@@ -1,0 +1,14 @@
+# Wikimedia Query API
+# https://www.mediawiki.org/w/api.php?action=help&modules=query
+
+GET http://en.wikipedia.org/w/api.php? action=query
+      &prop=extracts|pageimages|info
+      &inprop=url
+      &exsentences=10
+      &exlimit=1
+      &titles=Augustus
+      &explaintext=1
+      &format=json
+      &pithumbsize=300
+
+# pithumbsize: for properties specifically for prop=pageimages see https://en.wikipedia.org/w/api.php?action=help&modules=query%2Bpageimages

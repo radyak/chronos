@@ -1,0 +1,36 @@
+<div class="form-control">
+  <input type="number"
+         class="borderless day"
+         name="editDate.day"
+         min="1"
+         max="31"
+         (change)="update()"
+         [(ngModel)]="editDate.day">
+
+  <div class="month-wrapper">
+    <input type="number"
+           class="borderless month"
+           name="editDate.month"
+           min="1"
+           max="12"
+           (change)="update()"
+           [(ngModel)]="editDate.month">
+    <div class="name">
+      {{ monthName(editDate.month) }}
+    </div>
+  </div>
+
+  <span class="era" *ngIf="editDate.year >= 0">
+    AD
+  </span>
+  <input type="number"
+         class="borderless year"
+         name="editDate.year"
+         max="2999"
+         (change)="update()"
+         [(ngModel)]="editDate.year">
+
+  <span class="era" *ngIf="editDate.year < 0">
+    BC
+  </span>
+</div>

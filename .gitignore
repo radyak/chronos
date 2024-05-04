@@ -1,0 +1,14 @@
+.idea
+*.iml
+
+# Dev
+
+## Test/dev images
+/img/
+
+## Test DB
+dev/chronos-h2-data
+dev/chronos-postgres-data
+
+## Custom profiles
+application-dev-*.properties

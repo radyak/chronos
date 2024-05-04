@@ -1,0 +1,40 @@
+@import "../../theme/variables";
+
+.tag {
+  margin: 0 5px 5px 0;
+  display: inline-block;
+  border-radius: 3px;
+  font-size: 14px;
+  color: $gray-100;
+  white-space: nowrap;
+
+  &.small {
+    font-size: 10px;
+  }
+
+  &.light {
+    color: $primary;
+  }
+
+  & > * {
+    display: inline-block;
+  }
+
+  .category {
+    font-style: italic;
+    padding: 3px 0 3px 5px;
+  }
+
+  .name {
+    padding: 3px 5px;
+  }
+
+  .close {
+    padding: 5px 10px;
+    cursor: pointer;
+
+    &:hover {
+      background: rgba(0,0,0,0.3);
+    }
+  }
+}

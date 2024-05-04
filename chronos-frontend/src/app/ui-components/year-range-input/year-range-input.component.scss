@@ -1,0 +1,36 @@
+.form-control {
+  display: inline-block;
+
+  & > * {
+    vertical-align: top;
+  }
+}
+
+.from {
+  width: 40px;
+  padding: 0 inherit;
+}
+
+.to {
+  width: 40px;
+  padding: 0 inherit;
+}
+
+.era-bc {
+  padding-right: 5px;
+}
+
+.label {
+  opacity: 0.5;
+  padding-right: 5px;
+}
+
+.reset-button {
+  float: right;
+  cursor: pointer;
+  opacity: 0.5;
+
+  &:hover {
+    opacity: 1;
+  }
+}

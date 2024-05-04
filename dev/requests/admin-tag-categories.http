@@ -1,0 +1,30 @@
+POST http://localhost:8080/api/admin/tag-categories
+Content-Type: application/json
+
+{
+  "name": "Test Tag",
+  "icon": "some-icon"
+}
+
+###
+
+GET http://localhost:8080/api/admin/tag-categories
+
+###
+
+GET http://localhost:8080/api/admin/tag-categories/1
+
+###
+
+PUT http://localhost:8080/api/admin/tag-categories
+Content-Type: application/json
+
+{
+  "id": 3,
+  "name": "Test Tag CHANGED",
+  "icon": "another-icon"
+}
+
+###
+
+DELETE http://localhost:8080/api/admin/tag-categories/3

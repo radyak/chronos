@@ -1,0 +1,56 @@
+<div class="container">
+  <h1>Discover</h1>
+
+  <div class="row">
+    <chronos-entries-search-input></chronos-entries-search-input>
+  </div>
+
+  <div *ngIf="(results$ | async)?.length else noResults"
+       class="row results">
+    <h2>Results:</h2>
+
+    <div class="col-6">
+      <table class="table table-hover">
+        <tbody >
+        <tr *ngFor="let result of results$ | async"
+            (click)="selectEntry(result)"
+            class="pointer"
+            [ngClass]="{'table-active': result.id === selectedEntry?.id}">
+          <td>
+            <span class="title">
+              {{ result.title }}
+            </span>
+            <span class="subtitle"
+                  *ngIf="result.subTitle">
+              ({{ result.subTitle }})
+            </span>
+          </td>
+          <td class="dates">
+            <ng-container *ngIf="calculateMaxSpanningDateRange(result.dateRanges) as max">
+              {{ max.start | date: 'Y' }} - {{ max.end | date: 'Y' }}
+            </ng-container>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="col-6">
+      <chronos-wikipedia-summary *ngIf="wikipediaSummary else noEntrySelected"
+                                 [wikiSummary]="wikipediaSummary"
+                                 [tags]="selectedEntry?.tags">
+      </chronos-wikipedia-summary>
+      <ng-template #noEntrySelected>
+        <div class="no-entry-selected">
+          Select a result to display more information
+        </div>
+      </ng-template>
+    </div>
+  </div>
+
+  <ng-template #noResults>
+    <div class="no-results">
+      No results for <i>{{ submittedSearchTerm }}</i>
+    </div>
+  </ng-template>
+</div>

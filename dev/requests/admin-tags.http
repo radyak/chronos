@@ -1,0 +1,36 @@
+POST http://localhost:8080/api/admin/tags
+Content-Type: application/json
+
+{
+  "value": "Test Tag",
+  "color": "red"
+}
+
+###
+
+GET http://localhost:8080/api/admin/tags
+
+###
+
+GET http://localhost:8080/api/admin/tags/3
+
+###
+
+PUT http://localhost:8080/api/admin/tags
+Content-Type: application/json
+
+{
+  "id": 3,
+  "value": "Test Tag",
+  "color": "blue",
+  "tagCategory": {
+    "id": 1,
+    "key": "dynasty",
+    "name": "Dynasty",
+    "icon": null
+  }
+}
+
+###
+
+DELETE http://localhost:8080/api/admin/tags/3

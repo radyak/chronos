@@ -1,0 +1,22 @@
+.no-results,
+.results {
+  margin: 2rem 0;
+}
+.no-results {
+  text-align: center;
+}
+
+.title {
+  font-weight: bold;
+}
+.subtitle {
+  font-style: italic;
+}
+.dates {
+  text-align: right;
+  min-width: 120px;
+}
+.no-entry-selected {
+  text-align: center;
+  font-style: italic;
+}

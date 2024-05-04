@@ -1,0 +1,37 @@
+version: '3.5'
+
+services:
+
+  chronos:
+    container_name: chronos
+    #build: .
+    image: radyak/chronos:v0.0.2
+    depends_on:
+      - chronos-db
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=test-data
+      - APP_OAUTH_ISSUER=https://auth.radshift.de/auth/realms/Radshift
+      - APP_OAUTH_CLIENT_ID=chronos-admin-ui-staging
+      - DB_HOST=chronos-db
+      - DB_PORT=5432            # =default
+      - DB_DATABASE=chronos-db  # =default
+      - DB_USER=chronos-db-user # =default
+      - DB_PASSWORD=chronos-db-password
+    volumes:
+      - ./img:/app/data/img:ro
+
+
+  chronos-db:
+    container_name: chronos-db
+    image: postgres:12-alpine
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=chronos-db-user
+      - POSTGRES_PASSWORD=chronos-db-password
+      - POSTGRES_DB=chronos-db
+    volumes:
+      - "./dev/chronos-postgres-data:/var/lib/postgresql/data"

@@ -1,0 +1,32 @@
+.form-control {
+  display: inline-block;
+
+  & > * {
+    vertical-align: top;
+  }
+}
+
+.day {
+  width: 30px;
+}
+
+.month-wrapper {
+  display: inline-block;
+
+  & .month {
+    width: 30px;
+  }
+
+  & .name {
+    font-size: 75%
+  }
+}
+
+.year {
+  width: 40px;
+}
+
+.era {
+  opacity: 0.5;
+  padding-left: 5px;
+}

@@ -1,0 +1,34 @@
+# All
+GET http://localhost:8080/api/entries
+
+###
+
+# Filter by name fragment
+GET http://localhost:8080/api/entries?title=LeMagn
+
+###
+
+# Filter by tags
+GET http://localhost:8080/api/entries?tags=3,1
+
+###
+
+# Filter by name & tags
+GET http://localhost:8080/api/entries?title=LeMagn&tags=3,1
+
+###
+
+# Filter by year range
+GET http://localhost:8080/api/entries?from=760&to=800
+
+###
+
+GET http://localhost:8080/api/entries/1
+
+###
+
+GET http://localhost:8080/api/entries/6/wikipediasummary
+
+###
+
+GET http://localhost:8080/api/entries/random/wikipediasummary

@@ -1,0 +1,19 @@
+.tag-selection {
+  position: relative;
+  margin-bottom: 10px;
+}
+
+input.inner-control {
+  border: none;
+  background: none;
+  width: 100%;
+  padding: 0rem;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.form-control > .tag-list {
+  margin-top: 5px;
+}

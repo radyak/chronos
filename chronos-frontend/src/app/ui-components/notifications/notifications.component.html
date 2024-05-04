@@ -1,0 +1,25 @@
+<ng-container
+  *ngFor="let notification of notificationService.notifications">
+  <ngb-toast [class]="notification.classname"
+             [autohide]="true"
+             [delay]="notification.delay || 5000"
+             (hidden)="notificationService.remove(notification)"
+  >
+    <ng-container *ngIf="notification.heading; else messageOnly">
+      <div class="notification-heading">
+        <fa-icon *ngIf="notification.icon" [icon]="notification.icon"></fa-icon>
+        {{ notification.heading }}
+      </div>
+      <div class="notification-text">
+        {{ notification.text }}
+      </div>
+    </ng-container>
+
+    <ng-template #messageOnly>
+      <div class="notification-text">
+        <fa-icon *ngIf="notification.icon" [icon]="notification.icon"></fa-icon>
+        {{ notification.text }}
+      </div>
+    </ng-template>
+  </ngb-toast>
+</ng-container>

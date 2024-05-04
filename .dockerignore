@@ -1,0 +1,14 @@
+chronos-frontend/node_modules/
+npm-debug.log
+
+Dockerfile
+.dockerignore
+
+dev/
+img/
+doc/
+.github/
+.idea/
+.mvn/
+
+chronos-backend/src/main/resources/application-**.properties

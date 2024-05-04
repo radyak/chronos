@@ -1,0 +1,92 @@
+
+<div class="row">
+  <div class="col-7">
+
+    <table class="table table-hover">
+      <thead>
+      <tr>
+        <th scope="col">
+          <input type="search"
+                 placeholder="Name"
+                 name="tag-search"
+                 [(ngModel)]="searchTagCategory"
+          >
+        </th>
+        <th class="icon-col">
+          <fa-icon [icon]="searchIcon"></fa-icon>
+        </th>
+      </tr>
+      </thead>
+      <tbody>
+      <ng-container *ngFor="let category of tagCategories$ | async">
+        <tr *ngIf="filterTagCategory(category)"
+            [ngClass]="{'table-active': category.id == currentTagCategory?.id}"
+            class="pointer"
+            (click)="editTagCategory(category)">
+          <td>
+            {{ category.name }}
+          </td>
+          <td class="icon-col">
+            <fa-icon class="show-on-parent-hover" [icon]="editIcon"></fa-icon>
+          </td>
+        </tr>
+      </ng-container>
+      </tbody>
+    </table>
+  </div>
+  <div class="col-5">
+    <ng-template #noCurrentTagSelectedTemplate>
+      <button class="btn btn-block btn-outline-success" (click)="newTagCategory()">
+        <fa-icon [icon]="newIcon"></fa-icon>
+        New tag category
+      </button>
+    </ng-template>
+
+    <ng-template [ngIf]="currentTagCategory" [ngIfElse]="noCurrentTagSelectedTemplate">
+      <form>
+        <fieldset>
+          <legend *ngIf="currentTagCategory.id">
+            Edit Category <em>{{ currentTagCategory.name }}</em>
+          </legend>
+          <legend *ngIf="!currentTagCategory.id">
+            Edit New Category
+          </legend>
+
+          <div class="form-group">
+            <label for="category.name"
+                   class="form-label mt-4">
+              Category Name
+            </label>
+            <input type="text"
+                   class="form-control"
+                   id="category.name"
+                   name="category.name"
+                   placeholder="e.g. 'Territory' or 'Dynasty'"
+                   [(ngModel)]="currentTagCategory.name">
+          </div>
+
+          <div class="button-group">
+            <button type="submit"
+                    class="btn btn-outline-success"
+                    (click)="saveTagCategory()">
+              Save
+            </button>
+            <button type="button"
+                    class="btn btn-outline-danger"
+                    (click)="cancelEditTagCategory()">
+              Cancel
+            </button>
+            <button *ngIf="currentTagCategory.id"
+                    type="button"
+                    class="btn btn-danger"
+                    (click)="deleteTagCategory(currentTagCategory)">
+              Delete
+            </button>
+          </div>
+        </fieldset>
+      </form>
+    </ng-template>
+
+  </div>
+
+</div>

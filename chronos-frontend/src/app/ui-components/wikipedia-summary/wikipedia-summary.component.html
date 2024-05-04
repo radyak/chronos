@@ -1,0 +1,39 @@
+<div *ngIf="wikiSummary"
+     class="card border-light mb-3">
+  <div class="card-header">
+    <fa-icon [icon]="infoIcon"
+             class="info-icon"></fa-icon>
+    Wiki Info
+  </div>
+  <div class="card-body">
+    <h4 class="card-title">
+      {{ wikiSummary!.title }}
+    </h4>
+
+    <div class="tag-list" *ngIf="tags && tags.length > 0">
+      <chronos-tag *ngFor="let tag of tags"
+                   [tag]="tag">
+      </chronos-tag>
+    </div>
+
+    <img class="summary-image"
+         *ngIf="wikiSummary!.image?.url"
+         [src]="wikiSummary!.image?.url">
+
+    <p *ngIf="wikiSummary!.extract else noExtract"
+       class="card-text">
+      {{ wikiSummary!.extract }}
+
+      <br>
+
+      <a [href]="wikiSummary!.pageUrl" target="_blank">
+        &rarr; Read on Wikipedia
+      </a>
+    </p>
+
+    <ng-template #noExtract>
+      No extract available
+    </ng-template>
+
+  </div>
+</div>
