@@ -4,8 +4,6 @@ import {Observable, of} from "rxjs";
 import {Entry} from "../../../../model/entry.model";
 import {faPenToSquare, faPlus, faSearch, faTrash} from "@fortawesome/free-solid-svg-icons";
 import {ActivatedRoute, Router} from "@angular/router";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import {AdminConfirmModal} from "../../components/admin-confirm-modal/admin-confirm-modal";
 import {AdminConfirmService} from "../../services/admin-confirm.service";
 import {calculateMaxSpanningDateRange} from "../../../../util/date-range.utils";
 import {DateRange} from "../../../../model/date-range.model";
@@ -52,13 +50,11 @@ export class AdminEntriesComponent implements OnInit {
       "Confirm deleting entry",
       `Do you want to delete entry ${entry.title}?`
     )
-      .then(
-      () => {
-        this.adminEntriesService.deleteEntry(entry).subscribe(() => {
-          this.entries$ = this.adminEntriesService.allEntries();
-        })
-      }
-    );
+    .then(() => {
+      this.adminEntriesService.deleteEntry(entry).subscribe(() => {
+        this.entries$ = this.adminEntriesService.allEntries();
+      })
+    });
   }
 
   filterEntry(entry: Entry): boolean {

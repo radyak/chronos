@@ -10,7 +10,8 @@
          [inputFormatter]="tagFormatter"
          [editable]="false"
          [ngModel]="{}"
-         (ngModelChange)="addTag($event)">
+         (ngModelChange)="addTag($event)"
+         (paste)="onPaste($event)">
 
   <ng-template #tagSearchResult let-r="result" let-t="term">
     <chronos-tag [tag]="r"></chronos-tag>
@@ -22,4 +23,9 @@
                  action="remove"
                  (actionTriggered)="removeTag(tag)"></chronos-tag>
   </div>
+
+  <div class="copy" (click)="copyTags()">
+    <fa-icon [icon]="copyIcon"></fa-icon>
+  </div>
+
 </div>

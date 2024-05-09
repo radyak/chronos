@@ -5,6 +5,10 @@ import {TagComponent} from "../tag/tag.component";
 import {Tag} from "../../model/tag.model";
 import {NgbTypeahead} from "@ng-bootstrap/ng-bootstrap";
 import {debounceTime, map, Observable, OperatorFunction} from "rxjs";
+import {ClipboardModule, Clipboard} from "@angular/cdk/clipboard";
+import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
+import {faCopy} from "@fortawesome/free-solid-svg-icons";
+import {NotificationService} from "../notifications/notification.service";
 
 @Component({
   standalone: true,
@@ -16,14 +20,14 @@ import {debounceTime, map, Observable, OperatorFunction} from "rxjs";
     TagComponent,
     CommonModule,
     FormsModule,
-    NgbTypeahead
+    NgbTypeahead,
+    ClipboardModule,
+    FontAwesomeModule
   ],
   styleUrls: ['./tag-selection.component.scss']
 })
 export class TagSelectionComponent {
-  searchTagString: string = '';
-
-  selected?: Tag;
+  copyIcon = faCopy;
 
   @Input()
   public tags: Array<Tag> = [];
@@ -34,17 +38,8 @@ export class TagSelectionComponent {
   @Input()
   public availableTags: Array<Tag> = [];
 
-  filterAvailableTags(): Array<Tag> {
-    const filter = this.searchTagString.toLowerCase();
-    if (!filter) {
-      return this.availableTags;
-    }
-    return this.availableTags.filter(tag =>
-      (
-        tag.name?.toLowerCase().includes(filter)
-        || tag.tagCategory?.name?.toLowerCase().includes(filter)
-      )
-    );
+  constructor(private clipboard: Clipboard,
+              private notificationService: NotificationService) {
   }
 
   searchTags: OperatorFunction<string, readonly Tag[]> = (text$: Observable<string>) => {
@@ -83,4 +78,27 @@ export class TagSelectionComponent {
     return this.tags.map(t => t.id).indexOf(tag.id) !== -1;
   }
 
+  copyTags(): void {
+    const tagIdList = this.tags.map(tag => tag.id).join(",");
+    this.clipboard.copy(tagIdList);
+    this.notificationService.success("Copied assigned tags");
+  }
+
+  onPaste(event: ClipboardEvent) {
+    event.preventDefault();
+    let clipboardData = event.clipboardData;
+    let pastedText = clipboardData?.getData('text');
+    if (pastedText) {
+      const tags = pastedText.split(",")
+        .map(pastedTagId => parseInt(pastedTagId))
+        .filter(pastedTagId => !isNaN(pastedTagId))
+        .map(pastedTagId => this.availableTags.find(tag => tag.id == pastedTagId))
+        .filter(pastedTag => !!pastedTag)
+        .map(pastedTag => pastedTag as Tag);
+      for (let tag of tags) {
+        this.addTag(tag);
+      }
+      this.notificationService.success(`Pasted tags`);
+    }
+  }
 }

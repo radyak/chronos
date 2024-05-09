@@ -17,3 +17,16 @@ input.inner-control {
 .form-control > .tag-list {
   margin-top: 5px;
 }
+
+.copy {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  cursor: pointer;
+  opacity: 0.75;
+  transition: opacity .25s ease-out;
+
+  &:hover {
+    opacity: 1;
+  }
+}
