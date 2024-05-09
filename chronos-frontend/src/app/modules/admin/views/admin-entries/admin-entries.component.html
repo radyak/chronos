@@ -30,6 +30,12 @@
                  [(ngModel)]="searchEntryTitle"
           >
         </th>
+        <th class="col">
+          Subtitle
+        </th>
+        <th class="col">
+          Dates
+        </th>
         <th class="icon-col">
         </th>
         <th class="icon-col">
@@ -40,15 +46,21 @@
       <tbody>
       <ng-container *ngFor="let entry of entries$ | async">
         <tr *ngIf="filterEntry(entry)"
-            class="pointer">
-          <td (click)="editEntry(entry)">
+            class="pointer"
+            (click)="editEntry(entry)">
+          <td class="main-column">
             {{ entry.title }}
           </td>
-          <td (click)="deleteEntry(entry)">
-            <fa-icon class="show-on-parent-hover" [icon]="deleteIcon"></fa-icon>
+          <td class="secondary-column">
+            {{ entry.subTitle }}
           </td>
-          <td class="icon-col"
-              (click)="editEntry(entry)">
+          <td class="secondary-column">
+            {{ entryDateSpan(entry).start | date: 'Y' }} - {{ entryDateSpan(entry).end | date: 'Y' }}
+          </td>
+          <td (click)="deleteEntry(entry); $event.stopPropagation()">
+            <fa-icon class="text-danger show-on-parent-hover" [icon]="deleteIcon"></fa-icon>
+          </td>
+          <td class="icon-col">
             <fa-icon class="show-on-parent-hover" [icon]="editIcon"></fa-icon>
           </td>
         </tr>

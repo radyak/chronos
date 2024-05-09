@@ -7,6 +7,8 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {AdminConfirmModal} from "../../components/admin-confirm-modal/admin-confirm-modal";
 import {AdminConfirmService} from "../../services/admin-confirm.service";
+import {calculateMaxSpanningDateRange} from "../../../../util/date-range.utils";
+import {DateRange} from "../../../../model/date-range.model";
 
 
 @Component({
@@ -51,21 +53,20 @@ export class AdminEntriesComponent implements OnInit {
       `Do you want to delete entry ${entry.title}?`
     )
       .then(
-      (result) => {
-        console.log("Deleting")
+      () => {
         this.adminEntriesService.deleteEntry(entry).subscribe(() => {
           this.entries$ = this.adminEntriesService.allEntries();
         })
-      },
-      (reason) => {
-        console.log("Leaving")
-        //this.closeResult = `Dismissed ${reason}`;
-      },
+      }
     );
   }
 
   filterEntry(entry: Entry): boolean {
     return !!entry.title && entry.title.toLowerCase().includes(this.searchEntryTitle.toLowerCase())
+  }
+
+  entryDateSpan(entry: Entry): DateRange {
+    return calculateMaxSpanningDateRange(entry.dateRanges);
   }
 
 }
