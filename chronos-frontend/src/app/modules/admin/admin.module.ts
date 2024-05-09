@@ -26,6 +26,7 @@ import {NotificationsComponent} from "../../ui-components/notifications/notifica
 import {WikipediaSummaryComponent} from "../../ui-components/wikipedia-summary/wikipedia-summary.component";
 import {TagSelectionComponent} from "../../ui-components/tag-selection/tag-selection.component";
 import {AuthInterceptor} from "./interceptors/auth.interceptor";
+import {AdminEntryComponent} from "./views/admin-entry/admin-entry.component";
 
 
 const routes: Route[] = [
@@ -42,6 +43,10 @@ const routes: Route[] = [
         component: AdminEntriesComponent
       },
       {
+        path: 'entries/:id',
+        component: AdminEntryComponent
+      },
+      {
         path: 'tags',
         component: AdminTagsComponent
       }
@@ -56,6 +61,7 @@ const routes: Route[] = [
     TagCategoriesSectionComponent,
     TagsSectionComponent,
     AdminEntriesComponent,
+    AdminEntryComponent,
     AdminComponent
   ],
   imports: [

@@ -17,6 +17,10 @@ export class AdminEntriesService {
     return this.http.get<Array<Entry>>("/api/admin/entries")
   }
 
+  public getEntry(id: number): Observable<Entry> {
+    return this.http.get<Entry>(`/api/admin/entries/${id}`);
+  }
+
   public saveEntry(entry: Entry): Observable<Entry> {
     if (entry.id === undefined) {
       return this.createEntry(entry);

@@ -9,7 +9,6 @@ import {TagCategory} from "../../../../model/tag-category.model";
 import {WikipediaSummary} from "../../../../model/wikipedia-summary.model";
 import {TagCategoriesService} from "../../service/tag-categories.service";
 import {faMagnifyingGlassMinus, faMagnifyingGlassPlus, faPlus, faTrash} from "@fortawesome/free-solid-svg-icons"
-import {DateRange} from "../../../../model/date-range.model";
 import {getEarliestStartDateRange} from "../../../../util/date-range.utils";
 
 @Component({
