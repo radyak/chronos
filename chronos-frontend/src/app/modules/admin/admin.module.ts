@@ -27,6 +27,7 @@ import {WikipediaSummaryComponent} from "../../ui-components/wikipedia-summary/w
 import {TagSelectionComponent} from "../../ui-components/tag-selection/tag-selection.component";
 import {AuthInterceptor} from "./interceptors/auth.interceptor";
 import {AdminEntryComponent} from "./views/admin-entry/admin-entry.component";
+import {AdminConfirmService} from "./services/admin-confirm.service";
 
 
 const routes: Route[] = [
@@ -78,12 +79,13 @@ const routes: Route[] = [
     FooterComponent,
     NotificationsComponent,
     WikipediaSummaryComponent,
-    TagSelectionComponent
+    TagSelectionComponent,
   ],
   providers: [
     AdminTagCategoriesService,
     AdminTagsService,
     AdminEntriesService,
+    AdminConfirmService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AdminErrorInterceptor,

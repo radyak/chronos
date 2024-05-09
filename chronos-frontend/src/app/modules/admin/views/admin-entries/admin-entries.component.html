@@ -31,6 +31,8 @@
           >
         </th>
         <th class="icon-col">
+        </th>
+        <th class="icon-col">
           <fa-icon [icon]="searchIcon"></fa-icon>
         </th>
       </tr>
@@ -38,12 +40,15 @@
       <tbody>
       <ng-container *ngFor="let entry of entries$ | async">
         <tr *ngIf="filterEntry(entry)"
-            class="pointer"
-            (click)="editEntry(entry)">
-          <td>
+            class="pointer">
+          <td (click)="editEntry(entry)">
             {{ entry.title }}
           </td>
-          <td class="icon-col">
+          <td (click)="deleteEntry(entry)">
+            <fa-icon class="show-on-parent-hover" [icon]="deleteIcon"></fa-icon>
+          </td>
+          <td class="icon-col"
+              (click)="editEntry(entry)">
             <fa-icon class="show-on-parent-hover" [icon]="editIcon"></fa-icon>
           </td>
         </tr>
