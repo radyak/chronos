@@ -5,3 +5,11 @@
 .date-range > * {
   margin-right: 5px;
 }
+
+th.broad {
+  width: 100%;
+}
+
+th, td {
+  white-space: nowrap;
+}

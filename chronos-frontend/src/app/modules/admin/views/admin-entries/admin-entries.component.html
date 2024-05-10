@@ -32,7 +32,6 @@
           >
         </th>
         <th class="col">
-          Subtitle
         </th>
         <th class="col">
           <input type="search"
@@ -42,6 +41,7 @@
                  (keydown.enter)="updateSearchParams()"
           >
         </th>
+        <th class="col broad"></th>
         <th class="icon-col">
         </th>
         <th class="icon-col">
@@ -61,6 +61,12 @@
           </td>
           <td class="secondary-column">
             {{ entryDateSpan(entry).start | date: 'Y' }} - {{ entryDateSpan(entry).end | date: 'Y' }}
+          </td>
+          <td>
+            <ng-container *ngFor="let tag of entry.tags">
+              <chronos-tag size="small"
+                           [tag]="tag"></chronos-tag>
+            </ng-container>
           </td>
           <td (click)="deleteEntry(entry); $event.stopPropagation()">
             <fa-icon class="text-danger show-on-parent-hover" [icon]="deleteIcon"></fa-icon>
