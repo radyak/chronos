@@ -35,7 +35,12 @@
           Subtitle
         </th>
         <th class="col">
-          Dates
+          <input type="search"
+                 placeholder="Dates"
+                 name="entry-search-dates"
+                 [(ngModel)]="dateQuery"
+                 (keydown.enter)="updateSearchParams()"
+          >
         </th>
         <th class="icon-col">
         </th>

@@ -20,6 +20,7 @@ export class AdminEntriesComponent extends QueryDrivenComponent {
   entries$: Observable<Array<Entry>> = of([]);
 
   titleQuery: string = '';
+  dateQuery: string = '';
 
   editIcon = faPenToSquare;
   newIcon = faPlus;
@@ -34,18 +35,22 @@ export class AdminEntriesComponent extends QueryDrivenComponent {
   }
 
   override search(): void {
-    this.entries$ = this.adminEntriesService.allEntries({
-      title: this.titleQuery
-    })
+    this.entries$ = this.adminEntriesService.allEntries(this.toParams())
   }
 
   override toClassFields(params: Params) {
+    const from = params['from']
+    const to = params['to']
     this.titleQuery = params['title'];
+    this.dateQuery = (!from && !to) ? '' : `${params['from'] || ''}-${params['to'] || ''}`
   }
 
   override toParams(): Params {
+    const dates = this.dateQuery.split('-')
     return {
-      title: this.titleQuery
+      title: this.titleQuery,
+      from: dates[0] || null,
+      to: dates[1] || null
     };
   }
 
