@@ -17,7 +17,6 @@ import {ActivatedRoute, Router} from "@angular/router";
 })
 export class AdminEntryComponent implements OnInit {
 
-  entries$: Observable<Array<Entry>> = of([]);
   wikipediaSummary?: WikipediaSummary;
   availableTags: Array<Tag> = [];
   currentEntry?: Entry;
@@ -89,7 +88,6 @@ export class AdminEntryComponent implements OnInit {
 
   deleteEntry(entry: Entry): void {
     this.adminEntriesService.deleteEntry(entry).subscribe(() => {
-      this.entries$ = this.adminEntriesService.allEntries();
       this.goBack();
     })
   }

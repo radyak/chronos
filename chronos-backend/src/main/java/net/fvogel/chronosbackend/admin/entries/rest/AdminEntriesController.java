@@ -7,7 +7,10 @@ import net.fvogel.chronosbackend.wikipedia.model.WikipediaSummary;
 import net.fvogel.chronosbackend.wikipedia.service.WikipediaService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/admin/entries")
@@ -25,8 +28,14 @@ public class AdminEntriesController {
     }
 
     @GetMapping
-    public List<Entry> all() {
-        return this.entriesService.findAll();
+    public List<Entry> all(
+            @RequestParam(name = "title", required = false) String title,
+            @RequestParam(name = "tags", required = false) Long[] tagIdArray,
+            @RequestParam(name = "from", required = false) Short from,
+            @RequestParam(name = "to", required = false) Short to
+    ) {
+        Set<Long> tagIds = tagIdArray != null ? new HashSet<>(Arrays.asList(tagIdArray)) : null;
+        return this.entriesService.find(title, tagIds, from, to);
     }
 
     @GetMapping("wikipediasummary")
