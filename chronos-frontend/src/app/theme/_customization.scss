@@ -18,6 +18,13 @@ h2 {
     opacity: 1;
   }
 }
+td.secondary-column {
+  color: #aaa;
+}
+td.main-column {
+  font-style: italic;
+}
+
 th input {
   border: none;
   outline: none;
@@ -104,6 +111,12 @@ input[type=number]::-webkit-inner-spin-button {
 
 input[type=number] {
   -moz-appearance:textfield;
+}
+
+// Breadcrumbs
+.breadcrumb {
+  margin-top: 20px;
+  margin-bottom: -20px;
 }
 
 // Footer

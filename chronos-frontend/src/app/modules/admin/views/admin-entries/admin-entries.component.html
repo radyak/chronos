@@ -1,230 +1,84 @@
 <div class="container">
+
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a [routerLink]="['..']">Administration</a></li>
+    <li class="breadcrumb-item active">Entries</li>
+  </ol>
+
   <h1>Administration: Entries</h1>
 <!--  <p class="text-primary-emphasis small">-->
 <!--    Some explanation here ...-->
 <!--  </p>-->
 
   <div class="row">
-    <div [ngClass]="currentEntry ? 'col-4' : 'col-7'">
-
-      <table class="table table-hover">
-        <thead>
-        <tr>
-          <th scope="col">
-            <input type="search"
-                   placeholder="Title"
-                   name="entry-search-title"
-                   [(ngModel)]="searchEntryTitle"
-            >
-          </th>
-          <th class="icon-col">
-            <fa-icon [icon]="searchIcon"></fa-icon>
-          </th>
-        </tr>
-        </thead>
-        <tbody>
-        <ng-container *ngFor="let entry of entries$ | async">
-          <tr *ngIf="filterEntry(entry)"
-              [ngClass]="{'table-active': entry.id == currentEntry?.id}"
-              class="pointer"
-              (click)="editEntry(entry)">
-            <td>
-              {{ entry.title }}
-            </td>
-            <td class="icon-col">
-              <fa-icon class="show-on-parent-hover" [icon]="editIcon"></fa-icon>
-            </td>
-          </tr>
-        </ng-container>
-        </tbody>
-      </table>
+    <div class="col">
+      <button class="btn btn-outline-success" (click)="newEntry()">
+        <fa-icon [icon]="newIcon"></fa-icon>
+        New entry
+      </button>
     </div>
-    <div [ngClass]="currentEntry ? 'col-8' : 'col-5'">
-      <ng-template #noCurrentEntrySelectedTemplate>
-        <button class="btn btn-block btn-outline-success" (click)="newEntry()">
-          <fa-icon [icon]="newIcon"></fa-icon>
-          New entry
-        </button>
-      </ng-template>
-
-      <ng-template [ngIf]="currentEntry" [ngIfElse]="noCurrentEntrySelectedTemplate">
-        <form>
-          <fieldset>
-
-            <div class="form-group">
-              <label for="entry.title"
-                     class="form-label mt-4">
-                Title:
-              </label>
-              <input type="text"
-                     class="form-control"
-                     id="entry.title"
-                     name="entry.title"
-                     [(ngModel)]="currentEntry.title"
-                     (ngModelChange)="searchSummary()">
-              <small id="emailHelp"
-                     class="form-text text-muted">
-                You can explicitly add a Wikipedia page
-                <a class="link"
-                   (click)="wikipediaPageInputVisible = !wikipediaPageInputVisible">
-                  here
-                </a>
-              </small>
-            </div>
-
-            <div class="form-group"
-                 *ngIf="wikipediaPageInputVisible">
-              <label for="entry.wikipediaPage"
-                     class="form-label mt-4">
-                Wikipedia Page:
-              </label>
-              <input type="text"
-                     class="form-control"
-                     id="entry.wikipediaPage"
-                     name="entry.wikipediaPage"
-                     [(ngModel)]="currentEntry.wikipediaPage"
-                     (ngModelChange)="searchSummary()">
-            </div>
-
-            <div *ngIf="wikipediaSummary else noSummary"
-                 class="form-group">
-              <label for="entry.wikipediaPage"
-                     class="form-label mt-4">
-                Wikipedia preview:
-              </label>
-              <chronos-wikipedia-summary [wikiSummary]="wikipediaSummary">
-              </chronos-wikipedia-summary>
-            </div>
-            <ng-template #noSummary>
-              No summary available
-            </ng-template>
-
-            <div class="form-group">
-              <label for="entry.subtitle"
-                     class="form-label mt-4">
-                Subtitle:
-              </label>
-              <input type="text"
-                     class="form-control"
-                     id="entry.subtitle"
-                     name="entry.subtitle"
-                     [(ngModel)]="currentEntry.subTitle">
-            </div>
-
-            <div class="form-group">
-              <label class="form-label mt-4">
-                Dates:
-              </label>
-
-              <div *ngFor="let range of currentEntry.dateRanges">
-                <ng-container *ngIf="range === currentEntryDateRange else noEditDateRange">
-
-                  <div class="row">
-                    <div class="form-group col-12">
-
-                      <div ngbDropdown class="btn-block">
-                        <button type="button"
-                                class="btn btn-primary"
-                                id="tag.category"
-                                ngbDropdownToggle>
-                          {{ range.type || 'Select a type' }}
-                        </button>
-                        <div ngbDropdownMenu
-                             aria-labelledby="tag.category">
-                          <div class="dropdown-divider"></div>
-                          <ng-container
-                            *ngFor="let type of allDateRangeTypes()">
-                            <button ngbDropdownItem
-                                    (click)="range.type = type">
-                              {{ type }}
-                            </button>
-                          </ng-container>
-                        </div>
-                      </div>
-
-                    </div>
-                  </div>
-
-                  <div class="row">
-                    <div class="form-group col-6">
-                      <label class="form-label mt-4">
-                        From:
-                      </label>
-                      <chronos-date-input [(date)]="range.start"></chronos-date-input>
-                    </div>
-
-                    <div class="form-group col-6">
-                      <label class="form-label mt-4">
-                        To:
-                      </label>
-                      <chronos-date-input [(date)]="range.end"></chronos-date-input>
-                    </div>
-                  </div>
-
-                </ng-container>
-
-                <ng-template #noEditDateRange>
-                  <div class="date-range">
-                    <button (click)="editDateRange(range)"
-                            class="btn btn-outline-light btn-sm">
-                      <fa-icon [icon]="editIcon"></fa-icon>
-                    </button>
-                    <button (click)="deleteDateRange(range)"
-                            class="btn btn-outline-danger btn-sm">
-                      <fa-icon [icon]="deleteIcon"></fa-icon>
-                    </button>
-
-                    <span>
-                      <b>{{ range.type }}</b>:
-                      {{ range.start | date }} - {{ range.end | date }}
-                    </span>
-                  </div>
-                </ng-template>
-              </div>
-
-              <div class="button-group button-row">
-                <button (click)="addDateRange()"
-                        class="btn btn-outline-success btn-block">
-                  <fa-icon [icon]="newIcon"></fa-icon>
-                  Add Date
-                </button>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label class="form-label mt-4">
-                Tags:
-              </label>
-
-              <chronos-tag-selection [(tags)]="currentEntry.tags!"
-                                     [availableTags]="availableTags"></chronos-tag-selection>
-            </div>
-
-            <div class="button-group">
-              <button type="submit"
-                      class="btn btn-outline-success"
-                      (click)="saveEntry()">
-                Save
-              </button>
-              <button type="button"
-                      class="btn btn-outline-danger"
-                      (click)="cancelEditEntry()">
-                Cancel
-              </button>
-              <button *ngIf="currentEntry.id"
-                      type="button"
-                      class="btn btn-danger"
-                      (click)="deleteEntry(currentEntry)">
-                Delete
-              </button>
-            </div>
-          </fieldset>
-        </form>
-      </ng-template>
-
-    </div>
-
   </div>
 
+  <div class="row">
+    <table class="table table-hover">
+      <thead>
+      <tr>
+        <th scope="col">
+          <input type="search"
+                 placeholder="Title"
+                 name="entry-search-title"
+                 [(ngModel)]="titleQuery"
+                 (keydown.enter)="updateSearchParams()"
+          >
+        </th>
+        <th class="col">
+        </th>
+        <th class="col">
+          <input type="search"
+                 placeholder="Dates"
+                 name="entry-search-dates"
+                 [(ngModel)]="dateQuery"
+                 (keydown.enter)="updateSearchParams()"
+          >
+        </th>
+        <th class="col broad"></th>
+        <th class="icon-col">
+        </th>
+        <th class="icon-col">
+          <fa-icon [icon]="searchIcon"></fa-icon>
+        </th>
+      </tr>
+      </thead>
+      <tbody>
+      <ng-container *ngFor="let entry of entries$ | async">
+        <tr class="pointer"
+            (click)="editEntry(entry)">
+          <td class="main-column">
+            {{ entry.title }}
+          </td>
+          <td class="secondary-column">
+            {{ entry.subTitle }}
+          </td>
+          <td class="secondary-column">
+            {{ entryDateSpan(entry).start | date: 'Y' }} - {{ entryDateSpan(entry).end | date: 'Y' }}
+          </td>
+          <td>
+            <ng-container *ngFor="let tag of entry.tags">
+              <chronos-tag size="small"
+                           [tag]="tag"></chronos-tag>
+            </ng-container>
+          </td>
+          <td (click)="deleteEntry(entry); $event.stopPropagation()">
+            <fa-icon class="text-danger show-on-parent-hover" [icon]="deleteIcon"></fa-icon>
+          </td>
+          <td class="icon-col">
+            <fa-icon class="show-on-parent-hover" [icon]="editIcon"></fa-icon>
+          </td>
+        </tr>
+      </ng-container>
+      </tbody>
+    </table>
+
+  </div>
 
 </div>

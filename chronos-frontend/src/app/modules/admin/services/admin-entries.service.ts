@@ -4,6 +4,7 @@ import {catchError, MonoTypeOperatorFunction, Observable, of, tap} from "rxjs";
 import {Entry} from "../../../model/entry.model";
 import {NotificationService} from "../../../ui-components/notifications/notification.service";
 import {WikipediaSummary} from "../../../model/wikipedia-summary.model";
+import {EntriesSearchParams} from "../../public/service/entries.service";
 
 @Injectable({
   providedIn: null
@@ -13,8 +14,25 @@ export class AdminEntriesService {
   constructor(private http: HttpClient,
               private notificationService: NotificationService) { }
 
-  public allEntries(): Observable<Array<Entry>> {
-    return this.http.get<Array<Entry>>("/api/admin/entries")
+  public allEntries(entriesSearchParams: EntriesSearchParams): Observable<Array<Entry>> {
+    let params = new HttpParams();
+    if (entriesSearchParams.title) {
+      params = params.set('title', entriesSearchParams.title)
+    }
+    if (entriesSearchParams.tagIds && entriesSearchParams.tagIds.length > 0) {
+      params = params.set('tags', entriesSearchParams.tagIds.join(','))
+    }
+    if (entriesSearchParams.from) {
+      params = params.set('from', entriesSearchParams.from)
+    }
+    if (entriesSearchParams.to) {
+      params = params.set('to', entriesSearchParams.to)
+    }
+    return this.http.get<Array<Entry>>("/api/admin/entries", { params })
+  }
+
+  public getEntry(id: number): Observable<Entry> {
+    return this.http.get<Entry>(`/api/admin/entries/${id}`);
   }
 
   public saveEntry(entry: Entry): Observable<Entry> {
