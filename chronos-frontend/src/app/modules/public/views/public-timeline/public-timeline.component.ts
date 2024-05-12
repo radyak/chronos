@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {TagsService} from "../../service/tags.service";
-import {combineLatest} from "rxjs";
+import {combineLatest, map, Observable, shareReplay} from "rxjs";
 import {Tag} from "../../../../model/tag.model";
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {EntriesService} from "../../service/entries.service";
@@ -10,13 +10,14 @@ import {WikipediaSummary} from "../../../../model/wikipedia-summary.model";
 import {TagCategoriesService} from "../../service/tag-categories.service";
 import {faMagnifyingGlassMinus, faMagnifyingGlassPlus, faPlus, faTrash} from "@fortawesome/free-solid-svg-icons"
 import {getEarliestStartDateRange} from "../../../../util/date-range.utils";
+import {QueryDrivenComponent} from "../../../../common/query-driven-component.directive";
 
 @Component({
   selector: 'chronos-public-timeline',
   templateUrl: './public-timeline.component.html',
   styleUrls: ['./public-timeline.component.scss']
 })
-export class PublicTimelineComponent implements OnInit {
+export class PublicTimelineComponent extends QueryDrivenComponent implements OnInit {
 
   showSearchInputs = false;
 
@@ -26,7 +27,7 @@ export class PublicTimelineComponent implements OnInit {
   deleteIcon = faTrash;
 
   entries: Array<Array<Entry>> = [];
-  tags: Array<Tag> = [];
+  tags$: Observable<Array<Tag>>;
   tagCategories: Array<TagCategory> = [];
 
   selectedEntrySummary?: WikipediaSummary | null;
@@ -45,108 +46,31 @@ export class PublicTimelineComponent implements OnInit {
   constructor(private tagService: TagsService,
               private tagCategoriesService: TagCategoriesService,
               private entriesService: EntriesService,
-              private router: Router,
-              private activatedRoute: ActivatedRoute) {
-  }
+              protected override router: Router,
+              protected override route: ActivatedRoute) {
+    super(router, route);
 
-  ngOnInit(): void {
-    const tags$ = this.tagService.allTags();
-    combineLatest([
-      tags$,
-      this.activatedRoute.queryParams
-    ]).subscribe(([tags, params]) => {
-      this.from = parseInt(params['from']) || 0;
-      this.to = parseInt(params['to']) || 0;
-      this.selectedTagGroups = (params['tags'] || '')
-        .split(';')
-        .map((selectedTagIdGroupString: string) => selectedTagIdGroupString
-          .split(',')
-          .map((id: string) => tags.find(tag => tag.id === parseInt(id)))
-          .filter((tag) => !!tag)
-        )
-      this.colorCategoryId = parseInt(params['color-category']) || undefined
-      this.showSearchInputs = params['show-search-inputs']
-      this.searchEntries();
-    });
-
-    tags$.subscribe((tags: Array<Tag>) => this.tags = tags);
+    this.tags$ = this.tagService.allTags().pipe(shareReplay());
     this.tagCategoriesService.allTagCategories()
       .subscribe((tagCategories: Array<TagCategory>) => this.tagCategories = tagCategories);
   }
 
-  searchEntries(): void {
-    this.entries = []
-
-    if (!this.selectedTagGroups || this.selectedTagGroups.length === 0) {
-      this.entriesService.find({
-        from: this.from,
-        to: this.to
-      }).subscribe(entries =>
-        this.entries = [
-          entries.sort((e1, e2) => ((
-            getEarliestStartDateRange(e1.dateRanges).start! > getEarliestStartDateRange(e2.dateRanges).start!) ? 1 : -1)
-          )
-        ]
-      );
-    } else {
-      combineLatest(
-        this.selectedTagGroups.map(selectedTagGroup =>
-          this.entriesService.find({
-            tagIds: selectedTagGroup
-              .filter(tag => !!tag?.id)
-              .map(tag => tag.id!),
-            from: this.from,
-            to: this.to
-          })
-        )
-      ).subscribe(entries => {
-        entries.forEach(entry => entry.sort((e1, e2) =>
-          getEarliestStartDateRange(e1.dateRanges).start! > getEarliestStartDateRange(e2.dateRanges).start! ? 1 : -1)
-        );
-        this.entries = entries;
-      }
-    );
-    }
+  override ngOnInit(): void {
+    super.ngOnInit();
   }
 
   selectColorTagCategory(tagCategory?: TagCategory): void {
     this.colorCategoryId = tagCategory?.id;
-    this.updateQueryParams();
+    this.updateSearchParams();
   }
 
   trackSelectedTagGroup(i: number) {
     return this.selectedTagGroups?.[i];
   }
 
-  updateQueryParams(): void {
-    const params: Params = {
-      'tags': this.selectedTagGroups.length > 0 ?
-        this.selectedTagGroups
-          .filter(selectedTagGroup => selectedTagGroup && selectedTagGroup.length > 0)
-          .map(selectedTagGroup => selectedTagGroup
-            .map(tag => tag.id)
-            .filter(id => !!id)
-            .join(',')
-          ).join(';')
-        : null,
-      'from': this.from || null,
-      'to': this.to || null,
-      'color-category': this.colorCategoryId || null,
-      'show-search-inputs': this.showSearchInputs || null
-    }
-    this.router.navigate(
-      [],
-      {
-        relativeTo: this.activatedRoute,
-        queryParams: params,
-        queryParamsHandling: 'merge'
-      }
-    );
-  }
-
   setShowSearchInputs(showSearchInputs: boolean): void {
     this.showSearchInputs = showSearchInputs;
-    this.updateQueryParams();
+    this.updateSearchParams();
   }
 
   onEntrySelected(entry?: Entry) {
@@ -177,7 +101,77 @@ export class PublicTimelineComponent implements OnInit {
     if (this.selectedTagGroups.length === 0) {
       this.selectedTagGroups = [[]];
     }
-    this.updateQueryParams();
+    this.updateSearchParams();
+  }
+
+  protected search(): void {
+    if (!this.selectedTagGroups || this.selectedTagGroups.length === 0) {
+      this.entriesService.find({
+        from: this.from,
+        to: this.to
+      }).subscribe(entries =>
+        this.entries = [
+          entries.sort((e1, e2) => ((
+            getEarliestStartDateRange(e1.dateRanges).start! > getEarliestStartDateRange(e2.dateRanges).start!) ? 1 : -1)
+          )
+        ]
+      );
+    } else {
+      combineLatest(
+        this.selectedTagGroups.map(selectedTagGroup =>
+          this.entriesService.find({
+            tagIds: selectedTagGroup
+              .filter(tag => !!tag?.id)
+              .map(tag => tag.id!),
+            from: this.from,
+            to: this.to
+          })
+        )
+      ).subscribe(entries => {
+          entries.forEach(entry => entry.sort((e1, e2) =>
+            getEarliestStartDateRange(e1.dateRanges).start! > getEarliestStartDateRange(e2.dateRanges).start! ? 1 : -1)
+          );
+          this.entries = entries;
+        }
+      );
+    }
+  }
+
+  protected toClassFields(params: Params): Observable<void> {
+    return this.tags$.pipe(
+      map(tags => {
+        this.from = parseInt(params['from']) || 0;
+        this.to = parseInt(params['to']) || 0;
+        this.selectedTagGroups = (params['tags'] || '')
+          .split(';')
+          .map((selectedTagIdGroupString: string) => selectedTagIdGroupString
+            .split(',')
+            .map((id: string) => tags.find(tag => tag.id === parseInt(id)))
+            .filter((tag) => !!tag)
+          )
+        this.colorCategoryId = parseInt(params['color-category']) || undefined
+        this.showSearchInputs = params['show-search-inputs']
+        return;
+      })
+    )
+  }
+
+  protected toParams(): Params {
+    return {
+      'tags': this.selectedTagGroups.length > 0 ?
+        this.selectedTagGroups
+          .filter(selectedTagGroup => selectedTagGroup && selectedTagGroup.length > 0)
+          .map(selectedTagGroup => selectedTagGroup
+            .map(tag => tag.id)
+            .filter(id => !!id)
+            .join(',')
+          ).join(';')
+        : null,
+      'from': this.from || null,
+      'to': this.to || null,
+      'color-category': this.colorCategoryId || null,
+      'show-search-inputs': this.showSearchInputs || null
+    }
   }
 
 }

@@ -11,7 +11,7 @@
 
     <div class="tag-legend" *ngIf="colorCategoryId">
       Tag Legend:
-      <ng-container *ngFor="let tag of tags">
+      <ng-container *ngFor="let tag of tags$ | async">
         <chronos-tag *ngIf="tag.tagCategory?.id === colorCategoryId"
                      [tag]="tag"
                      size="small"
@@ -38,7 +38,7 @@
         </label>
         <chronos-year-range-input [(from)]="from"
                                   [(to)]="to"
-                                  (submit)="updateQueryParams()">
+                                  (submit)="updateSearchParams()">
         </chronos-year-range-input>
       </div>
 
@@ -92,8 +92,8 @@
         </label>
         <ng-container *ngFor="let selectedTagGroup of selectedTagGroups; index as i; trackBy:trackSelectedTagGroup">
           <chronos-tag-selection [(tags)]="selectedTagGroups[i]"
-                                 [availableTags]="tags"
-                                 (tagsChange)="updateQueryParams()">
+                                 [availableTags]="(tags$ | async) || []"
+                                 (tagsChange)="updateSearchParams()">
             <div class="remove-button"
                  (click)="removeSelectedTagGroup(selectedTagGroup)">
               <fa-icon [icon]="deleteIcon"></fa-icon>
@@ -116,7 +116,7 @@
   <div class="button-group">
     <button class="btn btn-outline-success"
             *ngIf="showSearchInputs"
-            (click)="updateQueryParams()">
+            (click)="updateSearchParams()">
       Search
     </button>
     <button class="btn btn-primary"
