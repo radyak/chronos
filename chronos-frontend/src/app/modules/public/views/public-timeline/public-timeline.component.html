@@ -1,37 +1,20 @@
 <div class="container">
-  <h1>Timeline</h1>
+  <h1>Discover</h1>
 
-  <section class="row" *ngIf="entries.length > 0">
-    <chronos-timeline [entries]="entries"
-                      [colorCategory]="selectedColorTagCategory"
-                      (entrySelected)="onEntrySelected($event)"
-                      [fromYear]="from"
-                      [toYear]="to">
-    </chronos-timeline>
+  <div class="button-group">
+    <button class="btn btn-primary btn-sm"
+            *ngIf="!showSearchInputs"
+            (click)="setShowSearchInputs(true)">
+      <fa-icon [icon]="showSearchIcon"></fa-icon>
+      Show search
+    </button>
+  </div>
 
-    <div class="tag-legend" *ngIf="colorCategoryId">
-      Tag Legend:
-      <ng-container *ngFor="let tag of tags$ | async">
-        <chronos-tag *ngIf="tag.tagCategory?.id === colorCategoryId"
-                     [tag]="tag"
-                     size="small"
-                     [hideCategory]="true">
-        </chronos-tag>
-      </ng-container>
-    </div>
-  </section>
+  <section class="row">
+    <div *ngIf="showSearchInputs" class="col-md-4">
 
-  <section *ngIf="selectedEntrySummary"
-           class="info-section">
-    <chronos-wikipedia-summary [wikiSummary]="selectedEntrySummary">
-    </chronos-wikipedia-summary>
-    <ng-template>
-      No summary available
-    </ng-template>
-  </section>
+      <h3>Search</h3>
 
-  <section class="row" *ngIf="showSearchInputs">
-    <div class="col-md-6">
       <div class="form-group">
         <label class="form-label mt-2">
           Filter by year:
@@ -84,8 +67,6 @@
         </div>
       </div>
 
-    </div>
-    <div class="col-md-6">
       <div class="form-group tag-selection">
         <label class="form-label mt-2">
           Filter by tags:
@@ -108,30 +89,64 @@
             Add tag group
           </button>
         </div>
-
       </div>
+
+      <div class="button-group">
+        <button class="btn btn-outline-success"
+                *ngIf="showSearchInputs"
+                (click)="updateSearchParams()">
+          Search
+        </button>
+        <button class="btn btn-primary"
+                *ngIf="showSearchInputs"
+                (click)="setShowSearchInputs(false)">
+          <fa-icon [icon]="hideSearchIcon"></fa-icon>
+          Hide Search
+        </button>
+
+        <button class="btn btn-primary btn-sm"
+                *ngIf="!showSearchInputs"
+                (click)="setShowSearchInputs(true)">
+          <fa-icon [icon]="showSearchIcon"></fa-icon>
+          Show search
+        </button>
+      </div>
+
     </div>
+
+    <div class="col-md-8" *ngIf="entries.length > 0">
+
+      <h3>Timeline</h3>
+
+      <chronos-timeline [entries]="entries"
+                        [colorCategory]="selectedColorTagCategory"
+                        (entrySelected)="onEntrySelected($event)"
+                        [fromYear]="from"
+                        [toYear]="to">
+      </chronos-timeline>
+
+      <div class="tag-legend" *ngIf="colorCategoryId">
+        Tag Legend:
+        <ng-container *ngFor="let tag of tags$ | async">
+          <chronos-tag *ngIf="tag.tagCategory?.id === colorCategoryId"
+                       [tag]="tag"
+                       size="small"
+                       [hideCategory]="true">
+          </chronos-tag>
+        </ng-container>
+      </div>
+
+      <div *ngIf="selectedEntrySummary"
+           class="info-section">
+        <chronos-wikipedia-summary [wikiSummary]="selectedEntrySummary">
+        </chronos-wikipedia-summary>
+        <ng-template>
+          No summary available
+        </ng-template>
+      </div>
+
+    </div>
+
   </section>
-
-  <div class="button-group">
-    <button class="btn btn-outline-success"
-            *ngIf="showSearchInputs"
-            (click)="updateSearchParams()">
-      Search
-    </button>
-    <button class="btn btn-primary"
-            *ngIf="showSearchInputs"
-            (click)="setShowSearchInputs(false)">
-      <fa-icon [icon]="hideSearchIcon"></fa-icon>
-      Hide Search
-    </button>
-
-    <button class="btn btn-primary btn-sm"
-            *ngIf="!showSearchInputs"
-            (click)="setShowSearchInputs(true)">
-      <fa-icon [icon]="showSearchIcon"></fa-icon>
-      Show search
-    </button>
-  </div>
 
 </div>
