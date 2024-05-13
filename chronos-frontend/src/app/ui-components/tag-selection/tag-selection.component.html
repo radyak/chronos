@@ -11,7 +11,10 @@
          [editable]="false"
          [ngModel]="{}"
          (ngModelChange)="addTag($event)"
-         (paste)="onPaste($event)">
+         (paste)="onPaste($event)"
+         (focus)="focus$.next($any($event).target.value)"
+         (click)="click$.next($any($event).target.value)"
+         #instance="ngbTypeahead">
 
   <ng-template #tagSearchResult let-r="result" let-t="term">
     <chronos-tag [tag]="r"></chronos-tag>
