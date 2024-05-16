@@ -1,0 +1,71 @@
+
+<table class="table table-hover">
+  <thead>
+  <tr>
+    <!-- Title -->
+    <th scope="col">
+      <input type="search"
+             placeholder="Title"
+             name="entry-search-title"
+             [(ngModel)]="search.title"
+             (keydown.enter)="searchChange.emit(search)"
+      >
+    </th>
+
+    <!-- Subtitle -->
+    <th class="col">
+    </th>
+
+    <!-- Dates -->
+    <th class="col">
+      <input type="search"
+             placeholder="Dates"
+             name="entry-search-dates"
+             [(ngModel)]="dateQuery"
+             (ngModelChange)="dateQuery"
+             (keydown.enter)="searchChange.emit(search)"
+      >
+    </th>
+
+    <!-- Tags -->
+    <th class="col broad">
+      Tags
+    </th>
+
+    <!-- Icons -->
+    <th class="icon-col">
+    </th>
+  </tr>
+  </thead>
+  <tbody>
+  <ng-container *ngFor="let entry of viewEntries">
+    <tr class="pointer"
+        (click)="rowClick.emit(entry._original)">
+      <td class="main-column">
+        {{ entry.title }}
+      </td>
+      <td class="secondary-column">
+        {{ entry.subTitle }}
+      </td>
+      <td class="secondary-column">
+        {{ entry.start | date: 'Y' }} - {{ entry.end | date: 'Y' }}
+      </td>
+      <td>
+        <ng-container *ngFor="let tag of entry.tags">
+          <chronos-tag size="small"
+                       [tag]="tag"></chronos-tag>
+        </ng-container>
+      </td>
+      <td class="icon-col">
+        <span class="icon"
+              *ngFor="let action of actions">
+          <fa-icon class="show-on-parent-hover"
+                   [ngClass]="action.color ? ('text-' + action.color) : ''"
+                   [icon]="action.icon"
+                   (click)="action.fn(entry); $event.stopPropagation()"></fa-icon>
+        </span>
+      </td>
+    </tr>
+  </ng-container>
+  </tbody>
+</table>

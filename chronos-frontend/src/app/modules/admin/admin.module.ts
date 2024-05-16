@@ -28,6 +28,7 @@ import {TagSelectionComponent} from "../../ui-components/tag-selection/tag-selec
 import {AuthInterceptor} from "./interceptors/auth.interceptor";
 import {AdminEntryComponent} from "./views/admin-entry/admin-entry.component";
 import {AdminConfirmService} from "./services/admin-confirm.service";
+import {EntriesTableComponent} from "../../ui-components/entries-table/entries-table.component";
 
 
 const routes: Route[] = [
@@ -80,6 +81,7 @@ const routes: Route[] = [
     NotificationsComponent,
     WikipediaSummaryComponent,
     TagSelectionComponent,
+    EntriesTableComponent,
   ],
   providers: [
     AdminTagCategoriesService,
