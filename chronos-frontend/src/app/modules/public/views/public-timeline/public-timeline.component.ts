@@ -33,6 +33,7 @@ export class PublicTimelineComponent extends QueryDrivenComponent implements OnI
   selectedEntrySummary?: WikipediaSummary | null;
 
   selectedTagGroups: Array<Array<Tag>> = [[]];
+  title: string = '';
   from: number = 0;
   to: number = 0;
   colorCategoryId?: number;
@@ -104,9 +105,16 @@ export class PublicTimelineComponent extends QueryDrivenComponent implements OnI
     this.updateSearchParams();
   }
 
+  protected keyDown(event: any) {
+    if (event.key === 'Enter') {
+      this.updateSearchParams();
+    }
+  }
+
   protected search(): void {
     if (!this.selectedTagGroups || this.selectedTagGroups.length === 0) {
       this.entriesService.find({
+        title: this.title,
         from: this.from,
         to: this.to
       }).subscribe(entries =>
@@ -123,6 +131,7 @@ export class PublicTimelineComponent extends QueryDrivenComponent implements OnI
             tagIds: selectedTagGroup
               .filter(tag => !!tag?.id)
               .map(tag => tag.id!),
+            title: this.title,
             from: this.from,
             to: this.to
           })
@@ -140,6 +149,7 @@ export class PublicTimelineComponent extends QueryDrivenComponent implements OnI
   protected toClassFields(params: Params): Observable<void> {
     return this.tags$.pipe(
       map(tags => {
+        this.title = params['title'] || '';
         this.from = parseInt(params['from']) || 0;
         this.to = parseInt(params['to']) || 0;
         this.selectedTagGroups = (params['tags'] || '')
@@ -167,6 +177,7 @@ export class PublicTimelineComponent extends QueryDrivenComponent implements OnI
             .join(',')
           ).join(';')
         : null,
+      'title': this.title || null,
       'from': this.from || null,
       'to': this.to || null,
       'color-category': this.colorCategoryId || null,
