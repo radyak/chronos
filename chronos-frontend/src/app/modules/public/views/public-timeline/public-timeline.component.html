@@ -11,7 +11,7 @@
   </div>
 
   <section class="row">
-    <div *ngIf="showSearchInputs" class="col-md-4">
+    <div [ngClass]="showSearchInputs ? 'col-md-4' : 'col-md-0'">
 
       <h3>Search</h3>
 

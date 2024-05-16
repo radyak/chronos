@@ -23,3 +23,17 @@ section {
   margin-top: 10px;
   margin-left: 10px;
 }
+
+.col-md-4,
+.col-md-8 {
+  flex-grow: 1;
+  transition: all 400ms ease;
+}
+.col-md-0 {
+  white-space: nowrap;
+  overflow: hidden;
+  padding: 0;
+  width: 0;
+  flex-shrink: 1;
+  transition: all 400ms ease;
+}
