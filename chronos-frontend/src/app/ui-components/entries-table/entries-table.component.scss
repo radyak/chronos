@@ -8,4 +8,8 @@ th.broad {
 
 th, td {
   white-space: nowrap;
+
+  :not(.slim) {
+    min-width: 50px;
+  }
 }

@@ -4,8 +4,9 @@ import {FormsModule} from "@angular/forms";
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import {TagComponent} from "../tag/tag.component";
 import {calculateMaxSpanningDateRange} from "../../util/date-range.utils";
-import {DatePipe, NgClass, NgForOf} from "@angular/common";
+import {DatePipe, NgClass, NgForOf, NgIf} from "@angular/common";
 import {IconDefinition} from "@fortawesome/fontawesome-svg-core";
+import {faClose, faSearch} from "@fortawesome/free-solid-svg-icons";
 
 interface TableEntryRepresentation extends Entry {
   start?: string,
@@ -36,10 +37,14 @@ export interface EntriesTableSearch {
     TagComponent,
     DatePipe,
     NgForOf,
-    NgClass
+    NgClass,
+    NgIf
   ]
 })
 export class EntriesTableComponent {
+
+  searchIcon = faSearch;
+  clearIcon = faClose;
 
   @Output()
   rowClick: EventEmitter<Entry> = new EventEmitter<Entry>();
@@ -68,17 +73,27 @@ export class EntriesTableComponent {
 
   protected viewEntries: Array<TableEntryRepresentation> = [];
 
-  set dateQuery(q: string) {
-    const dates = q.split('-')
-    this.search.start = dates[0];
-    this.search.end = dates[1];
+  // set dateQuery(q: string) {
+  //   const dates = q.split('-')
+  //   this.search.start = dates[0];
+  //   this.search.end = dates[1];
+  // }
+  //
+  // get dateQuery() {
+  //   const start = this.search.start || '';
+  //   const end = this.search.end || '';
+  //   const separator = (start && end) ? '-' : '';
+  //   return `${start}${separator}${end}`;
+  // }
+
+  clearTitle() {
+    this.search.title = '';
+    this.searchChange.emit(this.search);
   }
 
-  get dateQuery() {
-    const start = this.search.start || '';
-    const end = this.search.end || '';
-    const separator = (start && end) ? '-' : '';
-    return `${start}${separator}${end}`;
+  clearDateQuery() {
+    this.search.start = '';
+    this.search.end = '';
+    this.searchChange.emit(this.search);
   }
-
 }

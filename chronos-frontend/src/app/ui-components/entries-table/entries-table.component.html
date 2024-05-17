@@ -4,6 +4,13 @@
   <tr>
     <!-- Title -->
     <th scope="col">
+      <fa-icon [icon]="searchIcon"
+               *ngIf="!search.title"
+               [size]="'sm'"></fa-icon>
+      <fa-icon [icon]="clearIcon"
+               *ngIf="search.title"
+               (click)="clearTitle()"
+               [size]="'sm'"></fa-icon>
       <input type="search"
              placeholder="Title"
              name="entry-search-title"
@@ -16,13 +23,41 @@
     <th class="col">
     </th>
 
-    <!-- Dates -->
+    <!-- Dates - Start -->
     <th class="col">
+      <fa-icon [icon]="searchIcon"
+               *ngIf="!(search.start)"
+               [size]="'sm'"></fa-icon>
+      <fa-icon [icon]="clearIcon"
+               *ngIf="search.start"
+               (click)="clearDateQuery()"
+               [size]="'sm'"></fa-icon>
       <input type="search"
-             placeholder="Dates"
-             name="entry-search-dates"
-             [(ngModel)]="dateQuery"
-             (ngModelChange)="dateQuery"
+             placeholder="From"
+             name="entry-search-dates-start"
+             [(ngModel)]="search.start"
+             (keydown.enter)="searchChange.emit(search)"
+      >
+    </th>
+
+    <!-- Dates - Separator -->
+    <th class="col">
+      -
+    </th>
+
+    <!-- Dates - End -->
+    <th class="col">
+      <fa-icon [icon]="searchIcon"
+               *ngIf="!search.end"
+               [size]="'sm'"></fa-icon>
+      <fa-icon [icon]="clearIcon"
+               *ngIf="search.end"
+               (click)="clearDateQuery()"
+               [size]="'sm'"></fa-icon>
+      <input type="search"
+             placeholder="To"
+             name="entry-search-dates-end"
+             [(ngModel)]="search.end"
              (keydown.enter)="searchChange.emit(search)"
       >
     </th>
@@ -32,7 +67,7 @@
       Tags
     </th>
 
-    <!-- Icons -->
+    <!-- Actions -->
     <th class="icon-col">
     </th>
   </tr>
@@ -41,21 +76,40 @@
   <ng-container *ngFor="let entry of viewEntries">
     <tr class="pointer"
         (click)="rowClick.emit(entry._original)">
+      <!-- Title -->
       <td class="main-column">
         {{ entry.title }}
       </td>
+
+      <!-- Subtitle -->
       <td class="secondary-column">
         {{ entry.subTitle }}
       </td>
+
+      <!-- Dates - Start -->
       <td class="secondary-column">
-        {{ entry.start | date: 'Y' }} - {{ entry.end | date: 'Y' }}
+        {{ entry.start | date: 'Y' }}
       </td>
+
+      <!-- Dates - Separator -->
+      <td class="secondary-column">
+        -
+      </td>
+
+      <!-- Dates - End -->
+      <td class="secondary-column">
+        {{ entry.end | date: 'Y' }}
+      </td>
+
+      <!-- Tags -->
       <td>
         <ng-container *ngFor="let tag of entry.tags">
           <chronos-tag size="small"
                        [tag]="tag"></chronos-tag>
         </ng-container>
       </td>
+
+      <!-- Actions -->
       <td class="icon-col">
         <span class="icon"
               *ngFor="let action of actions">
