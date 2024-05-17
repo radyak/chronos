@@ -15,7 +15,7 @@
              placeholder="Title"
              name="entry-search-title"
              [(ngModel)]="search.title"
-             (keydown.enter)="searchChange.emit(search)"
+             (keydown.enter)="submit.emit()"
       >
     </th>
 
@@ -36,7 +36,7 @@
              placeholder="From"
              name="entry-search-dates-start"
              [(ngModel)]="search.start"
-             (keydown.enter)="searchChange.emit(search)"
+             (keydown.enter)="submit.emit()"
       >
     </th>
 
@@ -58,7 +58,7 @@
              placeholder="To"
              name="entry-search-dates-end"
              [(ngModel)]="search.end"
-             (keydown.enter)="searchChange.emit(search)"
+             (keydown.enter)="submit.emit()"
       >
     </th>
 

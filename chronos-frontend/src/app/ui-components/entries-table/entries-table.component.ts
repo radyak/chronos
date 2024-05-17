@@ -49,11 +49,11 @@ export class EntriesTableComponent {
   @Output()
   rowClick: EventEmitter<Entry> = new EventEmitter<Entry>();
 
-  @Output()
-  searchChange: EventEmitter<EntriesTableSearch> = new EventEmitter<EntriesTableSearch>();
-
   @Input()
   search: EntriesTableSearch = {};
+
+  @Output()
+  submit: EventEmitter<void> = new EventEmitter<void>();
 
   @Input()
   actions: Array<EntriesTableAction> = [];
@@ -73,27 +73,14 @@ export class EntriesTableComponent {
 
   protected viewEntries: Array<TableEntryRepresentation> = [];
 
-  // set dateQuery(q: string) {
-  //   const dates = q.split('-')
-  //   this.search.start = dates[0];
-  //   this.search.end = dates[1];
-  // }
-  //
-  // get dateQuery() {
-  //   const start = this.search.start || '';
-  //   const end = this.search.end || '';
-  //   const separator = (start && end) ? '-' : '';
-  //   return `${start}${separator}${end}`;
-  // }
-
   clearTitle() {
     this.search.title = '';
-    this.searchChange.emit(this.search);
+    this.submit.emit();
   }
 
   clearDateQuery() {
     this.search.start = '';
     this.search.end = '';
-    this.searchChange.emit(this.search);
+    this.submit.emit();
   }
 }

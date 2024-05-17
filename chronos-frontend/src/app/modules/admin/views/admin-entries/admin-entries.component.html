@@ -22,7 +22,7 @@
   <div class="row">
     <chronos-entries-table (rowClick)="editEntry($event)"
                            [search]="entrySearch"
-                           (searchChange)="updateSearchParams()"
+                           (submit)="updateSearchParams()"
                            [actions]="tableActions"
                            [entries]="entries$ | async">
     </chronos-entries-table>
