@@ -9,6 +9,7 @@ import {ClipboardModule, Clipboard} from "@angular/cdk/clipboard";
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import {faCopy} from "@fortawesome/free-solid-svg-icons";
 import {NotificationService} from "../notifications/notification.service";
+import {tagMatches} from "../../util/tag-match.function";
 
 @Component({
   standalone: true,
@@ -57,8 +58,7 @@ export class TagSelectionComponent {
       map((term) =>
         this.availableTags.filter(
           (tag) => {
-            return tag && `${tag.tagCategory?.name}: ${tag.name}`.toLowerCase().indexOf(term.toLowerCase()) > -1
-              && !this.isSelected(tag)
+            return tagMatches(term, tag) && !this.isSelected(tag)
           }
         ).slice(0, 10),
       ),

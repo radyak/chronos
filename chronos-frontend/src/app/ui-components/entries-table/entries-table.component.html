@@ -64,7 +64,18 @@
 
     <!-- Tags -->
     <th class="col broad">
-      Tags
+      <fa-icon [icon]="searchIcon"
+               *ngIf="!tagQuery"
+               [size]="'sm'"></fa-icon>
+      <fa-icon [icon]="clearIcon"
+               *ngIf="tagQuery"
+               (click)="tagQuery = ''"
+               [size]="'sm'"></fa-icon>
+      <input type="search"
+             placeholder="Tags"
+             name="entry-search-tags"
+             [(ngModel)]="tagQuery"
+      >
     </th>
 
     <!-- Actions -->
@@ -73,7 +84,7 @@
   </tr>
   </thead>
   <tbody>
-  <ng-container *ngFor="let entry of viewEntries">
+  <ng-container *ngFor="let entry of filteredEntries()">
     <tr class="pointer"
         (click)="rowClick.emit(entry._original)">
       <!-- Title -->

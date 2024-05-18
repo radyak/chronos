@@ -7,6 +7,7 @@ import {calculateMaxSpanningDateRange} from "../../util/date-range.utils";
 import {DatePipe, NgClass, NgForOf, NgIf} from "@angular/common";
 import {IconDefinition} from "@fortawesome/fontawesome-svg-core";
 import {faClose, faSearch} from "@fortawesome/free-solid-svg-icons";
+import {tagMatches} from "../../util/tag-match.function";
 
 interface TableEntryRepresentation extends Entry {
   start?: string,
@@ -73,6 +74,8 @@ export class EntriesTableComponent {
 
   protected viewEntries: Array<TableEntryRepresentation> = [];
 
+  protected tagQuery = '';
+
   clearTitle() {
     this.search.title = '';
     this.submit.emit();
@@ -83,4 +86,11 @@ export class EntriesTableComponent {
     this.search.end = '';
     this.submit.emit();
   }
+
+  filteredEntries(): Array<TableEntryRepresentation> {
+    return (this.viewEntries || []).filter(entry =>
+      entry.tags?.some(tag => tagMatches(this.tagQuery, tag))
+    );
+  }
+
 }
