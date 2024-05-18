@@ -29,6 +29,7 @@ import {PublicDiscoverComponent} from './views/public-discover/public-discover.c
 import {
     EntriesSearchInputComponent
 } from "../../functional-components/entries-search-input/entries-search-input.component";
+import {EntriesTableComponent} from "../../ui-components/entries-table/entries-table.component";
 
 
 const routes: Route[] = [
@@ -78,7 +79,8 @@ const routes: Route[] = [
         NgbDropdownToggle,
         FontAwesomeModule,
         TagSelectionComponent,
-        EntriesSearchInputComponent
+        EntriesSearchInputComponent,
+        EntriesTableComponent
     ],
   providers: [
     TagsService,

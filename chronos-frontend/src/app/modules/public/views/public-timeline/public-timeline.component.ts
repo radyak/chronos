@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {TagsService} from "../../service/tags.service";
-import {combineLatest, map, Observable, shareReplay} from "rxjs";
+import {combineLatest, map, Observable, retry, shareReplay} from "rxjs";
 import {Tag} from "../../../../model/tag.model";
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {EntriesService} from "../../service/entries.service";
@@ -8,9 +8,22 @@ import {Entry} from "../../../../model/entry.model";
 import {TagCategory} from "../../../../model/tag-category.model";
 import {WikipediaSummary} from "../../../../model/wikipedia-summary.model";
 import {TagCategoriesService} from "../../service/tag-categories.service";
-import {faMagnifyingGlassMinus, faMagnifyingGlassPlus, faPlus, faTrash} from "@fortawesome/free-solid-svg-icons"
+import {
+  faChartGantt,
+  faMagnifyingGlassMinus,
+  faMagnifyingGlassPlus,
+  faPlus, faTable,
+  faTrash
+} from "@fortawesome/free-solid-svg-icons"
 import {getEarliestStartDateRange} from "../../../../util/date-range.utils";
 import {QueryDrivenComponent} from "../../../../common/query-driven-component.directive";
+import {IconDefinition} from "@fortawesome/fontawesome-svg-core";
+
+interface DispayOption {
+  id: string,
+  label: string,
+  icon: IconDefinition
+}
 
 @Component({
   selector: 'chronos-public-timeline',
@@ -39,6 +52,21 @@ export class PublicTimelineComponent extends QueryDrivenComponent implements OnI
   colorCategoryId?: number;
 
   colorCategorySearch: string = '';
+
+  display: string = 'table';
+
+  displayOptions: Array<DispayOption> = [
+    {
+      id: 'table',
+      icon: faTable,
+      label: 'Table'
+    },
+    {
+      id: 'timeline',
+      icon: faChartGantt,
+      label: 'Timeline'
+    },
+  ];
 
   get selectedColorTagCategory(): TagCategory | undefined {
     return this.tagCategories.find(c => c.id === this.colorCategoryId);
@@ -159,8 +187,9 @@ export class PublicTimelineComponent extends QueryDrivenComponent implements OnI
             .map((id: string) => tags.find(tag => tag.id === parseInt(id)))
             .filter((tag) => !!tag)
           )
-        this.colorCategoryId = parseInt(params['color-category']) || undefined
-        this.showSearchInputs = params['show-search-inputs']
+        this.colorCategoryId = parseInt(params['color-category']) || undefined;
+        this.showSearchInputs = params['show-search-inputs'];
+        this.display = params['display'] || 'table';
         return;
       })
     )
@@ -181,8 +210,18 @@ export class PublicTimelineComponent extends QueryDrivenComponent implements OnI
       'from': this.from || null,
       'to': this.to || null,
       'color-category': this.colorCategoryId || null,
-      'show-search-inputs': this.showSearchInputs || null
+      'show-search-inputs': this.showSearchInputs || null,
+      'display': this.display || null
     }
+  }
+
+  selectDisplayOption(id: string) {
+    this.display = id;
+    this.updateSearchParams();
+  }
+
+  flatEntries(): Array<Entry> {
+    return this.entries.reduce((p, c) => p.concat(c));
   }
 
 }
