@@ -4,10 +4,8 @@
   <tr>
     <!-- Title -->
     <th scope="col">
-      <fa-icon [icon]="searchIcon"
-               *ngIf="!search.title"
-               [size]="'sm'"></fa-icon>
       <fa-icon [icon]="clearIcon"
+               class="pointer"
                *ngIf="search.title"
                (click)="clearTitle()"
                [size]="'sm'"></fa-icon>
@@ -25,10 +23,8 @@
 
     <!-- Dates - Start -->
     <th class="col">
-      <fa-icon [icon]="searchIcon"
-               *ngIf="!(search.start)"
-               [size]="'sm'"></fa-icon>
       <fa-icon [icon]="clearIcon"
+               class="pointer"
                *ngIf="search.start"
                (click)="clearDateQuery()"
                [size]="'sm'"></fa-icon>
@@ -47,10 +43,8 @@
 
     <!-- Dates - End -->
     <th class="col">
-      <fa-icon [icon]="searchIcon"
-               *ngIf="!search.end"
-               [size]="'sm'"></fa-icon>
       <fa-icon [icon]="clearIcon"
+               class="pointer"
                *ngIf="search.end"
                (click)="clearDateQuery()"
                [size]="'sm'"></fa-icon>
@@ -64,10 +58,8 @@
 
     <!-- Tags -->
     <th class="col broad">
-      <fa-icon [icon]="searchIcon"
-               *ngIf="!tagQuery"
-               [size]="'sm'"></fa-icon>
       <fa-icon [icon]="clearIcon"
+               class="pointer"
                *ngIf="tagQuery"
                (click)="tagQuery = ''"
                [size]="'sm'"></fa-icon>
@@ -80,6 +72,8 @@
 
     <!-- Actions -->
     <th class="icon-col">
+      <fa-icon [icon]="searchIcon"
+               [size]="'sm'"></fa-icon>
     </th>
   </tr>
   </thead>
