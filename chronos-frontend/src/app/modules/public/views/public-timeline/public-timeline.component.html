@@ -129,6 +129,47 @@
       </section>
 
       <section>
+        <h3>Sort</h3>
+
+        <div class="form-group">
+          <label for="sort.property"
+                 class="form-label mt-4">
+            Sort by:
+          </label>
+
+          <div ngbDropdown class="input-group">
+            <button type="button"
+                    class="btn btn-primary"
+                    id="sort.property"
+                    ngbDropdownToggle>
+              {{ sortConfig?.property?.label || 'Select a sort Property' }}
+            </button>
+            <div ngbDropdownMenu
+                 aria-labelledby="sort.property">
+              <button ngbDropdownItem
+                      (click)="sort(null)">
+                None
+              </button>
+              <div class="dropdown-divider"></div>
+              <ng-container
+                *ngFor="let sortOption of sortOptions">
+                <button ngbDropdownItem
+                        (click)="sort(sortOption)">
+                  {{ sortOption.label }}
+                </button>
+              </ng-container>
+            </div>
+            <button type="button"
+                    class="btn btn-light input-group-last"
+                    (click)="rotateSort()">
+              <fa-icon [icon]="sortIcon()"></fa-icon>
+            </button>
+          </div>
+        </div>
+
+      </section>
+
+      <section>
         <h3>Display</h3>
 
         <div class="form-group">

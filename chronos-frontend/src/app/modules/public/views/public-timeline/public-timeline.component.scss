@@ -37,3 +37,8 @@ section {
   flex-shrink: 1;
   transition: all 400ms ease;
 }
+
+.input-group-last {
+  border-bottom-right-radius: var(--bs-btn-border-radius) !important;
+  border-top-right-radius: var(--bs-btn-border-radius) !important;
+}
