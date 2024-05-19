@@ -212,48 +212,49 @@
       </div>
 
     <div class="col-md-8" *ngIf="entries.length > 0">
+      <section class="sticky-top">
 
-      <ng-container *ngIf="display ==='timeline'">
+        <ng-container *ngIf="display ==='timeline'">
 
-        <h3>Timeline</h3>
+          <h3>Timeline</h3>
 
-        <chronos-timeline [entries]="entries"
-                          [colorCategory]="selectedColorTagCategory"
-                          (entrySelected)="onEntrySelected($event)"
-                          [fromYear]="from"
-                          [toYear]="to">
-        </chronos-timeline>
+          <chronos-timeline [entries]="entries"
+                            [colorCategory]="selectedColorTagCategory"
+                            (entrySelected)="onEntrySelected($event)"
+                            [fromYear]="from"
+                            [toYear]="to">
+          </chronos-timeline>
 
-        <div class="tag-legend" *ngIf="colorCategoryId">
-          Tag Legend:
-          <ng-container *ngFor="let tag of tags$ | async">
-            <chronos-tag *ngIf="tag.tagCategory?.id === colorCategoryId"
-                         [tag]="tag"
-                         size="small"
-                         [hideCategory]="true">
-            </chronos-tag>
-          </ng-container>
+          <div class="tag-legend" *ngIf="colorCategoryId">
+            Tag Legend:
+            <ng-container *ngFor="let tag of tags$ | async">
+              <chronos-tag *ngIf="tag.tagCategory?.id === colorCategoryId"
+                           [tag]="tag"
+                           size="small"
+                           [hideCategory]="true">
+              </chronos-tag>
+            </ng-container>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="display === 'table'">
+
+          <h3>Table</h3>
+
+          <chronos-entries-table (rowClick)="onEntrySelected($event)"
+                                 [entries]="flatEntries()">
+          </chronos-entries-table>
+        </ng-container>
+
+        <div *ngIf="selectedEntrySummary"
+             class="info-section">
+          <chronos-wikipedia-summary [wikiSummary]="selectedEntrySummary">
+          </chronos-wikipedia-summary>
+          <ng-template>
+            No summary available
+          </ng-template>
         </div>
-      </ng-container>
-
-      <ng-container *ngIf="display === 'table'">
-
-        <h3>Table</h3>
-
-        <chronos-entries-table (rowClick)="onEntrySelected($event)"
-                               [entries]="flatEntries()">
-        </chronos-entries-table>
-      </ng-container>
-
-      <div *ngIf="selectedEntrySummary"
-           class="info-section">
-        <chronos-wikipedia-summary [wikiSummary]="selectedEntrySummary">
-        </chronos-wikipedia-summary>
-        <ng-template>
-          No summary available
-        </ng-template>
-      </div>
-
+      </section>
     </div>
 
   </section>
