@@ -12,31 +12,23 @@ import {
   faChartGantt,
   faMagnifyingGlassMinus,
   faMagnifyingGlassPlus,
-  faPlus, faSort, faSortDown, faSortUp,
+  faPlus,
   faTable,
   faTrash
 } from "@fortawesome/free-solid-svg-icons"
-import {getEarliestStartDateRange} from "../../../../util/date-range.utils";
 import {QueryDrivenComponent} from "../../../../common/query-driven-component.directive";
 import {IconDefinition} from "@fortawesome/fontawesome-svg-core";
+import {
+  EntriesSortService,
+  EntrySortableProperty,
+  SortConfig,
+  SortDirection
+} from "../../../../service/entries-sort.service";
 
 interface DisplayOption {
   id: string,
   label: string,
   icon: IconDefinition
-}
-
-interface EntrySortableProperty {
-  key: 'title' | 'subTitle' | 'start' | 'end';
-  label: string;
-  compare: (e1: Entry, e2: Entry) => number;
-}
-
-type SortDirection = 'asc' | 'desc';
-
-interface SortConfig {
-  property: EntrySortableProperty,
-  direction: SortDirection
 }
 
 @Component({
@@ -82,45 +74,6 @@ export class PublicTimelineComponent extends QueryDrivenComponent implements OnI
     },
   ];
 
-  sortOptions: Array<EntrySortableProperty> = [
-    {
-      key: 'title',
-      label: 'Title',
-      compare: (e1: Entry, e2: Entry) => {
-        if ((e1.title || '') < (e2.title || ''))
-          return 1;
-        if ((e1.title || '') > (e2.title || ''))
-          return -1;
-        return 0;
-      }
-    },
-    {
-      key: 'subTitle',
-      label: 'Subtitle',
-      compare: (e1: Entry, e2: Entry) => {
-        if ((e1.subTitle || '') < (e2.subTitle || ''))
-          return 1;
-        if ((e1.subTitle || '') > (e2.subTitle || ''))
-          return -1;
-        return 0;
-      }
-    },
-    {
-      key: 'start',
-      label: 'Earliest start date',
-      compare: (e1: Entry, e2: Entry) => {
-        return (getEarliestStartDateRange(e1.dateRanges).start! > getEarliestStartDateRange(e2.dateRanges).start! ? 1 : -1)
-      }
-    },
-    {
-      key: 'end',
-      label: 'Latest end date',
-      compare: (e1: Entry, e2: Entry) => {
-        return (getEarliestStartDateRange(e1.dateRanges).end! > getEarliestStartDateRange(e2.dateRanges).end! ? 1 : -1)
-      }
-    }
-  ];
-
   sortConfig?: SortConfig;
 
   get selectedColorTagCategory(): TagCategory | undefined {
@@ -131,16 +84,13 @@ export class PublicTimelineComponent extends QueryDrivenComponent implements OnI
               private tagCategoriesService: TagCategoriesService,
               private entriesService: EntriesService,
               protected override router: Router,
-              protected override route: ActivatedRoute) {
+              protected override route: ActivatedRoute,
+              private entriesSortService: EntriesSortService) {
     super(router, route);
 
     this.tags$ = this.tagService.allTags().pipe(shareReplay());
     this.tagCategoriesService.allTagCategories()
       .subscribe((tagCategories: Array<TagCategory>) => this.tagCategories = tagCategories);
-  }
-
-  override ngOnInit(): void {
-    super.ngOnInit();
   }
 
   selectColorTagCategory(tagCategory?: TagCategory): void {
@@ -194,7 +144,17 @@ export class PublicTimelineComponent extends QueryDrivenComponent implements OnI
     }
   }
 
-  protected search(): void {
+  flatEntries(): Array<Entry> {
+    return this.entries.reduce((p, c) => p.concat(c));
+  }
+
+
+
+  /**
+   * Section: Override QueryDrivenComponent parent methods
+   */
+
+  protected override search(): void {
     if (!this.selectedTagGroups || this.selectedTagGroups.length === 0) {
       this.entriesService.find({
         title: this.title,
@@ -202,13 +162,7 @@ export class PublicTimelineComponent extends QueryDrivenComponent implements OnI
         to: this.to
       }).subscribe(entries =>
         this.entries = [
-          entries.sort((e1, e2) => {
-              if (!this.sortConfig) {
-                return 0;
-              }
-              return this.sortConfig.property.compare(e1, e2) * (this.sortConfig.direction === 'asc' ? 1 : -1)
-            }
-          )
+          this.entriesSortService.sort(entries, this.sortConfig)
         ]
       );
     } else {
@@ -224,19 +178,14 @@ export class PublicTimelineComponent extends QueryDrivenComponent implements OnI
           })
         )
       ).subscribe(entries => {
-          entries.forEach(entry => entry.sort((e1, e2) => {
-              if (!this.sortConfig) {
-                return 0;
-              }
-              return this.sortConfig.property.compare(e1, e2) * (this.sortConfig.direction === 'asc' ? 1 : -1)
-          }));
+          entries.forEach(entry => this.entriesSortService.sort(entry, this.sortConfig));
           this.entries = entries;
         }
       );
     }
   }
 
-  protected toClassFields(params: Params): Observable<void> {
+  protected override toClassFields(params: Params): Observable<void> {
     return this.tags$.pipe(
       map(tags => {
         this.title = params['title'] || '';
@@ -253,7 +202,7 @@ export class PublicTimelineComponent extends QueryDrivenComponent implements OnI
         this.showSearchInputs = params['show-search-inputs'];
         this.display = params['display'] || 'table';
 
-        const sortBy: EntrySortableProperty | undefined = this.sortOptions.find(o => o.key === params['sortBy']);
+        const sortBy: EntrySortableProperty | undefined = this.entriesSortService.findSortPropertyByKey(params['sortBy']);
         if (sortBy) {
           this.sortConfig = {
             property: sortBy,
@@ -265,7 +214,7 @@ export class PublicTimelineComponent extends QueryDrivenComponent implements OnI
     )
   }
 
-  protected toParams(): Params {
+  protected override toParams(): Params {
     return {
       'tags': this.selectedTagGroups.length > 0 ?
         this.selectedTagGroups
@@ -287,10 +236,22 @@ export class PublicTimelineComponent extends QueryDrivenComponent implements OnI
     }
   }
 
+
+
+  /**
+   * Section: Display
+   */
+
   selectDisplayOption(id: string) {
     this.display = id;
     this.updateSearchParams();
   }
+
+
+
+  /**
+   * Section: Sorting
+   */
 
   sort(property: EntrySortableProperty | null, direction?: SortDirection): void {
     if (!property) {
@@ -303,25 +264,20 @@ export class PublicTimelineComponent extends QueryDrivenComponent implements OnI
     }
     this.updateSearchParams();
   }
-
-  flatEntries(): Array<Entry> {
-    return this.entries.reduce((p, c) => p.concat(c));
-  }
-
   sortIcon(): IconDefinition {
-    switch (this.sortConfig?.direction) {
-      case 'asc': return faSortUp;
-      case 'desc': return faSortDown;
-      default: return faSort;
-    }
+    return this.entriesSortService.sortIcon(this.sortConfig?.direction);
   }
 
   rotateSort(): void {
     if (!this.sortConfig) {
       return;
     }
-    this.sortConfig.direction = this.sortConfig.direction === 'asc' ? 'desc' : 'asc';
+    this.sortConfig.direction = this.entriesSortService.rotateDirection(this.sortConfig.direction);
     this.updateSearchParams();
+  }
+
+  get sortOptions(): Array<EntrySortableProperty> {
+    return this.entriesSortService.allSortProperties()
   }
 
 }
