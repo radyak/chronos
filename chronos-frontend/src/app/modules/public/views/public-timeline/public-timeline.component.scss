@@ -42,3 +42,10 @@ section {
   border-bottom-right-radius: var(--bs-btn-border-radius) !important;
   border-top-right-radius: var(--bs-btn-border-radius) !important;
 }
+
+.display-btn {
+  width: 80px;
+  .caption {
+    font-size: 10px;
+  }
+}

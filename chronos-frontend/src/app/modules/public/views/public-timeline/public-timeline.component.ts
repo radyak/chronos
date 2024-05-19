@@ -24,6 +24,7 @@ import {
   SortConfig,
   SortDirection
 } from "../../../../service/entries-sort.service";
+import {EntriesGroupMergeService} from "../../../../service/entries-group-merge.service";
 
 interface DisplayOption {
   id: string,
@@ -76,6 +77,8 @@ export class PublicTimelineComponent extends QueryDrivenComponent implements OnI
 
   sortConfig?: SortConfig;
 
+  mergeGroups = false;
+
   get selectedColorTagCategory(): TagCategory | undefined {
     return this.tagCategories.find(c => c.id === this.colorCategoryId);
   }
@@ -85,7 +88,8 @@ export class PublicTimelineComponent extends QueryDrivenComponent implements OnI
               private entriesService: EntriesService,
               protected override router: Router,
               protected override route: ActivatedRoute,
-              private entriesSortService: EntriesSortService) {
+              private entriesSortService: EntriesSortService,
+              private entriesGroupMergeService: EntriesGroupMergeService) {
     super(router, route);
 
     this.tags$ = this.tagService.allTags().pipe(shareReplay());
@@ -160,10 +164,11 @@ export class PublicTimelineComponent extends QueryDrivenComponent implements OnI
         title: this.title,
         from: this.from,
         to: this.to
-      }).subscribe(entries =>
-        this.entries = [
-          this.entriesSortService.sort(entries, this.sortConfig)
-        ]
+      }).subscribe(entries => {
+          this.entries = [
+            this.entriesSortService.sort(entries, this.sortConfig)
+          ];
+        }
       );
     } else {
       combineLatest(
@@ -178,6 +183,7 @@ export class PublicTimelineComponent extends QueryDrivenComponent implements OnI
           })
         )
       ).subscribe(entries => {
+          entries = this.entriesGroupMergeService.mergeGroups(entries, this.mergeGroups);
           entries.forEach(entry => this.entriesSortService.sort(entry, this.sortConfig));
           this.entries = entries;
         }
@@ -201,6 +207,7 @@ export class PublicTimelineComponent extends QueryDrivenComponent implements OnI
         this.colorCategoryId = parseInt(params['color-category']) || undefined;
         this.showSearchInputs = params['show-search-inputs'];
         this.display = params['display'] || 'table';
+        this.mergeGroups = params['mergeGroups'] === 'true';
 
         const sortBy: EntrySortableProperty | undefined = this.entriesSortService.findSortPropertyByKey(params['sortBy']);
         if (sortBy) {
@@ -233,6 +240,7 @@ export class PublicTimelineComponent extends QueryDrivenComponent implements OnI
       'display': this.display || null,
       'sortBy': this.sortConfig?.property.key || null,
       'sortOrder': this.sortConfig?.direction || null,
+      'mergeGroups': this.mergeGroups || null
     }
   }
 

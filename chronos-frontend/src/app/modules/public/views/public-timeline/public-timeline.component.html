@@ -174,17 +174,42 @@
 
         <div class="form-group">
           <ng-container *ngFor="let option of displayOptions">
-            <button class="btn btn-dark btn-lg margin-10"
+            <button class="btn btn-dark btn-lg margin-10 display-btn"
                     [ngClass]="{active: display === option.id}"
                     (click)="selectDisplayOption(option.id)">
               <fa-icon [icon]="option.icon">
               </fa-icon>
+              <div class="caption">
+                {{ option.label }}
+              </div>
             </button>
           </ng-container>
 
         </div>
       </section>
-    </div>
+
+      <section>
+        <h3>Grouping</h3>
+
+        <div class="form-group">
+          <div class="form-check form-switch">
+            <input class="form-check-input"
+                   type="checkbox"
+                   id="mergeGroups"
+                   [(ngModel)]="mergeGroups"
+                   (ngModelChange)="updateSearchParams()"
+                   >
+            <label class="form-check-label"
+                   for="mergeGroups">
+              Merge groups?
+            </label>
+          </div>
+
+        </div>
+
+      </section>
+
+      </div>
 
     <div class="col-md-8" *ngIf="entries.length > 0">
 
