@@ -53,6 +53,9 @@ export class EntriesTableComponent {
   @Input()
   search: EntriesTableSearch = {};
 
+  @Input()
+  searchable = true;
+
   @Output()
   submit: EventEmitter<void> = new EventEmitter<void>();
 

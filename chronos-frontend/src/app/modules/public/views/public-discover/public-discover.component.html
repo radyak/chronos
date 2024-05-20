@@ -242,7 +242,8 @@
           <h3>Table</h3>
 
           <chronos-entries-table (rowClick)="onEntrySelected($event)"
-                                 [entries]="flatEntries()">
+                                 [entries]="flatEntries()"
+                                 [searchable]="false">
           </chronos-entries-table>
         </ng-container>
 

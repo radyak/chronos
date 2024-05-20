@@ -12,6 +12,7 @@
       <input type="search"
              placeholder="Title"
              name="entry-search-title"
+             [disabled]="!searchable"
              [(ngModel)]="search.title"
              (keydown.enter)="submit.emit()"
       >
@@ -31,6 +32,7 @@
       <input type="search"
              placeholder="From"
              name="entry-search-dates-start"
+             [disabled]="!searchable"
              [(ngModel)]="search.start"
              (keydown.enter)="submit.emit()"
       >
@@ -51,6 +53,7 @@
       <input type="search"
              placeholder="To"
              name="entry-search-dates-end"
+             [disabled]="!searchable"
              [(ngModel)]="search.end"
              (keydown.enter)="submit.emit()"
       >
@@ -72,7 +75,8 @@
 
     <!-- Actions -->
     <th class="icon-col">
-      <fa-icon [icon]="searchIcon"
+      <fa-icon *ngIf="searchable"
+               [icon]="searchIcon"
                [size]="'sm'"></fa-icon>
     </th>
   </tr>
