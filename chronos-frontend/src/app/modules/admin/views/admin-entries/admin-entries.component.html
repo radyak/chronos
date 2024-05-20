@@ -16,6 +16,26 @@
         <fa-icon [icon]="newIcon"></fa-icon>
         New entry
       </button>
+
+      <span ngbDropdown>
+        <button class="btn btn-outline-secondary"
+                id="bulk-action-toggle"
+                [disabled]="selectedEntries.length === 0"
+                ngbDropdownToggle>
+          <fa-icon [icon]="batchActionIcon"></fa-icon>
+          Bulk actions
+        </button>
+
+        <div ngbDropdownMenu
+             aria-labelledby="bulk-action-toggle">
+          <button ngbDropdownItem
+                  *ngFor="let action of availableBulkActions()"
+                  (click)="selectBulkAction(action.id)">
+            <fa-icon [icon]="action.icon"></fa-icon>
+            {{ action.label }}
+          </button>
+        </div>
+      </span>
     </div>
   </div>
 
@@ -25,7 +45,8 @@
                            (submit)="updateSearchParams()"
                            [actions]="tableActions"
                            [entries]="entries$ | async"
-                           [selectable]="true">
+                           [selectable]="true"
+                           (onSelect)="this.selectedEntries = $event">
     </chronos-entries-table>
   </div>
 

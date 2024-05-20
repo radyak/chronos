@@ -41,6 +41,9 @@ export class TagSelectionComponent {
 
   @ViewChild('instance', { static: true }) instance!: NgbTypeahead;
 
+  @Input()
+  copyEnabled = true;
+
   focus$ = new Subject<string>();
   click$ = new Subject<string>();
 

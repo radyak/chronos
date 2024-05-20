@@ -8,4 +8,8 @@
 
 .admin-controls {
   text-align: right;
+
+  & > * {
+    margin-left: 5px;
+  }
 }
