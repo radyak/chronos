@@ -1,6 +1,5 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {PublicTimelineComponent} from './views/public-timeline/public-timeline.component';
 import {Route, RouterModule} from "@angular/router";
 import {PublicComponent} from './views/public/public.component';
 import {FooterComponent} from "../../ui-components/footer/footer.component";
@@ -44,10 +43,6 @@ const routes: Route[] = [
       {
         path: 'discover',
         component: PublicDiscoverComponent
-      },
-      {
-        path: 'timeline',
-        component: PublicTimelineComponent
       }
     ]
   }
@@ -57,7 +52,6 @@ const routes: Route[] = [
   declarations: [
     PublicComponent,
     PublicOverviewComponent,
-    PublicTimelineComponent,
     PublicDiscoverComponent
   ],
     imports: [

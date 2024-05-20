@@ -6,10 +6,12 @@ th.broad {
   width: 100%;
 }
 
-th, td {
+th {
   white-space: nowrap;
+}
 
+th, td {
   :not(.slim) {
-    min-width: 50px;
+    min-width: 40px;
   }
 }

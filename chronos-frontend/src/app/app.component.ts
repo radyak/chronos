@@ -19,10 +19,6 @@ export class AppComponent {
       routerLink: ''
     },
     {
-      label: 'Timeline',
-      routerLink: 'timeline'
-    },
-    {
       label: 'Discover',
       routerLink: 'discover'
     },

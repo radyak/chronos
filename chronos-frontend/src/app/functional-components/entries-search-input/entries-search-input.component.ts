@@ -24,7 +24,7 @@ export class EntriesSearchInputComponent {
 
   search(): void {
     const queryParams: Params = {
-      'search': this.searchTerm || null
+      'title': this.searchTerm || null
     };
     this.router.navigate(
       // TODO: This depends on the actual routing config; should be extracted
