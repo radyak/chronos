@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {AdminEntriesService} from "../../services/admin-entries.service";
-import {debounceTime, filter, map, Observable, of, Subject, switchMap} from "rxjs";
+import {debounceTime, filter, map, Subject} from "rxjs";
 import {Entry} from "../../../../model/entry.model";
-import {faPenToSquare, faPlus, faSearch, faTrash} from "@fortawesome/free-solid-svg-icons";
+import {faPenToSquare, faPlus, faTrash} from "@fortawesome/free-solid-svg-icons";
 import {AdminTagsService} from "../../services/admin-tags.service";
 import {Tag} from "../../../../model/tag.model";
 import {WikipediaSummary} from "../../../../model/wikipedia-summary.model";

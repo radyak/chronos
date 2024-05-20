@@ -1,11 +1,9 @@
 import {ElementBox} from "../model/representation/element-box";
 import {TimelineEntry} from "../model/wrapper/timeline-entry.model";
 import {TimeUtil} from "../../../util/time-util";
-import {TimelineElement} from "../model/representation/timeline-element";
 import {Line} from "../model/representation/line.model";
 import {TimelineConfig, YearIntervalConfig} from "../model/config/timeline-config";
 import {YearRange} from "../model/representation/year-range";
-import {DateRange} from "../../../model/date-range.model";
 import {TimelineDateRange} from "../model/wrapper/timeline-date-range.model";
 import {TimelineElementGroup} from "./timeline-element-group";
 

@@ -1,11 +1,4 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpParams} from "@angular/common/http";
-import {catchError, MonoTypeOperatorFunction, Observable, of, tap} from "rxjs";
-import {Entry} from "../../../model/entry.model";
-import {NotificationService} from "../../../ui-components/notifications/notification.service";
-import {WikipediaSummary} from "../../../model/wikipedia-summary.model";
-import {AdminEntriesService} from "./admin-entries.service";
-import {ActivatedRoute, Router} from "@angular/router";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {AdminConfirmModal} from "../components/admin-confirm-modal/admin-confirm-modal";
 

@@ -26,7 +26,7 @@ import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import {TagSelectionComponent} from "../../ui-components/tag-selection/tag-selection.component";
 import {PublicDiscoverComponent} from './views/public-discover/public-discover.component';
 import {
-    EntriesSearchInputComponent
+  EntriesSearchInputComponent
 } from "../../functional-components/entries-search-input/entries-search-input.component";
 import {EntriesTableComponent} from "../../ui-components/entries-table/entries-table.component";
 
