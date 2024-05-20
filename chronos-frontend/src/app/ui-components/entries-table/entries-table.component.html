@@ -1,7 +1,19 @@
-
 <table class="table table-hover">
   <thead>
   <tr>
+    <!-- Select -->
+    <th scope="col" *ngIf="selectable">
+      <input type="checkbox"
+             value=""
+             id="select-all-entries"
+             [ngModel]="allEntriesSelected()"
+             (click)="toggleAllEntriesSelection()"
+             class="form-check-input">
+      <span *ngIf="selectedEntries.size > 0">
+        ({{ selectedEntries.size }})
+      </span>
+    </th>
+
     <!-- Title -->
     <th scope="col">
       <fa-icon [icon]="clearIcon"
@@ -83,15 +95,27 @@
   </thead>
   <tbody>
   <ng-container *ngFor="let entry of filteredEntries()">
-    <tr class="pointer"
-        (click)="rowClick.emit(entry._original)">
+    <tr class="pointer">
+
+      <!-- Select -->
+      <th scope="col" *ngIf="selectable">
+        <input type="checkbox"
+               value=""
+               id="select-entry-{{ entry.id }}"
+               [ngModel]="isEntrySelected(entry._original)"
+               (ngModelChange)="toggleEntrySelection(entry._original)"
+               class="form-check-input">
+      </th>
+
       <!-- Title -->
-      <td class="main-column">
+      <td class="main-column"
+          (click)="entryClick.emit(entry._original)">
         {{ entry.title }}
       </td>
 
       <!-- Subtitle -->
-      <td class="secondary-column">
+      <td class="secondary-column"
+          (click)="entryClick.emit(entry._original)">
         {{ entry.subTitle }}
       </td>
 

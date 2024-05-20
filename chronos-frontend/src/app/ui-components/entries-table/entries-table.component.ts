@@ -48,7 +48,7 @@ export class EntriesTableComponent {
   clearIcon = faClose;
 
   @Output()
-  rowClick: EventEmitter<Entry> = new EventEmitter<Entry>();
+  entryClick: EventEmitter<Entry> = new EventEmitter<Entry>();
 
   @Input()
   search: EntriesTableSearch = {};
@@ -75,7 +75,19 @@ export class EntriesTableComponent {
     })
   }
 
+  get entries() {
+    return this.viewEntries.map(ve => ve._original);
+  }
+
   protected viewEntries: Array<TableEntryRepresentation> = [];
+
+  @Input()
+  public selectable = false;
+
+  protected selectedEntries: Set<Entry> = new Set<Entry>();
+
+  @Output()
+  onSelect: EventEmitter<Array<Entry>> = new EventEmitter<Array<Entry>>();
 
   protected tagQuery = '';
 
@@ -94,6 +106,32 @@ export class EntriesTableComponent {
     return (this.viewEntries || []).filter(entry =>
       entry.tags?.some(tag => tagMatches(this.tagQuery, tag))
     );
+  }
+
+  isEntrySelected(entry: Entry): boolean {
+    return this.selectedEntries.has(entry);
+  }
+
+  toggleEntrySelection(entry: Entry): void {
+    if (this.isEntrySelected(entry)) {
+      this.selectedEntries.delete(entry);
+    } else {
+      this.selectedEntries.add(entry);
+    }
+    this.onSelect.emit(Array.from(this.selectedEntries));
+  }
+
+  allEntriesSelected(): boolean {
+    return !(this.entries || []).find(entry => !this.selectedEntries.has(entry));
+  }
+
+  toggleAllEntriesSelection(): void {
+    if (!this.allEntriesSelected()) {
+      this.entries?.forEach(entry => this.selectedEntries.add(entry));
+    } else {
+      this.entries?.forEach(entry => this.selectedEntries.delete(entry));
+    }
+    this.onSelect.emit(Array.from(this.selectedEntries));
   }
 
 }

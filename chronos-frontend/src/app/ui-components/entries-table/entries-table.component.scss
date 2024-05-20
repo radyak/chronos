@@ -11,7 +11,7 @@ th {
 }
 
 th, td {
-  :not(.slim) {
+  &:not(.slim) {
     min-width: 40px;
   }
 }

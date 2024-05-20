@@ -241,7 +241,7 @@
 
           <h3>Table</h3>
 
-          <chronos-entries-table (rowClick)="onEntrySelected($event)"
+          <chronos-entries-table (entryClick)="onEntrySelected($event)"
                                  [entries]="flatEntries()"
                                  [searchable]="false">
           </chronos-entries-table>

@@ -20,11 +20,12 @@
   </div>
 
   <div class="row">
-    <chronos-entries-table (rowClick)="editEntry($event)"
+    <chronos-entries-table (entryClick)="editEntry($event)"
                            [search]="entrySearch"
                            (submit)="updateSearchParams()"
                            [actions]="tableActions"
-                           [entries]="entries$ | async">
+                           [entries]="entries$ | async"
+                           [selectable]="true">
     </chronos-entries-table>
   </div>
 
