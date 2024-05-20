@@ -1,0 +1,17 @@
+.icon {
+  padding: 0 3px;
+}
+
+th.broad {
+  width: 100%;
+}
+
+th {
+  white-space: nowrap;
+}
+
+th, td {
+  :not(.slim) {
+    min-width: 40px;
+  }
+}

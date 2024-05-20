@@ -32,31 +32,31 @@ th input {
   width: 100%;
 
   ::placeholder {
-    font-weight: bold;
+    //font-weight: bold;
     color: #fff;
     opacity: 1;
   }
 
   &::-webkit-input-placeholder {
-    font-weight: bold;
+    //font-weight: bold;
     color: #fff;
     opacity: 1;
   }
 
   &::-moz-placeholder {
-    font-weight: bold;
+    //font-weight: bold;
     color: #fff;
     opacity: 1;
   }
 
   &:-ms-input-placeholder {
-    font-weight: bold;
+    //font-weight: bold;
     color: #fff;
     opacity: 1;
   }
 
   &:-o-input-placeholder {
-    font-weight: bold;
+    //font-weight: bold;
     color: #fff;
     opacity: 1;
   }
@@ -153,4 +153,8 @@ footer {
 .no-break {
   white-space: nowrap;
   display: inline-block;
+}
+
+.margin-10 {
+  margin: 0 10px 10px 0;
 }

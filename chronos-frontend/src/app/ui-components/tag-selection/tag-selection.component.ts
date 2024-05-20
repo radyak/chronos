@@ -1,14 +1,15 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import {CommonModule, NgForOf} from "@angular/common";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {TagComponent} from "../tag/tag.component";
 import {Tag} from "../../model/tag.model";
 import {NgbTypeahead} from "@ng-bootstrap/ng-bootstrap";
-import {debounceTime, map, Observable, OperatorFunction} from "rxjs";
+import {debounceTime, distinctUntilChanged, filter, map, merge, Observable, OperatorFunction, Subject, tap} from "rxjs";
 import {ClipboardModule, Clipboard} from "@angular/cdk/clipboard";
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import {faCopy} from "@fortawesome/free-solid-svg-icons";
 import {NotificationService} from "../notifications/notification.service";
+import {tagMatches} from "../../util/tag-match.function";
 
 @Component({
   standalone: true,
@@ -38,18 +39,26 @@ export class TagSelectionComponent {
   @Input()
   public availableTags: Array<Tag> = [];
 
+  @ViewChild('instance', { static: true }) instance!: NgbTypeahead;
+
+  focus$ = new Subject<string>();
+  click$ = new Subject<string>();
+
   constructor(private clipboard: Clipboard,
               private notificationService: NotificationService) {
   }
 
   searchTags: OperatorFunction<string, readonly Tag[]> = (text$: Observable<string>) => {
-    return text$.pipe(
-      debounceTime(200),
+    const debouncedText$ = text$.pipe(distinctUntilChanged());
+    const clicksWithClosedPopup$ = this.click$.pipe(filter(() => !this.instance.isPopupOpen()));
+    const inputFocus$ = this.focus$;
+
+    return merge(debouncedText$, clicksWithClosedPopup$, inputFocus$).pipe(
+      distinctUntilChanged(),
       map((term) =>
-        term === '' ? [] : this.availableTags.filter(
+        this.availableTags.filter(
           (tag) => {
-            return tag && `${tag.tagCategory?.name}: ${tag.name}`.toLowerCase().indexOf(term.toLowerCase()) > -1
-              && !this.isSelected(tag)
+            return tagMatches(term, tag) && !this.isSelected(tag)
           }
         ).slice(0, 10),
       ),

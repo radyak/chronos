@@ -11,7 +11,7 @@
 <!--  </p>-->
 
   <div class="row">
-    <div class="col">
+    <div class="col admin-controls">
       <button class="btn btn-outline-success" (click)="newEntry()">
         <fa-icon [icon]="newIcon"></fa-icon>
         New entry
@@ -20,65 +20,12 @@
   </div>
 
   <div class="row">
-    <table class="table table-hover">
-      <thead>
-      <tr>
-        <th scope="col">
-          <input type="search"
-                 placeholder="Title"
-                 name="entry-search-title"
-                 [(ngModel)]="titleQuery"
-                 (keydown.enter)="updateSearchParams()"
-          >
-        </th>
-        <th class="col">
-        </th>
-        <th class="col">
-          <input type="search"
-                 placeholder="Dates"
-                 name="entry-search-dates"
-                 [(ngModel)]="dateQuery"
-                 (keydown.enter)="updateSearchParams()"
-          >
-        </th>
-        <th class="col broad"></th>
-        <th class="icon-col">
-        </th>
-        <th class="icon-col">
-          <fa-icon [icon]="searchIcon"></fa-icon>
-        </th>
-      </tr>
-      </thead>
-      <tbody>
-      <ng-container *ngFor="let entry of entries$ | async">
-        <tr class="pointer"
-            (click)="editEntry(entry)">
-          <td class="main-column">
-            {{ entry.title }}
-          </td>
-          <td class="secondary-column">
-            {{ entry.subTitle }}
-          </td>
-          <td class="secondary-column">
-            {{ entryDateSpan(entry).start | date: 'Y' }} - {{ entryDateSpan(entry).end | date: 'Y' }}
-          </td>
-          <td>
-            <ng-container *ngFor="let tag of entry.tags">
-              <chronos-tag size="small"
-                           [tag]="tag"></chronos-tag>
-            </ng-container>
-          </td>
-          <td (click)="deleteEntry(entry); $event.stopPropagation()">
-            <fa-icon class="text-danger show-on-parent-hover" [icon]="deleteIcon"></fa-icon>
-          </td>
-          <td class="icon-col">
-            <fa-icon class="show-on-parent-hover" [icon]="editIcon"></fa-icon>
-          </td>
-        </tr>
-      </ng-container>
-      </tbody>
-    </table>
-
+    <chronos-entries-table (rowClick)="editEntry($event)"
+                           [search]="entrySearch"
+                           (submit)="updateSearchParams()"
+                           [actions]="tableActions"
+                           [entries]="entries$ | async">
+    </chronos-entries-table>
   </div>
 
 </div>

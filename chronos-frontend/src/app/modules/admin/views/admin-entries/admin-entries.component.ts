@@ -1,13 +1,12 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {AdminEntriesService} from "../../services/admin-entries.service";
 import {Observable, of} from "rxjs";
 import {Entry} from "../../../../model/entry.model";
-import {faPenToSquare, faPlus, faSearch, faTrash} from "@fortawesome/free-solid-svg-icons";
+import {faPenToSquare, faPlus, faTrash} from "@fortawesome/free-solid-svg-icons";
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {AdminConfirmService} from "../../services/admin-confirm.service";
-import {calculateMaxSpanningDateRange} from "../../../../util/date-range.utils";
-import {DateRange} from "../../../../model/date-range.model";
 import {QueryDrivenComponent} from "../../../../common/query-driven-component.directive";
+import {EntriesTableAction, EntriesTableSearch} from "../../../../ui-components/entries-table/entries-table.component";
 
 
 @Component({
@@ -17,15 +16,22 @@ import {QueryDrivenComponent} from "../../../../common/query-driven-component.di
 })
 export class AdminEntriesComponent extends QueryDrivenComponent {
 
+  newIcon = faPlus;
+
   entries$: Observable<Array<Entry>> = of([]);
 
-  titleQuery: string = '';
-  dateQuery: string = '';
-
-  editIcon = faPenToSquare;
-  newIcon = faPlus;
-  searchIcon = faSearch;
-  deleteIcon = faTrash;
+  entrySearch: EntriesTableSearch = {};
+  tableActions: Array<EntriesTableAction> = [
+    {
+      fn: (entry: Entry) => this.editEntry(entry),
+      icon: faPenToSquare,
+    },
+    {
+      fn: (entry: Entry) => this.deleteEntry(entry),
+      icon: faTrash,
+      color: 'danger'
+    }
+  ]
 
   constructor(private adminEntriesService: AdminEntriesService,
               protected override router: Router,
@@ -39,18 +45,16 @@ export class AdminEntriesComponent extends QueryDrivenComponent {
   }
 
   override toClassFields(params: Params) {
-    const from = params['from']
-    const to = params['to']
-    this.titleQuery = params['title'];
-    this.dateQuery = (!from && !to) ? '' : `${params['from'] || ''}-${params['to'] || ''}`
+    this.entrySearch.title = params['title'];
+    this.entrySearch.start = params['from'];
+    this.entrySearch.end = params['to'];
   }
 
   override toParams(): Params {
-    const dates = this.dateQuery.split('-')
     return {
-      title: this.titleQuery,
-      from: dates[0] || null,
-      to: dates[1] || null
+      title: this.entrySearch.title,
+      from: this.entrySearch.start,
+      to: this.entrySearch.end
     };
   }
 
@@ -70,10 +74,6 @@ export class AdminEntriesComponent extends QueryDrivenComponent {
     .then(() => {
       this.adminEntriesService.deleteEntry(entry).subscribe(() => this.search())
     });
-  }
-
-  entryDateSpan(entry: Entry): DateRange {
-    return calculateMaxSpanningDateRange(entry.dateRanges);
   }
 
 }

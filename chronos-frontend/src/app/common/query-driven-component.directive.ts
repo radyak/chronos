@@ -1,5 +1,6 @@
 import {Directive, OnInit} from "@angular/core";
 import {ActivatedRoute, Params, Router} from "@angular/router";
+import {Observable} from "rxjs";
 
 @Directive()
 export abstract class QueryDrivenComponent implements OnInit {
@@ -11,8 +12,12 @@ export abstract class QueryDrivenComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
-      this.toClassFields(params);
-      this.search();
+      const done = this.toClassFields(params);
+      if (done instanceof Observable) {
+        done.subscribe(() => this.search());
+      } else {
+        this.search();
+      }
     })
   }
 
@@ -26,7 +31,7 @@ export abstract class QueryDrivenComponent implements OnInit {
 
   protected abstract search(): void;
 
-  protected abstract toClassFields(params: Params): void;
+  protected abstract toClassFields(params: Params): void | Observable<void>;
 
   protected abstract toParams(): Params;
 }

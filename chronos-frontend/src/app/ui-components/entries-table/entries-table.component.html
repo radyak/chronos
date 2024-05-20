@@ -1,0 +1,130 @@
+
+<table class="table table-hover">
+  <thead>
+  <tr>
+    <!-- Title -->
+    <th scope="col">
+      <fa-icon [icon]="clearIcon"
+               class="pointer"
+               *ngIf="search.title"
+               (click)="clearTitle()"
+               [size]="'sm'"></fa-icon>
+      <input type="search"
+             placeholder="Title"
+             name="entry-search-title"
+             [(ngModel)]="search.title"
+             (keydown.enter)="submit.emit()"
+      >
+    </th>
+
+    <!-- Subtitle -->
+    <th class="col">
+    </th>
+
+    <!-- Dates - Start -->
+    <th class="col">
+      <fa-icon [icon]="clearIcon"
+               class="pointer"
+               *ngIf="search.start"
+               (click)="clearDateQuery()"
+               [size]="'sm'"></fa-icon>
+      <input type="search"
+             placeholder="From"
+             name="entry-search-dates-start"
+             [(ngModel)]="search.start"
+             (keydown.enter)="submit.emit()"
+      >
+    </th>
+
+    <!-- Dates - Separator -->
+    <th class="col">
+      -
+    </th>
+
+    <!-- Dates - End -->
+    <th class="col">
+      <fa-icon [icon]="clearIcon"
+               class="pointer"
+               *ngIf="search.end"
+               (click)="clearDateQuery()"
+               [size]="'sm'"></fa-icon>
+      <input type="search"
+             placeholder="To"
+             name="entry-search-dates-end"
+             [(ngModel)]="search.end"
+             (keydown.enter)="submit.emit()"
+      >
+    </th>
+
+    <!-- Tags -->
+    <th class="col broad">
+      <fa-icon [icon]="clearIcon"
+               class="pointer"
+               *ngIf="tagQuery"
+               (click)="tagQuery = ''"
+               [size]="'sm'"></fa-icon>
+      <input type="search"
+             placeholder="Tags"
+             name="entry-search-tags"
+             [(ngModel)]="tagQuery"
+      >
+    </th>
+
+    <!-- Actions -->
+    <th class="icon-col">
+      <fa-icon [icon]="searchIcon"
+               [size]="'sm'"></fa-icon>
+    </th>
+  </tr>
+  </thead>
+  <tbody>
+  <ng-container *ngFor="let entry of filteredEntries()">
+    <tr class="pointer"
+        (click)="rowClick.emit(entry._original)">
+      <!-- Title -->
+      <td class="main-column">
+        {{ entry.title }}
+      </td>
+
+      <!-- Subtitle -->
+      <td class="secondary-column">
+        {{ entry.subTitle }}
+      </td>
+
+      <!-- Dates - Start -->
+      <td class="secondary-column">
+        {{ entry.start | date: 'Y' }}
+      </td>
+
+      <!-- Dates - Separator -->
+      <td class="secondary-column">
+        -
+      </td>
+
+      <!-- Dates - End -->
+      <td class="secondary-column">
+        {{ entry.end | date: 'Y' }}
+      </td>
+
+      <!-- Tags -->
+      <td>
+        <ng-container *ngFor="let tag of entry.tags">
+          <chronos-tag size="small"
+                       [tag]="tag"></chronos-tag>
+        </ng-container>
+      </td>
+
+      <!-- Actions -->
+      <td class="icon-col">
+        <span class="icon"
+              *ngFor="let action of actions">
+          <fa-icon class="show-on-parent-hover"
+                   [ngClass]="action.color ? ('text-' + action.color) : ''"
+                   [icon]="action.icon"
+                   (click)="action.fn(entry); $event.stopPropagation()"></fa-icon>
+        </span>
+      </td>
+    </tr>
+  </ng-container>
+  </tbody>
+</table>
