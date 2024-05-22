@@ -1,11 +1,13 @@
 package net.fvogel.chronosbackend.common.persistence.entries.repo;
 
 import net.fvogel.chronosbackend.common.persistence.entries.model.Entry;
+import net.fvogel.chronosbackend.common.persistence.tags.model.Tag;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -43,4 +45,5 @@ public interface EntryRepository extends JpaRepository<Entry, Long> {
     @Query("select e.id from Entry e order by random()")
     List<Long> findRandom();
 
+    Set<Entry> findByIdIn(Collection<Long> entryIds);
 }

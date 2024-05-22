@@ -5,7 +5,9 @@ import lombok.Data;
 import net.fvogel.chronosbackend.common.persistence.tags.model.Tag;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "entry")
@@ -35,7 +37,7 @@ public class Entry {
         joinColumns = @JoinColumn(name = "entry_id"),
         inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
-    List<Tag> tags = new ArrayList<>();
+    Set<Tag> tags = new HashSet<>();
 
     @Column(name = "wikipedia_page", nullable = true)
     private String wikipediaPage;

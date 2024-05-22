@@ -1,0 +1,7 @@
+PUT http://localhost:8080/api/admin/bulk-actions/entries/add-tags
+Content-Type: application/json
+
+{
+  "tagIds": [1, 4, 17],
+  "entryIds": [1, 2, 6, 18]
+}

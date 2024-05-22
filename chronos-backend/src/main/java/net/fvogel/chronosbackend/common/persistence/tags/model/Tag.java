@@ -9,6 +9,7 @@ import lombok.Data;
 import net.fvogel.chronosbackend.common.persistence.entries.model.Entry;
 
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "tag")
@@ -37,5 +38,18 @@ public class Tag {
     @JsonIgnore
     @ManyToMany(mappedBy = "tags")
     private List<Entry> entries;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Tag tag = (Tag) o;
+        return Objects.equals(id, tag.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 
 }
