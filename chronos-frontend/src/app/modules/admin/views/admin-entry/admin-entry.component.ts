@@ -54,12 +54,25 @@ export class AdminEntryComponent implements OnInit {
       this.adminEntriesService.getEntry(entryId).subscribe(entry => {
         this.currentEntry = entry;
         this.findWikipediaSummary(entry.title);
+        this.afterLoadEntry();
       })
     }
 
     this.adminTagsService.allTags().subscribe(tags => {
       this.availableTags = tags;
     });
+  }
+
+  protected pageTitle(): string {
+    return this.currentEntry?.title ? `"${this.currentEntry?.title}"` : "New Entry";
+  }
+
+  protected breadCrumbTitle(): string {
+    return this.currentEntry?.title || 'New';
+  }
+
+  protected afterLoadEntry(): void {
+    // To be overwritten from extending classes
   }
 
   private findWikipediaSummary(title?: string): void {

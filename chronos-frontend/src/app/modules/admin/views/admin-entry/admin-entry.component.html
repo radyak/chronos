@@ -3,17 +3,11 @@
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a routerLink="../..">Administration</a></li>
     <li class="breadcrumb-item"><a [routerLink]="['..']">Entries</a></li>
-    <li class="breadcrumb-item active">{{ currentEntry?.title || 'New' }}</li>
+    <li class="breadcrumb-item active">{{ breadCrumbTitle() }}</li>
   </ol>
 
   <h1>
-    Administration:
-    <ng-container *ngIf="currentEntry?.title">
-      Edit &quot;{{ currentEntry?.title }}&quot;
-    </ng-container>
-    <ng-container *ngIf="!currentEntry?.title">
-      New Entry
-    </ng-container>
+    Administration: {{ pageTitle() }}
   </h1>
 
   <ng-template #noCurrentEntry>

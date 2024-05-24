@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import {AdminEntriesService} from "../../services/admin-entries.service";
 import {Observable, of} from "rxjs";
 import {Entry} from "../../../../model/entry.model";
-import {faListCheck, faPenToSquare, faPlus, faTrash} from "@fortawesome/free-solid-svg-icons";
+import {faCopy, faListCheck, faPenToSquare, faPlus, faTrash} from "@fortawesome/free-solid-svg-icons";
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {AdminConfirmService} from "../../services/admin-confirm.service";
 import {QueryDrivenComponent} from "../../../../common/query-driven-component.directive";
@@ -28,6 +28,10 @@ export class AdminEntriesComponent extends QueryDrivenComponent {
     {
       fn: (entry: Entry) => this.editEntry(entry),
       icon: faPenToSquare,
+    },
+    {
+      fn: (entry: Entry) => this.copyEntry(entry),
+      icon: faCopy,
     },
     {
       fn: (entry: Entry) => this.deleteEntry(entry),
@@ -78,6 +82,10 @@ export class AdminEntriesComponent extends QueryDrivenComponent {
     .then(() => {
       this.adminEntriesService.deleteEntry(entry).subscribe(() => this.search())
     });
+  }
+
+  copyEntry(entry: Entry): void {
+    this.router.navigate([entry.id, "copy"], {relativeTo: this.route});
   }
 
   availableBulkActions(): Array<BulkAction> {

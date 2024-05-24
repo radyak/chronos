@@ -31,6 +31,7 @@ import {AdminConfirmService} from "./services/admin-confirm.service";
 import {EntriesTableComponent} from "../../ui-components/entries-table/entries-table.component";
 import {AdminBulkActionService} from "./services/admin-bulk-action.service";
 import {AddTagsBulkActionService} from "./services/bulk-actions/add-tags-bulk-action.service";
+import {AdminCopyEntryComponent} from "./views/admin-copy-entry/admin-copy-entry.component";
 
 
 const routes: Route[] = [
@@ -51,6 +52,10 @@ const routes: Route[] = [
         component: AdminEntryComponent
       },
       {
+        path: 'entries/:id/copy',
+        component: AdminCopyEntryComponent
+      },
+      {
         path: 'tags',
         component: AdminTagsComponent
       }
@@ -66,6 +71,7 @@ const routes: Route[] = [
     TagsSectionComponent,
     AdminEntriesComponent,
     AdminEntryComponent,
+    AdminCopyEntryComponent,
     AdminComponent
   ],
   imports: [
