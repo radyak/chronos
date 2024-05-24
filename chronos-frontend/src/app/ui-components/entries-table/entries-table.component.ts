@@ -104,7 +104,7 @@ export class EntriesTableComponent {
 
   filteredEntries(): Array<TableEntryRepresentation> {
     return (this.viewEntries || []).filter(entry =>
-      entry.tags?.some(tag => tagMatches(this.tagQuery, tag))
+      this.tagQuery ? entry.tags?.some(tag => tagMatches(this.tagQuery, tag)) : true
     );
   }
 
