@@ -1,4 +1,4 @@
-import {APP_INITIALIZER, NgModule} from '@angular/core';
+import {APP_INITIALIZER, inject, NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 
 import {AppRoutingModule} from './app-routing.module';
@@ -6,10 +6,12 @@ import {AppComponent} from './app.component';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {NavbarComponent} from "./ui-components/navbar/navbar.component";
 import {FooterComponent} from "./ui-components/footer/footer.component";
-import {OAuthModule} from "angular-oauth2-oidc";
+import {OAuthModule, OAuthService} from "angular-oauth2-oidc";
 import {AuthService} from "./security/auth.service";
 import {HttpClientModule} from "@angular/common/http";
 import {WebAppConfigService} from "./service/web-app-config.service";
+import {AuthServiceMock} from "./security/auth.service.mock";
+import {environment} from "../environments/environment";
 
 @NgModule({
   declarations: [
@@ -30,8 +32,15 @@ import {WebAppConfigService} from "./service/web-app-config.service";
     })
   ],
   providers: [
-    AuthService,
-    // WebAppConfigService,
+    {
+      provide: AuthService,
+      useFactory: () => {
+        if (environment.mockAuth) {
+          return new AuthServiceMock();
+        }
+        return new AuthService(inject(OAuthService), inject(WebAppConfigService));
+      }
+    },
     {
       provide: APP_INITIALIZER,
       multi: true,

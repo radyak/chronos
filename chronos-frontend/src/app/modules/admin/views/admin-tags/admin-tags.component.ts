@@ -1,10 +1,4 @@
-import {Component, OnInit} from '@angular/core';
-import {AdminTagCategoriesService} from "../../services/admin-tag-categories.service";
-import {Observable, of} from "rxjs";
-import {TagCategory} from "../../../../model/tag-category.model";
-import {faPenToSquare, faPlus, faSearch, faTrash} from "@fortawesome/free-solid-svg-icons";
-import {Tag} from "../../../../model/tag.model";
-import {AdminTagsService} from "../../services/admin-tags.service";
+import {Component} from '@angular/core';
 
 @Component({
   selector: 'chronos-admin-tags',

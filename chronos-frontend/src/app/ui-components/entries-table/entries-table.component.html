@@ -1,7 +1,19 @@
-
 <table class="table table-hover">
   <thead>
   <tr>
+    <!-- Select -->
+    <th scope="col" *ngIf="selectable">
+      <input type="checkbox"
+             value=""
+             id="select-all-entries"
+             [ngModel]="allEntriesSelected()"
+             (click)="toggleAllEntriesSelection()"
+             class="form-check-input">
+      <span *ngIf="selectedEntries.size > 0">
+        ({{ selectedEntries.size }})
+      </span>
+    </th>
+
     <!-- Title -->
     <th scope="col">
       <fa-icon [icon]="clearIcon"
@@ -12,6 +24,7 @@
       <input type="search"
              placeholder="Title"
              name="entry-search-title"
+             [disabled]="!searchable"
              [(ngModel)]="search.title"
              (keydown.enter)="submit.emit()"
       >
@@ -31,6 +44,7 @@
       <input type="search"
              placeholder="From"
              name="entry-search-dates-start"
+             [disabled]="!searchable"
              [(ngModel)]="search.start"
              (keydown.enter)="submit.emit()"
       >
@@ -51,6 +65,7 @@
       <input type="search"
              placeholder="To"
              name="entry-search-dates-end"
+             [disabled]="!searchable"
              [(ngModel)]="search.end"
              (keydown.enter)="submit.emit()"
       >
@@ -72,28 +87,41 @@
 
     <!-- Actions -->
     <th class="icon-col">
-      <fa-icon [icon]="searchIcon"
+      <fa-icon *ngIf="searchable"
+               [icon]="searchIcon"
                [size]="'sm'"></fa-icon>
     </th>
   </tr>
   </thead>
   <tbody>
   <ng-container *ngFor="let entry of filteredEntries()">
-    <tr class="pointer"
-        (click)="rowClick.emit(entry._original)">
+    <tr class="pointer">
+
+      <!-- Select -->
+      <th scope="col" *ngIf="selectable">
+        <input type="checkbox"
+               value=""
+               id="select-entry-{{ entry.id }}"
+               [ngModel]="isEntrySelected(entry._original)"
+               (ngModelChange)="toggleEntrySelection(entry._original)"
+               class="form-check-input">
+      </th>
+
       <!-- Title -->
-      <td class="main-column">
+      <td class="main-column"
+          (click)="entryClick.emit(entry._original)">
         {{ entry.title }}
       </td>
 
       <!-- Subtitle -->
-      <td class="secondary-column">
+      <td class="secondary-column"
+          (click)="entryClick.emit(entry._original)">
         {{ entry.subTitle }}
       </td>
 
       <!-- Dates - Start -->
       <td class="secondary-column">
-        {{ entry.start | date: 'Y' }}
+        {{ entry.start | date: 'y' }}
       </td>
 
       <!-- Dates - Separator -->
@@ -103,7 +131,7 @@
 
       <!-- Dates - End -->
       <td class="secondary-column">
-        {{ entry.end | date: 'Y' }}
+        {{ entry.end | date: 'y' }}
       </td>
 
       <!-- Tags -->

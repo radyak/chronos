@@ -2,11 +2,12 @@ import {Component} from '@angular/core';
 import {AdminEntriesService} from "../../services/admin-entries.service";
 import {Observable, of} from "rxjs";
 import {Entry} from "../../../../model/entry.model";
-import {faPenToSquare, faPlus, faTrash} from "@fortawesome/free-solid-svg-icons";
+import {faCopy, faListCheck, faPenToSquare, faPlus, faTrash} from "@fortawesome/free-solid-svg-icons";
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {AdminConfirmService} from "../../services/admin-confirm.service";
 import {QueryDrivenComponent} from "../../../../common/query-driven-component.directive";
 import {EntriesTableAction, EntriesTableSearch} from "../../../../ui-components/entries-table/entries-table.component";
+import {AdminBulkActionService, BulkAction} from "../../services/admin-bulk-action.service";
 
 
 @Component({
@@ -17,14 +18,20 @@ import {EntriesTableAction, EntriesTableSearch} from "../../../../ui-components/
 export class AdminEntriesComponent extends QueryDrivenComponent {
 
   newIcon = faPlus;
+  batchActionIcon = faListCheck;
 
   entries$: Observable<Array<Entry>> = of([]);
+  selectedEntries: Array<Entry> = [];
 
   entrySearch: EntriesTableSearch = {};
   tableActions: Array<EntriesTableAction> = [
     {
       fn: (entry: Entry) => this.editEntry(entry),
       icon: faPenToSquare,
+    },
+    {
+      fn: (entry: Entry) => this.copyEntry(entry),
+      icon: faCopy,
     },
     {
       fn: (entry: Entry) => this.deleteEntry(entry),
@@ -36,7 +43,8 @@ export class AdminEntriesComponent extends QueryDrivenComponent {
   constructor(private adminEntriesService: AdminEntriesService,
               protected override router: Router,
               protected override route: ActivatedRoute,
-              private confirmService: AdminConfirmService) {
+              private confirmService: AdminConfirmService,
+              private adminBulkActionService: AdminBulkActionService) {
     super(router, route);
   }
 
@@ -76,5 +84,18 @@ export class AdminEntriesComponent extends QueryDrivenComponent {
     });
   }
 
+  copyEntry(entry: Entry): void {
+    this.router.navigate([entry.id, "copy"], {relativeTo: this.route});
+  }
+
+  availableBulkActions(): Array<BulkAction> {
+    return this.adminBulkActionService.getAvailableActions();
+  }
+
+  selectBulkAction(id: string): void {
+    this.adminBulkActionService.bulkAction(this.selectedEntries, id).subscribe(() => {
+      this.search();
+    });
+  }
 }
 

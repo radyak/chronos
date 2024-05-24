@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {AdminEntriesService} from "../../services/admin-entries.service";
-import {debounceTime, filter, map, Observable, of, Subject, switchMap} from "rxjs";
+import {debounceTime, filter, map, Subject} from "rxjs";
 import {Entry} from "../../../../model/entry.model";
-import {faPenToSquare, faPlus, faSearch, faTrash} from "@fortawesome/free-solid-svg-icons";
+import {faPenToSquare, faPlus, faTrash} from "@fortawesome/free-solid-svg-icons";
 import {AdminTagsService} from "../../services/admin-tags.service";
 import {Tag} from "../../../../model/tag.model";
 import {WikipediaSummary} from "../../../../model/wikipedia-summary.model";
@@ -43,23 +43,31 @@ export class AdminEntryComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const entryId = this.route.snapshot.params['id'];
-    if (entryId === 'new') {
-      this.currentEntry = {
-        title: "",
-        tags: [],
-        dateRanges: []
-      };
-    } else {
-      this.adminEntriesService.getEntry(entryId).subscribe(entry => {
-        this.currentEntry = entry;
-        this.findWikipediaSummary(entry.title);
-      })
-    }
-
+    this.setCurrentEntry();
     this.adminTagsService.allTags().subscribe(tags => {
       this.availableTags = tags;
     });
+  }
+
+  protected setCurrentEntry(): void {
+    const entryId = this.route.snapshot.params['id'];
+    this.adminEntriesService.getEntry(entryId).subscribe(entry => {
+      this.currentEntry = entry;
+      this.findWikipediaSummary(entry.title);
+      this.afterLoadEntry();
+    })
+  }
+
+  protected pageTitle(): string {
+    return this.currentEntry?.title || '';
+  }
+
+  protected breadCrumbTitle(): string {
+    return this.currentEntry?.title || '';
+  }
+
+  protected afterLoadEntry(): void {
+    // To be overwritten from extending classes
   }
 
   private findWikipediaSummary(title?: string): void {

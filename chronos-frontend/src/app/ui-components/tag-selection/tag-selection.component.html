@@ -27,7 +27,9 @@
                  (actionTriggered)="removeTag(tag)"></chronos-tag>
   </div>
 
-  <div class="copy" (click)="copyTags()">
+  <div class="copy"
+       *ngIf="copyEnabled"
+       (click)="copyTags()">
     <fa-icon [icon]="copyIcon"></fa-icon>
   </div>
 

@@ -1,0 +1,36 @@
+<div class="modal-header">
+  <h4 class="modal-title" id="modal-basic-title">
+    Add tags to {{ selectedEntries.length }} entries
+  </h4>
+  <button type="button"
+          class="btn-close"
+          aria-label="Close"
+          (click)="activeModal.dismiss(null)">
+  </button>
+</div>
+<div class="modal-body">
+  You have selected the following entries:
+  <div class="entries-list">
+    {{ entriesString() }}
+  </div>
+
+  Please select the tags you want to add:
+  <div class="tag-selection">
+    <chronos-tag-selection [(tags)]="selectedTags"
+                           [availableTags]="availableTags"
+                           [copyEnabled]="false">
+    </chronos-tag-selection>
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button"
+          class="btn btn-outline-light"
+          (click)="activeModal.dismiss(null)">
+    Cancel
+  </button>
+  <button type="button"
+          class="btn btn-outline-success"
+          (click)="activeModal.close(selectedTags)">
+    Ok
+  </button>
+</div>

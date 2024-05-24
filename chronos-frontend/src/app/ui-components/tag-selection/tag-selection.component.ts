@@ -4,8 +4,8 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {TagComponent} from "../tag/tag.component";
 import {Tag} from "../../model/tag.model";
 import {NgbTypeahead} from "@ng-bootstrap/ng-bootstrap";
-import {debounceTime, distinctUntilChanged, filter, map, merge, Observable, OperatorFunction, Subject, tap} from "rxjs";
-import {ClipboardModule, Clipboard} from "@angular/cdk/clipboard";
+import {distinctUntilChanged, filter, map, merge, Observable, OperatorFunction, Subject} from "rxjs";
+import {Clipboard, ClipboardModule} from "@angular/cdk/clipboard";
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import {faCopy} from "@fortawesome/free-solid-svg-icons";
 import {NotificationService} from "../notifications/notification.service";
@@ -40,6 +40,9 @@ export class TagSelectionComponent {
   public availableTags: Array<Tag> = [];
 
   @ViewChild('instance', { static: true }) instance!: NgbTypeahead;
+
+  @Input()
+  copyEnabled = true;
 
   focus$ = new Subject<string>();
   click$ = new Subject<string>();

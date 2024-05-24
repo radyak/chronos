@@ -6,16 +6,22 @@ import net.fvogel.chronosbackend.common.persistence.entries.model.Entry;
 import net.fvogel.chronosbackend.common.persistence.entries.repo.EntryRepository;
 import net.fvogel.chronosbackend.wikipedia.model.WikipediaSummary;
 import net.fvogel.chronosbackend.wikipedia.service.WikipediaService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
 public class EntriesService {
+
+    private static final Logger logger = LoggerFactory.getLogger(EntriesService.class);
 
     private EntryRepository entryRepository;
     private WikipediaService wikipediaService;
@@ -28,6 +34,10 @@ public class EntriesService {
 
     public Entry save(Entry entry) {
         return this.entryRepository.save(entry);
+    }
+
+    public List<Entry> saveAll(Collection<Entry> entries) {
+        return this.entryRepository.saveAll(entries);
     }
 
     public List<Entry> findAll() {
@@ -45,6 +55,17 @@ public class EntriesService {
 
     public Entry findById(Long id) {
         return this.entryRepository.findById(id).orElseThrow(NotFoundException::new);
+    }
+
+    public Set<Entry> findByIds(Collection<Long> ids) {
+        Set<Entry> result = this.entryRepository.findByIdIn(ids);
+        if (ids.size() > result.size()) {
+            this.logger.warn(
+                    "Not able to find entries for all ids; searched for " + ids + ", but found only entries for IDs "
+                            + result.stream().map(t -> t.getId()).collect(Collectors.toList())
+            );
+        }
+        return result;
     }
 
     public void deleteById(Long id) {
