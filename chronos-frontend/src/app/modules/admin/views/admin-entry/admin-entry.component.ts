@@ -43,32 +43,27 @@ export class AdminEntryComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const entryId = this.route.snapshot.params['id'];
-    if (entryId === 'new') {
-      this.currentEntry = {
-        title: "",
-        tags: [],
-        dateRanges: []
-      };
-    } else {
-      this.adminEntriesService.getEntry(entryId).subscribe(entry => {
-        this.currentEntry = entry;
-        this.findWikipediaSummary(entry.title);
-        this.afterLoadEntry();
-      })
-    }
-
+    this.setCurrentEntry();
     this.adminTagsService.allTags().subscribe(tags => {
       this.availableTags = tags;
     });
   }
 
+  protected setCurrentEntry(): void {
+    const entryId = this.route.snapshot.params['id'];
+    this.adminEntriesService.getEntry(entryId).subscribe(entry => {
+      this.currentEntry = entry;
+      this.findWikipediaSummary(entry.title);
+      this.afterLoadEntry();
+    })
+  }
+
   protected pageTitle(): string {
-    return this.currentEntry?.title ? `"${this.currentEntry?.title}"` : "New Entry";
+    return this.currentEntry?.title || '';
   }
 
   protected breadCrumbTitle(): string {
-    return this.currentEntry?.title || 'New';
+    return this.currentEntry?.title || '';
   }
 
   protected afterLoadEntry(): void {
