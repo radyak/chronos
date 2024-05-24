@@ -30,6 +30,7 @@ import {AdminEntryComponent} from "./views/admin-entry/admin-entry.component";
 import {AdminConfirmService} from "./services/admin-confirm.service";
 import {EntriesTableComponent} from "../../ui-components/entries-table/entries-table.component";
 import {AdminBulkActionService} from "./services/admin-bulk-action.service";
+import {AddTagsBulkActionService} from "./services/bulk-actions/add-tags-bulk-action.service";
 
 
 const routes: Route[] = [
@@ -90,6 +91,7 @@ const routes: Route[] = [
     AdminEntriesService,
     AdminConfirmService,
     AdminBulkActionService,
+    AddTagsBulkActionService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AdminErrorInterceptor,

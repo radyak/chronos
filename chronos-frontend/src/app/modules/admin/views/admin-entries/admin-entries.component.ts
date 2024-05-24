@@ -85,7 +85,9 @@ export class AdminEntriesComponent extends QueryDrivenComponent {
   }
 
   selectBulkAction(id: string): void {
-    this.adminBulkActionService.bulkAction(this.selectedEntries, id);
+    this.adminBulkActionService.bulkAction(this.selectedEntries, id).subscribe(() => {
+      this.search();
+    });
   }
 }
 

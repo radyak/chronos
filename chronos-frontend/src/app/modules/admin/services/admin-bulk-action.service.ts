@@ -6,6 +6,8 @@ import {Tag} from "../../../model/tag.model";
 import {IconDefinition} from "@fortawesome/fontawesome-svg-core";
 import {faTags} from "@fortawesome/free-solid-svg-icons";
 import {NotificationService} from "../../../ui-components/notifications/notification.service";
+import {AddTagsBulkActionService} from "./bulk-actions/add-tags-bulk-action.service";
+import {from, Observable, of, switchMap, tap} from "rxjs";
 
 export interface BulkAction {
   id: string,
@@ -14,7 +16,7 @@ export interface BulkAction {
 }
 
 interface InternalBulkAction extends BulkAction {
-  action: (selectedEntries: Array<Entry>) => Promise<any> | void
+  action: (selectedEntries: Array<Entry>) => Observable<void>
 }
 
 @Injectable({
@@ -27,36 +29,45 @@ export class AdminBulkActionService {
       id: 'addTags',
       label: 'Add Tags',
       icon: faTags,
-      action: async (selectedEntries: Array<Entry>) => {
+      action: (selectedEntries: Array<Entry>) => {
         const modalRef = this.modal.open(AdminAddTagsModal, { ariaLabelledBy: 'modal-basic-title' })
         modalRef.componentInstance.selectedEntries = selectedEntries;
-        return modalRef.result.then((selectedTags?: Array<Tag>) => {
-          if (selectedTags) {
-            this.notificationService.success(
-              `Successfully added ${selectedTags.length} tags to ${selectedEntries.length} entries`
+        return from(modalRef.result).pipe(
+          switchMap((selectedTags: Array<Tag>) => {
+            if (!selectedTags || selectedTags.length === 0) {
+              return of();
+            }
+            return this.addTagsBulkActionService.addTagsToEntries(selectedTags, selectedEntries).pipe(
+              tap(() => {
+                this.notificationService.success(
+                  `Successfully added ${selectedTags.length} tags to ${selectedEntries.length} entries`
+                )
+              })
             )
-          }
-        })
+          })
+        )
       }
     }
   ];
 
   constructor(private modal: NgbModal,
-              private notificationService: NotificationService) {
+              private notificationService: NotificationService,
+              private addTagsBulkActionService: AddTagsBulkActionService) {
   }
 
   public getAvailableActions(): Array<BulkAction> {
     return this.bulkActions.map(({id, label, icon}) => ({id, label, icon}));
   }
 
-  public bulkAction(selectedEntries: Array<Entry>, id: string): void {
+  public bulkAction(selectedEntries: Array<Entry>, id: string): Observable<void> {
       const bulkAction = this.bulkActions.find(b => b.id === id);
       if (!bulkAction) {
         this.notificationService.error(
           `The selected action is not available`
         )
+        return of();
       } else {
-        bulkAction.action(selectedEntries);
+        return bulkAction.action(selectedEntries);
       }
   }
 
