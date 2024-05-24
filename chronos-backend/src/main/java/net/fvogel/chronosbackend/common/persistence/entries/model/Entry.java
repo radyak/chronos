@@ -25,7 +25,13 @@ public class Entry {
     private String subTitle;
 
     @OneToMany(
-            cascade=CascadeType.ALL,
+            cascade= {
+                    CascadeType.DETACH,
+                    CascadeType.MERGE,
+                    CascadeType.PERSIST,
+                    CascadeType.REFRESH,
+                    CascadeType.REMOVE
+            },
             orphanRemoval = true
     )
     @JoinColumn(name="entry_id")
