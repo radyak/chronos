@@ -18,6 +18,13 @@ th, td {
     width: 50%;
   }
 
+  &.ellipsis {
+    max-width: 0px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
   &.hide-overflow {
     max-width: 0px;
     white-space: nowrap;
