@@ -2,13 +2,26 @@
   <h1>Discover</h1>
 
   <div class="button-group">
-    <button class="btn btn-primary btn-sm"
+    <button class="btn btn-outline-success"
+            *ngIf="showSearchInputs"
+            (click)="updateSearchParams()">
+      Update
+    </button>
+    <button class="btn btn-primary"
+            *ngIf="showSearchInputs"
+            (click)="setShowSearchInputs(false)">
+      <fa-icon [icon]="hideSearchIcon"></fa-icon>
+      Hide Parameters
+    </button>
+
+    <button class="btn btn-primary"
             *ngIf="!showSearchInputs"
             (click)="setShowSearchInputs(true)">
       <fa-icon [icon]="showSearchIcon"></fa-icon>
-      Show search
+      Show Parameters
     </button>
   </div>
+
 
   <section class="row">
     <div [ngClass]="showSearchInputs ? 'col-md-4' : 'col-md-0'">
@@ -103,27 +116,6 @@
               Add tag group
             </button>
           </div>
-        </div>
-
-        <div class="button-group">
-          <button class="btn btn-outline-success"
-                  *ngIf="showSearchInputs"
-                  (click)="updateSearchParams()">
-            Search
-          </button>
-          <button class="btn btn-primary"
-                  *ngIf="showSearchInputs"
-                  (click)="setShowSearchInputs(false)">
-            <fa-icon [icon]="hideSearchIcon"></fa-icon>
-            Hide Search
-          </button>
-
-          <button class="btn btn-primary btn-sm"
-                  *ngIf="!showSearchInputs"
-                  (click)="setShowSearchInputs(true)">
-            <fa-icon [icon]="showSearchIcon"></fa-icon>
-            Show search
-          </button>
         </div>
 
       </section>
