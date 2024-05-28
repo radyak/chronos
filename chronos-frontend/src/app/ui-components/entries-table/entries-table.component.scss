@@ -2,16 +2,40 @@
   padding: 0 3px;
 }
 
-th.broad {
-  width: 100%;
-}
-
 th {
-  white-space: nowrap;
 }
 
 th, td {
   &:not(.slim) {
-    min-width: 40px;
+    min-width: 60px;
   }
+
+  &.slim {
+    padding: 0.5rem 0;
+  }
+
+  &.broad {
+    width: 50%;
+  }
+
+  &.hide-overflow {
+    max-width: 0px;
+    white-space: nowrap;
+    overflow: hidden;
+    position: relative;
+
+    &:after {
+      content:'';
+      width: 20px;
+      height: 100%;
+      position: absolute;
+      right: 0;
+      top: 0;
+      background: linear-gradient(90deg, transparent, var(--bs-body-bg));
+    }
+  }
+}
+
+.right {
+  text-align: right;
 }

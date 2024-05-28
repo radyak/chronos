@@ -60,6 +60,29 @@ th input {
     color: #fff;
     opacity: 1;
   }
+
+  &.right {
+
+    ::placeholder {
+      text-align: right;
+    }
+
+    &::-webkit-input-placeholder {
+      text-align: right;
+    }
+
+    &::-moz-placeholder {
+      text-align: right;
+    }
+
+    &:-ms-input-placeholder {
+      text-align: right;
+    }
+
+    &:-o-input-placeholder {
+      text-align: right;
+    }
+  }
 }
 
 // Column with icons only

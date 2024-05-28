@@ -42,6 +42,7 @@
                (click)="clearDateQuery()"
                [size]="'sm'"></fa-icon>
       <input type="search"
+             class="right"
              placeholder="From"
              name="entry-search-dates-start"
              [disabled]="!searchable"
@@ -51,7 +52,7 @@
     </th>
 
     <!-- Dates - Separator -->
-    <th class="col">
+    <th class="col slim">
       -
     </th>
 
@@ -86,7 +87,8 @@
     </th>
 
     <!-- Actions -->
-    <th class="icon-col">
+    <th class="icon-col"
+        *ngIf="actions.length > 0">
       <fa-icon *ngIf="searchable"
                [icon]="searchIcon"
                [size]="'sm'"></fa-icon>
@@ -114,18 +116,18 @@
       </td>
 
       <!-- Subtitle -->
-      <td class="secondary-column"
+      <td class="secondary-column hide-overflow"
           (click)="entryClick.emit(entry._original)">
         {{ entry.subTitle }}
       </td>
 
       <!-- Dates - Start -->
-      <td class="secondary-column">
+      <td class="secondary-column right">
         {{ entry.start | date: 'y' }}
       </td>
 
       <!-- Dates - Separator -->
-      <td class="secondary-column">
+      <td class="secondary-column slim">
         -
       </td>
 
@@ -135,7 +137,7 @@
       </td>
 
       <!-- Tags -->
-      <td>
+      <td class="broad hide-overflow">
         <ng-container *ngFor="let tag of entry.tags">
           <chronos-tag size="small"
                        [tag]="tag"></chronos-tag>
@@ -143,7 +145,8 @@
       </td>
 
       <!-- Actions -->
-      <td class="icon-col">
+      <td class="icon-col"
+          *ngIf="actions.length > 0">
         <span class="icon"
               *ngFor="let action of actions">
           <fa-icon class="show-on-parent-hover"
