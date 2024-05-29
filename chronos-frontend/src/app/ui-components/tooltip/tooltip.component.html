@@ -1,7 +1,15 @@
 <fa-icon [icon]="helpIcon"
          [ngbTooltip]="template"
-         triggers="click:blur">
+         [ngClass]="{'active': active}"
+         triggers="manual:blur"
+         #t1="ngbTooltip"
+         (click)="toggle(t1)">
 </fa-icon>
+
+<div class="text-primary-emphasis small"
+     *ngIf="inline && active">
+  <ng-container [ngTemplateOutlet]="template"></ng-container>
+</div>
 
 <ng-template #template>
   <ng-content></ng-content>

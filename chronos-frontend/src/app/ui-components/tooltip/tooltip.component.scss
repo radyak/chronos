@@ -1,0 +1,8 @@
+fa-icon {
+  color: var(--bs-primary-text-emphasis);
+  cursor: pointer;
+
+  &.active {
+    color: #ffffff;
+  }
+}
