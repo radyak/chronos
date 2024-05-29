@@ -1,7 +1,6 @@
 <div class="container">
-  <h1>Discover</h1>
 
-  <div class="button-group">
+  <div class="header-buttons">
     <button class="btn btn-outline-success"
             *ngIf="showSearchInputs"
             (click)="updateSearchParams()">
@@ -22,8 +21,12 @@
     </button>
   </div>
 
+  <h1>Discover</h1>
+  <p class="text-primary-emphasis small">
+    Here you can do whatever you want or <a (click)="setShowSearchInputs(true)">open the config</a> and adopt it to your desire
+  </p>
 
-  <section class="row">
+  <div class="row">
     <div [ngClass]="showSearchInputs ? 'col-md-4' : 'col-md-0'">
 
       <section>
@@ -250,6 +253,6 @@
       </section>
     </div>
 
-  </section>
+  </div>
 
 </div>

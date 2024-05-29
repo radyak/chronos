@@ -1,3 +1,16 @@
+.header-buttons {
+  position: absolute;
+  right: 0;
+
+  & > * {
+    margin-left: 5px;
+  }
+}
+
+.container {
+  position: relative;
+}
+
 section {
   margin-top: 2rem;
   padding: 5px 0;
