@@ -34,7 +34,10 @@
             history or the sequence of events or eras.
           </p>
           <p class="card-text">
-            <a [routerLink]="['timeline']">&rarr; Go to Timeline</a>
+            <a [routerLink]="['discover']"
+               [queryParams]="{display: 'timeline'}">
+              &rarr; Go to Timeline
+            </a>
           </p>
         </div>
       </div>
