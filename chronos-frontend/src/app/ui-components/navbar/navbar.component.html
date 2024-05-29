@@ -20,8 +20,10 @@
         <ng-container *ngFor="let menuItem of menuItems">
           <ng-container *ngIf="menuItem.show$ === undefined || (menuItem.show$ | async)">
             <li class="nav-item">
-              <a class="nav-link" [routerLink]="menuItem.routerLink"
-              [routerLinkActive]="'active'">
+              <a class="nav-link"
+                 [routerLink]="menuItem.routerLink"
+                 [routerLinkActive]="'active'"
+                 [routerLinkActiveOptions]="{exact: true}">
                 {{ menuItem.label }}
               </a>
             </li>
