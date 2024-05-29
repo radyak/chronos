@@ -29,6 +29,7 @@ import {
   EntriesSearchInputComponent
 } from "../../functional-components/entries-search-input/entries-search-input.component";
 import {EntriesTableComponent} from "../../ui-components/entries-table/entries-table.component";
+import {TooltipComponent} from "../../ui-components/tooltip/tooltip.component";
 
 
 const routes: Route[] = [
@@ -74,7 +75,8 @@ const routes: Route[] = [
         FontAwesomeModule,
         TagSelectionComponent,
         EntriesSearchInputComponent,
-        EntriesTableComponent
+        EntriesTableComponent,
+        TooltipComponent
     ],
   providers: [
     TagsService,
