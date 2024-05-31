@@ -11,7 +11,7 @@ import java.util.List;
 @RequestMapping("/api/tags")
 public class TagsController {
 
-    private TagsService tagsService;
+    protected TagsService tagsService;
 
     public TagsController(TagsService tagsService) {
         this.tagsService = tagsService;

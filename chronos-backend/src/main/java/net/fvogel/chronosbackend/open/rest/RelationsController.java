@@ -13,7 +13,7 @@ import java.util.Collection;
 @RequestMapping("/api/relations")
 public class RelationsController {
 
-    private RelationService relationService;
+    protected RelationService relationService;
 
     public RelationsController(RelationService relationService) {
         this.relationService = relationService;

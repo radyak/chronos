@@ -5,33 +5,22 @@ import net.fvogel.chronosbackend.common.exception.NotFoundException;
 import net.fvogel.chronosbackend.common.persistence.tags.model.Tag;
 import net.fvogel.chronosbackend.common.persistence.tags.repo.TagRepository;
 import net.fvogel.chronosbackend.common.service.TagsService;
+import net.fvogel.chronosbackend.open.rest.TagsController;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin/tags")
-public class AdminTagsController {
-
-    private TagsService tagsService;
+public class AdminTagsController extends TagsController {
 
     public AdminTagsController(TagsService tagsService) {
-        this.tagsService = tagsService;
+        super(tagsService);
     }
 
     @PostMapping
     public Tag create(@Valid @RequestBody Tag tag) {
         return this.tagsService.save(tag);
-    }
-
-    @GetMapping
-    public List<Tag> all() {
-        return this.tagsService.findAll();
-    }
-
-    @GetMapping("/{id}")
-    public Tag getById(@PathVariable("id") Long id) {
-        return this.tagsService.findById(id);
     }
 
     @PutMapping

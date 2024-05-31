@@ -14,7 +14,7 @@ import java.util.Set;
 @RequestMapping("/api/entries")
 public class EntriesController {
 
-    private EntriesService entriesService;
+    protected EntriesService entriesService;
 
     public EntriesController(EntriesService entriesService) {
         this.entriesService = entriesService;

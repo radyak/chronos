@@ -2,10 +2,7 @@ POST http://localhost:8080/api/admin/entries
 Content-Type: application/json
 
 {
-  "key": "cherlemagne",
-  "name": "Charlemagne",
-  "start": "0768-10-09",
-  "end": "0814-01-28"
+  "title": "Louis XVI"
 }
 
 ###
@@ -18,7 +15,7 @@ GET http://localhost:8080/api/admin/entries?ids=67,123,4
 
 ###
 
-GET http://localhost:8080/api/admin/entries/1
+GET http://localhost:8080/api/admin/entries/4
 
 ###
 
@@ -26,11 +23,15 @@ PUT http://localhost:8080/api/admin/entries
 Content-Type: application/json
 
 {
-  "id": 2,
-  "key": "charlemagne",
-  "name": "Charlemagne",
-  "start": "0768-10-09",
-  "end": "0814-01-28",
+  "id": 4,
+  "title": "Charlemagne",
+  "dateRanges": [
+    {
+      "type": "LIFE",
+      "start": "0768-10-09",
+      "end": "0814-01-28"
+    }
+  ],
   "tags": [
     {
       "id": 1
