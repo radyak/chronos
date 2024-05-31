@@ -17,6 +17,10 @@ public interface EntryRepository extends JpaRepository<Entry, Long> {
             select e
             from Entry e
             where (
+                :ids IS NULL
+                OR
+                e.id IN :ids
+            ) AND (
                 lower(e.title) like lower(concat('%', :title,'%'))
                 OR
                 :title IS NULL
@@ -36,6 +40,7 @@ public interface EntryRepository extends JpaRepository<Entry, Long> {
             """
     )
     List<Entry> findBy(
+            @Param("ids") Set<Long> ids,
             @Param("title") String title,
             @Param("tagIds") Set<Long> tagIds,
             @Param("from") LocalDate from,

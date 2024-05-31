@@ -13,6 +13,11 @@ GET http://localhost:8080/api/entries?tags=3,1
 
 ###
 
+# Filter by ids
+GET http://localhost:8080/api/entries?ids=6,7
+
+###
+
 # Filter by name & tags
 GET http://localhost:8080/api/entries?title=LeMagn&tags=3,1
 

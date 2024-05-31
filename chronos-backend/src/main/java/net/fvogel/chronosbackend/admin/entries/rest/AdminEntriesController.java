@@ -29,13 +29,15 @@ public class AdminEntriesController {
 
     @GetMapping
     public List<Entry> all(
+            @RequestParam(name = "ids", required = false) Long[] idArray,
             @RequestParam(name = "title", required = false) String title,
             @RequestParam(name = "tags", required = false) Long[] tagIdArray,
             @RequestParam(name = "from", required = false) Short from,
             @RequestParam(name = "to", required = false) Short to
     ) {
+        Set<Long> ids = idArray != null ? new HashSet<>(Arrays.asList(idArray)) : null;
         Set<Long> tagIds = tagIdArray != null ? new HashSet<>(Arrays.asList(tagIdArray)) : null;
-        return this.entriesService.find(title, tagIds, from, to);
+        return this.entriesService.find(ids, title, tagIds, from, to);
     }
 
     @GetMapping("wikipediasummary")

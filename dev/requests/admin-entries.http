@@ -14,6 +14,10 @@ GET http://localhost:8080/api/admin/entries
 
 ###
 
+GET http://localhost:8080/api/admin/entries?ids=67,123,4
+
+###
+
 GET http://localhost:8080/api/admin/entries/1
 
 ###

@@ -44,13 +44,16 @@ public class EntriesService {
         return this.entryRepository.findAll();
     }
 
-    public List<Entry> find(String title, Set<Long> tagIds, Short from, Short to) {
+    public List<Entry> find(Set<Long> ids, String title, Set<Long> tagIds, Short from, Short to) {
+        if (ids != null && ids.size() == 0) {
+            ids = null;
+        }
         if (tagIds != null && tagIds.size() == 0) {
             tagIds = null;
         }
         LocalDate fromDate = (from != null ? LocalDate.ofYearDay(from, 1) : null);
         LocalDate toDate = (to != null ? LocalDate.ofYearDay(to, 365) : null);
-        return this.entryRepository.findBy(title, tagIds, fromDate, toDate);
+        return this.entryRepository.findBy(ids, title, tagIds, fromDate, toDate);
     }
 
     public Entry findById(Long id) {
