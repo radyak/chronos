@@ -1,13 +1,16 @@
 package net.fvogel.chronosbackend.common.persistence.entries.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
+import net.fvogel.chronosbackend.common.persistence.relations.model.Relation;
 import net.fvogel.chronosbackend.common.persistence.tags.model.Tag;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Stream;
 
 @Entity
 @Table(name = "entry")
@@ -21,7 +24,7 @@ public class Entry {
     @Column(name = "title", unique = true, nullable = false)
     private String title;
 
-    @Column(name = "subtitle", unique = true, nullable = true)
+    @Column(name = "subtitle", unique = true)
     private String subTitle;
 
     @OneToMany(
@@ -45,7 +48,19 @@ public class Entry {
     )
     Set<Tag> tags = new HashSet<>();
 
-    @Column(name = "wikipedia_page", nullable = true)
+    @Column(name = "wikipedia_page")
     private String wikipediaPage;
 
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY, mappedBy = "from")
+    private List<Relation> fromRelations = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY, mappedBy = "to")
+    private List<Relation> toRelations = new ArrayList<>();
+
+    @Transient
+    public List<Relation> getRelations() {
+        return Stream.concat(fromRelations.stream(), toRelations.stream()).toList();
+    }
 }
