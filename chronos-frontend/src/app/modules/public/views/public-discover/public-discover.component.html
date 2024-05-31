@@ -35,6 +35,11 @@
         <div class="form-group">
           <label class="form-label mt-2">
             Filter by title:
+            <chronos-tooltip [inline]="false">
+              Type parts of a title to search for entries;
+              hit the <code>Enter</code> key or
+              the <a (click)="updateSearchParams()">Update</a> button to submit.
+            </chronos-tooltip>
           </label>
 
           <input class="form-control"
