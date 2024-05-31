@@ -1,0 +1,33 @@
+POST http://localhost:8080/api/admin/relation-types
+Content-Type: application/json
+
+{
+  "name": "TIMES_VALUE_OF",
+  "nameLabel": "times value of",
+  "nameInverseLabel": "fraction of the value of",
+  "valueLabel": "value"
+}
+###
+
+GET http://localhost:8080/api/admin/relation-types
+
+###
+
+GET http://localhost:8080/api/admin/relation-types/1
+
+###
+
+PUT http://localhost:8080/api/admin/relation-types
+Content-Type: application/json
+
+{
+  "id": 2,
+  "name": "TIMES_VALUE_OF",
+  "nameLabel": "times value of",
+  "nameInverseLabel": "th fraction of the value of",
+  "valueLabel": "value"
+}
+
+###
+
+DELETE http://localhost:8080/api/admin/relation-types/2

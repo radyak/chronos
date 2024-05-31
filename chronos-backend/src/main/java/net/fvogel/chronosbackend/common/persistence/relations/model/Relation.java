@@ -21,21 +21,27 @@ public class Relation {
     private RelationType type;
 
     @JsonIgnore
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="entry_from_id", nullable = false)
+    @JoinColumn(
+            name="entry_from_id",
+            insertable = false,
+            updatable = false
+    )
     private Entry from;
 
-    @Column(name="entry_from_id", insertable=false, updatable=false)
+    @Column(name="entry_from_id", nullable = false)
     private Long fromId;
 
     @JsonIgnore
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="entry_to_id", nullable = false)
+    @JoinColumn(
+            name="entry_to_id",
+            insertable = false,
+            updatable = false
+    )
     private Entry to;
 
-    @Column(name="entry_to_id", insertable=false, updatable=false)
+    @Column(name="entry_to_id", nullable = false)
     private Long toId;
 
     @Column(name = "rel_value")

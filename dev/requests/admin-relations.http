@@ -1,0 +1,50 @@
+POST http://localhost:8080/api/admin/relations
+Content-Type: application/json
+
+{
+  "type": {
+    "id": 1,
+    "name": "PREDECESSOR_OF",
+    "nameLabel": "predecessor of",
+    "nameInverseLabel": "successor of",
+    "valueLabel": null
+  },
+  "fromId": 6,
+  "toId": 3,
+  "value": null
+}
+
+###
+
+GET http://localhost:8080/api/admin/relations
+
+###
+
+GET http://localhost:8080/api/admin/relations?ofEntry=4
+
+###
+
+GET http://localhost:8080/api/admin/relations/1
+
+###
+
+PUT http://localhost:8080/api/admin/relations
+Content-Type: application/json
+
+{
+  "id": 17,
+  "type": {
+    "id": 1,
+    "name": "PREDECESSOR_OF",
+    "nameLabel": "predecessor of",
+    "nameInverseLabel": "successor of",
+    "valueLabel": null
+  },
+  "fromId": 6,
+  "toId": 3,
+  "value": null
+}
+
+###
+
+DELETE http://localhost:8080/api/admin/relations/2
