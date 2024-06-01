@@ -1,0 +1,7 @@
+section {
+  padding: 1rem 0;
+
+  &:not(:last-of-type) {
+    border-bottom: 1px solid #fff;
+  }
+}

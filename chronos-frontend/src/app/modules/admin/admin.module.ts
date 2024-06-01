@@ -33,6 +33,8 @@ import {AdminBulkActionService} from "./services/admin-bulk-action.service";
 import {AddTagsBulkActionService} from "./services/bulk-actions/add-tags-bulk-action.service";
 import {AdminCopyEntryComponent} from "./views/admin-copy-entry/admin-copy-entry.component";
 import {AdminNewEntryComponent} from "./views/admin-new-entry/admin-new-entry.component";
+import {AdminRelationTypesComponent} from "./views/admin-relation-types/admin-relation-types.component";
+import {AdminRelationTypesService} from "./services/admin-relation-types.service";
 
 
 const routes: Route[] = [
@@ -63,6 +65,10 @@ const routes: Route[] = [
       {
         path: 'tags',
         component: AdminTagsComponent
+      },
+      {
+        path: 'relation-types',
+        component: AdminRelationTypesComponent
       }
     ]
   }
@@ -78,6 +84,7 @@ const routes: Route[] = [
     AdminEntryComponent,
     AdminNewEntryComponent,
     AdminCopyEntryComponent,
+    AdminRelationTypesComponent,
     AdminComponent
   ],
   imports: [
@@ -104,6 +111,7 @@ const routes: Route[] = [
     AdminConfirmService,
     AdminBulkActionService,
     AddTagsBulkActionService,
+    AdminRelationTypesService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AdminErrorInterceptor,

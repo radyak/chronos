@@ -1,0 +1,147 @@
+<div class="container">
+
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a [routerLink]="['..']">Administration</a></li>
+    <li class="breadcrumb-item active">Relation Types</li>
+  </ol>
+
+  <h1>Administration: Relation Types</h1>
+
+  <p class="text-primary-emphasis small">
+    Relations between entries need a type assigned to allow specifying the level of how entries are
+    connected. The type also carries the respective default labels, also for the inverse direction of the relation.
+    Example: King A is the <i>child of</i> King B (the reverse: King B is <i>parent of</i> King A.
+  </p>
+
+  <div class="row">
+    <div class="col-7">
+
+      <table class="table table-hover">
+        <thead>
+        <tr>
+          <th scope="col">
+            <input type="search"
+                   placeholder="Name"
+                   name="type-search"
+                   [(ngModel)]="searchRelationType"
+            >
+          </th>
+          <th class="icon-col">
+            <fa-icon [icon]="searchIcon"></fa-icon>
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        <ng-container *ngFor="let type of relationTypes$ | async">
+          <tr *ngIf="filterRelationType(type)"
+              [ngClass]="{'table-active': type.id == currentRelationType?.id}"
+              class="pointer"
+              (click)="editRelationType(type)">
+            <td>
+              {{ type.name }}
+            </td>
+            <td class="icon-col">
+              <fa-icon class="show-on-parent-hover" [icon]="editIcon"></fa-icon>
+            </td>
+          </tr>
+        </ng-container>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-5">
+      <ng-template #noCurrentTypeSelectedTemplate>
+        <button class="btn btn-block btn-outline-success" (click)="newRelationType()">
+          <fa-icon [icon]="newIcon"></fa-icon>
+          New relation type
+        </button>
+      </ng-template>
+
+      <ng-template [ngIf]="currentRelationType" [ngIfElse]="noCurrentTypeSelectedTemplate">
+        <form>
+          <fieldset>
+            <legend *ngIf="currentRelationType.id">
+              Edit Type <em>{{ currentRelationType.name }}</em>
+            </legend>
+            <legend *ngIf="!currentRelationType.id">
+              Edit New Type
+            </legend>
+
+            <div class="form-group">
+              <label for="type.name"
+                     class="form-label mt-4">
+                Name
+              </label>
+              <input type="text"
+                     class="form-control"
+                     id="type.name"
+                     name="type.name"
+                     placeholder="e.g. 'CHILD_OF' or 'TIMES_VALUE_OF'"
+                     [(ngModel)]="currentRelationType.name">
+            </div>
+
+            <div class="form-group">
+              <label for="type.nameLabel"
+                     class="form-label mt-4">
+                Label
+              </label>
+              <input type="text"
+                     class="form-control"
+                     id="type.nameLabel"
+                     name="type.nameLabel"
+                     placeholder="e.g. 'child of' or 'value of'"
+                     [(ngModel)]="currentRelationType.nameLabel">
+            </div>
+
+            <div class="form-group">
+              <label for="type.nameInverseLabel"
+                     class="form-label mt-4">
+                Inverse label
+              </label>
+              <input type="text"
+                     class="form-control"
+                     id="type.nameInverseLabel"
+                     name="type.nameInverseLabel"
+                     placeholder="e.g. 'parent of' (for 'child of')"
+                     [(ngModel)]="currentRelationType.nameInverseLabel">
+            </div>
+
+            <div class="form-group">
+              <label for="type.valueLabel"
+                     class="form-label mt-4">
+                Inverse label
+              </label>
+              <input type="text"
+                     class="form-control"
+                     id="type.valueLabel"
+                     name="type.valueLabel"
+                     placeholder="e.g. 'times' (for 'value of')"
+                     [(ngModel)]="currentRelationType.valueLabel">
+            </div>
+
+            <div class="button-group">
+              <button type="submit"
+                      class="btn btn-outline-success"
+                      (click)="saveRelationType()">
+                Save
+              </button>
+              <button type="button"
+                      class="btn btn-outline-danger"
+                      (click)="cancelEditRelationType()">
+                Cancel
+              </button>
+              <button *ngIf="currentRelationType.id"
+                      type="button"
+                      class="btn btn-danger"
+                      (click)="deleteRelationType(currentRelationType)">
+                Delete
+              </button>
+            </div>
+          </fieldset>
+        </form>
+      </ng-template>
+
+    </div>
+
+  </div>
+
+</div>
