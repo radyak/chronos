@@ -131,6 +131,17 @@ class PublicEntrySearchApiIntegrationTest {
 				.andExpect(entriesContainAllTitles("Augustus", "Tiberius", "Charlemagne", "Louis"));
 	}
 
+	@Test
+	public void whenFilterEntriesByIds_thenOnlyMatchingEntriesReturned()
+			throws Exception {
+		mvc.perform(get("/api/entries?ids=2,7,138")
+						.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andExpect(content()
+						.contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+				.andExpect(entriesContainAllTitles("Charles Martel", "Tiberius"));
+	}
+
 	private ResultMatcher entriesContainAllTitles(String ...titles) {
 		return mvcResult -> {
 			Set<String> expected = new HashSet<>(Arrays.asList(titles));
