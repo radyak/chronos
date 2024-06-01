@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Entity
@@ -61,6 +62,8 @@ public class Entry {
 
     @Transient
     public List<Relation> getRelations() {
-        return Stream.concat(fromRelations.stream(), toRelations.stream()).toList();
+        return Stream
+                .concat(fromRelations.stream(), toRelations.stream())
+                .collect(Collectors.toList());
     }
 }

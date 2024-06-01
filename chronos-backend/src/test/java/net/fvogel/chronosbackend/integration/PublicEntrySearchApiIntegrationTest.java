@@ -163,8 +163,9 @@ class PublicEntrySearchApiIntegrationTest {
 			contentAsString = mvcResult.getResponse().getContentAsString();
 			return objectMapper.readValue(contentAsString, new TypeReference<HashSet<Entry>>(){});
 		} catch (UnsupportedEncodingException | JsonProcessingException e) {
-			throw new AssertionError("API response not parseable to Entry[]"
-					+ (contentAsString != null ? (": " + contentAsString) : "")
+			throw new AssertionError(
+					"API response not parseable to Entry[]" + (contentAsString != null ? (": " + contentAsString) : ""),
+					e
 			);
 		}
     }
