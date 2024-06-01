@@ -3,5 +3,6 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
     <include file="classpath:db/changelog/chronos-db-v1.0.0_baseline.xml" relativeToChangelogFile="false" />
+    <include file="classpath:db/changelog/chronos-db-v1.1.0_add-relations.xml" relativeToChangelogFile="false" />
 
 </databaseChangeLog>

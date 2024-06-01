@@ -45,3 +45,36 @@ Disables security.
 
 ### `dev-*`
 Custom profile(s) for development; application properties are git-ignored.
+
+
+## Database
+
+The database schema is versioned with [Liquibase](https://www.liquibase.com/).
+
+
+### Generating changelogs
+
+With the current configuration in place, it is recommended to proceed as described below, to add a new changelog:
+
+1. Checkout the *main* branch (or a respective Git revision with the previous database state).
+2. Start
+   * the local Postgres instance from the [docker-compose.yaml](../docker-compose.yaml)
+   * the [chronos-backend](../chronos-backend) with the profiles `test-persistence-postgres` (+ optionally `test-data`)
+3. Execute the command `mvn liquibase:generateChangeLog`. This generates a full `changelog.xml` in `src/main/resources/db/changelog`, which should be renamed to `changelog_old.xml` or something similar.
+4. Cheout the *feature/...* branch (or a respective Git revision with the new database state).
+5. Start the chronos-backend again, this time with the profiles `no-liquibase` (to let JPA's auto DDL do the update) and again with `test-persistence-postgres`.  
+6. Again, execute the command `mvn liquibase:generateChangeLog`, to generate a new full `changelog.xml` in `src/main/resources/db/changelog`.
+7. Compare the two generated changelogs, collect the delta in a new changelog and reference it in the `master.xml`.
+8. To verify the proper functioning of the changeset, proceed as follows:
+   1. If started, stop the app and stop and dispose the Postgres container
+   2. Delete the Postgres data (by default: `/dev/chronos-postrest-data`)
+   3. Perform steps 1-4 again.
+   4. Start the chronos-backend again, this time only with the profile `test-persistence-postgres`.
+   5. The startup should not throw any errors, as both Liquibase run + JPA validates the schema.
+
+### Conventions
+
+* The naming pattern for changelog files is:
+  > chronos-db-v[*version*]_[*short kebab-case description*].xml
+* IDs of changesets can keep their generated timestamp string, but the counter postfix should be adapted to be consistent.
+* The generated author of changesets should be changed, if necessary.
