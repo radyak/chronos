@@ -18,14 +18,10 @@ public class RelationType {
     private String name;
 
     @NotNull
-    @Column(name = "name_label", nullable = false)
-    private String nameLabel;
+    @Column(name = "label", nullable = false)
+    private String label;
 
-    @NotNull
-    @Column(name = "name_inverse_label", nullable = false)
-    private String nameInverseLabel;
-
-    @Column(name = "value_label")
-    private String valueLabel;
+    @Column(name = "inverse_relation_label")
+    private String inverseRelationLabel;
 
 }

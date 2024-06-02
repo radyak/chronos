@@ -29,13 +29,10 @@
             <column name="name" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="name_inverse_label" type="VARCHAR(255)">
+            <column name="label" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="name_label" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="value_label" type="VARCHAR(255)"/>
+            <column name="inverse_relation_label" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
     <changeSet author="radyak" id="1717222419048-3">

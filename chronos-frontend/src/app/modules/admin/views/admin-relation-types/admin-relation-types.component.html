@@ -80,42 +80,58 @@
             </div>
 
             <div class="form-group">
-              <label for="type.nameLabel"
+              <label for="type.label"
                      class="form-label mt-4">
                 Label
+                <chronos-tooltip [inline]="true">
+                  Define the label used to build a natural sentence to describe the relation.
+                  Use <code>{{ relationService.VALUE_PLACEHOLDER }}</code> as placeholder for the relation value.
+                </chronos-tooltip>
               </label>
               <input type="text"
                      class="form-control"
-                     id="type.nameLabel"
-                     name="type.nameLabel"
+                     id="type.label"
+                     name="type.label"
                      placeholder="e.g. 'child of' or 'value of'"
-                     [(ngModel)]="currentRelationType.nameLabel">
+                     [(ngModel)]="currentRelationType.label">
+
+              <small class="form-text text-muted">
+                Preview:
+                <span class="example">
+                  &quot;[Entry A] {{ relationService.getRelationDescription(currentRelationType.label, '[Example value]') }} [Entry B]&quot;
+                </span>
+              </small>
+
             </div>
 
             <div class="form-group">
-              <label for="type.nameInverseLabel"
+              <label for="type.inverseRelationLabel"
                      class="form-label mt-4">
                 Inverse label
+                <chronos-tooltip [inline]="true">
+                  Define the label used to build a natural sentence to describe the inverse direction of the relation.
+                  Use <code>{{ relationService.VALUE_PLACEHOLDER }}</code> as placeholder for the relation value.
+                </chronos-tooltip>
               </label>
               <input type="text"
                      class="form-control"
-                     id="type.nameInverseLabel"
-                     name="type.nameInverseLabel"
+                     id="type.inverseRelationLabel"
+                     name="type.inverseRelationLabel"
                      placeholder="e.g. 'parent of' (for 'child of')"
-                     [(ngModel)]="currentRelationType.nameInverseLabel">
-            </div>
+                     [(ngModel)]="currentRelationType.inverseRelationLabel">
 
-            <div class="form-group">
-              <label for="type.valueLabel"
-                     class="form-label mt-4">
-                Inverse label
-              </label>
-              <input type="text"
-                     class="form-control"
-                     id="type.valueLabel"
-                     name="type.valueLabel"
-                     placeholder="e.g. 'times' (for 'value of')"
-                     [(ngModel)]="currentRelationType.valueLabel">
+              <small class="form-text text-muted" *ngIf="currentRelationType.inverseRelationLabel else noInverseLabelDefined">
+                Preview:
+                <span class="example">
+                  &quot;[Entry B] {{ relationService.getRelationDescription(currentRelationType.inverseRelationLabel, '[Example value]') }} [Entry A]&quot;
+                </span>
+              </small>
+
+              <ng-template #noInverseLabelDefined>
+                <small class="form-text text-muted">
+                  No inverse label defined; will use normal label instead
+                </small>
+              </ng-template>
             </div>
 
             <div class="button-group">

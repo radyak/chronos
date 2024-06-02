@@ -3,6 +3,7 @@ import {Observable, of} from "rxjs";
 import {faPenToSquare, faPlus, faSearch} from "@fortawesome/free-solid-svg-icons";
 import {RelationType} from "../../../../model/relation-type.model";
 import {AdminRelationTypesService} from "../../services/admin-relation-types.service";
+import {RelationService} from "../../../../service/relation-service";
 
 @Component({
   selector: 'chronos-admin-relation-types',
@@ -19,7 +20,8 @@ export class AdminRelationTypesComponent {
   newIcon = faPlus;
   searchIcon = faSearch;
 
-  constructor(private adminRelationTypesService: AdminRelationTypesService) {
+  constructor(private adminRelationTypesService: AdminRelationTypesService,
+              protected relationService: RelationService) {
   }
 
   ngOnInit(): void {
@@ -32,7 +34,8 @@ export class AdminRelationTypesComponent {
 
   newRelationType(): void {
     this.currentRelationType = {
-      name: ""
+      name: "",
+      label: ""
     };
   }
 

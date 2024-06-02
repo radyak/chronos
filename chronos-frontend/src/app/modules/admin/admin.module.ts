@@ -35,6 +35,7 @@ import {AdminCopyEntryComponent} from "./views/admin-copy-entry/admin-copy-entry
 import {AdminNewEntryComponent} from "./views/admin-new-entry/admin-new-entry.component";
 import {AdminRelationTypesComponent} from "./views/admin-relation-types/admin-relation-types.component";
 import {AdminRelationTypesService} from "./services/admin-relation-types.service";
+import {TooltipComponent} from "../../ui-components/tooltip/tooltip.component";
 
 
 const routes: Route[] = [
@@ -103,6 +104,7 @@ const routes: Route[] = [
     WikipediaSummaryComponent,
     TagSelectionComponent,
     EntriesTableComponent,
+    TooltipComponent,
   ],
   providers: [
     AdminTagCategoriesService,
