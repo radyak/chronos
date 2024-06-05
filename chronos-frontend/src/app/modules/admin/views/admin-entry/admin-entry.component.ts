@@ -7,7 +7,9 @@ import {AdminTagsService} from "../../services/admin-tags.service";
 import {Tag} from "../../../../model/tag.model";
 import {WikipediaSummary} from "../../../../model/wikipedia-summary.model";
 import {DateRange, DateRangeType} from "../../../../model/date-range.model";
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute, Params, Router} from "@angular/router";
+import {RelationService} from "../../../../service/relation-service";
+import {Relation} from "../../../../model/relation.model";
 
 
 @Component({
@@ -32,6 +34,7 @@ export class AdminEntryComponent implements OnInit {
 
   constructor(private adminEntriesService: AdminEntriesService,
               private adminTagsService: AdminTagsService,
+              private relationService: RelationService,
               private router: Router,
               private route: ActivatedRoute) {
     this.wikipediaTitleSearch$.pipe(
@@ -50,12 +53,14 @@ export class AdminEntryComponent implements OnInit {
   }
 
   protected setCurrentEntry(): void {
-    const entryId = this.route.snapshot.params['id'];
-    this.adminEntriesService.getEntry(entryId).subscribe(entry => {
-      this.currentEntry = entry;
-      this.findWikipediaSummary(entry.title);
-      this.afterLoadEntry();
-    })
+    this.route.params.subscribe((params: Params) => {
+      const entryId = params['id'];
+      this.adminEntriesService.getEntry(entryId).subscribe(entry => {
+        this.currentEntry = entry;
+        this.findWikipediaSummary(entry.title);
+        this.afterLoadEntry();
+      });
+    });
   }
 
   protected pageTitle(): string {
@@ -68,6 +73,7 @@ export class AdminEntryComponent implements OnInit {
 
   protected afterLoadEntry(): void {
     // To be overwritten from extending classes
+    this.adminEntriesService.enrichEntry(this.currentEntry!);
   }
 
   private findWikipediaSummary(title?: string): void {
@@ -130,5 +136,25 @@ export class AdminEntryComponent implements OnInit {
     return Object.values(DateRangeType);
   }
 
+  relationLabel(relation: Relation): string {
+    return this.relationService.getRelationDescription(
+      (relation.fromId === this.currentEntry?.id && !!relation.type.label ?
+        relation.type.label : relation.type.inverseRelationLabel) || '-',
+      relation.value
+    );
+  }
+
+  relationOtherEntry(relation: Relation): Entry | undefined {
+    return (relation.fromId === this.currentEntry?.id ? relation.to : relation.from);
+  }
+
+  goTo(entry?: Entry): void {
+    if (!entry) {
+      return;
+    }
+    this.router.navigate(['..', entry.id], {
+      relativeTo: this.route
+    });
+  }
 }
 

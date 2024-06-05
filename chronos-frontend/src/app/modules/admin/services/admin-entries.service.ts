@@ -28,11 +28,31 @@ export class AdminEntriesService {
     if (entriesSearchParams.to) {
       params = params.set('to', entriesSearchParams.to)
     }
+    if (entriesSearchParams.ids) {
+      params = params.set('ids', entriesSearchParams.ids.join(','))
+    }
     return this.http.get<Array<Entry>>("/api/admin/entries", { params })
   }
 
   public getEntry(id: number): Observable<Entry> {
     return this.http.get<Entry>(`/api/admin/entries/${id}`);
+  }
+
+  public enrichEntry(entry: Entry): void {
+    const relationIds = new Set<number>();
+    entry.relations?.forEach(relation => {
+      relationIds.add(relation.fromId);
+      relationIds.add(relation.toId);
+    });
+    this.allEntries({
+      ids: [...relationIds]
+    }).subscribe(entries => {
+      const findById = (id: number) => entries.find(e => e.id === id);
+      entry.relations?.forEach(relation => {
+        relation.from = findById(relation.fromId);
+        relation.to = findById(relation.toId);
+      });
+    })
   }
 
   public saveEntry(entry: Entry): Observable<Entry> {

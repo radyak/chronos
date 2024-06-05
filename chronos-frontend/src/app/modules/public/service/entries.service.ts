@@ -9,6 +9,7 @@ export interface EntriesSearchParams {
   tagIds?: Array<number>;
   from?: number;
   to?: number;
+  ids?: Array<number>;
 }
 
 @Injectable({
@@ -35,6 +36,9 @@ export class EntriesService {
     }
     if (entriesSearchParams.to) {
       params = params.set('to', entriesSearchParams.to)
+    }
+    if (entriesSearchParams.ids) {
+      params = params.set('ids', entriesSearchParams.ids.join(','))
     }
     return this.http.get<Array<Entry>>("/api/entries", { params })
   }

@@ -5,8 +5,8 @@ export interface Relation {
   id?: number;
   type: RelationType;
   fromId: number;
-  from: Entry;
+  from?: Entry;
   toId: number;
-  to: Entry;
+  to?: Entry;
   value?: string;
 }
