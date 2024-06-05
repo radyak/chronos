@@ -48,4 +48,9 @@ public class EntriesController {
         return this.entriesService.findWikipediaSummaryForEntry(id);
     }
 
+    @GetMapping("/wikipediasummary")
+    public WikipediaSummary findWikipediaSummaryByTitle(@RequestParam(name = "title") String titleQuery) {
+        return this.entriesService.findWikipediaSummaryForTitle(titleQuery);
+    }
+
 }
