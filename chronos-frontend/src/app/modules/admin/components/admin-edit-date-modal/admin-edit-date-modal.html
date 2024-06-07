@@ -1,0 +1,65 @@
+<div class="modal-header">
+  <h4 class="modal-title"
+      id="modal-basic-title">
+    Edit Date Range
+  </h4>
+  <button type="button"
+          class="btn-close"
+          aria-label="Close"
+          (click)="activeModal.dismiss('CANCEL')">
+  </button>
+</div>
+
+<div class="modal-body">
+  <form>
+    <div class="form-group">
+      <div ngbDropdown class="btn-block">
+        <button type="button"
+                class="btn btn-primary"
+                id="dateRange.type"
+                ngbDropdownToggle>
+          {{ editedRange.type || 'Select a type' }}
+        </button>
+        <div ngbDropdownMenu
+             aria-labelledby="tag.category">
+          <div class="dropdown-divider"></div>
+          <ng-container
+            *ngFor="let type of allDateRangeTypes()">
+            <button ngbDropdownItem
+                    (click)="editedRange.type = type">
+              {{ type }}
+            </button>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label mt-4">
+        From:
+      </label>
+      <chronos-date-input [(date)]="editedRange.start"></chronos-date-input>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label mt-4">
+        To:
+      </label>
+      <chronos-date-input [(date)]="editedRange.end"></chronos-date-input>
+    </div>
+
+  </form>
+</div>
+
+<div class="modal-footer">
+  <button type="button"
+          class="btn btn-outline-light"
+          (click)="activeModal.dismiss(originalRange)">
+    Cancel
+  </button>
+  <button type="button"
+          class="btn btn-outline-danger"
+          (click)="activeModal.close(editedRange)">
+    Ok
+  </button>
+</div>

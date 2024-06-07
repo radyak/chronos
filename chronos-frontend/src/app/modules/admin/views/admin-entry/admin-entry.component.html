@@ -75,71 +75,22 @@
             Dates:
           </label>
 
-          <div *ngFor="let range of currentEntry.dateRanges">
-            <ng-container *ngIf="range === currentEntryDateRange else noEditDateRange">
-
-              <div class="row">
-                <div class="form-group col-12">
-
-                  <div ngbDropdown class="btn-block">
-                    <button type="button"
-                            class="btn btn-primary"
-                            id="tag.category"
-                            ngbDropdownToggle>
-                      {{ range.type || 'Select a type' }}
-                    </button>
-                    <div ngbDropdownMenu
-                         aria-labelledby="tag.category">
-                      <div class="dropdown-divider"></div>
-                      <ng-container
-                        *ngFor="let type of allDateRangeTypes()">
-                        <button ngbDropdownItem
-                                (click)="range.type = type">
-                          {{ type }}
-                        </button>
-                      </ng-container>
-                    </div>
-                  </div>
-
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="form-group col-6">
-                  <label class="form-label mt-4">
-                    From:
-                  </label>
-                  <chronos-date-input [(date)]="range.start"></chronos-date-input>
-                </div>
-
-                <div class="form-group col-6">
-                  <label class="form-label mt-4">
-                    To:
-                  </label>
-                  <chronos-date-input [(date)]="range.end"></chronos-date-input>
-                </div>
-              </div>
-
-            </ng-container>
-
-            <ng-template #noEditDateRange>
-              <div class="date-range">
-                <button (click)="editDateRange(range)"
-                        class="btn btn-outline-light btn-sm">
-                  <fa-icon [icon]="editIcon"></fa-icon>
-                </button>
-                <button (click)="deleteDateRange(range)"
-                        class="btn btn-outline-danger btn-sm">
-                  <fa-icon [icon]="deleteIcon"></fa-icon>
-                </button>
-
-                <span>
-                  <b>{{ range.type }}</b>:
-                  {{ range.start | date }} - {{ range.end | date }}
-                </span>
-              </div>
-            </ng-template>
-          </div>
+          <table class="table table-hover">
+            <tbody>
+              <tr *ngFor="let range of currentEntry.dateRanges"
+                  class="pointer"
+                  (click)="editDateRange(range)">
+                <td>{{ range.type }}</td>
+                <td>{{ range.start | date }} - {{ range.end | date }}</td>
+                <td class="icon-col">
+                  <fa-icon [icon]="deleteIcon"
+                           (click)="deleteDateRange(range)"
+                           class="action-icon">
+                    ></fa-icon>
+                </td>
+              </tr>
+            </tbody>
+          </table>
 
           <div class="button-group button-row">
             <button (click)="addDateRange()"

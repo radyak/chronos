@@ -9,8 +9,7 @@ import {NgIf} from "@angular/common";
   templateUrl: './admin-confirm-modal.html',
   imports: [
     NgIf
-  ],
-  styleUrls: ['./admin-confirm-modal.scss']
+  ]
 })
 export class AdminConfirmModal {
 

@@ -1,15 +1,17 @@
 import {Component, OnInit} from '@angular/core';
 import {AdminEntriesService} from "../../services/admin-entries.service";
-import {debounceTime, filter, map, Subject} from "rxjs";
+import {debounceTime, filter, from, map, Subject} from "rxjs";
 import {Entry} from "../../../../model/entry.model";
-import {faPenToSquare, faPlus, faTrash} from "@fortawesome/free-solid-svg-icons";
+import {faPlus, faSearch, faTrash} from "@fortawesome/free-solid-svg-icons";
 import {AdminTagsService} from "../../services/admin-tags.service";
 import {Tag} from "../../../../model/tag.model";
 import {WikipediaSummary} from "../../../../model/wikipedia-summary.model";
-import {DateRange, DateRangeType} from "../../../../model/date-range.model";
+import {DateRange} from "../../../../model/date-range.model";
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {RelationService} from "../../../../service/relation-service";
 import {Relation} from "../../../../model/relation.model";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {AdminEditDateModal} from "../../components/admin-edit-date-modal/admin-edit-date-modal";
 
 
 @Component({
@@ -22,19 +24,18 @@ export class AdminEntryComponent implements OnInit {
   wikipediaSummary?: WikipediaSummary;
   availableTags: Array<Tag> = [];
   currentEntry?: Entry;
-  currentEntryDateRange?: DateRange;
 
   wikipediaPageInputVisible = false;
 
   wikipediaTitleSearch$ = new Subject<string | undefined>();
 
-  editIcon = faPenToSquare;
   newIcon = faPlus;
   deleteIcon = faTrash;
 
   constructor(private adminEntriesService: AdminEntriesService,
               private adminTagsService: AdminTagsService,
               private relationService: RelationService,
+              private modal: NgbModal,
               private router: Router,
               private route: ActivatedRoute) {
     this.wikipediaTitleSearch$.pipe(
@@ -115,12 +116,17 @@ export class AdminEntryComponent implements OnInit {
   }
 
   editDateRange(dateRange: DateRange) {
-    this.currentEntryDateRange = dateRange;
+    const modalRef = this.modal.open(AdminEditDateModal, { ariaLabelledBy: 'modal-basic-title' })
+    modalRef.componentInstance.dateRange = dateRange;
+    return from(modalRef.result).subscribe((editedDateRange: DateRange) => {
+      dateRange.start = editedDateRange.start;
+      dateRange.end = editedDateRange.end;
+      dateRange.type = editedDateRange.type;
+    });
   }
 
   deleteDateRange(dateRange: DateRange) {
     this.currentEntry?.dateRanges?.splice(this.currentEntry?.dateRanges?.indexOf(dateRange), 1);
-    delete this.currentEntryDateRange;
   }
 
   addDateRange() {
@@ -130,10 +136,6 @@ export class AdminEntryComponent implements OnInit {
     };
     this.currentEntry?.dateRanges?.push(newDate);
     this.editDateRange(newDate);
-  }
-
-  allDateRangeTypes(): Array<DateRangeType> {
-    return Object.values(DateRangeType);
   }
 
   relationLabel(relation: Relation): string {
@@ -156,5 +158,7 @@ export class AdminEntryComponent implements OnInit {
       relativeTo: this.route
     });
   }
+
+  protected readonly faSearch = faSearch;
 }
 
