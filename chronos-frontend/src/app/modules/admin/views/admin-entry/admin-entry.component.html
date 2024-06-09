@@ -136,15 +136,36 @@
           Relations
         </h2>
 
-        <ng-container *ngFor="let relation of currentEntry.relations">
-          <div>
-            {{ relationLabel(relation) }}
-            <a (click)="goTo(relationOtherEntry(relation))"
-               href="#">
-              {{ relationOtherEntry(relation)?.title }}
-            </a>
-          </div>
-        </ng-container>
+        <table class="table table-hover">
+          <tbody>
+          <tr *ngFor="let relation of currentEntry.relations"
+              class="pointer"
+              (click)="editRelation(relation)">
+            <td>
+              {{ relationLabel(relation) }}
+              <a (click)="goTo(relationOtherEntry(relation))"
+                 href="#">
+                {{ relationOtherEntry(relation)?.title }}
+              </a>
+            </td>
+            <td class="icon-col">
+              <fa-icon [icon]="deleteIcon"
+                       (click)="deleteRelation(relation)"
+                       class="action-icon">
+                ></fa-icon>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+
+        <div class="button-group button-row">
+          <button (click)="addRelation()"
+                  class="btn btn-outline-success btn-block">
+            <fa-icon [icon]="newIcon"></fa-icon>
+            Add Relation
+          </button>
+        </div>
+
       </form>
 
     </div>

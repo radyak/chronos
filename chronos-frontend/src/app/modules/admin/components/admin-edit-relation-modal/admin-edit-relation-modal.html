@@ -1,0 +1,52 @@
+<div class="modal-header">
+  <h4 class="modal-title"
+      id="modal-basic-title">
+    Edit Relation of {{ entry.title }}
+  </h4>
+  <button type="button"
+          class="btn-close"
+          aria-label="Close"
+          (click)="activeModal.dismiss()">
+  </button>
+</div>
+
+<div class="modal-body">
+  <form>
+
+    <div class="form-group">
+<!--      <div ngbDropdown class="btn-block">-->
+<!--        <button type="button"-->
+<!--                class="btn btn-primary"-->
+<!--                id="dateRange.type"-->
+<!--                ngbDropdownToggle>-->
+<!--          {{ editedRange.type || 'Select a type' }}-->
+<!--        </button>-->
+<!--        <div ngbDropdownMenu-->
+<!--             aria-labelledby="tag.category">-->
+<!--          <div class="dropdown-divider"></div>-->
+<!--          <ng-container-->
+<!--            *ngFor="let type of allDateRangeTypes()">-->
+<!--            <button ngbDropdownItem-->
+<!--                    (click)="editedRange.type = type">-->
+<!--              {{ type }}-->
+<!--            </button>-->
+<!--          </ng-container>-->
+<!--        </div>-->
+<!--      </div>-->
+    </div>
+
+  </form>
+</div>
+
+<div class="modal-footer">
+  <button type="button"
+          class="btn btn-outline-light"
+          (click)="activeModal.dismiss()">
+    Cancel
+  </button>
+  <button type="button"
+          class="btn btn-outline-danger"
+          (click)="activeModal.close(editedRelation)">
+    Ok
+  </button>
+</div>

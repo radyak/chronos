@@ -28,6 +28,8 @@ import {DateInputComponent} from "../../../../ui-components/date-input/date-inpu
 export class AdminEditDateModal {
 
   activeModal = inject(NgbActiveModal);
+  originalRange!: DateRange;
+  editedRange!: DateRange;
 
   @Input()
   set dateRange(dateRange: DateRange) {
@@ -36,9 +38,6 @@ export class AdminEditDateModal {
       ...dateRange
     };
   }
-
-  originalRange!: DateRange;
-  editedRange!: DateRange;
 
   allDateRangeTypes(): Array<DateRangeType> {
     return Object.values(DateRangeType);
