@@ -1,0 +1,38 @@
+<div ngbDropdown class="btn-block">
+  <button type="button"
+          class="btn btn-primary"
+          id="tag.category"
+          ngbDropdownToggle>
+    {{
+      (showInverted ? relationType?.inverseRelationLabel : relationType?.label)
+      || 'Select a relation type'
+    }}
+  </button>
+  <div ngbDropdownMenu
+       aria-labelledby="tag.category">
+    <div class="mb-1">
+      <form autocomplete="off">
+        <input
+          type="search"
+          class="form-control borderless shadow-none"
+          id="tag.category.search"
+          name="tag.category.search"
+          placeholder="Search ..."
+          [(ngModel)]="relationTypeFilter"
+        />
+        <input autocomplete="false"
+               name="hidden"
+               type="text"
+               style="display:none;">
+      </form>
+    </div>
+    <div class="dropdown-divider"></div>
+    <ng-container
+      *ngFor="let relationType of filteredRelationTypes(relationTypes$ | async)">
+      <button ngbDropdownItem
+              (click)="select(relationType)">
+        {{ showInverted ? relationType?.inverseRelationLabel : relationType?.label }}
+      </button>
+    </ng-container>
+  </div>
+</div>

@@ -162,7 +162,8 @@ export class AdminEntryComponent implements OnInit {
   addRelation() {
     const relation: Relation = {
       type: null as any,
-      fromId: 0,
+      from: this.currentEntry,
+      fromId: this.currentEntry?.id || 0,
       toId: 0
     };
     this.currentEntry?.relations?.push(relation);
@@ -189,8 +190,8 @@ export class AdminEntryComponent implements OnInit {
 
   relationLabel(relation: Relation): string {
     return this.relationService.getRelationDescription(
-      (relation.fromId === this.currentEntry?.id && !!relation.type.label ?
-        relation.type.label : relation.type.inverseRelationLabel) || '-',
+      (relation.fromId === this.currentEntry?.id && !!relation.type?.label ?
+        relation.type?.label : relation.type?.inverseRelationLabel) || '-',
       relation.value
     );
   }

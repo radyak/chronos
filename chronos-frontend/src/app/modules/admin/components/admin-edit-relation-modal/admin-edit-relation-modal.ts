@@ -1,38 +1,19 @@
 import {Component, inject, Input} from '@angular/core';
-import {
-  NgbActiveModal,
-  NgbDropdown,
-  NgbDropdownItem,
-  NgbDropdownMenu,
-  NgbDropdownToggle
-} from "@ng-bootstrap/ng-bootstrap";
-import {AsyncPipe, NgForOf, NgIf} from "@angular/common";
-import {TagSelectionComponent} from "../../../../ui-components/tag-selection/tag-selection.component";
+import {NgbActiveModal} from "@ng-bootstrap/ng-bootstrap";
 import {Relation} from "../../../../model/relation.model";
-import {DateInputComponent} from "../../../../ui-components/date-input/date-input.component";
 import {Entry} from "../../../../model/entry.model";
+import {RelationService} from "../../../../service/relation-service";
 
 
 @Component({
-  standalone: true,
   selector: 'chronos-admin-edit-relation-modal',
   templateUrl: './admin-edit-relation-modal.html',
-  imports: [
-    NgIf,
-    TagSelectionComponent,
-    AsyncPipe,
-    DateInputComponent,
-    NgForOf,
-    NgbDropdown,
-    NgbDropdownItem,
-    NgbDropdownMenu,
-    NgbDropdownToggle
-  ],
   styleUrls: ['./admin-edit-relation-modal.scss']
 })
 export class AdminEditRelationModal {
 
   activeModal = inject(NgbActiveModal);
+  relationService = inject(RelationService)
   editedRelation!: Relation;
 
   @Input()
@@ -43,6 +24,21 @@ export class AdminEditRelationModal {
     this.editedRelation = {
       ...relation
     };
+  }
+
+  get isInverse(): boolean {
+    return this.editedRelation.toId === this.entry.id;
+  }
+
+  reverse(): void {
+    const tempId = this.editedRelation.fromId;
+    const temp = this.editedRelation.from;
+
+    this.editedRelation.fromId = this.editedRelation.toId;
+    this.editedRelation.from = this.editedRelation.to;
+
+    this.editedRelation.toId = tempId;
+    this.editedRelation.to = temp;
   }
 
 }

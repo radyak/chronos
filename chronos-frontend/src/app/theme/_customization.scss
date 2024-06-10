@@ -95,6 +95,7 @@ th input {
 // Links/Actions
 a {
   cursor: pointer;
+  text-decoration: underline !important;
 
   &.action {
     margin-right: 10px;

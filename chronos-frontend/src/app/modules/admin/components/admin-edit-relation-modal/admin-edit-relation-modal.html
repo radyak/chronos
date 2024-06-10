@@ -13,28 +13,42 @@
 <div class="modal-body">
   <form>
 
-    <div class="form-group">
-<!--      <div ngbDropdown class="btn-block">-->
-<!--        <button type="button"-->
-<!--                class="btn btn-primary"-->
-<!--                id="dateRange.type"-->
-<!--                ngbDropdownToggle>-->
-<!--          {{ editedRange.type || 'Select a type' }}-->
-<!--        </button>-->
-<!--        <div ngbDropdownMenu-->
-<!--             aria-labelledby="tag.category">-->
-<!--          <div class="dropdown-divider"></div>-->
-<!--          <ng-container-->
-<!--            *ngFor="let type of allDateRangeTypes()">-->
-<!--            <button ngbDropdownItem-->
-<!--                    (click)="editedRange.type = type">-->
-<!--              {{ type }}-->
-<!--            </button>-->
-<!--          </ng-container>-->
-<!--        </div>-->
-<!--      </div>-->
+    <div class="form-group inline"
+         *ngIf="!isInverse else inverseRelation">
+        <span class="btn">
+          {{ editedRelation.from?.title }}
+        </span>
+
+      <chronos-admin-relation-type-select-input [(relationType)]="editedRelation.type">
+      </chronos-admin-relation-type-select-input>
+
+      <chronos-admin-entries-select-input [(entry)]="editedRelation.to">
+      </chronos-admin-entries-select-input>
     </div>
 
+    <ng-template #inverseRelation>
+      <div class="form-group inline">
+        <chronos-admin-entries-select-input [(entry)]="editedRelation.from">
+        </chronos-admin-entries-select-input>
+
+        <chronos-admin-relation-type-select-input [(relationType)]="editedRelation.type">
+        </chronos-admin-relation-type-select-input>
+
+        <span class="btn">
+          {{ editedRelation.to?.title }}
+        </span>
+      </div>
+    </ng-template>
+
+    <a (click)="reverse()" class="inline">
+      <div class="form-check form-switch">
+        <input class="form-check-input"
+               type="checkbox"
+               role="switch"
+               [checked]="isInverse">
+      </div>
+      Reverse the relation
+    </a>
   </form>
 </div>
 

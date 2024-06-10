@@ -36,6 +36,13 @@ import {AdminNewEntryComponent} from "./views/admin-new-entry/admin-new-entry.co
 import {AdminRelationTypesComponent} from "./views/admin-relation-types/admin-relation-types.component";
 import {AdminRelationTypesService} from "./services/admin-relation-types.service";
 import {TooltipComponent} from "../../ui-components/tooltip/tooltip.component";
+import {
+  AdminEntriesSelectInputComponent
+} from "./components/admin-entries-select-input/admin-entries-select-input.component";
+import {AdminEditRelationModal} from "./components/admin-edit-relation-modal/admin-edit-relation-modal";
+import {
+  AdminRelationTypeSelectInputComponent
+} from "./components/admin-relation-type-select-input/admin-relation-type-select-input.component";
 
 
 const routes: Route[] = [
@@ -86,7 +93,10 @@ const routes: Route[] = [
     AdminNewEntryComponent,
     AdminCopyEntryComponent,
     AdminRelationTypesComponent,
-    AdminComponent
+    AdminComponent,
+    AdminEntriesSelectInputComponent,
+    AdminRelationTypeSelectInputComponent,
+    AdminEditRelationModal
   ],
   imports: [
     CommonModule,
