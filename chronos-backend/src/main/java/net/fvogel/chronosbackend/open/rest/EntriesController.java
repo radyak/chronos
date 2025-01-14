@@ -46,4 +46,14 @@ public class EntriesController {
         return this.entriesService.findWikipediaSummaryForEntry(id);
     }
 
+    @GetMapping("/search")
+    public List<Entry> search(
+            @RequestParam(name = "title", required = false) String title,
+            @RequestParam(name = "tags", required = false) Long[] tagIdArray,
+            @RequestParam(name = "from", required = false) Short from,
+            @RequestParam(name = "to", required = false) Short to
+    ) {
+        return this.entriesService.search(title, tagIdArray, from, to);
+    }
+
 }

@@ -1,0 +1,32 @@
+# All
+GET http://localhost:8080/api/entries/search
+
+###
+
+# Filter by name fragment
+GET http://localhost:8080/api/entries/search?title=LeMagn
+
+###
+
+# Filter by tags
+GET http://localhost:8080/api/entries/search?tags=3,1
+
+###
+
+# Filter by name & tags
+GET http://localhost:8080/api/entries/search?title=LeMagn&tags=3,1
+
+###
+
+# Filter by year range - lower bound only
+GET http://localhost:8080/api/entries/search?from=760
+
+###
+
+# Filter by year range - upper bound only
+GET http://localhost:8080/api/entries/search?to=800
+
+###
+
+# Filter by year range - bounded range
+GET http://localhost:8080/api/entries/search?from=760&to=778
