@@ -1,0 +1,7 @@
+# Retrieve entry for 'Hadrian'
+GET http://localhost:8080/api/wiki/search?q=Hadrian
+
+###
+
+# HTTP 400 error: no query string
+GET http://localhost:8080/api/wiki/search
