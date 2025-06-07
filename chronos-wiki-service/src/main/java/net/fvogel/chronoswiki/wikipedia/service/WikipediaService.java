@@ -8,6 +8,9 @@ import net.fvogel.chronoswiki.wikipedia.model.WikipediaImage;
 import net.fvogel.chronoswiki.wikipedia.model.WikipediaSummary;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
+import org.springframework.cache.annotation.Cacheable;
+import net.fvogel.chronoswiki.config.CachingConfig;
+
 
 @Service
 public class WikipediaService {
@@ -20,6 +23,7 @@ public class WikipediaService {
         this.objectMapper = new ObjectMapper();
     }
 
+    @Cacheable(CachingConfig.Caches.WIKI_ARTICLES_BY_TITLE)
     public WikipediaSummary findWikipediaArticleSummary(String title) {
         String uri = "https://en.wikipedia.org/w/api.php?"
                 + "action=query"
@@ -40,6 +44,8 @@ public class WikipediaService {
                 .findFirst()
                 .orElseThrow(NotFoundException::new)
                 .getValue();
+        
+        System.out.println("I arrived here: " +  wikipediaPageDto);
 
         WikipediaSummary wikipediaSummary = mapToWikipediaSummary(wikipediaPageDto);
 

@@ -5,3 +5,8 @@ GET http://localhost:8080/api/wiki/search?q=Hadrian
 
 # HTTP 400 error: no query string
 GET http://localhost:8080/api/wiki/search
+
+###
+
+# Wikipedia API call
+GET https://en.wikipedia.org/w/api.php?action=query&prop=extracts|pageimages|info&inprop=url&exsentences=10&exlimit=1&explaintext=1&format=json&pithumbsize=300&titles=Probus

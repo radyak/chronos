@@ -1,0 +1,12 @@
+# Wikipedia API call - exact result
+GET https://en.wikipedia.org/w/api.php?action=query&prop=extracts|pageimages|info&inprop=url&exsentences=10&exlimit=1&explaintext=1&format=json&pithumbsize=300&titles=Probus (emperor)
+
+### 
+
+# Wikipedia API call - clarification page result
+GET https://en.wikipedia.org/w/api.php?action=query&prop=extracts|pageimages|info&inprop=url&exsentences=10&exlimit=1&explaintext=1&format=json&pithumbsize=300&titles=Probus
+
+### 
+
+# Wikipedia API call - German
+GET https://de.wikipedia.org/w/api.php?action=query&prop=extracts|pageimages|info&inprop=url&exsentences=10&exlimit=1&explaintext=1&format=json&pithumbsize=300&titles=Probus (Kaiser)
