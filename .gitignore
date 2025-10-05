@@ -9,6 +9,7 @@
 ## Test DB
 dev/chronos-h2-data
 dev/chronos-postgres-data
+dev/chronos-neo4j-data
 
 ## Custom profiles
 application-dev-*.properties
