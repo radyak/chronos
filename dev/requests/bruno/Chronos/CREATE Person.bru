@@ -1,0 +1,19 @@
+meta {
+  name: CREATE Person
+  type: http
+  seq: 4
+}
+
+post {
+  url: http://localhost:8080/api/persons
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "key": "valerian-ii",
+    "from": "0258-01-01",
+    "name": "Publius Licinius Cornelius Valerianus"
+  }
+}

@@ -1,0 +1,15 @@
+meta {
+  name: GET Persons born after
+  type: http
+  seq: 5
+}
+
+get {
+  url: http://localhost:8080/api/persons/after?year=0259
+  body: json
+  auth: inherit
+}
+
+params:query {
+  year: 0259
+}
