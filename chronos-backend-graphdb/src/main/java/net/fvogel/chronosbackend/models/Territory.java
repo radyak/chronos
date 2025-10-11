@@ -1,18 +1,18 @@
-package net.fvogel.chronosbackend;
+package net.fvogel.chronosbackend.models;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import net.fvogel.chronosbackend.relationships.Ruled;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
+import org.springframework.data.neo4j.core.schema.Relationship;
 import org.springframework.data.neo4j.core.support.UUIDStringGenerator;
 
-import java.time.LocalDate;
-import java.util.Date;
+import java.util.List;
 
-@Node("Person")
+@Node("Territory")
 @Data
-public class Person {
+public class Territory {
 
     @Id
     @GeneratedValue(UUIDStringGenerator.class)
@@ -20,16 +20,11 @@ public class Person {
 
     String key;
 
-//    @DateString
-//    @JsonFormat(pattern="yyyy-MM-dd")
-//    LocalDate from;
     String from;
-
-//    @DateString
-//    @JsonFormat(pattern="yyyy-MM-dd")
-//    LocalDate to;
     String to;
 
     String name;
 
+    @Relationship(type = "RULED", direction = Relationship.Direction.INCOMING)
+    private List<Ruled> ruledBy;
 }

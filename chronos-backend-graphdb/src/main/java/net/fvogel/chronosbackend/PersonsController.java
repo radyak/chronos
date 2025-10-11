@@ -2,6 +2,7 @@ package net.fvogel.chronosbackend;
 
 import org.springframework.data.neo4j.core.Neo4jOperations;
 import org.springframework.web.bind.annotation.*;
+import net.fvogel.chronosbackend.models.Person;
 
 import java.util.List;
 
@@ -43,13 +44,15 @@ public class PersonsController {
      */
     @GetMapping("/before")
     public List<Person> findPersonsDiedBefore(@RequestParam("year") String year) {
+        // see https://neo4j.github.io/cypher-dsl/2025.0.3/
         var postNode = node("Person").named("p");
+        var territoryNode = node("Territory").named("t");
+        var relation = postNode.relationshipTo(territoryNode, "RULED").named("r");
         return this.template.findAll(
-                match(postNode)
-                        .where(postNode.property("to").lt(literalOf(year)))
-                        .returning(postNode)
-                        .build(),
-                Person.class
+            match(relation)
+                .where(postNode.property("to").lt(literalOf(year)))
+                .returning(postNode, relation, territoryNode).build(),
+            Person.class
         );
     }
 

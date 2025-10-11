@@ -1,10 +1,10 @@
 // Early Rome
 CREATE (RomanEmpire:Territory {key:"roman-empire"})
-CREATE (Otho:Person {key:"otho", from:date("0032-04-28"), to:date("0069-04-16"), name:"Marcus Salvius Otho"})
-CREATE (Vitellius:Person {key:"vitellius", from:date("0015-09-27"), to:date("0069-12-20"), name:"Aulus Vitellius"})
-CREATE (Vespasian:Person {key:"vespasian", from:date("0009-09-17"), to:date("0079-07-23"), name:"Titus Flavius Vespasianus"})
-CREATE (Titus:Person {key:"titus", from:date("0039-12-30"), to:date("0081-09-13"), name:"Titus Flavius Vespasianus"})
-CREATE (Domitian:Person {key:"domitian", from:date("0051-10-24"), to:date("0096-09-18"), name:"Titus Flavius Domitianus"})
+CREATE (Otho:Person {key:"otho", from:"0032-04-28", to:"0069-04-16", name:"Marcus Salvius Otho"})
+CREATE (Vitellius:Person {key:"vitellius", from:"0015-09-27", to:"0069-12-20", name:"Aulus Vitellius"})
+CREATE (Vespasian:Person {key:"vespasian", from:"0009-09-17", to:"0079-07-23", name:"Titus Flavius Vespasianus"})
+CREATE (Titus:Person {key:"titus", from:"0039-12-30", to:"0081-09-13", name:"Titus Flavius Vespasianus"})
+CREATE (Domitian:Person {key:"domitian", from:"0051-10-24", to:"0096-09-18", name:"Titus Flavius Domitianus"})
 CREATE (Domitilla:Person {key:"domitilla-the-elder", name:"Flavia Domitilla Major"})
 CREATE (Caenis:Person {key:"caenis", to:"0074", name:"Antonia Caenis"})
 
