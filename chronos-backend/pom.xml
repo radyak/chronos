@@ -19,10 +19,13 @@
 		<maven.compiler.target>17</maven.compiler.target>
 	</properties>
 	<dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency>
+        <!-- PERSISTENCE -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-neo4j</artifactId>
+        </dependency>
+
+        <!-- REST API -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation</artifactId>
@@ -31,11 +34,15 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
+
+        <!-- DOCUMENTATION -->
 		<dependency>
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
 			<version>2.2.0</version>
 		</dependency>
+
+        <!-- SECURITY -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
@@ -48,12 +55,8 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>net.fvogel</groupId>
-			<artifactId>chronos-frontend</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
 
+        <!-- DEV / DEBUGGING -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
@@ -70,28 +73,21 @@
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
+
+        <!-- TEST -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
 
-		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<scope>runtime</scope>
-		</dependency>
+        <!-- UI -->
+        <dependency>
+            <groupId>net.fvogel</groupId>
+            <artifactId>chronos-frontend</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
 
-		<dependency>
-			<groupId>org.postgresql</groupId>
-			<artifactId>postgresql</artifactId>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.liquibase</groupId>
-			<artifactId>liquibase-core</artifactId>
-			<version>4.27.0</version>
-		</dependency>
 	</dependencies>
 
 	<build>
@@ -108,34 +104,24 @@
 					</excludes>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.liquibase</groupId>
-				<artifactId>liquibase-maven-plugin</artifactId>
-				<version>4.27.0</version>
-				<dependencies>
-					<dependency>
-						<groupId>org.liquibase.ext</groupId>
-						<artifactId>liquibase-hibernate5</artifactId>
-						<version>3.6</version>
-					</dependency>
-				</dependencies>
-				<configuration>
-					<driver>org.postgresql.Driver</driver>
-					<url>jdbc:postgresql://localhost:5432/chronos-db</url>
-					<username>chronos-db-user</username>
-					<password>chronos-db-password</password>
-					<referenceDriver>org.postgresql.Driver</referenceDriver>
-					<referenceUrl>jdbc:postgresql://localhost:5432/chronos-db-new</referenceUrl>
-					<username>chronos-db-user</username>
-					<password>chronos-db-password</password>
-					<changeLogFile>src/main/resources/db/changelog/master.xml</changeLogFile>
-					<outputChangeLogFile>src/main/resources/db/changelog/changelog.xml</outputChangeLogFile>
-					<diffChangeLogFile>src/main/resources/db/changelog/diff_changelog.xml</diffChangeLogFile>
-					<verbose>true</verbose>
-					<logging>debug</logging>
-				</configuration>
-			</plugin>
 		</plugins>
 	</build>
+
+    <profiles>
+        <profile>
+            <id>no-ui</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>net.fvogel</groupId>
+                    <artifactId>chronos-frontend</artifactId>
+                    <version>0.0.1-SNAPSHOT</version>
+                    <scope>runtime</scope>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
 
 </project>
