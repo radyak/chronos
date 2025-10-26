@@ -107,21 +107,4 @@
 		</plugins>
 	</build>
 
-    <profiles>
-        <profile>
-            <id>no-ui</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>net.fvogel</groupId>
-                    <artifactId>chronos-frontend</artifactId>
-                    <version>0.0.1-SNAPSHOT</version>
-                    <scope>runtime</scope>
-                </dependency>
-            </dependencies>
-        </profile>
-    </profiles>
-
 </project>

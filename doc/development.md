@@ -22,23 +22,15 @@ TODO: Describe docker-compose, custom dev profile, img path
 ## Profiles
 The following Spring profiles are intended to be used *only for development*:
 
-### `test-persistence-inmemory`
-Activates H2 database in in-memory mode for development.
-H2 Console: see /h2-console (JDBC String: `jdbc:h2:mem:chronos`)
-
-### `test-persistence-filebased`
-Activates H2 database in file-based mode for development.
-H2 Console: see /h2-console (JDBC String: `jdbc:h2:mem:chronos`)
-
-### `test-persistence-postgres`
-Configures a connection with the Postgres database in the provided [docker-compose.yaml](../docker-compose.yaml)
-
 ### `test-data`
 Sets up some test data.
-PLEASE NOTE: This does currently *not* work with Postgres (reason unknown yet). 
+PLEASE NOTE: This is currently just a dummy, it does not yet import anything
 
-### `no-liquibase`
-Disables Liquibase for development, e.g. to let auto-ddl update the database schema automatically, in order to generate the next Liquibase changelog.
+### `local-persistence`
+Sets up connection to a locally running Neo4j instance, defined in the [docker-compose.yaml](../docker-compose.yaml).
+
+### `debug`
+Set some properties, such as log levels, for debugging.
 
 ### `no-security`
 Disables security.
