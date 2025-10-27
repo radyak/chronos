@@ -56,6 +56,12 @@
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 
+        <!-- CACHING -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
+
         <!-- DEV / DEBUGGING -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

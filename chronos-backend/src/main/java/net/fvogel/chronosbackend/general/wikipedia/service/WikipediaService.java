@@ -1,5 +1,6 @@
 package net.fvogel.chronosbackend.general.wikipedia.service;
 
+import net.fvogel.chronosbackend.config.caching.CachingConfig;
 import net.fvogel.chronosbackend.general.wikipedia.client.WikipediaApiClient;
 import net.fvogel.chronosbackend.general.wikipedia.dto.WikipediaPageDto;
 import net.fvogel.chronosbackend.general.wikipedia.dto.WikipediaQueryResultDto;
@@ -13,6 +14,7 @@ import net.fvogel.chronosbackend.general.wikipedia.model.WikipediaArticleInfo;
 import net.fvogel.chronosbackend.shared.exception.InvalidParameterException;
 import net.fvogel.chronosbackend.shared.exception.NotFoundException;
 import net.fvogel.chronosbackend.shared.lang.SupportedLanguage;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -35,7 +37,9 @@ public class WikipediaService {
      * @param offset        (optional) An offset, to start results at a later index (for pagination; wiki API returns 10 results by default)
      * @return              A list of wikipedia articles
      */
+    @Cacheable(CachingConfig.CACHE_NAME_WIKI_ARTICLES_SEARCH)
     public List<WikipediaArticleInfo> searchWikipediaArticlesByTitle(String title, SupportedLanguage lang, Integer offset) {
+        System.out.println("Searching for title " + title + ", lang " + lang + ", offset " + offset);
         if (title == null || title.length() < 3) {
             throw new InvalidParameterException();
         }
@@ -59,7 +63,9 @@ public class WikipediaService {
      * @param lang  (optional; default: "en") The language that the title is to be interpreted as & to search for
      * @return      The Wikipedia article
      */
+    @Cacheable(CachingConfig.CACHE_NAME_WIKI_ARTICLE)
     public WikipediaArticleSummary findWikipediaSummaryByQid(String qid, SupportedLanguage lang) {
+        System.out.println("Loading for ID " + qid + ", lang " + lang);
         if (qid == null || !qid.startsWith("Q")) {
             throw new InvalidParameterException();
         }
