@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "Wikipedia",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

@@ -1,0 +1,23 @@
+meta {
+  name: GET - (2) Load by title
+  type: http
+  seq: 6
+}
+
+get {
+  url: https://it.wikipedia.org/w/api.php?action=query&prop=extracts|pageimages|info&inprop=url&exsentences=10&exlimit=1&titles=Augusto&explaintext=1&format=json&pithumbsize=300
+  body: none
+  auth: inherit
+}
+
+params:query {
+  action: query
+  prop: extracts|pageimages|info
+  inprop: url
+  exsentences: 10
+  exlimit: 1
+  titles: Augusto
+  explaintext: 1
+  format: json
+  pithumbsize: 300
+}

@@ -3,10 +3,8 @@ package net.fvogel.chronosbackend.general.wikipedia.model;
 import lombok.Data;
 
 @Data
-public class WikipediaSummary {
-    Integer pageid;
+public class WikipediaArticleInfo {
     String title;
-    String extract;
+    String qid;
     WikipediaImage image;
-    String pageUrl;
 }

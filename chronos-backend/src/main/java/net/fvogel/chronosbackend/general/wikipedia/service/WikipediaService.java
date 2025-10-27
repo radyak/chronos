@@ -1,65 +1,87 @@
 package net.fvogel.chronosbackend.general.wikipedia.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import net.fvogel.chronosbackend.general.wikipedia.client.WikipediaApiClient;
 import net.fvogel.chronosbackend.general.wikipedia.dto.WikipediaPageDto;
 import net.fvogel.chronosbackend.general.wikipedia.dto.WikipediaQueryResultDto;
-import net.fvogel.chronosbackend.general.wikipedia.model.WikipediaImage;
-import net.fvogel.chronosbackend.general.wikipedia.model.WikipediaSummary;
+import net.fvogel.chronosbackend.general.wikipedia.dto.getentities.WikipediaEntityDto;
+import net.fvogel.chronosbackend.general.wikipedia.dto.getentities.WikipediaEntityResultDto;
+import net.fvogel.chronosbackend.general.wikipedia.dto.getentities.WikipediaSiteLinkDto;
+import net.fvogel.chronosbackend.general.wikipedia.mapper.WikipediaModelMapper;
+import net.fvogel.chronosbackend.general.wikipedia.dto.search.WikipediaSearchResultDto;
+import net.fvogel.chronosbackend.general.wikipedia.model.WikipediaArticleSummary;
+import net.fvogel.chronosbackend.general.wikipedia.model.WikipediaArticleInfo;
+import net.fvogel.chronosbackend.shared.exception.InvalidParameterException;
 import net.fvogel.chronosbackend.shared.exception.NotFoundException;
+import net.fvogel.chronosbackend.shared.lang.SupportedLanguage;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClient;
+
+import java.util.Collections;
+import java.util.List;
 
 @Service
 public class WikipediaService {
 
-    private RestClient restClient;
-    private ObjectMapper objectMapper;
+    private WikipediaApiClient apiClient;
 
-    public WikipediaService() {
-        this.restClient = RestClient.create();
-        this.objectMapper = new ObjectMapper();
+    public WikipediaService(WikipediaApiClient apiClient) {
+        this.apiClient = apiClient;
     }
 
-    public WikipediaSummary findWikipediaArticleSummary(String title) {
-        String uri = "https://en.wikipedia.org/w/api.php?"
-                + "action=query"
-                + "&prop=extracts|pageimages|info"
-                + "&inprop=url"
-                + "&exsentences=10"
-                + "&exlimit=1"
-                + "&explaintext=1"
-                + "&format=json"
-                + "&pithumbsize=300"
-                + "&titles=" + title;
-        WikipediaQueryResultDto resultDto = this.restClient.get()
-                .uri(uri)
-                .retrieve()
-                .body(WikipediaQueryResultDto.class);
-
-        WikipediaPageDto wikipediaPageDto = resultDto.getQuery().getPages().entrySet().stream()
-                .findFirst()
-                .orElseThrow(NotFoundException::new)
-                .getValue();
-
-        WikipediaSummary wikipediaSummary = mapToWikipediaSummary(wikipediaPageDto);
-
-        return wikipediaSummary;
-    }
-
-    private static WikipediaSummary mapToWikipediaSummary(WikipediaPageDto wikipediaPageDto) {
-        WikipediaSummary wikipediaSummary = new WikipediaSummary();
-        wikipediaSummary.setPageid(wikipediaPageDto.getPageid());
-        wikipediaSummary.setTitle(wikipediaPageDto.getTitle());
-        wikipediaSummary.setExtract(wikipediaPageDto.getExtract());
-        wikipediaSummary.setPageUrl(wikipediaPageDto.getCanonicalurl());
-
-        if (wikipediaPageDto.getThumbnail() != null) {
-            WikipediaImage image = new WikipediaImage();
-            wikipediaSummary.setImage(image);
-            image.setUrl(wikipediaPageDto.getThumbnail().getSource());
-            image.setHeight(wikipediaPageDto.getThumbnail().getHeight());
-            image.setWidth(wikipediaPageDto.getThumbnail().getWidth());
+    /**
+     * Finds Wikipedia article infos (containing title, thumbnail, QID) by title (interpreted by language).
+     *
+     * @param title         The title or title part to search; must be at least 3 characters long
+     * @param lang          (optional; default: "en") The language that the title is to be interpreted as & to search for
+     * @param offset        (optional) An offset, to start results at a later index (for pagination; wiki API returns 10 results by default)
+     * @return              A list of wikipedia articles
+     */
+    public List<WikipediaArticleInfo> searchWikipediaArticlesByTitle(String title, SupportedLanguage lang, Integer offset) {
+        if (title == null || title.length() < 3) {
+            throw new InvalidParameterException();
         }
-        return wikipediaSummary;
+        if (lang == null) {
+            lang = SupportedLanguage.EN;
+        }
+
+        WikipediaSearchResultDto resultDto = this.apiClient.searchWikipediaArticleInfos(title, lang, offset);
+
+        if (resultDto == null || resultDto.getQuery() == null || resultDto.getQuery().getPages() == null) {
+            return Collections.emptyList();
+        }
+        return resultDto.getQuery().getPages().values().stream()
+                .map(WikipediaModelMapper::mapToWikipediaShortResult)
+                .toList();
     }
+
+    /**
+     * Loads a Wikipedia article
+     * @param qid
+     * @param lang  (optional; default: "en") The language that the title is to be interpreted as & to search for
+     * @return      The Wikipedia article
+     */
+    public WikipediaArticleSummary findWikipediaSummaryByQid(String qid, SupportedLanguage lang) {
+        if (qid == null || !qid.startsWith("Q")) {
+            throw new InvalidParameterException();
+        }
+        if (lang == null) {
+            lang = SupportedLanguage.EN;
+        }
+        WikipediaEntityResultDto entityByQid = this.apiClient.getEntityByQid(qid, lang);
+        try {
+            WikipediaEntityDto entityDto = entityByQid.getEntities().get(qid);
+            WikipediaSiteLinkDto siteLinkDto = entityDto.getSitelinks().get(lang + "wiki");
+
+            WikipediaQueryResultDto queryResultDto = this.apiClient.queryWikipediaArticleByTitle(siteLinkDto.getTitle(), lang);
+
+            WikipediaPageDto wikipediaPageDto = queryResultDto.getQuery().getPages().entrySet().stream()
+                    .findFirst()
+                    .orElseThrow(NotFoundException::new)
+                    .getValue();
+
+            return WikipediaModelMapper.mapToWikipediaSummary(wikipediaPageDto);
+        } catch (NullPointerException e) {
+            throw new NotFoundException();
+        }
+    }
+
 }

@@ -1,0 +1,23 @@
+meta {
+  name: Get by title
+  type: http
+  seq: 2
+}
+
+get {
+  url: http://en.wikipedia.org/w/api.php?action=query&prop=extracts|pageimages|info|pageprops&inprop=url&exsentences=10&exlimit=1&titles=Augustus&explaintext=1&format=json&pithumbsize=300
+  body: none
+  auth: inherit
+}
+
+params:query {
+  action: query
+  prop: extracts|pageimages|info|pageprops
+  inprop: url
+  exsentences: 10
+  exlimit: 1
+  titles: Augustus
+  explaintext: 1
+  format: json
+  pithumbsize: 300
+}

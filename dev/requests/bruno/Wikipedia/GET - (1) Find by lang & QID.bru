@@ -1,0 +1,19 @@
+meta {
+  name: GET - (1) Find by lang & QID
+  type: http
+  seq: 5
+}
+
+get {
+  url: https://www.wikidata.org/w/api.php?action=wbgetentities&ids=Q1405&props=sitelinks&sitefilter=itwiki&format=json
+  body: none
+  auth: inherit
+}
+
+params:query {
+  action: wbgetentities
+  ids: Q1405
+  props: sitelinks
+  sitefilter: itwiki
+  format: json
+}

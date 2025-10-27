@@ -2,7 +2,6 @@ package net.fvogel.chronosbackend.domain.person.rest;
 
 import net.fvogel.chronosbackend.domain.person.persistence.Person;
 import net.fvogel.chronosbackend.domain.person.service.PersonsService;
-import net.fvogel.chronosbackend.general.wikipedia.model.WikipediaSummary;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,16 +27,6 @@ public class PersonsController {
     @GetMapping("/{id}")
     public Person getById(@PathVariable("id") String id) {
         return this.personsService.findById(id);
-    }
-
-    @GetMapping("/random/wikipediasummary")
-    public WikipediaSummary getRandom() {
-        return this.personsService.findRandom();
-    }
-
-    @GetMapping("/{id}/wikipediasummary")
-    public WikipediaSummary getWikipediaSummaryById(@PathVariable("id") String id) {
-        return this.personsService.findWikipediaSummaryForPerson(id);
     }
 
 }

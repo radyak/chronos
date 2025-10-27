@@ -2,9 +2,7 @@ package net.fvogel.chronosbackend.domain.person.service;
 
 import net.fvogel.chronosbackend.domain.person.persistence.Person;
 import net.fvogel.chronosbackend.domain.person.persistence.PersonRepository;
-import net.fvogel.chronosbackend.general.wikipedia.model.WikipediaSummary;
-import net.fvogel.chronosbackend.general.wikipedia.service.WikipediaService;
-import net.fvogel.chronosbackend.shared.exception.InvalidParameterException;
+import net.fvogel.chronosbackend.general.wikipedia.client.WikipediaApiClient;
 import net.fvogel.chronosbackend.shared.exception.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,12 +19,12 @@ public class PersonsService {
     private static final Logger logger = LoggerFactory.getLogger(PersonsService.class);
 
     private PersonRepository personRepository;
-    private WikipediaService wikipediaService;
+    private WikipediaApiClient wikipediaApiClient;
 
     public PersonsService(PersonRepository personRepository,
-                          WikipediaService wikipediaService) {
+                          WikipediaApiClient wikipediaApiClient) {
         this.personRepository = personRepository;
-        this.wikipediaService = wikipediaService;
+        this.wikipediaApiClient = wikipediaApiClient;
     }
 
     public Person save(Person entry) {
@@ -54,27 +52,10 @@ public class PersonsService {
         this.personRepository.delete(person);
     }
 
-    public WikipediaSummary findWikipediaSummaryForPerson(String id) {
-        // TODO: Make this working again
-        Person person = this.findById(id);
-//        if (person.getWikipediaPage() == null) {
-        return this.wikipediaService.findWikipediaArticleSummary(person.getKey());
-//        } else {
-//            return this.wikipediaService.findWikipediaArticleSummary(person.getWikipediaPage());
-//        }
-    }
-
-    public WikipediaSummary findWikipediaSummaryForTitle(String title) {
-        if (title == null || title.length() < 3) {
-            throw new InvalidParameterException();
-        }
-        return this.wikipediaService.findWikipediaArticleSummary(title);
-    }
-
-    public WikipediaSummary findRandom() {
-        // TODO: Make this working again
-        Person randomPerson = this.personRepository.findAll().get(0);
-        return this.findWikipediaSummaryForPerson(randomPerson.getKey());
-    }
+//    public WikipediaSummary findRandom() {
+//        // TODO: Make this working again, for any node type
+//        Person randomPerson = this.personRepository.findAll().get(0);
+//        return this.findWikipediaSummaryForPerson(randomPerson.getKey());
+//    }
 
 }

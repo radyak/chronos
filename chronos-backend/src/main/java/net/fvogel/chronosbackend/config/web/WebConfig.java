@@ -1,9 +1,11 @@
 package net.fvogel.chronosbackend.config.web;
 
 
+import net.fvogel.chronosbackend.config.web.converter.StringToSupportedLanguagConverter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.resource.PathResourceResolver;
@@ -48,5 +50,10 @@ public class WebConfig implements WebMvcConfigurer {
                     }
                 });
 
+    }
+
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+        registry.addConverter(new StringToSupportedLanguagConverter());
     }
 }

@@ -1,0 +1,20 @@
+meta {
+  name: SEARCH - Find by title
+  type: http
+  seq: 3
+}
+
+get {
+  url: https://en.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch=Augustus&format=json&prop=pageimages|info|pageprops&gsroffset=10
+  body: none
+  auth: inherit
+}
+
+params:query {
+  action: query
+  generator: search
+  gsrsearch: Augustus
+  format: json
+  prop: pageimages|info|pageprops
+  gsroffset: 10
+}

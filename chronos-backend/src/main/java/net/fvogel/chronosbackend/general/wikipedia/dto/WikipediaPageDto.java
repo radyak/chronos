@@ -11,4 +11,5 @@ public class WikipediaPageDto {
     WikipediaImageDto thumbnail;
     String pageimage;
     String canonicalurl;
+    WikipediaPagePropsDto pageprops;
 }

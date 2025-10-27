@@ -3,7 +3,6 @@ package net.fvogel.chronosbackend.domain.person.rest;
 import jakarta.validation.Valid;
 import net.fvogel.chronosbackend.domain.person.persistence.Person;
 import net.fvogel.chronosbackend.domain.person.service.PersonsService;
-import net.fvogel.chronosbackend.general.wikipedia.model.WikipediaSummary;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,11 +28,6 @@ public class AdminPersonsController {
             @RequestParam(name = "to", required = false) String to
     ) {
         return this.personsService.findBetween(from, to);
-    }
-
-    @GetMapping("wikipediasummary")
-    public WikipediaSummary findWikipediasummary(@RequestParam(name = "title", required = false) String title) {
-        return this.personsService.findWikipediaSummaryForTitle(title);
     }
 
     @GetMapping("/{id}")

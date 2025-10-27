@@ -1,0 +1,16 @@
+meta {
+  name: Search Articles [Admin]
+  type: http
+  seq: 1
+}
+
+get {
+  url: http://localhost:8080/api/admin/wiki/articles/search?q=Augustus&lang=de
+  body: none
+  auth: inherit
+}
+
+params:query {
+  q: Augustus
+  lang: de
+}

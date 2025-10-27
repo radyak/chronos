@@ -13,11 +13,28 @@ The aspects of the application have different technical requirements:
   * Docker: 25.0.2
   * Docker-compose: 2.24.5
 
+
 ## Setup
 1. From `/chronos-frontend`: run `npm install && npm run build`. This will generate initial static resources for the WebJar in step 2.
 2. From `/` (project root): run `mvn clean install`. This will also create a WebJar, that fulfills the `chronos-frontend` mvn dependency of the backend.
 
 TODO: Describe docker-compose, custom dev profile, img path
+
+
+## Run
+
+### Backend
+Before starting the backend, the Neo4J container must be started. This can be done with the command
+```bash
+docker-compose up -d chronos-db
+```
+
+The backend comes with the Maven Spring-Boot plugin, which allows the backend to be started with the command:
+```bash
+mvn spring-boot:run -Dspring-boot.run.profiles=no-security,local-persistence
+```
+For info about the profiles, see below.
+
 
 ## Profiles
 The following Spring profiles are intended to be used *only for development*:
