@@ -2,15 +2,25 @@ package net.fvogel.chronosbackend.domain.person.service;
 
 import net.fvogel.chronosbackend.domain.person.persistence.Person;
 import net.fvogel.chronosbackend.domain.person.persistence.PersonRepository;
-import net.fvogel.chronosbackend.general.wikipedia.client.WikipediaApiClient;
+import net.fvogel.chronosbackend.shared.exception.InvalidDataException;
+import net.fvogel.chronosbackend.shared.exception.InvalidParameterException;
 import net.fvogel.chronosbackend.shared.exception.NotFoundException;
+import org.neo4j.cypherdsl.core.Condition;
+import org.neo4j.cypherdsl.core.StatementBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.neo4j.core.Neo4jOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
+
+import static org.neo4j.cypherdsl.core.Cypher.*;
 
 @Service
 @Transactional
@@ -18,21 +28,31 @@ public class PersonsService {
 
     private static final Logger logger = LoggerFactory.getLogger(PersonsService.class);
 
-    private PersonRepository personRepository;
-    private WikipediaApiClient wikipediaApiClient;
+    private final PersonRepository personRepository;
+    private final Neo4jOperations template;
 
     public PersonsService(PersonRepository personRepository,
-                          WikipediaApiClient wikipediaApiClient) {
+                          Neo4jOperations template) {
         this.personRepository = personRepository;
-        this.wikipediaApiClient = wikipediaApiClient;
+        this.template = template;
     }
 
-    public Person save(Person entry) {
-        return this.personRepository.save(entry);
+    public Person save(Person person) {
+        try {
+            return this.personRepository.save(person);
+        } catch (DataIntegrityViolationException e) {
+            logger.warn("Error while saving Person " + person, e);
+            throw new InvalidDataException();
+        }
     }
 
     public List<Person> saveAll(Collection<Person> persons) {
-        return this.personRepository.saveAll(persons);
+        try {
+            return this.personRepository.saveAll(persons);
+        } catch (DataIntegrityViolationException e) {
+            logger.warn("Error while saving Persons " + persons, e);
+            throw new InvalidDataException();
+        }
     }
 
     public List<Person> findAll() {
@@ -40,22 +60,40 @@ public class PersonsService {
     }
 
     public List<Person> findBetween(String from, String to) {
-        return this.personRepository.findBetween(from, to);
+        var person = node("Person").named("p");
+
+        List<Condition> conditions = new ArrayList<>();
+
+        if (from != null) {
+            conditions.add(person.property("from").gt(literalOf(from)));
+        }
+        if (to != null) {
+            conditions.add(person.property("to").lt(literalOf(to)));
+        }
+
+        StatementBuilder.OngoingReading query = match(person);
+        if (!conditions.isEmpty()) {
+            Condition condition = conditions.get(0);
+            for (Condition currentCondition : conditions) {
+                if (currentCondition == condition) continue;
+                condition = condition.and(currentCondition);
+            }
+            query = ((StatementBuilder.OngoingReadingWithoutWhere)query).where(condition);
+        }
+
+        return this.template.findAll(
+            query.returning(person).build(),
+            Person.class
+        );
     }
 
-    public Person findById(String id) {
-        return this.personRepository.findById(id).orElseThrow(NotFoundException::new);
+    public Person findByIdOrKey(String id) {
+        return this.personRepository.findByIdOrKey(id).orElseThrow(NotFoundException::new);
     }
 
     public void deleteById(String id) {
         Person person = this.personRepository.findById(id).orElseThrow(NotFoundException::new);
         this.personRepository.delete(person);
     }
-
-//    public WikipediaSummary findRandom() {
-//        // TODO: Make this working again, for any node type
-//        Person randomPerson = this.personRepository.findAll().get(0);
-//        return this.findWikipediaSummaryForPerson(randomPerson.getKey());
-//    }
 
 }

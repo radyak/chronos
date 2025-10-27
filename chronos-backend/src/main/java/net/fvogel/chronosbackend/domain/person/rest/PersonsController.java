@@ -10,23 +10,23 @@ import java.util.List;
 @RequestMapping("/api/persons")
 public class PersonsController {
 
-    private PersonsService personsService;
+    private final PersonsService personsService;
 
     public PersonsController(PersonsService personsService) {
         this.personsService = personsService;
     }
 
     @GetMapping
-    public List<Person> all(
+    public List<Person> query(
             @RequestParam(name = "from", required = false) String from,
             @RequestParam(name = "to", required = false) String to
     ) {
         return this.personsService.findBetween(from, to);
     }
 
-    @GetMapping("/{id}")
-    public Person getById(@PathVariable("id") String id) {
-        return this.personsService.findById(id);
+    @GetMapping("/{identifier}")
+    public Person getByIdOrKey(@PathVariable("identifier") String identifier) {
+        return this.personsService.findByIdOrKey(identifier);
     }
 
 }

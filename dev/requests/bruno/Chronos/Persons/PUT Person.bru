@@ -1,0 +1,21 @@
+meta {
+  name: PUT Person
+  type: http
+  seq: 4
+}
+
+put {
+  url: http://localhost:8080/api/admin/persons
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "id": "2b9f89a7-0317-4c36-88a9-5ff67c34cc79",
+    "key": "augustus",
+    "from": "-0063-09-23",
+    "to": "0014-08-19",
+    "qid": "Q1406"
+  }
+}

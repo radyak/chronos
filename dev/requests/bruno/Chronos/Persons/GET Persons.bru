@@ -1,0 +1,16 @@
+meta {
+  name: GET Persons
+  type: http
+  seq: 1
+}
+
+get {
+  url: http://localhost:8080/api/persons?from=-0063&to=0015
+  body: none
+  auth: inherit
+}
+
+params:query {
+  from: -0063
+  to: 0015
+}

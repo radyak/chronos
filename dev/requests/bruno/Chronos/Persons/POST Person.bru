@@ -1,0 +1,20 @@
+meta {
+  name: POST Person
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:8080/api/admin/persons
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "key": "augustus",
+    "from": "-0063-09-23",
+    "to": "0014-08-19",
+    "qid": "Q1405"
+  }
+}
