@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/admin/persons")
 public class AdminPersonsController {
 
-    private PersonsService personsService;
+    private final PersonsService personsService;
 
     public AdminPersonsController(PersonsService personsService) {
         this.personsService = personsService;

@@ -3,7 +3,6 @@ package net.fvogel.chronosbackend.domain.person.service;
 import net.fvogel.chronosbackend.domain.person.persistence.Person;
 import net.fvogel.chronosbackend.domain.person.persistence.PersonRepository;
 import net.fvogel.chronosbackend.shared.exception.InvalidDataException;
-import net.fvogel.chronosbackend.shared.exception.InvalidParameterException;
 import net.fvogel.chronosbackend.shared.exception.NotFoundException;
 import org.neo4j.cypherdsl.core.Condition;
 import org.neo4j.cypherdsl.core.StatementBuilder;
@@ -14,10 +13,8 @@ import org.springframework.data.neo4j.core.Neo4jOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 import static org.neo4j.cypherdsl.core.Cypher.*;

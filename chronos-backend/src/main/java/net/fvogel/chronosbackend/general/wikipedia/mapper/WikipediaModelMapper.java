@@ -1,9 +1,9 @@
 package net.fvogel.chronosbackend.general.wikipedia.mapper;
 
 import net.fvogel.chronosbackend.general.wikipedia.dto.WikipediaPageDto;
-import net.fvogel.chronosbackend.general.wikipedia.model.WikipediaImage;
-import net.fvogel.chronosbackend.general.wikipedia.model.WikipediaArticleSummary;
 import net.fvogel.chronosbackend.general.wikipedia.model.WikipediaArticleInfo;
+import net.fvogel.chronosbackend.general.wikipedia.model.WikipediaArticleSummary;
+import net.fvogel.chronosbackend.general.wikipedia.model.WikipediaImage;
 import org.springframework.stereotype.Service;
 
 @Service
