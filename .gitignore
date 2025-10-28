@@ -11,3 +11,6 @@ dev/chronos-neo4j-data
 
 ## Custom profiles
 application-dev-*.properties
+
+# Dev
+backup

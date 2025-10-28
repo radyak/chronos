@@ -1,0 +1,129 @@
+<table class="table table-hover">
+  <thead>
+  <tr>
+    <!-- Select -->
+    <th scope="col" *ngIf="selectable">
+      <input type="checkbox"
+             value=""
+             id="select-all-entities"
+             [ngModel]="allEntitiesSelected()"
+             (click)="toggleAllEntitiesSelection()"
+             class="form-check-input">
+      <span *ngIf="selectedEntities.size > 0">
+        ({{ selectedEntities.size }})
+      </span>
+    </th>
+
+    <!-- Key -->
+    <th scope="col">
+      <fa-icon [icon]="clearIcon"
+               class="pointer"
+               *ngIf="search.key"
+               (click)="clearKey()"
+               [size]="'sm'"></fa-icon>
+      <input type="search"
+             placeholder="Key"
+             name="entity-search-key"
+             [disabled]="!searchable"
+             [(ngModel)]="search.key"
+             (keydown.enter)="submit.emit()"
+      >
+    </th>
+
+    <!-- Dates - Start -->
+    <th class="col">
+      <fa-icon [icon]="clearIcon"
+               class="pointer"
+               *ngIf="search.from"
+               (click)="clearDateQuery()"
+               [size]="'sm'"></fa-icon>
+      <input type="search"
+             class="right"
+             placeholder="From"
+             name="entity-search-dates-from"
+             [disabled]="!searchable"
+             [(ngModel)]="search.from"
+             (keydown.enter)="submit.emit()"
+      >
+    </th>
+
+    <!-- Dates - Separator -->
+    <th class="col slim">
+      -
+    </th>
+
+    <!-- Dates - End -->
+    <th class="col">
+      <fa-icon [icon]="clearIcon"
+               class="pointer"
+               *ngIf="search.to"
+               (click)="clearDateQuery()"
+               [size]="'sm'"></fa-icon>
+      <input type="search"
+             placeholder="To"
+             name="entity-search-dates-to"
+             [disabled]="!searchable"
+             [(ngModel)]="search.to"
+             (keydown.enter)="submit.emit()"
+      >
+    </th>
+
+    <!-- Actions -->
+    <th class="icon-col"
+        *ngIf="actions.length > 0">
+      <fa-icon *ngIf="searchable"
+               [icon]="searchIcon"
+               [size]="'sm'"></fa-icon>
+    </th>
+  </tr>
+  </thead>
+  <tbody>
+  <ng-container *ngFor="let entity of filteredEntities()">
+    <tr class="pointer">
+
+      <!-- Select -->
+      <th scope="col" *ngIf="selectable">
+        <input type="checkbox"
+               value=""
+               id="select-entity-{{ entity.id }}"
+               [ngModel]="isEntitySelected(entity._original)"
+               (ngModelChange)="toggleEntitySelection(entity._original)"
+               class="form-check-input">
+      </th>
+
+      <!-- Key -->
+      <td class="main-column"
+          (click)="entityClick.emit(entity._original)">
+        {{ entity.key }}
+      </td>
+
+      <!-- Dates - Start -->
+      <td class="secondary-column right">
+        {{ entity.from }}
+      </td>
+
+      <!-- Dates - Separator -->
+      <td class="secondary-column slim">
+        -
+      </td>
+
+      <!-- Dates - End -->
+      <td class="secondary-column">
+        {{ entity.to }}
+      </td>
+
+      <!-- Actions -->
+      <td class="icon-col"
+          *ngIf="actions.length > 0">
+        <span class="icon"
+              *ngFor="let action of actions">
+          <fa-icon class="show-on-parent-hover"
+                   [ngClass]="action.color ? ('text-' + action.color) : ''"
+                   [icon]="action.icon"
+                   (click)="action.fn(entity); $event.stopPropagation()"></fa-icon>
+        </span>
+      </td>
+    </tr>
+  </ng-container>
+  </tbody>
+</table>

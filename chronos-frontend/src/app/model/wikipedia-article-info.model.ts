@@ -1,9 +1,7 @@
 import { WikipediaImage } from "./wikipedia-article-image.model";
 
-export interface WikipediaSummary {
-  pageid: number;
+export interface WikipediaArticleInfo {
   title: string;
-  extract: string;
+  qid: string;
   image?: WikipediaImage;
-  pageUrl: string;
 }

@@ -1,0 +1,33 @@
+<div class="container">
+
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a [routerLink]="['..']">Administration</a></li>
+    <li class="breadcrumb-item active">Persons</li>
+  </ol>
+
+  <h1>Administration: Persons</h1>
+<!--  <p class="text-primary-emphasis small">-->
+<!--    Some explanation here ...-->
+<!--  </p>-->
+
+  <div class="row">
+    <div class="col admin-controls">
+      <button class="btn btn-outline-success" (click)="newEntity()">
+        <fa-icon [icon]="newIcon"></fa-icon>
+        New person
+      </button>
+    </div>
+  </div>
+
+  <div class="row">
+    <chronos-enitities-table (entityClick)="editEntity($event)"
+                           [search]="entitySearch"
+                           (submit)="updateSearchParams()"
+                           [actions]="tableActions"
+                           [entities]="entities$ | async"
+                           [selectable]="true"
+                           (onSelect)="this.selectedEntities = $event">
+    </chronos-enitities-table>
+  </div>
+
+</div>

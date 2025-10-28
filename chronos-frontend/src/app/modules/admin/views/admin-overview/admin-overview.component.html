@@ -1,15 +1,12 @@
 <div class="container">
 
   <ol class="breadcrumb">
-    <li class="breadcrumb-item active"><a routerLink="../..">Administration</a></li>
+    <li class="breadcrumb-item active"><a [routerLink]="['/', 'admin']">Administration</a></li>
   </ol>
 
   <h1>Administration</h1>
 
   <div>
-    <a routerLink="entries">Entries</a>
-  </div>
-  <div>
-    <a routerLink="tags">Tags</a>
+    <a [routerLink]="['persons']">Persons</a>
   </div>
 </div>

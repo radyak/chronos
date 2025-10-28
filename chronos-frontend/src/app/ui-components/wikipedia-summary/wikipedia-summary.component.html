@@ -10,12 +10,6 @@
       {{ wikiSummary!.title }}
     </h4>
 
-    <div class="tag-list" *ngIf="tags && tags.length > 0">
-      <chronos-tag *ngFor="let tag of tags"
-                   [tag]="tag">
-      </chronos-tag>
-    </div>
-
     <img class="summary-image"
          *ngIf="wikiSummary!.image?.url"
          [src]="wikiSummary!.image?.url">

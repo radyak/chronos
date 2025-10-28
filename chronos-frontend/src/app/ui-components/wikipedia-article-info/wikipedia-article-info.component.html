@@ -1,0 +1,10 @@
+<div class="article">
+  <div class="image-container">
+    <ng-container *ngIf="article.image?.url">
+      <img class="summary-image"
+          [src]="article.image?.url">
+    </ng-container>
+  </div>
+
+  {{ article.title }}
+</div>

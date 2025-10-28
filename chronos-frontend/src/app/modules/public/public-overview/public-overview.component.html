@@ -1,0 +1,51 @@
+<div class="jumbotron jumbotron-fluid">
+  <div class="container">
+    <div class="jumbotron-content">
+      <h1 class="display-4 jumbotron-headline">
+        <img src="/assets/svg/chronos-logo.svg" height="50">
+        <span>Chronos</span>
+      </h1>
+      <p class="lead">The structured history database</p>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card border-light mb-3">
+        <div class="card-body">
+          <h4 class="card-title">Discover</h4>
+          <div class="card-text">
+            Directly search for entries.
+          </div>
+          <div class="mt-2">
+            <!-- <chronos-entries-search-input>
+            </chronos-entries-search-input> -->
+          </div>
+        </div>
+      </div>
+
+      <div class="card border-light mb-3">
+        <div class="card-body">
+          <h4 class="card-title">Timeline</h4>
+          <p class="card-text">
+            Compose filters and select date ranges to create a timeline. Timelines show parallel developments in
+            history or the sequence of events or eras.
+          </p>
+          <p class="card-text">
+            <a [routerLink]="['discover']"
+               [queryParams]="{display: 'timeline'}">
+              &rarr; Go to Timeline
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <chronos-wikipedia-summary [wikiSummary]="wikipediaSummary">
+      </chronos-wikipedia-summary>
+    </div>
+  </div>
+</div>

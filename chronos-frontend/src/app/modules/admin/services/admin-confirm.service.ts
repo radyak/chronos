@@ -3,7 +3,7 @@ import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {AdminConfirmModal} from "../components/admin-confirm-modal/admin-confirm-modal";
 
 @Injectable({
-  providedIn: null
+  providedIn: 'root'
 })
 export class AdminConfirmService {
 
