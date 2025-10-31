@@ -65,7 +65,7 @@ export class AdminPersonComponent implements OnInit {
 
   protected setCurrentEntry(): void {
     const entityId = this.route.snapshot.params['id'];
-    this.personService.load(entityId).subscribe(entity => {
+    this.personService.getByIdentifier(entityId).subscribe(entity => {
       this.currentEntity = entity;
       this.loadWikipediaSummary(entity.qid);
       this.afterLoadEntity();
@@ -97,7 +97,7 @@ export class AdminPersonComponent implements OnInit {
     if (!qid) {
       return;
     }
-    this.wikiArticlesService.load(qid!).subscribe(wikipediaSummary => {
+    this.wikiArticlesService.getArticleByQid(qid!).subscribe(wikipediaSummary => {
       this.wikipediaSummary = wikipediaSummary;
     })
   }

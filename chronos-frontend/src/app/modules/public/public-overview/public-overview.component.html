@@ -17,11 +17,7 @@
         <div class="card-body">
           <h4 class="card-title">Discover</h4>
           <div class="card-text">
-            Directly search for entries.
-          </div>
-          <div class="mt-2">
-            <!-- <chronos-entries-search-input>
-            </chronos-entries-search-input> -->
+            Some placeholder text here
           </div>
         </div>
       </div>
@@ -34,9 +30,8 @@
             history or the sequence of events or eras.
           </p>
           <p class="card-text">
-            <a [routerLink]="['discover']"
-               [queryParams]="{display: 'timeline'}">
-              &rarr; Go to Timeline
+            <a [routerLink]="['dummy']">
+              &rarr; Some placeholder link
             </a>
           </p>
         </div>
@@ -44,8 +39,10 @@
     </div>
 
     <div class="col-md-6">
-      <chronos-wikipedia-summary [wikiSummary]="wikipediaSummary">
-      </chronos-wikipedia-summary>
+      <ng-container *ngIf="wikipediaSummary$ | async as wikipediaSummary">
+        <chronos-wikipedia-summary [wikiSummary]="wikipediaSummary">
+        </chronos-wikipedia-summary>
+      </ng-container>
     </div>
   </div>
 </div>

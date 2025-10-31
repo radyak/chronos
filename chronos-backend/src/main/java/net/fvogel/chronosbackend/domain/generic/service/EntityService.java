@@ -11,11 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -30,15 +27,7 @@ public class EntityService {
         this.driver = driver;
     }
 
-    public List<Entity> findAllNodes() {
-        try (Session session = driver.session()) {
-            return session.run("MATCH (n) RETURN n LIMIT 50")
-                    .list(record -> record.get("n").asNode())
-                    .stream().map(this::mapToLabelledEntity).toList();
-        }
-    }
-
-    public Entity findRandomEntity() {
+    public Entity findRandomEntityWithQid() {
         try (Session session = driver.session()) {
             return session.run("MATCH (n) WHERE n.qid IS NOT null RETURN n, rand() as r ORDER BY r LIMIT 1")
                     .list(record -> record.get("n").asNode())

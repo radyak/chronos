@@ -15,12 +15,20 @@ export class WikiArticlesService {
 
   constructor(private http: HttpClient) { }
 
-  public load(qid: string, lang: string = 'en'): Observable<WikipediaSummary> {
+  public getArticleByQid(qid: string, lang: string = 'en'): Observable<WikipediaSummary> {
     let params = new HttpParams();
     if (!!lang) {
       params = params.set('lang', lang)
     }
     return this.http.get<WikipediaSummary>(`/api/wiki/articles/${qid}`, { params })
+  }
+
+  public getRandomArticle(lang: string = 'en'): Observable<WikipediaSummary> {
+    let params = new HttpParams();
+    if (!!lang) {
+      params = params.set('lang', lang)
+    }
+    return this.http.get<WikipediaSummary>(`/api/wiki/articles/random`, { params })
   }
 
 }

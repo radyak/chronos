@@ -15,11 +15,11 @@ export class PersonService {
 
   constructor(private http: HttpClient) { }
 
-  public load(identifier: string): Observable<Person> {
+  public getByIdentifier(identifier: string): Observable<Person> {
     return this.http.get<Person>(`/api/persons/${identifier}`)
   }
 
-  public loadAll(): Observable<Array<Person>> {
+  public getAll(): Observable<Array<Person>> {
     return this.http.get<Array<Person>>("/api/persons")
   }
 

@@ -14,3 +14,4 @@ application-dev-*.properties
 
 # Dev
 backup
+dev/exampledata

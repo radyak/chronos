@@ -7,6 +7,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
 import { WikipediaSummary } from 'src/app/model/wikipedia-summary.model';
 import { WikipediaSummaryComponent } from 'src/app/ui-components/wikipedia-summary/wikipedia-summary.component';
+import { WikiArticlesService } from '../../admin/person/wiki-article.service';
+import { Observable, of } from 'rxjs';
 
 @Component({
   selector: 'chronos-public-overview',
@@ -25,15 +27,14 @@ import { WikipediaSummaryComponent } from 'src/app/ui-components/wikipedia-summa
 })
 export class PublicOverviewComponent implements OnInit {
 
-  wikipediaSummary!: WikipediaSummary;
+  wikipediaSummary$: Observable<WikipediaSummary> = of();
 
-  constructor() {
+  constructor(private wikiArticlesService: WikiArticlesService) {
 
   }
 
   ngOnInit(): void {
-    // this.entriesService.getRandomWikipediaSummary()
-    //   .subscribe(wikipediaSummary => this.wikipediaSummary = wikipediaSummary);
+    this. wikipediaSummary$ = this.wikiArticlesService.getRandomArticle(); //.subscribe(wikipediaSummary => this.wikipediaSummary = wikipediaSummary);
   }
 
 }
