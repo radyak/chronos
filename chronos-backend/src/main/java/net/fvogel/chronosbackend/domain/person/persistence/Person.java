@@ -1,6 +1,8 @@
 package net.fvogel.chronosbackend.domain.person.persistence;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import net.fvogel.chronosbackend.domain.generic.persistence.Entity;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
@@ -8,16 +10,8 @@ import org.springframework.data.neo4j.core.support.UUIDStringGenerator;
 
 @Node("Person")
 @Data
-public class Person {
-
-    @Id
-    @GeneratedValue(UUIDStringGenerator.class)
-    String id;
-
-    String key;
-    String from;
-    String to;
-    String qid;
+@EqualsAndHashCode(callSuper = true)
+public class Person extends Entity {
 
 
 //    @Relationship(type = "RULED", direction = Relationship.Direction.OUTGOING)
