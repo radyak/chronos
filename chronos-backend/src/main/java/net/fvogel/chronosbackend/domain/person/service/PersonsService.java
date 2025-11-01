@@ -34,11 +34,25 @@ public class PersonsService {
         this.template = template;
     }
 
-    public Person save(Person person) {
+    public Person create(Person person) {
         try {
             return this.personRepository.save(person);
         } catch (DataIntegrityViolationException e) {
-            logger.warn("Error while saving Person " + person, e);
+            logger.warn("Error while creating Person " + person, e);
+            throw new InvalidDataException();
+        }
+    }
+
+    public Person update(String id, Person person) {
+        try {
+            Person existing = this.personRepository.findById(id).orElseThrow(NotFoundException::new);
+            existing.setKey(person.getKey());
+            existing.setFrom(person.getFrom());
+            existing.setTo(person.getTo());
+            existing.setQid(person.getQid());
+            return this.personRepository.save(existing);
+        } catch (DataIntegrityViolationException e) {
+            logger.warn("Error while updating Person " + person, e);
             throw new InvalidDataException();
         }
     }
@@ -75,12 +89,12 @@ public class PersonsService {
                 if (currentCondition == condition) continue;
                 condition = condition.and(currentCondition);
             }
-            query = ((StatementBuilder.OngoingReadingWithoutWhere)query).where(condition);
+            query = ((StatementBuilder.OngoingReadingWithoutWhere) query).where(condition);
         }
 
         return this.template.findAll(
-            query.returning(person).build(),
-            Person.class
+                query.returning(person).build(),
+                Person.class
         );
     }
 

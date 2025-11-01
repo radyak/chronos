@@ -28,6 +28,12 @@
                            [selectable]="true"
                            (onSelect)="this.selectedEntities = $event">
     </chronos-enitities-table>
+    <button type="submit"
+            class="btn btn-outline-success"
+            (click)="newEntity()">
+      <fa-icon [icon]="newIcon"></fa-icon>
+      New person
+    </button>
   </div>
 
 </div>

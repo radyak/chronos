@@ -18,12 +18,15 @@ public class AdminPersonsController {
 
     @PostMapping
     public Person create(@Valid @RequestBody Person person) {
-        return this.personsService.save(person);
+        return this.personsService.create(person);
     }
 
-    @PutMapping
-    public Person update(@Valid @RequestBody Person person) {
-        return this.personsService.save(person);
+    @PutMapping("/{id}")
+    public Person update(
+            @PathVariable("id") String id,
+            @Valid @RequestBody Person person
+    ) {
+        return this.personsService.update(id, person);
     }
 
     @DeleteMapping("/{id}")

@@ -1,20 +1,20 @@
-import {Component, OnInit} from '@angular/core';
-import {debounceTime, filter, map, Subject} from "rxjs";
-import {faCircleNotch, faMagnifyingGlass, faPenToSquare, faPlus, faSpinner, faTrash} from "@fortawesome/free-solid-svg-icons";
-import {ActivatedRoute, Router, RouterModule} from "@angular/router";
+import { CommonModule } from '@angular/common';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, Router, RouterModule } from "@angular/router";
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faMagnifyingGlass, faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { debounceTime, filter, map, Subject, Subscription, switchMap } from "rxjs";
+import { DateInputComponent } from 'src/app/common/components/date-input/date-input.component';
+import { WikipediaArticleInfoComponent } from 'src/app/common/components/wikipedia-article-info/wikipedia-article-info.component';
+import { WikipediaSummaryComponent } from 'src/app/common/components/wikipedia-summary/wikipedia-summary.component';
 import { Entity } from 'src/app/common/model/domain/entity.model';
+import { WikipediaArticleInfo } from 'src/app/common/model/general/wikipedia/wikipedia-article-info.model';
+import { WikipediaSummary } from 'src/app/common/model/general/wikipedia/wikipedia-summary.model';
 import { AdminPersonService } from '../../person/admin-person.service';
+import { AdminWikiArticlesService } from '../../person/admin-wiki-article.service';
 import { PersonService } from '../../person/entries.service';
 import { WikiArticlesService } from '../../person/wiki-article.service';
-import { WikipediaSummaryComponent } from 'src/app/common/components/wikipedia-summary/wikipedia-summary.component';
-import { FormsModule } from '@angular/forms';
-import { CommonModule, NgFor, NgForOf } from '@angular/common';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { AdminWikiArticlesService } from '../../person/admin-wiki-article.service';
-import { WikipediaArticleInfoComponent } from 'src/app/common/components/wikipedia-article-info/wikipedia-article-info.component';
-import { WikipediaSummary } from 'src/app/common/model/general/wikipedia/wikipedia-summary.model';
-import { WikipediaArticleInfo } from 'src/app/common/model/general/wikipedia/wikipedia-article-info.model';
-import { DateInputComponent } from 'src/app/common/components/date-input/date-input.component';
 
 
 @Component({
@@ -32,11 +32,12 @@ import { DateInputComponent } from 'src/app/common/components/date-input/date-in
     WikipediaArticleInfoComponent,
   ]
 })
-export class AdminPersonComponent implements OnInit {
+export class AdminPersonComponent implements OnInit, OnDestroy {
 
   wikipediaSummary?: WikipediaSummary;
   matchingArticles?: Array<WikipediaArticleInfo> = [];
   currentEntity?: Entity;
+  paramSubscription?: Subscription;
 
   wikipediaTitleSearch$ = new Subject<string | undefined>();
   wikipediaSearchTerm: string = '';
@@ -56,20 +57,26 @@ export class AdminPersonComponent implements OnInit {
       map(q => q!.trim()),
       debounceTime(700)
     ).subscribe(q => this.searchWikipediaArticles(q))
-
   }
 
   ngOnInit(): void {
     this.setCurrentEntry();
   }
 
+  ngOnDestroy(): void {
+    this.paramSubscription?.unsubscribe();
+  }
+
   protected setCurrentEntry(): void {
-    const entityId = this.route.snapshot.params['id'];
-    this.personService.getByIdentifier(entityId).subscribe(entity => {
+    this.paramSubscription = this.route.params.pipe(switchMap(params => {
+      const entityId = params['id'];
+      return this.personService.getByIdentifier(entityId);
+    }))
+    .subscribe(entity => {
       this.currentEntity = entity;
       this.loadWikipediaSummary(entity.qid);
       this.afterLoadEntity();
-    })
+    });
   }
 
   protected pageTitle(): string {

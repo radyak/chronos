@@ -33,7 +33,7 @@ export class AdminPersonService {
   }
 
   private update(person: Person): Observable<Person> {
-    return this.http.put<Person>("/api/admin/persons", person).pipe(
+    return this.http.put<Person>(`/api/admin/persons/${person.id}`, person).pipe(
       this.successNotification(`Updated person"`)
     );
   }

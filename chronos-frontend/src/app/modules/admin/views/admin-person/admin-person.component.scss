@@ -5,3 +5,9 @@
 .date-range > * {
   margin-right: 5px;
 }
+
+.control-row {
+  position: sticky;
+  bottom: 0;
+  background: var(--bs-body-bg);
+}

@@ -16,6 +16,28 @@
     </div>
   </ng-template>
 
+  <div class="row control-row">
+
+    <div class="button-group">
+      <button type="submit"
+              class="btn btn-outline-success"
+              (click)="saveEntity()">
+        Save
+      </button>
+      <button type="button"
+              class="btn btn-outline-danger"
+              (click)="cancelEditEntity()">
+        Cancel
+      </button>
+      <button *ngIf="currentEntity && currentEntity.id"
+              type="button"
+              class="btn btn-danger"
+              (click)="deleteEntity(currentEntity!)">
+        Delete
+      </button>
+    </div>
+  </div>
+
   <div class="row" *ngIf="currentEntity else noCurrentEntity">
     <ng-template [ngIf]="currentEntity">
       <form>
@@ -100,28 +122,6 @@
       </form>
     </ng-template>
 
-  </div>
-
-  <div class="row">
-
-    <div class="button-group">
-      <button type="submit"
-              class="btn btn-outline-success"
-              (click)="saveEntity()">
-        Save
-      </button>
-      <button type="button"
-              class="btn btn-outline-danger"
-              (click)="cancelEditEntity()">
-        Cancel
-      </button>
-      <button *ngIf="currentEntity && currentEntity.id"
-              type="button"
-              class="btn btn-danger"
-              (click)="deleteEntity(currentEntity!)">
-        Delete
-      </button>
-    </div>
   </div>
 
 </div>
