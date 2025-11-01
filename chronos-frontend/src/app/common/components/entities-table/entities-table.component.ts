@@ -3,8 +3,9 @@ import {FormsModule} from "@angular/forms";
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import {NgClass, NgForOf, NgIf} from "@angular/common";
 import {IconDefinition} from "@fortawesome/fontawesome-svg-core";
-import {faClose, faSearch} from "@fortawesome/free-solid-svg-icons";
+import {faClose, faEllipsis, faSearch} from "@fortawesome/free-solid-svg-icons";
 import { Entity } from 'src/app/common/model/domain/entity.model';
+import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 
 interface TableEntityRepresentation extends Entity {
   _original: Entity
@@ -13,7 +14,8 @@ interface TableEntityRepresentation extends Entity {
 export interface EntitiesTableAction {
   fn: (e: Entity) => void,
   icon: IconDefinition,
-  color?: 'warn' | 'success' | 'danger'
+  color?: 'warn' | 'success' | 'danger',
+  text: string
 }
 
 export interface EntitiesTableSearch {
@@ -31,14 +33,16 @@ export interface EntitiesTableSearch {
     FormsModule,
     FontAwesomeModule,
     NgForOf,
+    NgIf,
     NgClass,
-    NgIf
+    NgbDropdownModule
   ]
 })
 export class EntitiesTableComponent {
 
   searchIcon = faSearch;
   clearIcon = faClose;
+  ellipsisIcon = faEllipsis;
 
   @Output()
   entityClick: EventEmitter<Entity> = new EventEmitter<Entity>();

@@ -79,7 +79,7 @@
   </thead>
   <tbody>
   <ng-container *ngFor="let entity of filteredEntities()">
-    <tr class="pointer">
+    <tr class="pointer"(click)="entityClick.emit(entity)">
 
       <!-- Select -->
       <th scope="col" *ngIf="selectable">
@@ -115,13 +115,19 @@
       <!-- Actions -->
       <td class="icon-col"
           *ngIf="actions.length > 0">
-        <span class="icon"
-              *ngFor="let action of actions">
-          <fa-icon class="show-on-parent-hover"
-                   [ngClass]="action.color ? ('text-' + action.color) : ''"
-                   [icon]="action.icon"
-                   (click)="action.fn(entity); $event.stopPropagation()"></fa-icon>
-        </span>
+          <div ngbDropdown>
+            <fa-icon [icon]="ellipsisIcon" ngbDropdownToggle
+                     (click)="$event.stopPropagation()"></fa-icon>
+            <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+              <button ngbDropdownItem
+                      *ngFor="let action of actions"
+                      [ngClass]="action.color ? ('text-' + action.color) : ''"
+                      (click)="action.fn(entity); $event.stopPropagation()">
+                  <fa-icon [icon]="action.icon"></fa-icon>
+                  {{ action.text }}
+              </button>
+            </div>
+          </div>
       </td>
     </tr>
   </ng-container>

@@ -41,6 +41,10 @@ th, td {
       background: linear-gradient(90deg, transparent, var(--bs-body-bg));
     }
   }
+
+  .dropdown-toggle::after {
+    display:none;
+  }
 }
 
 .right {

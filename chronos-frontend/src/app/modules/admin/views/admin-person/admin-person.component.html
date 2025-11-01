@@ -68,7 +68,7 @@
                      [(ngModel)]="wikipediaSearchTerm"
                      (ngModelChange)="triggerSearch()"/>
                      
-              <ng-container *ngFor="let article of matchingArticles; track $index">
+              <ng-container *ngFor="let article of matchingArticles">
                 <chronos-wikipedia-article-info [article]="article"
                                                 (click)="assignArticleToCurrentEntity(article)"></chronos-wikipedia-article-info>
               </ng-container>

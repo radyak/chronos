@@ -11,13 +11,6 @@ h2 {
 
 // Tables
 // Search input in table header
-.show-on-parent-hover {
-  opacity: 0;
-
-  tr:hover & {
-    opacity: 1;
-  }
-}
 td.secondary-column {
   color: #aaa;
 }

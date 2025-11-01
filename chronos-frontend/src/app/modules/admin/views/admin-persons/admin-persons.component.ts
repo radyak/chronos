@@ -37,15 +37,18 @@ export class AdminPersonsComponent extends AbstractQueryDrivenComponent {
     {
       fn: (entity: Entity) => this.editEntity(entity),
       icon: faPenToSquare,
+      text: 'Edit'
     },
     {
       fn: (entity: Entity) => this.copyEntity(entity),
       icon: faCopy,
+      text: 'Copy'
     },
     {
       fn: (entity: Entity) => this.deleteEntity(entity),
       icon: faTrash,
-      color: 'danger'
+      color: 'danger',
+      text: 'Delete'
     }
   ]
 
