@@ -1,20 +1,20 @@
 import {Component, OnInit} from '@angular/core';
 import {debounceTime, filter, map, Subject} from "rxjs";
 import {faPenToSquare, faPlus, faTrash} from "@fortawesome/free-solid-svg-icons";
-import {WikipediaSummary} from "../../../../model/wikipedia-summary.model";
 import {ActivatedRoute, Router, RouterModule} from "@angular/router";
-import { Entity } from 'src/app/model/domain/entity.model';
+import { Entity } from 'src/app/common/model/domain/entity.model';
 import { AdminPersonService } from '../../person/admin-person.service';
 import { PersonService } from '../../person/entries.service';
 import { WikiArticlesService } from '../../person/wiki-article.service';
-import { WikipediaSummaryComponent } from 'src/app/ui-components/wikipedia-summary/wikipedia-summary.component';
+import { WikipediaSummaryComponent } from 'src/app/common/components/wikipedia-summary/wikipedia-summary.component';
 import { FormsModule } from '@angular/forms';
 import { CommonModule, NgFor, NgForOf } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { DateInputComponent } from 'src/app/ui-components/date-input/date-input.component';
 import { AdminWikiArticlesService } from '../../person/admin-wiki-article.service';
-import { WikipediaArticleInfo } from 'src/app/model/wikipedia-article-info.model';
-import { WikipediaArticleInfoComponent } from 'src/app/ui-components/wikipedia-article-info/wikipedia-article-info.component';
+import { WikipediaArticleInfoComponent } from 'src/app/common/components/wikipedia-article-info/wikipedia-article-info.component';
+import { WikipediaSummary } from 'src/app/common/model/general/wikipedia/wikipedia-summary.model';
+import { WikipediaArticleInfo } from 'src/app/common/model/general/wikipedia/wikipedia-article-info.model';
+import { DateInputComponent } from 'src/app/common/components/date-input/date-input.component';
 
 
 @Component({

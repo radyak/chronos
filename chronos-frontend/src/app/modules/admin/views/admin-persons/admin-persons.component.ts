@@ -3,9 +3,9 @@ import {Observable, of} from "rxjs";
 import {faCopy, faListCheck, faPenToSquare, faPlus, faTrash} from "@fortawesome/free-solid-svg-icons";
 import {ActivatedRoute, Params, Router, RouterModule} from "@angular/router";
 import {AdminConfirmService} from "../../services/admin-confirm.service";
-import {QueryDrivenComponent} from "../../../../common/query-driven-component.directive";
-import {EntitiesTableAction, EntitiesTableComponent, EntitiesTableSearch} from "../../../../ui-components/entities-table/entities-table.component";
-import { Entity } from 'src/app/model/domain/entity.model';
+import {AbstractQueryDrivenComponent} from "../../../../common/components/abstract-query-driven-component.directive";
+import {EntitiesTableAction, EntitiesTableComponent, EntitiesTableSearch} from "../../../../common/components/entities-table/entities-table.component";
+import { Entity } from 'src/app/common/model/domain/entity.model';
 import { AdminPersonService } from '../../person/admin-person.service';
 import { PersonService } from '../../person/entries.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -24,7 +24,7 @@ import { CommonModule } from '@angular/common';
     RouterModule
   ]
 })
-export class AdminPersonsComponent extends QueryDrivenComponent {
+export class AdminPersonsComponent extends AbstractQueryDrivenComponent {
 
   newIcon = faPlus;
   batchActionIcon = faListCheck;

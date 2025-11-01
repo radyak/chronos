@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {MenuItem} from "./ui-components/navbar/navbar.component";
+import {MenuItem} from "./common/components/navbar/navbar.component";
 import {of} from "rxjs";
 
 @Component({
@@ -18,10 +18,10 @@ export class AppComponent {
       label: 'Home',
       routerLink: ''
     },
-    {
-      label: 'Discover',
-      routerLink: 'discover'
-    },
+    // {
+    //   label: 'Discover',
+    //   routerLink: 'discover'
+    // },
     {
       label: 'Admin',
       routerLink: 'admin',

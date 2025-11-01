@@ -1,7 +1,10 @@
-<chronos-navbar [title]="title"
-                [menuItems]="menuItems">
-</chronos-navbar>
+<header chronos-navbar
+        [title]="title"
+        [menuItems]="menuItems">
+</header>
 
-<router-outlet></router-outlet>
+<main>
+    <router-outlet></router-outlet>
+</main>
 
-<chronos-footer></chronos-footer>
+<footer chronos-footer></footer>

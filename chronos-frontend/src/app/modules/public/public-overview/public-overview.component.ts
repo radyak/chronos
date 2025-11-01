@@ -5,10 +5,10 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
-import { WikipediaSummary } from 'src/app/model/wikipedia-summary.model';
-import { WikipediaSummaryComponent } from 'src/app/ui-components/wikipedia-summary/wikipedia-summary.component';
+import { WikipediaSummaryComponent } from 'src/app/common/components/wikipedia-summary/wikipedia-summary.component';
 import { WikiArticlesService } from '../../admin/person/wiki-article.service';
 import { Observable, of } from 'rxjs';
+import { WikipediaSummary } from 'src/app/common/model/general/wikipedia/wikipedia-summary.model';
 
 @Component({
   selector: 'chronos-public-overview',

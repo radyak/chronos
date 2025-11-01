@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { NotificationsComponent } from 'src/app/ui-components/notifications/notifications.component';
+import { NotificationsComponent } from 'src/app/common/components/notifications/notifications.component';
 
 @Component({
   selector: 'chronos-admin',

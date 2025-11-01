@@ -4,14 +4,14 @@ import {BrowserModule} from '@angular/platform-browser';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {NavbarComponent} from "./ui-components/navbar/navbar.component";
-import {FooterComponent} from "./ui-components/footer/footer.component";
+import {NavbarComponent} from "./common/components/navbar/navbar.component";
+import {FooterComponent} from "./common/components/footer/footer.component";
 import {OAuthModule, OAuthService} from "angular-oauth2-oidc";
-import {AuthService} from "./security/auth.service";
 import {HttpClientModule} from "@angular/common/http";
-import {WebAppConfigService} from "./service/web-app-config.service";
-import {AuthServiceMock} from "./security/auth.service.mock";
+import {WebAppConfigService} from "./general/webconfig/web-app-config.service";
 import {environment} from "../environments/environment";
+import { AuthService } from './general/security/auth.service';
+import { AuthServiceMock } from './general/security/auth.service.mock';
 
 @NgModule({
   declarations: [
