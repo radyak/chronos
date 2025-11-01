@@ -17,87 +17,89 @@
   </ng-template>
 
   <div class="row" *ngIf="currentEntity else noCurrentEntity">
-    <div class="col-8">
-      <ng-template [ngIf]="currentEntity">
-        <form>
-          <fieldset>
-
+    <ng-template [ngIf]="currentEntity">
+      <form>
+        <fieldset>
+          <section>
             <div class="form-group">
               <label for="entity.key"
-                     class="form-label mt-4">
+                    class="form-label mt-4">
                 Key:
               </label>
               <input type="text"
-                     class="form-control"
-                     id="entity.key"
-                     name="entity.key"
-                     [(ngModel)]="currentEntity.key">
+                    class="form-control"
+                    id="entity.key"
+                    name="entity.key"
+                    [(ngModel)]="currentEntity.key">
             </div>
 
             <div class="form-group">
-              <label class="form-label mt-4">
-                Dates:
-              </label>
-
-                <div class="row">
-                  <div class="form-group col-6">
-                    <label class="form-label mt-4">
-                      From:
-                    </label>
-                    <chronos-date-input [(date)]="currentEntity.from"></chronos-date-input>
-                  </div>
-
-                  <div class="form-group col-6">
-                    <label class="form-label mt-4">
-                      To:
-                    </label>
-                    <chronos-date-input [(date)]="currentEntity.to"></chronos-date-input>
-                  </div>
+              <div class="row">
+                <div class="form-group col-6">
+                  <label class="form-label mt-4">
+                    From:
+                  </label>
+                  <chronos-date-input [(date)]="currentEntity.from"></chronos-date-input>
                 </div>
-            </div>
 
+                <div class="form-group col-6">
+                  <label class="form-label mt-4">
+                    To:
+                  </label>
+                  <chronos-date-input [(date)]="currentEntity.to"></chronos-date-input>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <label class="form-label mt-4">
+              Linked Wiki Article:
+            </label>
+            
+            <ng-container *ngIf="wikipediaSummary else noSummary">
+              <chronos-wikipedia-summary [wikiSummary]="wikipediaSummary">
+              </chronos-wikipedia-summary>
+            </ng-container>
+
+            <ng-template #noSummary>
+              No summary available
+            </ng-template>
+            
             <div class="form-group">
               <label for="entity.wikiarticle"
-                     class="form-label mt-4">
-                Linked Wiki Article:
+                    class="form-label mt-4">
+                Search for article:
               </label>
-              <input type="text"
-                     class="form-control"
-                     id="entity.wikiarticle"
-                     name="entity.wikiarticle"
-                     [(ngModel)]="wikipediaSearchTerm"
-                     (ngModelChange)="triggerSearch()"/>
-                     
+
+              <div class="input-group mb-3">
+                <span class="input-group-text">
+                  <fa-icon *ngIf="!searchWikipediaArticlesLoading" [icon]="searchIcon"></fa-icon>
+                  <fa-icon *ngIf="searchWikipediaArticlesLoading" [icon]="loadingIcon" class="fa-spin-pulse"></fa-icon>
+                </span>
+                <input type="text"
+                      class="form-control"
+                      id="entity.wikiarticle"
+                      name="entity.wikiarticle"
+                      [(ngModel)]="wikipediaSearchTerm"
+                      aria-label="Search for Wikipedia articles"
+                      placeholder="Search for Wikipedia articles"
+                      (ngModelChange)="triggerSearch()"/>
+              </div>
+                    
               <ng-container *ngFor="let article of matchingArticles">
                 <chronos-wikipedia-article-info [article]="article"
                                                 (click)="assignArticleToCurrentEntity(article)"></chronos-wikipedia-article-info>
               </ng-container>
-                     
             </div>
+                    
+          </section>
 
 
-          </fieldset>
-        </form>
-      </ng-template>
+        </fieldset>
+      </form>
+    </ng-template>
 
-    </div>
-
-    <div class="col-4">
-      <div *ngIf="wikipediaSummary else noSummary"
-           class="form-group">
-        <label for="entity.wikipediaPage"
-               class="form-label mt-4">
-          Wikipedia preview:
-        </label>
-        <chronos-wikipedia-summary [wikiSummary]="wikipediaSummary">
-        </chronos-wikipedia-summary>
-      </div>
-
-      <ng-template #noSummary>
-        No summary available
-      </ng-template>
-
-    </div>
   </div>
 
   <div class="row">

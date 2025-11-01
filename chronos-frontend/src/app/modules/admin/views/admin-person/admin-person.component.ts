@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {debounceTime, filter, map, Subject} from "rxjs";
-import {faPenToSquare, faPlus, faTrash} from "@fortawesome/free-solid-svg-icons";
+import {faCircleNotch, faMagnifyingGlass, faPenToSquare, faPlus, faSpinner, faTrash} from "@fortawesome/free-solid-svg-icons";
 import {ActivatedRoute, Router, RouterModule} from "@angular/router";
 import { Entity } from 'src/app/common/model/domain/entity.model';
 import { AdminPersonService } from '../../person/admin-person.service';
@@ -40,10 +40,10 @@ export class AdminPersonComponent implements OnInit {
 
   wikipediaTitleSearch$ = new Subject<string | undefined>();
   wikipediaSearchTerm: string = '';
+  searchWikipediaArticlesLoading: boolean = false;
 
-  editIcon = faPenToSquare;
-  newIcon = faPlus;
-  deleteIcon = faTrash;
+  searchIcon = faMagnifyingGlass;
+  loadingIcon = faSpinner;
 
   constructor(private adminPersonService: AdminPersonService,
               private personService: PersonService,
@@ -88,7 +88,9 @@ export class AdminPersonComponent implements OnInit {
     if (!query) {
       return;
     }
+    this.searchWikipediaArticlesLoading = true;
     this.adminWikiArticlesService.search(query!).subscribe(articles => {
+      this.searchWikipediaArticlesLoading = false;
       this.matchingArticles = articles;
     })
   }

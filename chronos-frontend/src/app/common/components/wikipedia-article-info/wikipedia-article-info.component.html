@@ -1,10 +1,11 @@
 <div class="article">
-  <div class="image-container">
-    <ng-container *ngIf="article.image?.url">
-      <img class="summary-image"
-          [src]="article.image?.url">
+  <div class="image-container" [ngStyle]="getStyle()">
+    <ng-container *ngIf="!article.image?.url">
+      <fa-icon [icon]="noImageIcon"></fa-icon>
     </ng-container>
   </div>
 
-  {{ article.title }}
+  <div class="title-container">
+    {{ article.title }}
+  </div>
 </div>

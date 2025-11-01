@@ -1,6 +1,8 @@
+@import "../../../theme/variables";
+
 .article {
   margin-top: 3px;
-  border-radius: 3px;
+  border-radius: $border-radius;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -11,13 +13,15 @@
 }
 
 .image-container {
-  display: inline-block;
+  display: flex;
+  align-items: center;
   width: 50px;
   height: 50px;
   margin-right: 10px;
+  justify-content: center;
+  border-radius: $border-radius;
 }
 
-.summary-image {
-  max-height: 50px;
-  border-radius: 3px;
+.title-container {
+  margin-left: 10px;
 }
