@@ -99,7 +99,11 @@ public class PersonsService {
     }
 
     public Person findByIdOrKey(String id) {
-        return this.personRepository.findByIdOrKey(id).orElseThrow(NotFoundException::new);
+        return this.personRepository.findByIdEqualsOrKey(id, id).orElseThrow(NotFoundException::new);
+    }
+
+    public Person findById(String id) {
+        return this.personRepository.findById(id).orElseThrow(NotFoundException::new);
     }
 
     public void deleteById(String id) {
