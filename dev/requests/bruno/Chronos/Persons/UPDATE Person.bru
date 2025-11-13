@@ -1,0 +1,31 @@
+meta {
+  name: UPDATE Person
+  type: http
+  seq: 4
+}
+
+put {
+  url: http://localhost:8080/api/admin/persons/tts
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "id": "tts",
+    "key": "titus",
+    "from": "0039-12-30",
+    "to": "0081-09-13",
+    "qid": null,
+    "parents": [
+      {
+        "id": "vspsn",
+        "key": "vespasian",
+        "from": "0009-09-17",
+        "to": "0079-07-23",
+        "qid": null,
+        "parents": []
+      }
+    ]
+  }
+}

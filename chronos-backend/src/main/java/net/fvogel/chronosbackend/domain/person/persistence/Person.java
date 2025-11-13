@@ -1,17 +1,17 @@
 package net.fvogel.chronosbackend.domain.person.persistence;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import net.fvogel.chronosbackend.domain.generic.persistence.Entity;
 import org.springframework.data.neo4j.core.schema.Node;
+import org.springframework.data.neo4j.core.schema.Relationship;
+
+import java.util.List;
 
 @Node("Person")
 @Data
-@EqualsAndHashCode(callSuper = true)
 public class Person extends Entity {
 
-
-//    @Relationship(type = "RULED", direction = Relationship.Direction.OUTGOING)
-//    private List<Ruled> ruled;
+    @Relationship(type = "CHILD_OF", direction = Relationship.Direction.OUTGOING)
+    private List<ChildOf> parents;
 
 }

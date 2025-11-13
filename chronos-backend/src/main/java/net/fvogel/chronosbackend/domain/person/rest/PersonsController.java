@@ -22,6 +22,7 @@ public class PersonsController {
             @RequestParam(name = "to", required = false) String to
     ) {
         return this.personsService.findBetween(from, to);
+//        return this.personsService.findAll();
     }
 
     @GetMapping("/{identifier}")
