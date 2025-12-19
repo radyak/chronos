@@ -46,10 +46,10 @@ public class PersonsService {
     public Person update(String id, Person person) {
         try {
             Person existing = this.personRepository.findById(id).orElseThrow(NotFoundException::new);
-            existing.setKey(person.getKey());
-            existing.setFrom(person.getFrom());
-            existing.setTo(person.getTo());
-            existing.setQid(person.getQid());
+            existing.key = person.key;
+            existing.from = person.from;
+            existing.to = person.to;
+            existing.qid = person.qid;
             return this.personRepository.save(existing);
         } catch (DataIntegrityViolationException e) {
             logger.warn("Error while updating Person " + person, e);

@@ -20,7 +20,7 @@ public class AdminMetadataController {
 
     @GetMapping("")
     public List<EntityMetadata> listNodes() {
-        return this.metadataService.listNodeClasses();
+        return this.metadataService.getAllMetaData();
     }
 
 }

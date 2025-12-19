@@ -28,7 +28,7 @@ public class PersonParentsService {
     }
 
     public Person addChildOf(Person person, ChildOf childOf) {
-        String parentId = childOf.getParent().getId();
+        String parentId = childOf.getParent().id;
 
         // Invalid parent ID
         if (parentId == null) {
@@ -36,7 +36,7 @@ public class PersonParentsService {
         }
 
         // Parent (ID) already present in parents
-        if (person.getParents().stream().anyMatch(currentChildOf -> currentChildOf.getParent().getId().equals(parentId))) {
+        if (person.getParents().stream().anyMatch(currentChildOf -> currentChildOf.getParent().id.equals(parentId))) {
             throw new ConflictingDataException();
         }
 
@@ -47,23 +47,23 @@ public class PersonParentsService {
         // Add & update
         person.getParents().add(childOf);
         this.personRepository.save(person);
-        return this.personRepository.findById(person.getId()).orElseThrow(NotFoundException::new);
+        return this.personRepository.findById(person.id).orElseThrow(NotFoundException::new);
     }
 
     public Person updateChildOf(Person person, String parentId, ChildOf childOf) {
         // Find existing relation and remove it (required by SND)
         ChildOf existingChildOf = person.getParents().stream()
-                .filter(currentChildOf -> currentChildOf.getParent().getId().equals(parentId))
+                .filter(currentChildOf -> currentChildOf.getParent().id.equals(parentId))
                 .findFirst()
                 .orElseThrow(NotFoundException::new);
-        deleteChildOf(person.getId(), parentId);
+        deleteChildOf(person.id, parentId);
 
         // Transfer parent as it cannot be changed
         childOf.setParent(existingChildOf.getParent());
         person.getParents().add(childOf);
 
         this.template.save(person);
-        return this.personRepository.findById(person.getId()).orElseThrow(NotFoundException::new);
+        return this.personRepository.findById(person.id).orElseThrow(NotFoundException::new);
     }
 
     public void deleteChildOf(String childId, String parentId) {
