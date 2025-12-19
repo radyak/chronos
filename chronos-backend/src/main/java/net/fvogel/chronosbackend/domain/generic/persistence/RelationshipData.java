@@ -1,17 +1,19 @@
 package net.fvogel.chronosbackend.domain.generic.persistence;
 
-import lombok.Data;
+import net.fvogel.chronosbackend.domain.common.ChronosDateSpec;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 
 
-@Data
 public class RelationshipData {
 
     @Id
     @GeneratedValue
-    String id;
+    public String id;
 
-    String from;
-    String to;
+    @ChronosDateSpec
+    public String from;
+
+    @ChronosDateSpec
+    public String to;
 }

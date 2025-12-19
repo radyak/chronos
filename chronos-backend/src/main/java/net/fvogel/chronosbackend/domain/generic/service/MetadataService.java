@@ -1,7 +1,9 @@
 package net.fvogel.chronosbackend.domain.generic.service;
 
+import net.fvogel.chronosbackend.domain.generic.model.EntityFieldMetadata;
 import net.fvogel.chronosbackend.domain.generic.model.EntityMetadata;
 import net.fvogel.chronosbackend.domain.generic.model.RelationMetadata;
+import net.fvogel.chronosbackend.shared.exception.NotFoundException;
 import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
 import org.slf4j.Logger;
@@ -10,22 +12,19 @@ import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
 import org.springframework.data.neo4j.core.schema.TargetNode;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static net.fvogel.chronosbackend.domain.generic.service.ReflectionUtils.*;
+
 
 @Service
-@Transactional
 public class MetadataService {
 
     private static final Logger logger = LoggerFactory.getLogger(MetadataService.class);
@@ -33,10 +32,28 @@ public class MetadataService {
     private static final Class<? extends Annotation> nodeAnnotationClass = Node.class;
     private static final Class<? extends Annotation> relationshipPropertiesAnnotation = Relationship.class;
 
+    private final List<EntityMetadata> metaData;
+
+    public MetadataService() {
+        metaData = this.listNodeClasses();
+    }
+
+    public List<EntityMetadata> getAllMetaData() {
+        return this.metaData;
+    }
+
+    public EntityMetadata getMetaData(String type) {
+        return this.metaData.stream().filter(data -> data.getName().equals(type)).findFirst().orElseThrow(NotFoundException::new);
+    }
+
+    public boolean entityExists(String entityName) {
+        return this.metaData.stream().anyMatch(e -> e.getName().equals(entityName));
+    }
+
     /**
      * Scans for all classes annotated with org.springframework.data.neo4j.core.schema.Node
      */
-    public List<EntityMetadata> listNodeClasses() {
+    private List<EntityMetadata> listNodeClasses() {
         // Initialize Reflections with a specific scanner
         Reflections reflections = new Reflections(packageName, Scanners.TypesAnnotated);
 
@@ -63,13 +80,13 @@ public class MetadataService {
                         ec.setRelations(extractRelationConfigs(clazz));
 
                         // Map fields
-//                        Field[] fields = clazz.getDeclaredFields();
-//                        for (Field field : fields) {
-//                            EntityFieldMetadata efm = new EntityFieldMetadata();
-//                            efm.setName(field.getName());
-//                            efm.setType(field.getType().getSimpleName());
-//                            ec.getFields().add(efm);
-//                        }
+                        List<Field> fields = getNonAnnotatedFields(clazz, Relationship.class);
+                        for (Field field : fields) {
+                            EntityFieldMetadata efm = new EntityFieldMetadata();
+                            efm.setName(field.getName());
+                            efm.setType(field.getType().getSimpleName());
+                            ec.getFields().add(efm);
+                        }
 
                         return ec;
                     }
@@ -151,67 +168,6 @@ public class MetadataService {
 
             return rc;
         }).collect(Collectors.toList());
-    }
-
-    /**
-     * Gets the type of a generically typed field
-     * E.g.
-     * private List<MyEntity> entities; -> MyEntity.class
-     *
-     * @param field The Field to derive the generic type from
-     * @return The type's class
-     */
-    private Class<?> getListElementType(Field field) {
-        // First check that the field is assignable from List
-        if (!List.class.isAssignableFrom(field.getType())) {
-            return null;
-        }
-
-        // Check if the generic type is parameterized
-        Type genericType = field.getGenericType();
-        if (genericType instanceof ParameterizedType pt) {
-            Type[] typeArgs = pt.getActualTypeArguments();
-            if (typeArgs.length == 1) {
-                Type arg = typeArgs[0];
-                if (arg instanceof Class<?>) {
-                    return (Class<?>) arg;
-                } else if (arg instanceof ParameterizedType) {
-                    // e.g. List<Map<String, Foo>>
-                    Type rawType = ((ParameterizedType) arg).getRawType();
-                    if (rawType instanceof Class<?>) {
-                        return (Class<?>) rawType;
-                    }
-                }
-            }
-        }
-
-        return null;
-    }
-
-
-    /**
-     * Returns all fields of the given class (including inherited ones)
-     * that are annotated with the given annotation.
-     *
-     * @param clazz           the class to inspect
-     * @param annotationClass the annotation type to look for
-     * @return list of Fields that are annotated with annotationClass
-     */
-    public List<Field> getAnnotatedFields(Class<?> clazz, Class<? extends Annotation> annotationClass) {
-        List<Field> annotatedFields = new ArrayList<>();
-
-        // Walk up the class hierarchy to include inherited fields
-        Class<?> current = clazz;
-        while (current != null && current != Object.class) {
-            for (Field field : current.getDeclaredFields()) {
-                if (field.isAnnotationPresent(annotationClass)) {
-                    annotatedFields.add(field);
-                }
-            }
-            current = current.getSuperclass();
-        }
-
-        return annotatedFields;
     }
 
 }

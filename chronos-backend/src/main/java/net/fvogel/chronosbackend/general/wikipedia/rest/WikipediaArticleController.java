@@ -32,7 +32,7 @@ public class WikipediaArticleController {
             @RequestParam(name = "lang", required = false) SupportedLanguage lang
     ) {
         Entity randomEntity = this.entityService.findRandomEntityWithQid();
-        return this.wikipediaService.findWikipediaSummaryByQid(randomEntity.getQid(), lang);
+        return this.wikipediaService.findWikipediaSummaryByQid(randomEntity.qid, lang);
     }
 
 }
