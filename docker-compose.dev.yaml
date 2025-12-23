@@ -1,0 +1,56 @@
+services:
+
+  chronos:
+    image: maven:3.9.6-eclipse-temurin-17-alpine
+    container_name: chronos
+    working_dir: /app/chronos-backend
+    command: mvn spring-boot:run
+    volumes:
+      - .:/app
+      - ~/.m2:/root/.m2
+      - ./dev/exampledata/img:/app/data/img:ro
+    depends_on:
+      - chronos-db
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=no-security
+      - APP_GDP_HOST=chronos-db
+      - APP_GDB_USERNAME=neo4j
+      - APP_GDB_PASSWORD=password
+
+  chronos-db:
+    container_name: chronos-db
+    image: neo4j:5.26.14-community-bullseye
+    restart: always
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    environment:
+      - NEO4J_AUTH=neo4j/password
+    volumes:
+      - "./dev/chronos-postgres-data:/var/lib/postgresql/data"
+      - "./dev/chronos-neo4j-data:/data"
+
+  chronos-sds:
+    image: maven:3.9.6-eclipse-temurin-17-alpine
+    container_name: chronos-sds
+    working_dir: /app/chronos-schema-definition-service
+    command: mvn spring-boot:run
+    ports:
+      - "8090:8090"
+    volumes:
+      - .:/app
+      - ~/.m2:/root/.m2
+    environment:
+      spring_profiles_active: no-security
+
+  chronos-ui:
+    image: node:21.7.2-alpine3.18
+    container_name: chronos-ui
+    working_dir: /app
+    command: npm start -- --host=0.0.0.0
+    ports:
+      - "4200:4200"
+    volumes:
+      - ./chronos-frontend:/app

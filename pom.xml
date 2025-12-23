@@ -1,18 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<groupId>net.fvogel</groupId>
-	<artifactId>chronos</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>chronos-root</name>
-	<description>Chronos Web Application Root</description>
+    <groupId>net.fvogel</groupId>
+    <artifactId>chronos</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>chronos-root</name>
+    <description>Chronos Web Application Root</description>
 
-	<packaging>pom</packaging>
-	
-	<modules>
-		<module>chronos-frontend</module>
-		<module>chronos-backend</module>
-	</modules>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.5.7</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>chronos-commons</module>
+        <module>chronos-frontend</module>
+        <module>chronos-backend</module>
+        <module>chronos-schema-definition-service</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+                <version>2.2.0</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
 </project>

@@ -3,10 +3,13 @@ package net.fvogel.chronosbackend.domain.generic.rest;
 import net.fvogel.chronosbackend.domain.generic.persistence.Entity;
 import net.fvogel.chronosbackend.domain.generic.service.EntityService;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/entities")
@@ -26,6 +29,13 @@ public class EntityController {
     @GetMapping()
     public List<Entity> findAll() {
         return this.entityService.findAll();
+    }
+
+    @GetMapping("/{id}")
+    public Set<Map<String, Object>> findOne(
+            @PathVariable("id") String id
+    ) {
+        return this.entityService.findWithRelationsById(id);
     }
 
 //    @GetMapping("{id}")

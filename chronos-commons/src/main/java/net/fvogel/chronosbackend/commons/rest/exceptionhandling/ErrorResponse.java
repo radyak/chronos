@@ -1,4 +1,4 @@
-package net.fvogel.chronosbackend.shared.rest.errorhandling;
+package net.fvogel.chronosbackend.commons.rest.exceptionhandling;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

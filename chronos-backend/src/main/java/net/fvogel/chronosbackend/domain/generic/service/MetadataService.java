@@ -1,9 +1,9 @@
 package net.fvogel.chronosbackend.domain.generic.service;
 
+import net.fvogel.chronosbackend.commons.exception.NotFoundException;
 import net.fvogel.chronosbackend.domain.generic.model.EntityFieldMetadata;
 import net.fvogel.chronosbackend.domain.generic.model.EntityMetadata;
 import net.fvogel.chronosbackend.domain.generic.model.RelationMetadata;
-import net.fvogel.chronosbackend.shared.exception.NotFoundException;
 import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
 import org.slf4j.Logger;

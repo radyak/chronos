@@ -1,11 +1,11 @@
 package net.fvogel.chronosbackend.domain.person.service;
 
+import net.fvogel.chronosbackend.commons.exception.ConflictingDataException;
+import net.fvogel.chronosbackend.commons.exception.InvalidDataException;
+import net.fvogel.chronosbackend.commons.exception.NotFoundException;
 import net.fvogel.chronosbackend.domain.person.persistence.ChildOf;
 import net.fvogel.chronosbackend.domain.person.persistence.Person;
 import net.fvogel.chronosbackend.domain.person.persistence.PersonRepository;
-import net.fvogel.chronosbackend.shared.exception.ConflictingDataException;
-import net.fvogel.chronosbackend.shared.exception.InvalidDataException;
-import net.fvogel.chronosbackend.shared.exception.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.neo4j.core.Neo4jOperations;

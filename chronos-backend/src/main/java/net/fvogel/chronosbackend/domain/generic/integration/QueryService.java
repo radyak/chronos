@@ -1,5 +1,6 @@
 package net.fvogel.chronosbackend.domain.generic.integration;
 
+import net.fvogel.chronosbackend.commons.exception.InvalidDataException;
 import net.fvogel.chronosbackend.domain.generic.integration.query.node.CreateNodeQuery;
 import net.fvogel.chronosbackend.domain.generic.integration.query.node.DeleteNodeQuery;
 import net.fvogel.chronosbackend.domain.generic.integration.query.node.UpdateNodeQuery;
@@ -7,7 +8,6 @@ import net.fvogel.chronosbackend.domain.generic.model.EntityFieldMetadata;
 import net.fvogel.chronosbackend.domain.generic.model.EntityMetadata;
 import net.fvogel.chronosbackend.domain.generic.persistence.Entity;
 import net.fvogel.chronosbackend.domain.generic.service.MetadataService;
-import net.fvogel.chronosbackend.shared.exception.InvalidDataException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

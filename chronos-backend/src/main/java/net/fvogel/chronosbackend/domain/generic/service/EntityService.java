@@ -1,24 +1,22 @@
 package net.fvogel.chronosbackend.domain.generic.service;
 
+import net.fvogel.chronosbackend.commons.exception.NotFoundException;
 import net.fvogel.chronosbackend.domain.generic.integration.QueryService;
 import net.fvogel.chronosbackend.domain.generic.integration.query.node.CreateNodeQuery;
 import net.fvogel.chronosbackend.domain.generic.integration.query.node.DeleteNodeQuery;
 import net.fvogel.chronosbackend.domain.generic.integration.query.node.UpdateNodeQuery;
 import net.fvogel.chronosbackend.domain.generic.persistence.Entity;
 import net.fvogel.chronosbackend.domain.generic.persistence.LabelledEntity;
-import net.fvogel.chronosbackend.shared.exception.NotFoundException;
 import org.neo4j.driver.Driver;
 import org.neo4j.driver.Session;
 import org.neo4j.driver.types.Node;
+import org.neo4j.driver.types.Relationship;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 import static net.fvogel.chronosbackend.domain.generic.integration.QueryUtils.wrapWith;
 
@@ -54,6 +52,45 @@ public class EntityService {
                     .stream().map(this::mapToEntity).findFirst()
                     .orElseThrow(NotFoundException::new);
         }
+    }
+
+    public Set<Map<String, Object>> findWithRelationsById(String id) {
+        try (Session session = driver.session()) {
+            return session.run("MATCH (s)-[r]->(t) WHERE s.id = " + wrapWith(id, "'") + " RETURN s, r, t")
+                    .list(record -> {
+                        return new HashSet<>(Arrays.asList(
+                                getNode("s", record),
+                                getRelationship("r", record),
+                                getNode("t", record))
+                        );
+                    })
+                    .stream().findFirst()
+                    .orElseThrow(NotFoundException::new);
+        }
+    }
+
+    private Map<String, Object> getNode(String key, org.neo4j.driver.Record record) {
+        Node node = record.get(key).asNode();
+        Map<String, Object> map = new HashMap<>(node.asMap());
+        map.put("labels", toList(node.labels()));
+        map.put("_id", node.elementId());
+        return map;
+    }
+
+    private Map<String, Object> getRelationship(String key, org.neo4j.driver.Record record) {
+        Relationship relationship = record.get(key).asRelationship();
+        Map<String, Object> map = new HashMap<>(relationship.asMap());
+        map.put("type", relationship.type());
+        map.put("source", relationship.startNodeElementId());
+        map.put("target", relationship.endNodeElementId());
+        map.put("_id", relationship.elementId());
+        return map;
+    }
+
+    private <T> List<T> toList(Iterable<T> it) {
+        List<T> list = new ArrayList<T>();
+        it.forEach(list::add);
+        return list;
     }
 
     public List<Entity> findAll() {
