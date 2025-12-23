@@ -1,10 +1,10 @@
-package net.fvogel.chronosbackend.shared.rest.errorhandling;
+package net.fvogel.chronosbackend.commons.rest.exceptionhandling;
 
 import jakarta.servlet.http.HttpServletRequest;
-import net.fvogel.chronosbackend.shared.exception.ConflictingDataException;
-import net.fvogel.chronosbackend.shared.exception.InvalidDataException;
-import net.fvogel.chronosbackend.shared.exception.InvalidParameterException;
-import net.fvogel.chronosbackend.shared.exception.NotFoundException;
+import net.fvogel.chronosbackend.commons.exception.ConflictingDataException;
+import net.fvogel.chronosbackend.commons.exception.InvalidDataException;
+import net.fvogel.chronosbackend.commons.exception.InvalidParameterException;
+import net.fvogel.chronosbackend.commons.exception.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

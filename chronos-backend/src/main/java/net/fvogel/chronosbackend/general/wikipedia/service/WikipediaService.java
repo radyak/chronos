@@ -1,5 +1,8 @@
 package net.fvogel.chronosbackend.general.wikipedia.service;
 
+import net.fvogel.chronosbackend.commons.exception.InvalidParameterException;
+import net.fvogel.chronosbackend.commons.exception.NotFoundException;
+import net.fvogel.chronosbackend.commons.lang.SupportedLanguage;
 import net.fvogel.chronosbackend.config.caching.CachingConfig;
 import net.fvogel.chronosbackend.general.wikipedia.client.WikipediaApiClient;
 import net.fvogel.chronosbackend.general.wikipedia.dto.WikipediaPageDto;
@@ -11,9 +14,6 @@ import net.fvogel.chronosbackend.general.wikipedia.dto.search.WikipediaSearchRes
 import net.fvogel.chronosbackend.general.wikipedia.mapper.WikipediaModelMapper;
 import net.fvogel.chronosbackend.general.wikipedia.model.WikipediaArticleInfo;
 import net.fvogel.chronosbackend.general.wikipedia.model.WikipediaArticleSummary;
-import net.fvogel.chronosbackend.shared.exception.InvalidParameterException;
-import net.fvogel.chronosbackend.shared.exception.NotFoundException;
-import net.fvogel.chronosbackend.shared.lang.SupportedLanguage;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +23,7 @@ import java.util.List;
 @Service
 public class WikipediaService {
 
-    private WikipediaApiClient apiClient;
+    private final WikipediaApiClient apiClient;
 
     public WikipediaService(WikipediaApiClient apiClient) {
         this.apiClient = apiClient;
@@ -32,10 +32,10 @@ public class WikipediaService {
     /**
      * Finds Wikipedia article infos (containing title, thumbnail, QID) by title (interpreted by language).
      *
-     * @param title         The title or title part to search; must be at least 3 characters long
-     * @param lang          (optional; default: "en") The language that the title is to be interpreted as & to search for
-     * @param offset        (optional) An offset, to start results at a later index (for pagination; wiki API returns 10 results by default)
-     * @return              A list of wikipedia articles
+     * @param title  The title or title part to search; must be at least 3 characters long
+     * @param lang   (optional; default: "en") The language that the title is to be interpreted as & to search for
+     * @param offset (optional) An offset, to start results at a later index (for pagination; wiki API returns 10 results by default)
+     * @return A list of wikipedia articles
      */
     @Cacheable(CachingConfig.CACHE_NAME_WIKI_ARTICLES_SEARCH)
     public List<WikipediaArticleInfo> searchWikipediaArticlesByTitle(String title, SupportedLanguage lang, Integer offset) {
@@ -59,9 +59,10 @@ public class WikipediaService {
 
     /**
      * Loads a Wikipedia article
+     *
      * @param qid
-     * @param lang  (optional; default: "en") The language that the title is to be interpreted as & to search for
-     * @return      The Wikipedia article
+     * @param lang (optional; default: "en") The language that the title is to be interpreted as & to search for
+     * @return The Wikipedia article
      */
     @Cacheable(CachingConfig.CACHE_NAME_WIKI_ARTICLE)
     public WikipediaArticleSummary findWikipediaSummaryByQid(String qid, SupportedLanguage lang) {

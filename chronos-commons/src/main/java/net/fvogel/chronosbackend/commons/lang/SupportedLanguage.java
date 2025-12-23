@@ -1,16 +1,16 @@
-package net.fvogel.chronosbackend.shared.lang;
+package net.fvogel.chronosbackend.commons.lang;
 
 /**
  * Languages that are supported globally for following contexts:
- *  - i18n of the UI
- *  - Wikipedia articles
+ * - i18n of the UI
+ * - Wikipedia articles
  */
 public enum SupportedLanguage {
     DE("de"),
     EN("en"),
     IT("it");
 
-    private String lang;
+    private final String lang;
 
     SupportedLanguage(String lang) {
         this.lang = lang;

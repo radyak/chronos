@@ -1,10 +1,10 @@
 package net.fvogel.chronosbackend.general.wikipedia.rest;
 
+import net.fvogel.chronosbackend.commons.lang.SupportedLanguage;
 import net.fvogel.chronosbackend.domain.generic.persistence.Entity;
 import net.fvogel.chronosbackend.domain.generic.service.EntityService;
 import net.fvogel.chronosbackend.general.wikipedia.model.WikipediaArticleSummary;
 import net.fvogel.chronosbackend.general.wikipedia.service.WikipediaService;
-import net.fvogel.chronosbackend.shared.lang.SupportedLanguage;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

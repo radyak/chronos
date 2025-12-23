@@ -1,4 +1,4 @@
-package net.fvogel.chronosbackend.config.security;
+package net.fvogel.chronosbackend.commons.security;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,9 +21,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Component
-public class KeycloakJwtAuthConverter implements Converter<Jwt, AbstractAuthenticationToken> {
+public class ChronosJwtAuthConverter implements Converter<Jwt, AbstractAuthenticationToken> {
 
-    private static final Logger logger = LoggerFactory.getLogger(KeycloakJwtAuthConverter.class);
+    private static final Logger logger = LoggerFactory.getLogger(ChronosJwtAuthConverter.class);
 
     private final JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter =
             new JwtGrantedAuthoritiesConverter();

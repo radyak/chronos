@@ -1,9 +1,9 @@
 package net.fvogel.chronosbackend.general.wikipedia.client;
 
+import net.fvogel.chronosbackend.commons.lang.SupportedLanguage;
 import net.fvogel.chronosbackend.general.wikipedia.dto.WikipediaQueryResultDto;
 import net.fvogel.chronosbackend.general.wikipedia.dto.getentities.WikipediaEntityResultDto;
 import net.fvogel.chronosbackend.general.wikipedia.dto.search.WikipediaSearchResultDto;
-import net.fvogel.chronosbackend.shared.lang.SupportedLanguage;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
@@ -21,10 +21,10 @@ public class WikipediaApiClient {
     /**
      * Finds wikipedia articles with main data (title, thumbnail, QID - no content) by title (interpreted by language).
      *
-     * @param title         The title or title part to search
-     * @param lang          The language that the title is to be interpreted as & to search for
-     * @param resultOffset  (optional) An offset, to start results at a later index (for pagination; wiki API returns 10 results by default)
-     * @return              The search result DTO of wikipedia articles
+     * @param title        The title or title part to search
+     * @param lang         The language that the title is to be interpreted as & to search for
+     * @param resultOffset (optional) An offset, to start results at a later index (for pagination; wiki API returns 10 results by default)
+     * @return The search result DTO of wikipedia articles
      */
     public WikipediaSearchResultDto searchWikipediaArticleInfos(String title, SupportedLanguage lang, Integer resultOffset) {
         String uri = "https://" + lang + ".wikipedia.org/w/api.php?"
@@ -48,9 +48,9 @@ public class WikipediaApiClient {
     /**
      * Loads a Wikipedia entity by QID
      *
-     * @param qid   The QID
-     * @param lang  The language; used as sitefilter
-     * @return      The found entity
+     * @param qid  The QID
+     * @param lang The language; used as sitefilter
+     * @return The found entity
      */
     public WikipediaEntityResultDto getEntityByQid(String qid, SupportedLanguage lang) {
         String uri = "https://www.wikidata.org/w/api.php?"
@@ -70,9 +70,10 @@ public class WikipediaApiClient {
 
     /**
      * Loads a Wikipedia article by title
-     * @param title     The title
-     * @param lang      The language that the title is to be interpreted as & to search for
-     * @return          The query result
+     *
+     * @param title The title
+     * @param lang  The language that the title is to be interpreted as & to search for
+     * @return The query result
      */
     public WikipediaQueryResultDto queryWikipediaArticleByTitle(String title, SupportedLanguage lang) {
         String uri = "https://" + lang + ".wikipedia.org/w/api.php?"

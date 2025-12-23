@@ -1,4 +1,4 @@
-package net.fvogel.chronosbackend.shared.exception;
+package net.fvogel.chronosbackend.commons.exception;
 
 import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
