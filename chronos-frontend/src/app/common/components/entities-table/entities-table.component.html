@@ -23,7 +23,7 @@
                [size]="'sm'"></fa-icon>
       <input type="search"
              placeholder="Key"
-             name="entity-search-key"
+             name="entityPO-search-key"
              [disabled]="!searchable"
              [(ngModel)]="search.key"
              (keydown.enter)="submit.emit()"
@@ -40,7 +40,7 @@
       <input type="search"
              class="right"
              placeholder="From"
-             name="entity-search-dates-from"
+             name="entityPO-search-dates-from"
              [disabled]="!searchable"
              [(ngModel)]="search.from"
              (keydown.enter)="submit.emit()"
@@ -61,7 +61,7 @@
                [size]="'sm'"></fa-icon>
       <input type="search"
              placeholder="To"
-             name="entity-search-dates-to"
+             name="entityPO-search-dates-to"
              [disabled]="!searchable"
              [(ngModel)]="search.to"
              (keydown.enter)="submit.emit()"
@@ -78,28 +78,28 @@
   </tr>
   </thead>
   <tbody>
-  <ng-container *ngFor="let entity of filteredEntities()">
-    <tr class="pointer"(click)="entityClick.emit(entity)">
+  <ng-container *ngFor="let entityPO of filteredEntities()">
+    <tr class="pointer"(click)="entityClick.emit(entityPO)">
 
       <!-- Select -->
       <th scope="col" *ngIf="selectable">
         <input type="checkbox"
                value=""
-               id="select-entity-{{ entity.id }}"
-               [ngModel]="isEntitySelected(entity._original)"
-               (ngModelChange)="toggleEntitySelection(entity._original)"
+               id="select-entityPO-{{ entityPO.id }}"
+               [ngModel]="isEntitySelected(entityPO._original)"
+               (ngModelChange)="toggleEntitySelection(entityPO._original)"
                class="form-check-input">
       </th>
 
       <!-- Key -->
       <td class="main-column"
-          (click)="entityClick.emit(entity._original)">
-        {{ entity.key }}
+          (click)="entityClick.emit(entityPO._original)">
+        {{ entityPO.key }}
       </td>
 
       <!-- Dates - Start -->
       <td class="secondary-column right">
-        {{ entity.from }}
+        {{ entityPO.from }}
       </td>
 
       <!-- Dates - Separator -->
@@ -109,7 +109,7 @@
 
       <!-- Dates - End -->
       <td class="secondary-column">
-        {{ entity.to }}
+        {{ entityPO.to }}
       </td>
 
       <!-- Actions -->
@@ -122,7 +122,7 @@
               <button ngbDropdownItem
                       *ngFor="let action of actions"
                       [ngClass]="action.color ? ('text-' + action.color) : ''"
-                      (click)="action.fn(entity); $event.stopPropagation()">
+                      (click)="action.fn(entityPO); $event.stopPropagation()">
                   <fa-icon [icon]="action.icon"></fa-icon>
                   {{ action.text }}
               </button>
