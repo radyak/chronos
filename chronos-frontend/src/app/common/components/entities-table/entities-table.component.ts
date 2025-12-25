@@ -4,7 +4,7 @@ import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import {NgClass, NgForOf, NgIf} from "@angular/common";
 import {IconDefinition} from "@fortawesome/fontawesome-svg-core";
 import {faClose, faEllipsis, faSearch} from "@fortawesome/free-solid-svg-icons";
-import { Entity } from 'src/app/common/model/domain/entity.model';
+import { Entity } from 'src/app/common/model/domain/entityPO.model';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 
 interface TableEntityRepresentation extends Entity {
@@ -61,10 +61,10 @@ export class EntitiesTableComponent {
 
   @Input()
   set entities(entities: Array<Entity> | null) {
-    this.viewEntities = (entities || []).map(entity => {
+    this.viewEntities = (entities || []).map(entityPO => {
       return {
-        ...entity,
-        _original: entity
+        ...entityPO,
+        _original: entityPO
       }
     })
   }
@@ -97,33 +97,33 @@ export class EntitiesTableComponent {
   }
 
   filteredEntities(): Array<TableEntityRepresentation> {
-    return (this.viewEntities || []).filter(entity =>
-      this.tagQuery ? entity.key?.match(this.tagQuery) : true
+    return (this.viewEntities || []).filter(entityPO =>
+      this.tagQuery ? entityPO.key?.match(this.tagQuery) : true
     );
   }
 
-  isEntitySelected(entity: Entity): boolean {
-    return this.selectedEntities.has(entity);
+  isEntitySelected(entityPO: Entity): boolean {
+    return this.selectedEntities.has(entityPO);
   }
 
-  toggleEntitySelection(entity: Entity): void {
-    if (this.isEntitySelected(entity)) {
-      this.selectedEntities.delete(entity);
+  toggleEntitySelection(entityPO: Entity): void {
+    if (this.isEntitySelected(entityPO)) {
+      this.selectedEntities.delete(entityPO);
     } else {
-      this.selectedEntities.add(entity);
+      this.selectedEntities.add(entityPO);
     }
     this.onSelect.emit(Array.from(this.selectedEntities));
   }
 
   allEntitiesSelected(): boolean {
-    return !(this.entities || []).find(entity => !this.selectedEntities.has(entity));
+    return !(this.entities || []).find(entityPO => !this.selectedEntities.has(entityPO));
   }
 
   toggleAllEntitiesSelection(): void {
     if (!this.allEntitiesSelected()) {
-      this.entities?.forEach(entity => this.selectedEntities.add(entity));
+      this.entities?.forEach(entityPO => this.selectedEntities.add(entityPO));
     } else {
-      this.entities?.forEach(entity => this.selectedEntities.delete(entity));
+      this.entities?.forEach(entityPO => this.selectedEntities.delete(entityPO));
     }
     this.onSelect.emit(Array.from(this.selectedEntities));
   }

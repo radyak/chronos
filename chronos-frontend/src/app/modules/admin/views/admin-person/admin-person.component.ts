@@ -8,7 +8,7 @@ import { debounceTime, filter, map, Subject, Subscription, switchMap } from "rxj
 import { DateInputComponent } from 'src/app/common/components/date-input/date-input.component';
 import { WikipediaArticleInfoComponent } from 'src/app/common/components/wikipedia-article-info/wikipedia-article-info.component';
 import { WikipediaSummaryComponent } from 'src/app/common/components/wikipedia-summary/wikipedia-summary.component';
-import { Entity } from 'src/app/common/model/domain/entity.model';
+import { Entity } from 'src/app/common/model/domain/entityPO.model';
 import { WikipediaArticleInfo } from 'src/app/common/model/general/wikipedia/wikipedia-article-info.model';
 import { WikipediaSummary } from 'src/app/common/model/general/wikipedia/wikipedia-summary.model';
 import { AdminPersonService } from '../../person/admin-person.service';
@@ -72,9 +72,9 @@ export class AdminPersonComponent implements OnInit, OnDestroy {
       const entityId = params['id'];
       return this.personService.getByIdentifier(entityId);
     }))
-    .subscribe(entity => {
-      this.currentEntity = entity;
-      this.loadWikipediaSummary(entity.qid);
+    .subscribe(entityPO => {
+      this.currentEntity = entityPO;
+      this.loadWikipediaSummary(entityPO.qid);
       this.afterLoadEntity();
     });
   }
@@ -136,8 +136,8 @@ export class AdminPersonComponent implements OnInit, OnDestroy {
     this.router.navigate(['..'], { relativeTo: this.route });
   }
 
-  deleteEntity(entity: Entity): void {
-    this.adminPersonService.delete(entity).subscribe(() => {
+  deleteEntity(entityPO: Entity): void {
+    this.adminPersonService.delete(entityPO).subscribe(() => {
       this.goBack();
     })
   }
