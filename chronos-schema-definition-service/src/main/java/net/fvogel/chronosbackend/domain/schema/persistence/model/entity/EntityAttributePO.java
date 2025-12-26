@@ -1,7 +1,6 @@
 package net.fvogel.chronosbackend.domain.schema.persistence.model.entity;
 
 import jakarta.persistence.*;
-import jakarta.persistence.Entity;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import net.fvogel.chronosbackend.commons.model.schema.AttributeType;
@@ -21,7 +20,7 @@ public class EntityAttributePO {
     /**
      * The actual key used for the schema.
      */
-    @Column(name = "technical_key", unique = true, nullable = false)
+    @Column(name = "technical_key", nullable = false)
     @NotNull
     String key;
 

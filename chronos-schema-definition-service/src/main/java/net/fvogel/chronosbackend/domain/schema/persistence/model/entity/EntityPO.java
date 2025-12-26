@@ -39,10 +39,10 @@ public class EntityPO {
     List<EntityAttributePO> attributes = new ArrayList<>();
 
     @OneToMany(mappedBy = "source")
-    List<RelationPO> relationPOS = new ArrayList<>();
+    List<RelationPO> relations = new ArrayList<>();
 
     @JsonIgnore
     @OneToMany(mappedBy = "target", fetch = FetchType.LAZY)
-    List<RelationPO> inboundRelationPOS = new ArrayList<>();
+    List<RelationPO> inboundRelations = new ArrayList<>();
 
 }

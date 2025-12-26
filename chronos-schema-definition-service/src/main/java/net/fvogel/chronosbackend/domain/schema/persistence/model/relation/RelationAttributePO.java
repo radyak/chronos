@@ -20,7 +20,7 @@ public class RelationAttributePO {
     /**
      * The actual key used for the schema.
      */
-    @Column(name = "technical_key", unique = true, nullable = false)
+    @Column(name = "technical_key", nullable = false)
     @NotNull
     String key;
 

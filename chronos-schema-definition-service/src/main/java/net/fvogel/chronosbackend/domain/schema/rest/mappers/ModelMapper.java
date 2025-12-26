@@ -4,10 +4,10 @@ import net.fvogel.chronosbackend.commons.model.schema.Attribute;
 import net.fvogel.chronosbackend.commons.model.schema.Entity;
 import net.fvogel.chronosbackend.commons.model.schema.Relation;
 import net.fvogel.chronosbackend.commons.model.schema.SchemaResponse;
-import net.fvogel.chronosbackend.domain.schema.persistence.model.entity.EntityPO;
 import net.fvogel.chronosbackend.domain.schema.persistence.model.entity.EntityAttributePO;
-import net.fvogel.chronosbackend.domain.schema.persistence.model.relation.RelationPO;
+import net.fvogel.chronosbackend.domain.schema.persistence.model.entity.EntityPO;
 import net.fvogel.chronosbackend.domain.schema.persistence.model.relation.RelationAttributePO;
+import net.fvogel.chronosbackend.domain.schema.persistence.model.relation.RelationPO;
 
 import java.util.stream.Collectors;
 
@@ -69,11 +69,18 @@ public class ModelMapper {
 
     public void extractToResponseDto(EntityPO entityPO, SchemaResponse responseDTO) {
         responseDTO.getEntities().add(this.toDto(entityPO));
-        responseDTO.getRelations().addAll(entityPO.getRelationPOS().stream()
+        responseDTO.getRelations().addAll(entityPO.getRelations().stream()
                 .map(this::toDto)
                 .collect(Collectors.toSet()));
-        responseDTO.getEntities().addAll(entityPO.getRelationPOS().stream()
+        responseDTO.getRelations().addAll(entityPO.getInboundRelations().stream()
+                .map(this::toDto)
+                .collect(Collectors.toSet()));
+        responseDTO.getEntities().addAll(entityPO.getRelations().stream()
                 .map(RelationPO::getTarget)
+                .map(this::toDto)
+                .collect(Collectors.toSet()));
+        responseDTO.getEntities().addAll(entityPO.getInboundRelations().stream()
+                .map(RelationPO::getSource)
                 .map(this::toDto)
                 .collect(Collectors.toSet()));
     }

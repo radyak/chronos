@@ -1,4 +1,4 @@
-package net.fvogel.chronosbackend.domain.schema.persistence;
+package net.fvogel.chronosbackend.domain.schema.persistence.repository;
 
 import net.fvogel.chronosbackend.domain.schema.persistence.model.entity.EntityAttributePO;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,84 +1,76 @@
 package net.fvogel.chronosbackend.config.testdata;
 
-import net.fvogel.chronosbackend.commons.model.schema.AttributeType;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import net.fvogel.chronosbackend.domain.schema.persistence.model.entity.EntityPO;
-import net.fvogel.chronosbackend.domain.schema.persistence.model.entity.EntityAttributePO;
 import net.fvogel.chronosbackend.domain.schema.persistence.model.relation.RelationPO;
-import net.fvogel.chronosbackend.domain.schema.persistence.model.relation.RelationAttributePO;
 import net.fvogel.chronosbackend.domain.schema.service.SchemaService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 @Profile("test-data")
 @Component
 public class TestDataImporter {
 
+    private static final ObjectMapper mapper = new ObjectMapper();
+
+    @Autowired
+    SchemaService service;
+
     @Bean
-    public CommandLineRunner demo(SchemaService service) {
+    public CommandLineRunner importTestData() {
         return (args) -> {
-
-            // ENTITIES
-
-            EntityAttributePO stringAttr = entityAttribute("myString", AttributeType.STRING);
-            stringAttr.setValuePattern("[a-z]+");
-
-            EntityAttributePO numberAttr = entityAttribute("myNumber", AttributeType.NUMBER);
-            numberAttr.setValueRange("[,1000[");
-
-            EntityAttributePO enumAttr = entityAttribute("myEnum", AttributeType.ENUM);
-            enumAttr.setAllowedValues(Arrays.asList("val1", "val2", "val3"));
-
-            EntityPO entityPO = entity("MyEntity", stringAttr, numberAttr, enumAttr);
-
-            service.save(entityPO);
-
-
-            // RELATIONS
-
-            RelationAttributePO relationAttributePO = relationAttribute("myRelationEnum", AttributeType.ENUM);
-            relationAttributePO.setAllowedValues(Arrays.asList("val1", "val2", "val3"));
-
-            RelationPO relationPO = relation("MyRelation", relationAttributePO);
-            relationPO.setSource(entityPO);
-            relationPO.setTarget(entityPO);
-
-            service.save(relationPO);
+            this.importTestData("testdata/test-schema.json");
         };
     }
 
-    private EntityAttributePO entityAttribute(String name, AttributeType type) {
-        EntityAttributePO entityAttributePO = new EntityAttributePO();
-        entityAttributePO.setLabel("schema.entity.attr." + name);
-        entityAttributePO.setKey(name);
-        entityAttributePO.setType(type);
-        return entityAttributePO;
+    public void importTestData(String resourcePath) throws IOException {
+
+        // READ & DESERIALIZE JSON
+        InputStream is = TestDataImporter.class
+                .getClassLoader()
+                .getResourceAsStream(resourcePath);
+
+        if (is == null) {
+            throw new IllegalStateException("Resource not found");
+        }
+
+        List<EntityPO> entityPOs = mapper.readValue(is, new TypeReference<List<EntityPO>>() {
+        });
+
+
+        // SAVE ENTITIES
+        entityPOs.forEach(service::save);
+
+
+        // ADJUST RELATION REFERENCES & SAVE RELATIONS
+        List<RelationPO> relationPOs = new ArrayList<>();
+
+        entityPOs.forEach(entityPO -> {
+            relationPOs.addAll(entityPO.getRelations());
+        });
+
+        relationPOs.forEach(relationPO -> {
+            relationPO.setTarget(findByKey(relationPO.getTarget().getKey(), entityPOs));
+            relationPO.setSource(findByKey(relationPO.getSource().getKey(), entityPOs));
+            service.save(relationPO);
+        });
+
     }
 
-    private EntityPO entity(String name, EntityAttributePO... attributes) {
-        EntityPO entityPO = new EntityPO();
-        entityPO.setKey(name);
-        entityPO.setLabel("schema.entity." + name);
-        entityPO.getAttributes().addAll(Arrays.asList(attributes));
-        return entityPO;
+    private EntityPO findByKey(String key, List<EntityPO> entityPOs) {
+        return entityPOs.stream()
+                .filter(entityPO -> key.equals(entityPO.getKey()))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("No EntityPO saved with key '" + key + "'"));
     }
 
-    private RelationAttributePO relationAttribute(String name, AttributeType type) {
-        RelationAttributePO relationAttributePO = new RelationAttributePO();
-        relationAttributePO.setLabel("schema.relation.attr." + name);
-        relationAttributePO.setKey(name);
-        relationAttributePO.setType(type);
-        return relationAttributePO;
-    }
-
-    private RelationPO relation(String name, RelationAttributePO... attributes) {
-        RelationPO relationPO = new RelationPO();
-        relationPO.setKey(name);
-        relationPO.setLabel("schema.relation." + name);
-        relationPO.getAttributes().addAll(Arrays.asList(attributes));
-        return relationPO;
-    }
 }
