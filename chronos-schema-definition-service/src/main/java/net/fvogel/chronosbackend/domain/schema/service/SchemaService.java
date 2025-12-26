@@ -2,14 +2,14 @@ package net.fvogel.chronosbackend.domain.schema.service;
 
 import jakarta.transaction.Transactional;
 import net.fvogel.chronosbackend.commons.exception.NotFoundException;
-import net.fvogel.chronosbackend.domain.schema.persistence.EntityAttributePORepository;
-import net.fvogel.chronosbackend.domain.schema.persistence.EntityPORepository;
-import net.fvogel.chronosbackend.domain.schema.persistence.RelationAttributePORepository;
-import net.fvogel.chronosbackend.domain.schema.persistence.RelationPORepository;
-import net.fvogel.chronosbackend.domain.schema.persistence.model.entity.EntityPO;
 import net.fvogel.chronosbackend.domain.schema.persistence.model.entity.EntityAttributePO;
-import net.fvogel.chronosbackend.domain.schema.persistence.model.relation.RelationPO;
+import net.fvogel.chronosbackend.domain.schema.persistence.model.entity.EntityPO;
 import net.fvogel.chronosbackend.domain.schema.persistence.model.relation.RelationAttributePO;
+import net.fvogel.chronosbackend.domain.schema.persistence.model.relation.RelationPO;
+import net.fvogel.chronosbackend.domain.schema.persistence.repository.EntityAttributePORepository;
+import net.fvogel.chronosbackend.domain.schema.persistence.repository.EntityPORepository;
+import net.fvogel.chronosbackend.domain.schema.persistence.repository.RelationAttributePORepository;
+import net.fvogel.chronosbackend.domain.schema.persistence.repository.RelationPORepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

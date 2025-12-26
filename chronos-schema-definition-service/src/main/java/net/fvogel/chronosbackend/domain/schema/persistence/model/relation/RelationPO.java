@@ -1,6 +1,5 @@
 package net.fvogel.chronosbackend.domain.schema.persistence.model.relation;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -20,7 +19,7 @@ public class RelationPO {
     /**
      * The actual key used for the schema.
      */
-    @Column(name = "technical_key", unique = true, nullable = false)
+    @Column(name = "technical_key", nullable = false)
     @NotNull
     String key;
 
@@ -38,12 +37,10 @@ public class RelationPO {
     @OneToMany
     List<RelationAttributePO> attributes = new ArrayList<>();
 
-    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "source_entity_id", nullable = false)
     EntityPO source;
 
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "target_entity_id", nullable = false)
     EntityPO target;
