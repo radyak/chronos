@@ -33,8 +33,8 @@ public class SchemaService {
         return new HashSet<>(this.entityPORepository.findAll());
     }
 
-    public EntityPO getEntityByKey(String name) {
-        return this.entityPORepository.findByKey(name).orElseThrow(NotFoundException::new);
+    public EntityPO getEntityByKey(String key) {
+        return this.entityPORepository.findByKey(key).orElseThrow(NotFoundException::new);
     }
 
     public EntityPO save(EntityPO entityPO) {
@@ -42,6 +42,11 @@ public class SchemaService {
             this.entityAttributePORepository.save(attribute);
         }
         return this.entityPORepository.save(entityPO);
+    }
+
+    public void delete(String key) {
+        EntityPO entityPO = this.getEntityByKey(key);
+        this.entityPORepository.delete(entityPO);
     }
 
     public RelationPO save(RelationPO relationPO) {
