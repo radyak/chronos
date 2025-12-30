@@ -41,7 +41,15 @@ public class SchemaService {
         for (EntityAttributePO attribute : entityPO.getAttributes()) {
             this.entityAttributePORepository.save(attribute);
         }
-        return this.entityPORepository.save(entityPO);
+
+        EntityPO result = this.entityPORepository.save(entityPO);
+
+        for (RelationPO relationPO : entityPO.getRelations()) {
+            relationPO.setSource(entityPO);
+            this.save(relationPO);
+        }
+
+        return result;
     }
 
     public void delete(String key) {

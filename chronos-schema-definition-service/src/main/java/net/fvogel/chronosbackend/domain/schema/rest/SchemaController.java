@@ -19,7 +19,8 @@ public class SchemaController {
     @Autowired
     SchemaService schemaService;
 
-    ModelMapper modelMapper = new ModelMapper();
+    @Autowired
+    ModelMapper modelMapper;
 
     @GetMapping()
     public SchemaResponse getSchema() {
