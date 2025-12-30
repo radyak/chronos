@@ -17,7 +17,7 @@ public class AdminSchemaController {
     @Autowired
     ModelMapper modelMapper;
 
-    // TODO: Error mapping
+    // TODO: Handle ConstraintViolationException/TransactionSystemException by @NotNull, @Size etc.
 
     @PostMapping("/entities")
     public SchemaResponse createEntity(@RequestBody EntityPO entityPO) {
