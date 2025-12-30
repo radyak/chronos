@@ -3,3 +3,71 @@ GET http://localhost:8090/api/schema
 ###
 
 GET http://localhost:8090/api/schema/Territory
+
+
+
+### ADMIN
+
+### create
+
+POST http://localhost:8090/api/schema/admin/entities
+Content-Type: application/json
+
+{
+    "key": "Dynasty",
+    "label": "schema.entity.Dynasty",
+    "attributes": [
+        {
+            "key": "name",
+            "label": "schema.entity.Dynasty.attr.name",
+            "type": "STRING",
+            "isArray": false,
+            "valuePattern": "[a-zA-Z\\s]+"
+        }
+    ]
+}
+
+
+### update
+
+PUT http://localhost:8090/api/schema/admin/entities/Dynasty
+Content-Type: application/json
+
+{
+  "id": 5,
+  "key": "Dynasty",
+  "label": "schema.entity.Dynasty",
+  "explanation": "A family, important throughout a longer period, which a person belongs to",
+  "examples": "Flavians (Roman Empire), Qing (China), Rockefellers (USA)",
+  "attributes": [
+    {
+      "id": 5,
+      "key": "name",
+      "label": "schema.entity.Dynasty.attr.name",
+      "explanation": "The name of the dynasty",
+      "examples": null,
+      "type": "STRING",
+      "isArray": false,
+      "valuePattern": "[a-zA-Z\\s]+",
+      "valueRange": null,
+      "allowedValues": []
+    },
+    {
+      "key": "type",
+      "label": "schema.entity.Dynasty.attr.type",
+      "explanation": "Did the dynasty also include non-relatives",
+      "examples": null,
+      "type": "ENUM",
+      "isArray": false,
+      "valuePattern": null,
+      "valueRange": null,
+      "allowedValues": ["related-only", "adoptives", "all"]
+    }
+  ],
+  "relations": []
+}
+
+
+### delete
+
+DELETE http://localhost:8090/api/schema/admin/entities/Dynasty
