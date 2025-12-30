@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import net.fvogel.chronosbackend.domain.schema.persistence.model.entity.EntityPO;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +37,8 @@ public class RelationPO {
     String examples;
 
     @OneToMany
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "relation_id")
     List<RelationAttributePO> attributes = new ArrayList<>();
 
     @ManyToOne

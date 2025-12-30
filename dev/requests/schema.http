@@ -2,7 +2,7 @@ GET http://localhost:8090/api/schema
 
 ###
 
-GET http://localhost:8090/api/schema/Territory
+GET http://localhost:8090/api/schema/Dynasty
 
 
 
@@ -19,11 +19,28 @@ Content-Type: application/json
     "attributes": [
         {
             "key": "name",
-            "label": "schema.entity.Dynasty.attr.name",
+            "label": "schema.entity.Territory.attr.name",
             "type": "STRING",
             "isArray": false,
             "valuePattern": "[a-zA-Z\\s]+"
         }
+    ],
+    "relations": [
+      {
+        "key": "FOUNDED_BY",
+        "label": "schema.relation.FOUNDED_BY",
+        "attributes": [
+          {
+            "key": "name",
+            "label": "schema.relation.attr.FOUNDED_BY.attr.name",
+            "type": "STRING",
+            "isArray": false
+          }
+        ],
+        "target": {
+          "id": 2
+        }
+      }
     ]
 }
 
@@ -34,14 +51,14 @@ PUT http://localhost:8090/api/schema/admin/entities/Dynasty
 Content-Type: application/json
 
 {
-  "id": 5,
+  "id": 3,
   "key": "Dynasty",
   "label": "schema.entity.Dynasty",
   "explanation": "A family, important throughout a longer period, which a person belongs to",
   "examples": "Flavians (Roman Empire), Qing (China), Rockefellers (USA)",
   "attributes": [
     {
-      "id": 5,
+      "id": 3,
       "key": "name",
       "label": "schema.entity.Dynasty.attr.name",
       "explanation": "The name of the dynasty",

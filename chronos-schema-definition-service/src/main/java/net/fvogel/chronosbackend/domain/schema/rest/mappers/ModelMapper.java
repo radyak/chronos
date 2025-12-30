@@ -8,9 +8,11 @@ import net.fvogel.chronosbackend.domain.schema.persistence.model.entity.EntityAt
 import net.fvogel.chronosbackend.domain.schema.persistence.model.entity.EntityPO;
 import net.fvogel.chronosbackend.domain.schema.persistence.model.relation.RelationAttributePO;
 import net.fvogel.chronosbackend.domain.schema.persistence.model.relation.RelationPO;
+import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
 
+@Component
 public class ModelMapper {
 
     public Entity toDto(EntityPO entityPO) {

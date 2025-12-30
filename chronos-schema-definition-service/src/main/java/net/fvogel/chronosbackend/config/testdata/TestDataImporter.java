@@ -46,18 +46,15 @@ public class TestDataImporter {
         List<EntityPO> entityPOs = mapper.readValue(is, new TypeReference<List<EntityPO>>() {
         });
 
-
-        // SAVE ENTITIES
-        entityPOs.forEach(service::save);
-
-
-        // ADJUST RELATION REFERENCES & SAVE RELATIONS
+        // CREATE ENTITIES FIRST, COLLECT RELATIONS FOR SUBSEQUENT, SEPARATE CREATION
         List<RelationPO> relationPOs = new ArrayList<>();
-
         entityPOs.forEach(entityPO -> {
             relationPOs.addAll(entityPO.getRelations());
+            entityPO.getRelations().clear();
+            this.service.save(entityPO);
         });
 
+        // NOW CREATE RELATIONS
         relationPOs.forEach(relationPO -> {
             relationPO.setTarget(findByKey(relationPO.getTarget().getKey(), entityPOs));
             relationPO.setSource(findByKey(relationPO.getSource().getKey(), entityPOs));

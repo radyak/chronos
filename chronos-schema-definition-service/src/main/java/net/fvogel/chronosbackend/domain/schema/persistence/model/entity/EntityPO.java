@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import net.fvogel.chronosbackend.domain.schema.persistence.model.relation.RelationPO;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,13 +38,17 @@ public class EntityPO {
     String examples;
 
     @OneToMany
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "entity_id")
     List<EntityAttributePO> attributes = new ArrayList<>();
 
-    @OneToMany(mappedBy = "source")
+    @OneToMany(mappedBy = "source", orphanRemoval = true, cascade = CascadeType.REMOVE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     List<RelationPO> relations = new ArrayList<>();
 
     @JsonIgnore
     @OneToMany(mappedBy = "target", fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     List<RelationPO> inboundRelations = new ArrayList<>();
 
 }
