@@ -43,6 +43,8 @@ public class EntityPO {
     List<EntityAttributePO> attributes = new ArrayList<>();
 
     @OneToMany(mappedBy = "source", orphanRemoval = true, cascade = CascadeType.REMOVE)
+    // CascadeType.REMOVE targets to handle relations together with entities, not separately; it should be evaluated later on,
+    // which behavior is more desirable
     @OnDelete(action = OnDeleteAction.CASCADE)
     List<RelationPO> relations = new ArrayList<>();
 
