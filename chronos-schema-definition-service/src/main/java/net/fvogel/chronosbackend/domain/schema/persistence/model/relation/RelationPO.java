@@ -1,8 +1,10 @@
 package net.fvogel.chronosbackend.domain.schema.persistence.model.relation;
 
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import net.fvogel.chronosbackend.config.i18n.I18nConstants;
 import net.fvogel.chronosbackend.domain.schema.persistence.model.entity.EntityPO;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -22,14 +24,14 @@ public class RelationPO {
      * The actual key used for the schema.
      */
     @Column(name = "technical_key", nullable = false)
-    @NotNull
+    @NotNull(message = I18nConstants.Errors.Relations.KEY_NOT_SPECIFIED)
     String key;
 
     /**
      * A label or label key used for human-readable purposes, such as the UI
      */
     @Column(unique = true, nullable = false)
-    @NotNull
+    @NotNull(message = I18nConstants.Errors.Relations.LABEL_NOT_SPECIFIED)
     String label;
 
     String explanation;
@@ -39,6 +41,7 @@ public class RelationPO {
     @OneToMany
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "relation_id")
+    @Valid
     List<RelationAttributePO> attributes = new ArrayList<>();
 
     @ManyToOne
