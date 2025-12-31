@@ -1,5 +1,6 @@
 package net.fvogel.chronosbackend.domain.schema.rest;
 
+import jakarta.validation.Valid;
 import net.fvogel.chronosbackend.commons.model.schema.SchemaResponse;
 import net.fvogel.chronosbackend.domain.schema.persistence.model.entity.EntityPO;
 import net.fvogel.chronosbackend.domain.schema.rest.mappers.ModelMapper;
@@ -17,10 +18,8 @@ public class AdminSchemaController {
     @Autowired
     ModelMapper modelMapper;
 
-    // TODO: Handle ConstraintViolationException/TransactionSystemException by @NotNull, @Size etc.
-
     @PostMapping("/entities")
-    public SchemaResponse createEntity(@RequestBody EntityPO entityPO) {
+    public SchemaResponse createEntity(@Valid @RequestBody EntityPO entityPO) {
         schemaService.save(entityPO);
         entityPO = schemaService.getEntityByKey(entityPO.getKey());
 
@@ -34,8 +33,11 @@ public class AdminSchemaController {
     }
 
     @PutMapping("/entities/{key}")
-    public SchemaResponse updateEntity(@RequestBody EntityPO entityPO) {
-        // TODO: What to do with the key?
+    public SchemaResponse updateEntity(@Valid @RequestBody EntityPO entityPO,
+                                       @PathVariable String key) {
+        // Ensure the entity already exists
+        EntityPO original = schemaService.getEntityByKey(key);
+
         schemaService.save(entityPO);
         EntityPO result = schemaService.getEntityByKey(entityPO.getKey());
 

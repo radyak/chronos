@@ -19,7 +19,7 @@ Content-Type: application/json
     "attributes": [
         {
             "key": "name",
-            "label": "schema.entity.Territory.attr.name",
+            "label": "schema.entity.Dynasty.attr.name",
             "type": "STRING",
             "isArray": false,
             "valuePattern": "[a-zA-Z\\s]+"

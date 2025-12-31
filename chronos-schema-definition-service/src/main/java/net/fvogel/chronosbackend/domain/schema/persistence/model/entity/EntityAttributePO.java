@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import net.fvogel.chronosbackend.commons.model.schema.AttributeType;
+import net.fvogel.chronosbackend.config.i18n.I18nConstants;
 import net.fvogel.chronosbackend.shared.persistence.StringListConverter;
 
 import java.util.ArrayList;
@@ -21,14 +22,14 @@ public class EntityAttributePO {
      * The actual key used for the schema.
      */
     @Column(name = "technical_key", nullable = false)
-    @NotNull
+    @NotNull(message = I18nConstants.Errors.Entities.Attributes.KEY_NOT_SPECIFIED)
     String key;
 
     /**
      * A label or label key used for human-readable purposes, such as the UI
      */
     @Column(unique = true, nullable = false)
-    @NotNull
+    @NotNull(message = I18nConstants.Errors.Entities.Attributes.LABEL_NOT_SPECIFIED)
     String label;
 
     String explanation;
@@ -37,10 +38,12 @@ public class EntityAttributePO {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    @NotNull
+    @NotNull(message = I18nConstants.Errors.Entities.Attributes.TYPE_NOT_SPECIFIED)
     AttributeType type;
 
     Boolean isArray = false;
+
+    Boolean isMandatory = false;
 
     /**
      * Optional restriction for type=STRING
