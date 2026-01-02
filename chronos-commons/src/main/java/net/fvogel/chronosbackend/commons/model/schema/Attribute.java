@@ -3,8 +3,7 @@ package net.fvogel.chronosbackend.commons.model.schema;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -16,7 +15,8 @@ public class Attribute {
     String examples;
     AttributeType type;
     Boolean isArray = false;
+    Boolean isMandatory = false;
     String valuePattern;
     String valueRange;
-    List<String> allowedValues = new ArrayList<>();
+    Set<String> allowedValues;
 }

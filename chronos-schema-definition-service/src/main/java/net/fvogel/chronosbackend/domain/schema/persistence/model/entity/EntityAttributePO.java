@@ -5,10 +5,10 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import net.fvogel.chronosbackend.commons.model.schema.AttributeType;
 import net.fvogel.chronosbackend.config.i18n.I18nConstants;
-import net.fvogel.chronosbackend.shared.persistence.StringListConverter;
+import net.fvogel.chronosbackend.shared.persistence.StringSetConverter;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Entity
@@ -67,7 +67,7 @@ public class EntityAttributePO {
      * Optional restriction for type=ENUM
      * Defines discrete values of the attribute values
      */
-    @Convert(converter = StringListConverter.class)
-    List<String> allowedValues = new ArrayList<>();
+    @Convert(converter = StringSetConverter.class)
+    Set<String> allowedValues = new HashSet<>();
 
 }

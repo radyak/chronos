@@ -1,0 +1,30 @@
+[
+  {
+    "key": "name",
+    "label": "name",
+    "explanation": "",
+    "examples": "",
+    "type": "STRING",
+    "isArray": false,
+    "isMandatory": true,
+    "valuePattern": null
+  },
+  {
+    "key": "start",
+    "label": "start",
+    "explanation": "",
+    "examples": "",
+    "type": "DATENOTATION",
+    "isArray": false,
+    "isMandatory": false
+  },
+  {
+    "key": "end",
+    "label": "end",
+    "explanation": "",
+    "examples": "",
+    "type": "DATENOTATION",
+    "isArray": false,
+    "isMandatory": false
+  }
+]
