@@ -4,16 +4,21 @@ import net.fvogel.chronosbackend.commons.model.schema.Attribute;
 import net.fvogel.chronosbackend.commons.model.schema.Entity;
 import net.fvogel.chronosbackend.commons.model.schema.Relation;
 import net.fvogel.chronosbackend.commons.model.schema.SchemaResponse;
+import net.fvogel.chronosbackend.domain.schema.business.DefaultEntityAttributesRule;
 import net.fvogel.chronosbackend.domain.schema.persistence.model.entity.EntityAttributePO;
 import net.fvogel.chronosbackend.domain.schema.persistence.model.entity.EntityPO;
 import net.fvogel.chronosbackend.domain.schema.persistence.model.relation.RelationAttributePO;
 import net.fvogel.chronosbackend.domain.schema.persistence.model.relation.RelationPO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
 
 @Component
 public class ModelMapper {
+
+    @Autowired
+    DefaultEntityAttributesRule defaultEntityAttributesRule;
 
     public Entity toDto(EntityPO entityPO) {
         Entity dto = new Entity();
@@ -34,6 +39,7 @@ public class ModelMapper {
         dto.setExamples(attribute.getExamples());
         dto.setExplanation(attribute.getExplanation());
         dto.setIsArray(attribute.getIsArray());
+        dto.setIsMandatory(attribute.getIsMandatory());
         dto.setType(attribute.getType());
         dto.setAllowedValues(attribute.getAllowedValues());
         dto.setValuePattern(attribute.getValuePattern());
@@ -62,6 +68,7 @@ public class ModelMapper {
         dto.setExamples(attribute.getExamples());
         dto.setExplanation(attribute.getExplanation());
         dto.setIsArray(attribute.getIsArray());
+        dto.setIsMandatory(attribute.getIsMandatory());
         dto.setType(attribute.getType());
         dto.setAllowedValues(attribute.getAllowedValues());
         dto.setValuePattern(attribute.getValuePattern());
@@ -70,21 +77,24 @@ public class ModelMapper {
     }
 
     public void extractToResponseDto(EntityPO entityPO, SchemaResponse responseDTO) {
-        responseDTO.getEntities().add(this.toDto(entityPO));
-        responseDTO.getRelations().addAll(entityPO.getRelations().stream()
+        responseDTO.getEntities().getElements().add(this.toDto(entityPO));
+        responseDTO.getRelations().getElements().addAll(entityPO.getRelations().stream()
                 .map(this::toDto)
                 .collect(Collectors.toSet()));
-        responseDTO.getRelations().addAll(entityPO.getInboundRelations().stream()
+        responseDTO.getRelations().getElements().addAll(entityPO.getInboundRelations().stream()
                 .map(this::toDto)
                 .collect(Collectors.toSet()));
-        responseDTO.getEntities().addAll(entityPO.getRelations().stream()
+        responseDTO.getEntities().getElements().addAll(entityPO.getRelations().stream()
                 .map(RelationPO::getTarget)
                 .map(this::toDto)
                 .collect(Collectors.toSet()));
-        responseDTO.getEntities().addAll(entityPO.getInboundRelations().stream()
+        responseDTO.getEntities().getElements().addAll(entityPO.getInboundRelations().stream()
                 .map(RelationPO::getSource)
                 .map(this::toDto)
                 .collect(Collectors.toSet()));
+
+        responseDTO.getEntities().setDefaultAttributes(defaultEntityAttributesRule.getDefaultEntityAttributes());
+        responseDTO.getRelations().setDefaultAttributes(defaultEntityAttributesRule.getDefaultRelationAttributes());
     }
 
 

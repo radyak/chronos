@@ -2,7 +2,7 @@ GET http://localhost:8090/api/schema
 
 ###
 
-GET http://localhost:8090/api/schema/Dynasty
+GET http://localhost:8090/api/schema/Territory
 
 
 

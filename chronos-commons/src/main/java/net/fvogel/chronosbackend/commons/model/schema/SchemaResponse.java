@@ -8,8 +8,8 @@ import java.util.Set;
 @Data
 public class SchemaResponse {
     SchemaResponseMetaInfoDTO meta = new SchemaResponseMetaInfoDTO();
-    Set<Entity> entities = new HashSet<>();
-    Set<Relation> relations = new HashSet<>();
+    EntitiesInfoDTO entities = new EntitiesInfoDTO();
+    RelationsInfoDTO relations = new RelationsInfoDTO();
 
     @Data
     public static class SchemaResponseMetaInfoDTO {
@@ -17,4 +17,17 @@ public class SchemaResponse {
         String query;
         String base;
     }
+
+    @Data
+    public static class EntitiesInfoDTO {
+        Set<Entity> elements = new HashSet<>();
+        Set<Attribute> defaultAttributes = new HashSet<>();
+    }
+
+    @Data
+    public static class RelationsInfoDTO {
+        Set<Relation> elements = new HashSet<>();
+        Set<Attribute> defaultAttributes = new HashSet<>();
+    }
+
 }

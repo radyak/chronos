@@ -4,11 +4,10 @@
     "label": "schema.entity.Territory",
     "attributes": [
       {
-        "key": "name",
-        "label": "schema.entity.Territory.attr.name",
-        "type": "STRING",
-        "isArray": false,
-        "valuePattern": "[a-zA-Z\\s]+"
+        "key": "area",
+        "label": "schema.entity.Territory.attr.area",
+        "type": "NUMBER",
+        "isArray": false
       }
     ]
   },
@@ -17,11 +16,14 @@
     "label": "schema.entity.Person",
     "attributes": [
       {
-        "key": "name",
-        "label": "schema.entity.Person.attr.name",
-        "type": "STRING",
+        "key": "gender",
+        "label": "schema.entity.Person.attr.gender",
+        "type": "ENUM",
         "isArray": false,
-        "valuePattern": "[a-zA-Z\\s]+"
+        "allowedValues": [
+          "male",
+          "female"
+        ]
       }
     ],
     "relations": [
