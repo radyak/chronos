@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import net.fvogel.chronosbackend.config.i18n.I18nConstants;
 import net.fvogel.chronosbackend.domain.schema.persistence.model.relation.RelationPO;
@@ -24,19 +25,15 @@ public class EntityPO {
     /**
      * The actual key used for the schema.
      */
-    @Column(name = "technical_key", unique = true, nullable = false)
-    @NotNull(message = I18nConstants.Errors.Entities.KEY_NOT_SPECIFIED)
+    @Column(name = "technical_key", unique = true, nullable = false, length = 64)
+    @Size(min = 3, max = 64, message = I18nConstants.Errors.INVALID_LENGTH)
+    @NotNull(message = I18nConstants.Errors.NOT_SPECIFIED)
     String key;
 
-    /**
-     * A label or label key used for human-readable purposes, such as the UI
-     */
-    @Column(unique = true, nullable = false)
-    @NotNull(message = I18nConstants.Errors.Entities.LABEL_NOT_SPECIFIED)
-    String label;
-
+    @Size(min = 3, max = 255, message = I18nConstants.Errors.INVALID_LENGTH)
     String explanation;
 
+    @Size(min = 3, max = 255, message = I18nConstants.Errors.INVALID_LENGTH)
     String examples;
 
     @OneToMany

@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestControllerAdvice
 public class ChronosSchemaDefinitionServiceExceptionHandler extends RestExceptionHandler {
@@ -56,10 +58,21 @@ public class ChronosSchemaDefinitionServiceExceptionHandler extends RestExceptio
     }
 
     private ErrorResponseErrorDetail mapFieldError(FieldError error) {
+        Map<String, Object> params = new HashMap<>();
+
+        Object[] args = error.getArguments();
+        if (args != null) {
+            if ("Size".equals(error.getCode())) {
+                params.put("min", Math.min((Integer) args[1], (Integer) args[2]));
+                params.put("max", Math.max((Integer) args[1], (Integer) args[2]));
+            }
+        }
+
         return new ErrorResponseErrorDetail(
                 error.getField(),
                 error.getCode(),
-                error.getDefaultMessage()
+                error.getDefaultMessage(),
+                params
         );
     }
 

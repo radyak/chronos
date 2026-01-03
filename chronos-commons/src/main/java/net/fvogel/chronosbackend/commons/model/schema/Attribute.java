@@ -10,7 +10,6 @@ import java.util.Set;
 public class Attribute {
     Long id;
     String key;
-    String label;
     String explanation;
     String examples;
     AttributeType type;

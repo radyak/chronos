@@ -11,7 +11,6 @@ import java.util.List;
 public class Relation {
     Long id;
     String key;
-    String label;
     String explanation;
     String examples;
     List<Attribute> attributes = new ArrayList<>();
