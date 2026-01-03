@@ -1,11 +1,9 @@
 [
   {
     "key": "Territory",
-    "label": "schema.entity.Territory",
     "attributes": [
       {
         "key": "area",
-        "label": "schema.entity.Territory.attr.area",
         "type": "NUMBER",
         "isArray": false
       }
@@ -13,11 +11,9 @@
   },
   {
     "key": "Person",
-    "label": "schema.entity.Person",
     "attributes": [
       {
         "key": "gender",
-        "label": "schema.entity.Person.attr.gender",
         "type": "ENUM",
         "isArray": false,
         "allowedValues": [
@@ -29,11 +25,9 @@
     "relations": [
       {
         "key": "RELATIONSHIP_WITH",
-        "label": "schema.relation.RELATIONSHIP_WITH",
         "attributes": [
           {
             "key": "status",
-            "label": "schema.relation.attr.RELATIONSHIP_WITH.attr.status",
             "type": "ENUM",
             "isArray": false,
             "allowedValues": [
@@ -52,11 +46,9 @@
       },
       {
         "key": "RULED",
-        "label": "schema.relation.RULED",
         "attributes": [
           {
             "key": "status",
-            "label": "schema.relation.attr.RULED.attr.titles",
             "type": "ENUM",
             "isArray": true,
             "allowedValues": [

@@ -1,7 +1,6 @@
 [
   {
     "key": "name",
-    "label": "name",
     "explanation": "",
     "examples": "",
     "type": "STRING",
@@ -11,7 +10,6 @@
   },
   {
     "key": "start",
-    "label": "start",
     "explanation": "",
     "examples": "",
     "type": "DATENOTATION",
@@ -20,7 +18,6 @@
   },
   {
     "key": "end",
-    "label": "end",
     "explanation": "",
     "examples": "",
     "type": "DATENOTATION",
