@@ -4,6 +4,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import net.fvogel.chronosbackend.commons.rest.exceptionhandling.ErrorResponse;
 import net.fvogel.chronosbackend.commons.rest.exceptionhandling.ErrorResponseErrorDetail;
 import net.fvogel.chronosbackend.commons.rest.exceptionhandling.RestExceptionHandler;
+import net.fvogel.chronosbackend.domain.schema.business.ValidationError;
+import net.fvogel.chronosbackend.domain.schema.business.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -57,6 +59,25 @@ public class ChronosSchemaDefinitionServiceExceptionHandler extends RestExceptio
 
     }
 
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<ErrorResponse> handleValidationException(ValidationException ex, HttpServletRequest req) {
+        logger.debug("Encountered validation errors: {}", ex.getMessage(), ex);
+        List<ErrorResponseErrorDetail> errors = ex.getErrors()
+                .stream()
+                .map(this::mapValidationError)
+                .toList();
+
+        ErrorResponse err = new ErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.BAD_REQUEST.value(),
+                errors,
+                "Data is not valid",
+                req.getRequestURI()
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
+
+    }
+
     private ErrorResponseErrorDetail mapFieldError(FieldError error) {
         Map<String, Object> params = new HashMap<>();
 
@@ -73,6 +94,15 @@ public class ChronosSchemaDefinitionServiceExceptionHandler extends RestExceptio
                 error.getCode(),
                 error.getDefaultMessage(),
                 params
+        );
+    }
+
+    private ErrorResponseErrorDetail mapValidationError(ValidationError error) {
+        return new ErrorResponseErrorDetail(
+                error.getField(),
+                error.getConstraint(),
+                error.getMessage(),
+                error.getArguments()
         );
     }
 

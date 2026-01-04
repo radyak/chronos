@@ -3,6 +3,7 @@ package net.fvogel.chronosbackend.domain.schema.service;
 import jakarta.transaction.Transactional;
 import net.fvogel.chronosbackend.commons.exception.NotFoundException;
 import net.fvogel.chronosbackend.domain.schema.business.DefaultEntityAttributesRule;
+import net.fvogel.chronosbackend.domain.schema.business.UniqueValidator;
 import net.fvogel.chronosbackend.domain.schema.persistence.model.entity.EntityAttributePO;
 import net.fvogel.chronosbackend.domain.schema.persistence.model.entity.EntityPO;
 import net.fvogel.chronosbackend.domain.schema.persistence.model.relation.RelationAttributePO;
@@ -32,6 +33,8 @@ public class SchemaService {
     RelationAttributePORepository relationAttributePORepository;
     @Autowired
     DefaultEntityAttributesRule defaultEntityAttributesRule;
+    @Autowired
+    UniqueValidator uniqueValidator;
 
     public Set<EntityPO> allEntities() {
         return new HashSet<>(this.entityPORepository.findAll());
@@ -42,12 +45,14 @@ public class SchemaService {
     }
 
     public EntityPO save(EntityPO entityPO) {
+        uniqueValidator.validate(entityPO);
+
         // Avoid persisting of default attributes
         List<EntityAttributePO> specificAttributes = entityPO.getAttributes().stream()
                 .filter(attr -> defaultEntityAttributesRule.isDefaultEntityAttribute(attr.getKey()))
                 .toList();
         entityPO.setAttributes(specificAttributes);
-        
+
         for (EntityAttributePO attribute : entityPO.getAttributes()) {
             this.entityAttributePORepository.save(attribute);
         }
@@ -68,6 +73,8 @@ public class SchemaService {
     }
 
     public RelationPO save(RelationPO relationPO) {
+        uniqueValidator.validate(relationPO);
+
         // Avoid persisting of default attributes
         List<RelationAttributePO> specificAttributes = relationPO.getAttributes().stream()
                 .filter(attr -> defaultEntityAttributesRule.isDefaultRelationAttribute(attr.getKey()))
