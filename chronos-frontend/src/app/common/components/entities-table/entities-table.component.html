@@ -2,13 +2,13 @@
   <thead>
   <tr>
     <!-- Select -->
-    <th scope="col" *ngIf="selectable">
-      <input type="checkbox"
-             value=""
-             id="select-all-entities"
+    <th *ngIf="selectable" scope="col">
+      <input (click)="toggleAllEntitiesSelection()"
              [ngModel]="allEntitiesSelected()"
-             (click)="toggleAllEntitiesSelection()"
-             class="form-check-input">
+             class="form-check-input"
+             id="select-all-entities"
+             type="checkbox"
+             value="">
       <span *ngIf="selectedEntities.size > 0">
         ({{ selectedEntities.size }})
       </span>
@@ -16,34 +16,34 @@
 
     <!-- Key -->
     <th scope="col">
-      <fa-icon [icon]="clearIcon"
-               class="pointer"
+      <fa-icon (click)="clearKey()"
                *ngIf="search.key"
-               (click)="clearKey()"
-               [size]="'sm'"></fa-icon>
-      <input type="search"
-             placeholder="Key"
-             name="entityPO-search-key"
-             [disabled]="!searchable"
+               [icon]="clearIcon"
+               [size]="'sm'"
+               class="pointer"></fa-icon>
+      <input (keydown.enter)="submit.emit()"
              [(ngModel)]="search.key"
-             (keydown.enter)="submit.emit()"
+             [disabled]="!searchable"
+             name="entity-search-key"
+             placeholder="Key"
+             type="search"
       >
     </th>
 
     <!-- Dates - Start -->
     <th class="col">
-      <fa-icon [icon]="clearIcon"
-               class="pointer"
+      <fa-icon (click)="clearDateQuery()"
                *ngIf="search.from"
-               (click)="clearDateQuery()"
-               [size]="'sm'"></fa-icon>
-      <input type="search"
-             class="right"
-             placeholder="From"
-             name="entityPO-search-dates-from"
-             [disabled]="!searchable"
+               [icon]="clearIcon"
+               [size]="'sm'"
+               class="pointer"></fa-icon>
+      <input (keydown.enter)="submit.emit()"
              [(ngModel)]="search.from"
-             (keydown.enter)="submit.emit()"
+             [disabled]="!searchable"
+             class="right"
+             name="entity-search-dates-from"
+             placeholder="From"
+             type="search"
       >
     </th>
 
@@ -54,23 +54,23 @@
 
     <!-- Dates - End -->
     <th class="col">
-      <fa-icon [icon]="clearIcon"
-               class="pointer"
+      <fa-icon (click)="clearDateQuery()"
                *ngIf="search.to"
-               (click)="clearDateQuery()"
-               [size]="'sm'"></fa-icon>
-      <input type="search"
-             placeholder="To"
-             name="entityPO-search-dates-to"
-             [disabled]="!searchable"
+               [icon]="clearIcon"
+               [size]="'sm'"
+               class="pointer"></fa-icon>
+      <input (keydown.enter)="submit.emit()"
              [(ngModel)]="search.to"
-             (keydown.enter)="submit.emit()"
+             [disabled]="!searchable"
+             name="entity-search-dates-to"
+             placeholder="To"
+             type="search"
       >
     </th>
 
     <!-- Actions -->
-    <th class="icon-col"
-        *ngIf="actions.length > 0">
+    <th *ngIf="actions.length > 0"
+        class="icon-col">
       <fa-icon *ngIf="searchable"
                [icon]="searchIcon"
                [size]="'sm'"></fa-icon>
@@ -78,28 +78,28 @@
   </tr>
   </thead>
   <tbody>
-  <ng-container *ngFor="let entityPO of filteredEntities()">
-    <tr class="pointer"(click)="entityClick.emit(entityPO)">
+  <ng-container *ngFor="let entity of filteredEntities()">
+    <tr (click)="entityClick.emit(entity)" class="pointer">
 
       <!-- Select -->
-      <th scope="col" *ngIf="selectable">
-        <input type="checkbox"
-               value=""
-               id="select-entityPO-{{ entityPO.id }}"
-               [ngModel]="isEntitySelected(entityPO._original)"
-               (ngModelChange)="toggleEntitySelection(entityPO._original)"
-               class="form-check-input">
+      <th *ngIf="selectable" scope="col">
+        <input (ngModelChange)="toggleEntitySelection(entity._original)"
+               [ngModel]="isEntitySelected(entity._original)"
+               class="form-check-input"
+               id="select-entity-{{ entity.id }}"
+               type="checkbox"
+               value="">
       </th>
 
       <!-- Key -->
-      <td class="main-column"
-          (click)="entityClick.emit(entityPO._original)">
-        {{ entityPO.key }}
+      <td (click)="entityClick.emit(entity._original)"
+          class="main-column">
+        {{ entity.key }}
       </td>
 
       <!-- Dates - Start -->
       <td class="secondary-column right">
-        {{ entityPO.from }}
+        {{ entity.from }}
       </td>
 
       <!-- Dates - Separator -->
@@ -109,25 +109,25 @@
 
       <!-- Dates - End -->
       <td class="secondary-column">
-        {{ entityPO.to }}
+        {{ entity.to }}
       </td>
 
       <!-- Actions -->
-      <td class="icon-col"
-          *ngIf="actions.length > 0">
-          <div ngbDropdown>
-            <fa-icon [icon]="ellipsisIcon" ngbDropdownToggle
-                     (click)="$event.stopPropagation()"></fa-icon>
-            <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-              <button ngbDropdownItem
-                      *ngFor="let action of actions"
-                      [ngClass]="action.color ? ('text-' + action.color) : ''"
-                      (click)="action.fn(entityPO); $event.stopPropagation()">
-                  <fa-icon [icon]="action.icon"></fa-icon>
-                  {{ action.text }}
-              </button>
-            </div>
+      <td *ngIf="actions.length > 0"
+          class="icon-col">
+        <div ngbDropdown>
+          <fa-icon (click)="$event.stopPropagation()" [icon]="ellipsisIcon"
+                   ngbDropdownToggle></fa-icon>
+          <div aria-labelledby="dropdownBasic1" ngbDropdownMenu>
+            <button (click)="action.fn(entity); $event.stopPropagation()"
+                    *ngFor="let action of actions"
+                    [ngClass]="action.color ? ('text-' + action.color) : ''"
+                    ngbDropdownItem>
+              <fa-icon [icon]="action.icon"></fa-icon>
+              {{ action.text }}
+            </button>
           </div>
+        </div>
       </td>
     </tr>
   </ng-container>

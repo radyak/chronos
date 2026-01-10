@@ -5,7 +5,7 @@ import {ActivatedRoute, Params, Router, RouterModule} from "@angular/router";
 import {AdminConfirmService} from "../../services/admin-confirm.service";
 import {AbstractQueryDrivenComponent} from "../../../../common/components/abstract-query-driven-component.directive";
 import {EntitiesTableAction, EntitiesTableComponent, EntitiesTableSearch} from "../../../../common/components/entities-table/entities-table.component";
-import { Entity } from 'src/app/common/model/domain/entityPO.model';
+import { Entity } from 'src/app/common/model/domain/entity.model';
 import { AdminPersonService } from '../../person/admin-person.service';
 import { PersonService } from '../../person/entries.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -35,17 +35,17 @@ export class AdminPersonsComponent extends AbstractQueryDrivenComponent {
   entitySearch: EntitiesTableSearch = {};
   tableActions: Array<EntitiesTableAction> = [
     {
-      fn: (entityPO: Entity) => this.editEntity(entityPO),
+      fn: (entity: Entity) => this.editEntity(entity),
       icon: faPenToSquare,
       text: 'Edit'
     },
     {
-      fn: (entityPO: Entity) => this.copyEntity(entityPO),
+      fn: (entity: Entity) => this.copyEntity(entity),
       icon: faCopy,
       text: 'Copy'
     },
     {
-      fn: (entityPO: Entity) => this.deleteEntity(entityPO),
+      fn: (entity: Entity) => this.deleteEntity(entity),
       icon: faTrash,
       color: 'danger',
       text: 'Delete'
@@ -76,26 +76,26 @@ export class AdminPersonsComponent extends AbstractQueryDrivenComponent {
     };
   }
 
-  editEntity(entityPO: Entity): void {
-    this.router.navigate([entityPO.id], {relativeTo: this.route});
+  editEntity(entity: Entity): void {
+    this.router.navigate([entity.id], {relativeTo: this.route});
   }
 
   newEntity(): void {
     this.router.navigate(['new'], {relativeTo: this.route});
   }
 
-  deleteEntity(entityPO: Entity): void {
+  deleteEntity(entity: Entity): void {
     this.confirmService.confirm(
-      "Confirm deleting entityPO",
-      `Do you want to delete entityPO ${entityPO.key}?`
+      "Confirm deleting entity",
+      `Do you want to delete entity ${entity.key}?`
     )
     .then(() => {
-      this.adminEntitiesService.delete(entityPO).subscribe(() => this.search())
+      this.adminEntitiesService.delete(entity).subscribe(() => this.search())
     });
   }
 
-  copyEntity(entityPO: Entity): void {
-    this.router.navigate([entityPO.id, "copy"], {relativeTo: this.route});
+  copyEntity(entity: Entity): void {
+    this.router.navigate([entity.id, "copy"], {relativeTo: this.route});
   }
 
 }

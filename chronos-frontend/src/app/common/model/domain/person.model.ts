@@ -1,4 +1,4 @@
-import { Entity } from "./entityPO.model";
+import { Entity } from "./entity.model";
 
 
 export interface Person extends Entity {
