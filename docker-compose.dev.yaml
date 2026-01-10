@@ -45,6 +45,22 @@ services:
     environment:
       spring_profiles_active: no-security
 
+  chronos-sds-db:
+    image: postgres:18.1-alpine3.23
+    container_name: chronos-sds-db
+    shm_size: 128mb
+    environment:
+      POSTGRES_USER: sds-db-user
+      POSTGRES_PASSWORD: sds-db-password
+      POSTGRES_DB: sds-db
+    ports:
+      - 5432:5432
+    #    Activate for persistent local testdata:
+    #    volumes:
+    #      - ./data:/var/lib/postgresql/data
+    #      - ./logs:/var/log/postgresql
+    #      - ./certs:/var/lib/postgresql/certs
+  
   chronos-ui:
     image: node:21.7.2-alpine3.18
     container_name: chronos-ui
@@ -54,3 +70,9 @@ services:
       - "4200:4200"
     volumes:
       - ./chronos-frontend:/app
+
+  db-admin:
+    image: adminer
+    restart: always
+    ports:
+      - 7000:8080
