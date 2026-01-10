@@ -40,6 +40,10 @@
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+        </dependency>
 
         <!-- REST API -->
         <dependency>
@@ -123,6 +127,27 @@
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.liquibase</groupId>
+                <artifactId>liquibase-maven-plugin</artifactId>
+                <configuration>
+                    <driver>org.postgresql.Driver</driver>
+                    <url>jdbc:postgresql://localhost:5432/sds-db</url>
+                    <username>sds-db-user</username>
+                    <password>sds-db-password</password>
+
+                    <referenceUrl>
+                        hibernate:spring:net.fvogel.chronosbackend?dialect=org.hibernate.dialect.PostgreSQLDialect
+                    </referenceUrl>
+
+                    <verbose>true</verbose>
+
+                    <changeLogFile>src/main/resources/db/db.changelog-master.xml</changeLogFile>
+                    <!--                    <diffChangeLogFile>src/main/resources/db/changelogs/changelog.VERSION.xml</diffChangeLogFile>-->
+                    <outputChangeLogFile>src/main/resources/db/changelogs/db.changelog-LATEST.xml</outputChangeLogFile>
                 </configuration>
             </plugin>
         </plugins>
