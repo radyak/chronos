@@ -14,7 +14,7 @@ POST http://localhost:8090/api/schema/admin/entities
 Content-Type: application/json
 
 {
-    "key": "Dynasty",
+    "key": "Family",
     "attributes": [
         {
             "key": "name",
@@ -28,12 +28,12 @@ Content-Type: application/json
         "key": "FOUNDED_BY",
         "attributes": [
           {
-            "key": "name",
+            "key": "key1",
             "type": "STRING",
             "isArray": false
           },
           {
-            "key": "name",
+            "key": "key2",
             "type": "NUMBER",
             "isArray": false
           }
