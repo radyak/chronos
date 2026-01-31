@@ -26,7 +26,6 @@ public class NoSecurityConfig {
         http.authorizeHttpRequests(
                 httpRequests -> httpRequests.anyRequest().anonymous()
         );
-        http.headers(httpSecurityHeadersConfigurer -> httpSecurityHeadersConfigurer.frameOptions(frameOptionsConfig -> frameOptionsConfig.disable()));
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         return http.build();
     }
