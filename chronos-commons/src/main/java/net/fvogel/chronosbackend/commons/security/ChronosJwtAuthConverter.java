@@ -20,6 +20,25 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Chronos Standard JWT Converter.
+ * <p>
+ * Converts a JWT with an expected structure for user principles and roles.
+ * Besides standard claims like exp, iss etc. it expects this custom structure:
+ * {
+ * ...
+ * "resource_access": {
+ * "${app.auth.client-id}": {
+ * "roles": [
+ * "app-roles" <- This is where backends expect their respective role(s)
+ * ]
+ * },
+ * ...
+ * },
+ * "${app.auth.principle-attribute}": "my User name",
+ * ...
+ * }
+ */
 @Component
 public class ChronosJwtAuthConverter implements Converter<Jwt, AbstractAuthenticationToken> {
 
