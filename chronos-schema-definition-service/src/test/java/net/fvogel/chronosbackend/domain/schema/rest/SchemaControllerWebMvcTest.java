@@ -35,8 +35,6 @@ public class SchemaControllerWebMvcTest {
 
         mockMvc.perform(get("/api/schema/{key}", "Territory"))
                 .andExpect(status().isNotFound());
-//                .andExpect(jsonPath("$.id").value(1))
-//                .andExpect(jsonPath("$.name").value("Item A"));
     }
 
 
