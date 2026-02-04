@@ -1,4 +1,4 @@
-package net.fvogel.chronosbackend.domain.schema.rest;
+package net.fvogel.chronosbackend.it;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,7 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test-data")
-public class SchemaControllerSpringBootTest {
+public class PublicApiIntegrationTest {
 
     @Autowired
     private WebApplicationContext context;
@@ -32,11 +32,29 @@ public class SchemaControllerSpringBootTest {
     }
 
     @Test
-    void getEntity() throws Exception {
+    void getCompleteSchema() throws Exception {
+        mvc.perform(get("/api/schema"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.meta.base").value("*"))
+
+                .andExpect(jsonPath("$.entities.elements.length()").value(2))
+                .andExpect(jsonPath("$.entities.defaultAttributes.length()").value(3))
+
+                .andExpect(jsonPath("$.relations.elements.length()").value(2))
+                .andExpect(jsonPath("$.relations.defaultAttributes.length()").value(3));
+    }
+
+    @Test
+    void getSingleEntity() throws Exception {
         mvc.perform(get("/api/schema/{key}", "Territory"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.meta.base").value("Territory"))
-                .andExpect(jsonPath("$.entities.elements.length()").value(2));
+
+                .andExpect(jsonPath("$.entities.elements.length()").value(2))
+                .andExpect(jsonPath("$.entities.defaultAttributes.length()").value(3))
+
+                .andExpect(jsonPath("$.relations.elements.length()").value(1))
+                .andExpect(jsonPath("$.relations.defaultAttributes.length()").value(3));
     }
 
     @Test
