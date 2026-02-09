@@ -44,6 +44,10 @@ public class SchemaService {
         return this.entityPORepository.findByKey(key).orElseThrow(NotFoundException::new);
     }
 
+    public void assertEntityExistsByKey(String key) {
+        getEntityByKey(key);
+    }
+
     public EntityPO save(EntityPO entityPO) {
         uniqueValidator.validate(entityPO);
 

@@ -36,15 +36,14 @@ public class AdminSchemaController {
     public SchemaResponse updateEntity(@Valid @RequestBody EntityPO entityPO,
                                        @PathVariable String key) {
         // Ensure the entity already exists
-        EntityPO original = schemaService.getEntityByKey(key);
+        schemaService.assertEntityExistsByKey(key);
 
         schemaService.save(entityPO);
-        EntityPO result = schemaService.getEntityByKey(entityPO.getKey());
 
         SchemaResponse response = new SchemaResponse();
-        modelMapper.extractToResponseDto(result, response);
+        modelMapper.extractToResponseDto(entityPO, response);
 
-        response.getMeta().setBase(result.getKey());
+        response.getMeta().setBase(key);
         response.getMeta().setDepth(1);
 
         return response;
