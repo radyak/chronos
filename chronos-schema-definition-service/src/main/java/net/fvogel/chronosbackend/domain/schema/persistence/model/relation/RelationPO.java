@@ -5,6 +5,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import net.fvogel.chronosbackend.config.i18n.I18nConstants;
 import net.fvogel.chronosbackend.domain.schema.persistence.model.entity.EntityPO;
 import org.hibernate.annotations.OnDelete;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@EqualsAndHashCode(exclude = {"source", "target"})
 @Entity
 public class RelationPO {
 
