@@ -105,7 +105,7 @@ Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJsb2NhbGhvc3QiLCJzdWIiOiJyb
     {
       "id": 2,
       "key": "RULED",
-      "explanation": null,
+      "explanation": "habbi",
       "examples": null,
       "attributes": [
         {

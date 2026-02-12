@@ -26,8 +26,6 @@ public class AdminApiEntityUpdateIntegrationTest {
     @Nested
     class Entity extends BaseIntegrationTest {
 
-        private final ObjectMapper objectMapper = new ObjectMapper();
-
         @Test
         void canUpdateSimpleFieldInExistingEntity() throws Exception {
             EntityPO entity = loadEntity("Person");

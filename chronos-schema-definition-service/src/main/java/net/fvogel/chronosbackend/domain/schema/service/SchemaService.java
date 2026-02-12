@@ -1,7 +1,9 @@
 package net.fvogel.chronosbackend.domain.schema.service;
 
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import net.fvogel.chronosbackend.commons.exception.NotFoundException;
+import net.fvogel.chronosbackend.config.caching.CachingConfig;
 import net.fvogel.chronosbackend.domain.schema.business.DefaultEntityAttributesRule;
 import net.fvogel.chronosbackend.domain.schema.business.UniqueValidator;
 import net.fvogel.chronosbackend.domain.schema.persistence.model.entity.EntityAttributePO;
@@ -13,12 +15,16 @@ import net.fvogel.chronosbackend.domain.schema.persistence.repository.EntityPORe
 import net.fvogel.chronosbackend.domain.schema.persistence.repository.RelationAttributePORepository;
 import net.fvogel.chronosbackend.domain.schema.persistence.repository.RelationPORepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@Slf4j
 @Service
 @Transactional
 public class SchemaService {
@@ -36,10 +42,13 @@ public class SchemaService {
     @Autowired
     UniqueValidator uniqueValidator;
 
+
+    @Cacheable({CachingConfig.CacheNames.SCHEMA_CACHE})
     public Set<EntityPO> allEntities() {
         return new HashSet<>(this.entityPORepository.findAll());
     }
 
+    @Cacheable({CachingConfig.CacheNames.ENTITY_CACHE})
     public EntityPO getEntityByKey(String key) {
         return this.entityPORepository.findByKey(key).orElseThrow(NotFoundException::new);
     }
@@ -48,6 +57,8 @@ public class SchemaService {
         getEntityByKey(key);
     }
 
+    @CacheEvict({CachingConfig.CacheNames.SCHEMA_CACHE})
+    @CachePut(cacheNames = {CachingConfig.CacheNames.ENTITY_CACHE}, key = "#entityPO.key")
     public EntityPO save(EntityPO entityPO) {
         uniqueValidator.validate(entityPO);
 
@@ -71,6 +82,10 @@ public class SchemaService {
         return result;
     }
 
+    @CacheEvict({
+            CachingConfig.CacheNames.ENTITY_CACHE,
+            CachingConfig.CacheNames.SCHEMA_CACHE,
+    })
     public void delete(String key) {
         EntityPO entityPO = this.getEntityByKey(key);
         this.entityPORepository.delete(entityPO);

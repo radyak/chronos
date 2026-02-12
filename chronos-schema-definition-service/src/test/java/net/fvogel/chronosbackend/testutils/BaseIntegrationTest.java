@@ -1,5 +1,6 @@
 package net.fvogel.chronosbackend.testutils;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import net.fvogel.chronosbackend.commons.security.DevJwtGenerator;
 import net.fvogel.chronosbackend.domain.schema.persistence.model.entity.EntityPO;
 import net.fvogel.chronosbackend.domain.schema.persistence.repository.EntityPORepository;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -23,23 +25,20 @@ import java.util.Set;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
+@TestPropertySource(properties = {"spring.cache.type=NONE"})
 public abstract class BaseIntegrationTest {
 
+    protected final ObjectMapper objectMapper = new ObjectMapper();
     @Value("${app.auth.admin-role}")
     protected String adminRole;
-
     @Autowired
     protected DevJwtGenerator jwtGenerator;
-
     @Autowired
     protected TestDataManager testDataManager;
-
     @Autowired
     protected WebApplicationContext context;
-
     @Autowired
     protected EntityPORepository entityPORepository;
-
     protected MockMvc mvc;
 
     @BeforeEach
