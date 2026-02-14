@@ -1,6 +1,6 @@
 package net.fvogel.chronosbackend.domain.generic.service;
 
-import net.fvogel.chronosbackend.commons.exception.NotFoundException;
+import net.fvogel.chronos.commons.exception.NotFoundException;
 import net.fvogel.chronosbackend.domain.generic.integration.QueryService;
 import net.fvogel.chronosbackend.domain.generic.integration.query.node.CreateNodeQuery;
 import net.fvogel.chronosbackend.domain.generic.integration.query.node.DeleteNodeQuery;

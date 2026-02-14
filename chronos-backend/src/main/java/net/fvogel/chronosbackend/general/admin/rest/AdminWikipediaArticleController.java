@@ -1,6 +1,6 @@
 package net.fvogel.chronosbackend.general.admin.rest;
 
-import net.fvogel.chronosbackend.commons.lang.SupportedLanguage;
+import net.fvogel.chronos.commons.lang.SupportedLanguage;
 import net.fvogel.chronosbackend.general.wikipedia.model.WikipediaArticleInfo;
 import net.fvogel.chronosbackend.general.wikipedia.service.WikipediaService;
 import org.springframework.web.bind.annotation.GetMapping;

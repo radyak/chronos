@@ -1,6 +1,6 @@
 package net.fvogel.chronosbackend.config.security;
 
-import net.fvogel.chronosbackend.commons.security.ChronosJwtAuthConverter;
+import net.fvogel.chronos.commons.security.ChronosJwtAuthConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

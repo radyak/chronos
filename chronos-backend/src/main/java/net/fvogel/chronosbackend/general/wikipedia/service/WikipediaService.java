@@ -1,8 +1,8 @@
 package net.fvogel.chronosbackend.general.wikipedia.service;
 
-import net.fvogel.chronosbackend.commons.exception.InvalidParameterException;
-import net.fvogel.chronosbackend.commons.exception.NotFoundException;
-import net.fvogel.chronosbackend.commons.lang.SupportedLanguage;
+import net.fvogel.chronos.commons.exception.InvalidParameterException;
+import net.fvogel.chronos.commons.exception.NotFoundException;
+import net.fvogel.chronos.commons.lang.SupportedLanguage;
 import net.fvogel.chronosbackend.config.caching.CachingConfig;
 import net.fvogel.chronosbackend.general.wikipedia.client.WikipediaApiClient;
 import net.fvogel.chronosbackend.general.wikipedia.dto.WikipediaPageDto;

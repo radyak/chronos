@@ -1,7 +1,7 @@
 package net.fvogel.chronosbackend.config.web.converter;
 
-import net.fvogel.chronosbackend.commons.exception.InvalidParameterException;
-import net.fvogel.chronosbackend.commons.lang.SupportedLanguage;
+import net.fvogel.chronos.commons.exception.InvalidParameterException;
+import net.fvogel.chronos.commons.lang.SupportedLanguage;
 import org.springframework.core.convert.converter.Converter;
 
 public class StringToSupportedLanguagConverter implements Converter<String, SupportedLanguage> {

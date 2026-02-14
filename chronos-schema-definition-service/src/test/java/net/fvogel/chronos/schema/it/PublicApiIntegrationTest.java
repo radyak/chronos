@@ -1,0 +1,45 @@
+package net.fvogel.chronos.schema.it;
+
+import net.fvogel.chronos.schema.testutils.BaseIntegrationTest;
+import org.junit.jupiter.api.Test;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+
+public class PublicApiIntegrationTest extends BaseIntegrationTest {
+
+    @Test
+    void getCompleteSchema() throws Exception {
+        mvc.perform(get("/api/schema"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.meta.base").value("*"))
+
+                .andExpect(jsonPath("$.entities.elements.length()").value(2))
+                .andExpect(jsonPath("$.entities.defaultAttributes.length()").value(3))
+
+                .andExpect(jsonPath("$.relations.elements.length()").value(2))
+                .andExpect(jsonPath("$.relations.defaultAttributes.length()").value(3));
+    }
+
+    @Test
+    void getSingleEntity() throws Exception {
+        mvc.perform(get("/api/schema/{key}", "Territory"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.meta.base").value("Territory"))
+
+                .andExpect(jsonPath("$.entities.elements.length()").value(2))
+                .andExpect(jsonPath("$.entities.defaultAttributes.length()").value(3))
+
+                .andExpect(jsonPath("$.relations.elements.length()").value(1))
+                .andExpect(jsonPath("$.relations.defaultAttributes.length()").value(3));
+    }
+
+    @Test
+    void cannotGetUnknownEntity() throws Exception {
+        mvc.perform(get("/api/schema/{key}", "Dynasty"))
+                .andExpect(status().isNotFound());
+    }
+
+}

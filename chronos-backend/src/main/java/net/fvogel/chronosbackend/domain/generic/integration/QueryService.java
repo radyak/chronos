@@ -1,6 +1,6 @@
 package net.fvogel.chronosbackend.domain.generic.integration;
 
-import net.fvogel.chronosbackend.commons.exception.InvalidDataException;
+import net.fvogel.chronos.commons.exception.InvalidDataException;
 import net.fvogel.chronosbackend.domain.generic.integration.query.node.CreateNodeQuery;
 import net.fvogel.chronosbackend.domain.generic.integration.query.node.DeleteNodeQuery;
 import net.fvogel.chronosbackend.domain.generic.integration.query.node.UpdateNodeQuery;

@@ -1,6 +1,6 @@
 package net.fvogel.chronosbackend.general.wikipedia.rest;
 
-import net.fvogel.chronosbackend.commons.lang.SupportedLanguage;
+import net.fvogel.chronos.commons.lang.SupportedLanguage;
 import net.fvogel.chronosbackend.domain.generic.persistence.Entity;
 import net.fvogel.chronosbackend.domain.generic.service.EntityService;
 import net.fvogel.chronosbackend.general.wikipedia.model.WikipediaArticleSummary;
