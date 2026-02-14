@@ -21,7 +21,7 @@
     <modules>
         <module>chronos-commons</module>
         <module>chronos-frontend</module>
-        <module>chronos-backend</module>
+        <module>chronos-historical-data-service</module>
         <module>chronos-schema-definition-service</module>
     </modules>
 

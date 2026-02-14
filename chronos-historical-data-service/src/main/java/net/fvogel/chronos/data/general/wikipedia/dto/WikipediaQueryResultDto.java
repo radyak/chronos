@@ -1,0 +1,8 @@
+package net.fvogel.chronos.data.general.wikipedia.dto;
+
+import lombok.Data;
+
+@Data
+public class WikipediaQueryResultDto {
+    WikipediaQueryDto query;
+}
