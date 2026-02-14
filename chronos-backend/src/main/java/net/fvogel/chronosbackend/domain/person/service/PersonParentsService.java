@@ -1,8 +1,8 @@
 package net.fvogel.chronosbackend.domain.person.service;
 
-import net.fvogel.chronosbackend.commons.exception.ConflictingDataException;
-import net.fvogel.chronosbackend.commons.exception.InvalidDataException;
-import net.fvogel.chronosbackend.commons.exception.NotFoundException;
+import net.fvogel.chronos.commons.exception.ConflictingDataException;
+import net.fvogel.chronos.commons.exception.InvalidDataException;
+import net.fvogel.chronos.commons.exception.NotFoundException;
 import net.fvogel.chronosbackend.domain.person.persistence.ChildOf;
 import net.fvogel.chronosbackend.domain.person.persistence.Person;
 import net.fvogel.chronosbackend.domain.person.persistence.PersonRepository;

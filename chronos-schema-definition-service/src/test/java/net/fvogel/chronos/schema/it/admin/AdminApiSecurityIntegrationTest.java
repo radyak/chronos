@@ -1,0 +1,44 @@
+package net.fvogel.chronos.schema.it.admin;
+
+import net.fvogel.chronos.schema.domain.schema.persistence.repository.EntityPORepository;
+import net.fvogel.chronos.schema.testutils.BaseIntegrationTest;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+
+public class AdminApiSecurityIntegrationTest extends BaseIntegrationTest {
+
+    @Autowired
+    EntityPORepository entityPORepository;
+
+    @Test
+    void unauthenticatedUserCannotDeleteEntity() throws Exception {
+        assertThat(entityPORepository.findByKey("Territory").isPresent());
+        mvc.perform(delete("/api/schema/admin/entities/{key}", "Territory"))
+                .andExpect(status().isUnauthorized());
+        assertThat(entityPORepository.findByKey("Territory").isPresent());
+    }
+
+    @Test
+    void unauthorizedUserCannotDeleteEntity() throws Exception {
+        assertThat(entityPORepository.findByKey("Territory").isPresent());
+        mvc.perform(delete("/api/schema/admin/entities/{key}", "Territory")
+                .header("Authorization", authHeader("user"))
+        ).andExpect(status().isForbidden());
+        assertThat(entityPORepository.findByKey("Territory").isPresent());
+    }
+
+    @Test
+    void adminRoleAuthorizedUserCanDeleteEntity() throws Exception {
+        assertThat(entityPORepository.findByKey("Territory").isPresent());
+        mvc.perform(delete("/api/schema/admin/entities/{key}", "Territory")
+                .header("Authorization", adminAuthHeader())
+        ).andExpect(status().isOk());
+        assertThat(entityPORepository.findByKey("Territory").isEmpty());
+    }
+
+}

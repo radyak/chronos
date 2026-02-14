@@ -1,6 +1,6 @@
 package net.fvogel.chronosbackend.general.wikipedia.client;
 
-import net.fvogel.chronosbackend.commons.lang.SupportedLanguage;
+import net.fvogel.chronos.commons.lang.SupportedLanguage;
 import net.fvogel.chronosbackend.general.wikipedia.dto.WikipediaQueryResultDto;
 import net.fvogel.chronosbackend.general.wikipedia.dto.getentities.WikipediaEntityResultDto;
 import net.fvogel.chronosbackend.general.wikipedia.dto.search.WikipediaSearchResultDto;
