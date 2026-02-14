@@ -145,7 +145,7 @@
                     <password>sds-db-password</password>
 
                     <referenceUrl>
-                        hibernate:spring:net.fvogel.chronosbackend?dialect=org.hibernate.dialect.PostgreSQLDialect
+                        hibernate:spring:net.fvogel.chronos.schema?dialect=org.hibernate.dialect.PostgreSQLDialect
                     </referenceUrl>
 
                     <verbose>true</verbose>
