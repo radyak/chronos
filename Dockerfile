@@ -22,5 +22,5 @@ RUN mvn clean package
 FROM eclipse-temurin:17-jre-alpine as runtime
 
 WORKDIR /app
-COPY --from=backend-build /build/chronos-backend/target/chronos-backend-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=backend-build /build/chronos-historical-data-service/target/chronos-historical-data-service-*.jar app.jar
 CMD ["java", "-jar", "app.jar"]
