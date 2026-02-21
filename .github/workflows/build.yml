@@ -45,8 +45,8 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: frontend-dist
-          path: ./chronos-frontend/dist
+          name: frontend-artefacts
+          path: ./chronos-frontend/dist/
 
 
   ### BUILD: BACKEND
@@ -73,7 +73,7 @@ jobs:
       - name: Artifact upload
         uses: actions/upload-artifact@v4
         with:
-          name: app-jars
+          name: backend-artefacts
           path: |
             ./chronos-historical-data-service/target/*.jar
             ./chronos-schema-definition-service/target/*.jar
@@ -96,15 +96,11 @@ jobs:
       - name: Repository checkout
         uses: actions/checkout@v4
 
-      - name: Backend artifact download
+      - name: Build artifacts download
         uses: actions/download-artifact@v4
         with:
-          name: app-jars
-
-      - name: Frontend artifact download
-        uses: actions/download-artifact@v4
-        with:
-          name: frontend-dist
+          pattern: '*-artefacts'
+          merge-multiple: true
 
       - name: Docker Buildx setup
         uses: docker/setup-buildx-action@v3.0.0
