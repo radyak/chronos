@@ -117,6 +117,13 @@ jobs:
           username: radyak #${{ github.actor }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: Create ref name
+        run: |
+          SAFE_REF=$(echo "${GITHUB_REF_NAME}" \
+            | tr '[:upper:]' '[:lower:]' \
+            | sed -E 's/[^a-z0-9._-]+/-/g')
+          echo "SAFE_REF=$SAFE_REF" >> $GITHUB_ENV
+
       - name: ${{ env.REGISTRY }} docker image build and push
         uses: docker/build-push-action@v5
         with:
@@ -125,7 +132,7 @@ jobs:
           tags: |
             radyak/${{ matrix.service }}:latest
             radyak/${{ matrix.service }}:${{ github.sha }}
-            radyak/${{ matrix.service }}:${{ github.ref_name }}
+            radyak/${{ matrix.service }}:${{ env.SAFE_REF }}
 
 #      - name: Build ${{ matrix.service }} image
 #        run: |
