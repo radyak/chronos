@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import net.fvogel.chronos.schema.domain.schema.persistence.model.entity.EntityPO;
 import net.fvogel.chronos.schema.domain.schema.persistence.model.relation.RelationPO;
 import net.fvogel.chronos.schema.domain.schema.service.SchemaService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -19,6 +21,7 @@ import java.util.List;
 public class TestDataManager {
 
     private static final ObjectMapper mapper = new ObjectMapper();
+    private static final Logger logger = LoggerFactory.getLogger(TestDataManager.class);
 
     @Autowired
     SchemaService schemaService;
@@ -28,6 +31,11 @@ public class TestDataManager {
     }
 
     public void importTestData(String resourcePath) throws IOException {
+        int existingEntriesCount = schemaService.allEntities().size();
+        if (existingEntriesCount > 0) {
+            logger.info("Database already contains {} entities - no test data will be inserted", existingEntriesCount);
+            return;
+        }
         List<EntityPO> entityPOs = readEntities(resourcePath);
 
         // CREATE ENTITIES FIRST, COLLECT RELATIONS FOR SUBSEQUENT, SEPARATE CREATION

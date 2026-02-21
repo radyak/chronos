@@ -1,7 +1,6 @@
 package net.fvogel.chronos.schema.domain.schema.service;
 
 import jakarta.transaction.Transactional;
-import lombok.extern.slf4j.Slf4j;
 import net.fvogel.chronos.commons.exception.NotFoundException;
 import net.fvogel.chronos.schema.config.caching.CachingConfig;
 import net.fvogel.chronos.schema.domain.schema.business.DefaultEntityAttributesRule;
@@ -24,7 +23,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Slf4j
 @Service
 @Transactional
 public class SchemaService {
