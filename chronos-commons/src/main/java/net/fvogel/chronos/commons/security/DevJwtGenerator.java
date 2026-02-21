@@ -21,7 +21,7 @@ import java.util.Set;
  * see DevSecurityConfig).
  */
 @Component
-@Profile({"test", "dev"})
+@Profile({"test", "dev-security"})
 public class DevJwtGenerator {
 
     Logger logger = LoggerFactory.getLogger(DevJwtGenerator.class);

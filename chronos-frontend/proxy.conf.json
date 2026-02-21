@@ -1,6 +1,11 @@
 {
+  "/api/schema/*": {
+    "target": "http://chronos-sds:8090/",
+    "secure": false,
+    "changeOrigin": true
+  },
   "/api/*": {
-    "target": "http://chronos:8080/",
+    "target": "http://chronos-hds:8080/",
     "secure": false,
     "changeOrigin": true
   }
