@@ -30,10 +30,17 @@ public class CachingIntegrationTest extends BaseIntegrationTest {
     @Autowired
     private CacheManager cacheManager;
 
+    private void clearCaches() {
+        cacheManager.getCacheNames().forEach(cacheName -> cacheManager.getCache(cacheName).clear());
+    }
+
     @BeforeEach
     public void setup() throws IOException {
+        // Caches need to be cleared to properly clean and set up test data
+        this.clearCaches();
         super.setup();
-        cacheManager.getCacheNames().forEach(cacheName -> cacheManager.getCache(cacheName).clear());
+
+        this.clearCaches();
         Mockito.reset(entityPORepository);
     }
 
