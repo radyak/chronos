@@ -90,7 +90,7 @@ jobs:
       matrix:
         service:
           - chronos-frontend
-          - chronos-schema-definition-service
+          - chronos-historical-data-service
           - chronos-schema-definition-service
     steps:
       - name: Repository checkout
