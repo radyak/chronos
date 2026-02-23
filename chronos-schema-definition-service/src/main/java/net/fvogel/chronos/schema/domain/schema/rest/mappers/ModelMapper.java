@@ -52,8 +52,12 @@ public class ModelMapper {
         dto.setExamples(relationPO.getExamples());
         dto.setExplanation(relationPO.getExplanation());
         dto.setAttributes(relationPO.getAttributes().stream().map(this::toDto).toList());
-        dto.setSourceEntityId(relationPO.getSource().getId());
-        dto.setTargetEntityId(relationPO.getTarget().getId());
+        if (relationPO.getSource() != null) {
+            dto.setSourceEntityId(relationPO.getSource().getId());
+        }
+        if (relationPO.getTarget() != null) {
+            dto.setTargetEntityId(relationPO.getTarget().getId());
+        }
         return dto;
     }
 

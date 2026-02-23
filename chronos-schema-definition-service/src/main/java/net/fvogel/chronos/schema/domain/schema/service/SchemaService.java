@@ -15,7 +15,6 @@ import net.fvogel.chronos.schema.domain.schema.persistence.repository.RelationAt
 import net.fvogel.chronos.schema.domain.schema.persistence.repository.RelationPORepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +39,9 @@ public class SchemaService {
     @Autowired
     UniqueValidator uniqueValidator;
 
+    public long entityCount() {
+        return this.entityPORepository.count();
+    }
 
     @Cacheable({CachingConfig.CacheNames.SCHEMA_CACHE})
     public Set<EntityPO> allEntities() {
@@ -55,8 +57,13 @@ public class SchemaService {
         getEntityByKey(key);
     }
 
-    @CacheEvict({CachingConfig.CacheNames.SCHEMA_CACHE})
-    @CachePut(cacheNames = {CachingConfig.CacheNames.ENTITY_CACHE}, key = "#entityPO.key")
+    @CacheEvict(
+            value = {
+                    CachingConfig.CacheNames.SCHEMA_CACHE,
+                    CachingConfig.CacheNames.ENTITY_CACHE
+            },
+            allEntries = true
+    )
     public EntityPO save(EntityPO entityPO) {
         uniqueValidator.validate(entityPO);
 
@@ -80,10 +87,13 @@ public class SchemaService {
         return result;
     }
 
-    @CacheEvict({
-            CachingConfig.CacheNames.ENTITY_CACHE,
-            CachingConfig.CacheNames.SCHEMA_CACHE,
-    })
+    @CacheEvict(
+            value = {
+                    CachingConfig.CacheNames.ENTITY_CACHE,
+                    CachingConfig.CacheNames.SCHEMA_CACHE,
+            },
+            allEntries = true
+    )
     public void delete(String key) {
         EntityPO entityPO = this.getEntityByKey(key);
         this.entityPORepository.delete(entityPO);

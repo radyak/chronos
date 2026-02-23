@@ -114,7 +114,7 @@ public class CachingIntegrationTest extends BaseIntegrationTest {
                 .andExpect(jsonPath("$.entities.elements.length()").value(2))
                 .andExpect(jsonPath("$.entities.elements[?(@.key == 'Person')].explanation").value("An individual human"));
 
-        verifyNoMoreInteractions(entityPORepository);
+        verify(entityPORepository, times(1)).findByKey("Person");
 
 
         // Retrieve complete schema again - Cache EVICT had to empty SCHEMA cache
