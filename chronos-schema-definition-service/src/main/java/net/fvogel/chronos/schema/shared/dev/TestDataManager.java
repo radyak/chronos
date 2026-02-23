@@ -31,12 +31,14 @@ public class TestDataManager {
     }
 
     public void importTestData(String resourcePath) throws IOException {
-        int existingEntriesCount = schemaService.allEntities().size();
+        long existingEntriesCount = schemaService.entityCount();
         if (existingEntriesCount > 0) {
             logger.info("Database already contains {} entities - no test data will be inserted", existingEntriesCount);
             return;
         }
         List<EntityPO> entityPOs = readEntities(resourcePath);
+
+        logger.info("Database empty - inserting {} entities", entityPOs.size());
 
         // CREATE ENTITIES FIRST, COLLECT RELATIONS FOR SUBSEQUENT, SEPARATE CREATION
         List<RelationPO> relationPOs = new ArrayList<>();
