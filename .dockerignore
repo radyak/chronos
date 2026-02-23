@@ -10,5 +10,3 @@ doc/
 .github/
 .idea/
 .mvn/
-
-chronos-backend/src/main/resources/application-**.properties

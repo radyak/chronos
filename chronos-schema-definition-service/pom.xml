@@ -184,4 +184,13 @@
         </plugins>
     </build>
 
+    <profiles>
+        <profile>
+            <id>inContainer</id>
+            <build>
+                <directory>target/inContainer</directory>
+            </build>
+        </profile>
+    </profiles>
+
 </project>

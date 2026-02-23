@@ -16,7 +16,7 @@ services:
     image: maven:3.9.6-eclipse-temurin-17-alpine
     container_name: chronos-hds
     working_dir: /app/chronos-historical-data-service
-    command: mvn spring-boot:run
+    command: mvn spring-boot:run -PinContainer
     volumes:
       - .:/app
       - ~/.m2:/root/.m2
@@ -49,14 +49,14 @@ services:
     image: maven:3.9.6-eclipse-temurin-17-alpine
     container_name: chronos-sds
     working_dir: /app/chronos-schema-definition-service
-    command: mvn spring-boot:run
-    ports:
-      - "8090:8090"
+    command: mvn spring-boot:run -PinContainer
     volumes:
       - .:/app
       - ~/.m2:/root/.m2
     depends_on:
       - chronos-sds-db
+    ports:
+      - "8090:8090"
     environment:
       SPRING_PROFILES_ACTIVE: dev-security,test-data,debug
       APP_DB_HOST: chronos-sds-db
