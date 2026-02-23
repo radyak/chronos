@@ -1,5 +1,17 @@
 services:
 
+  traefik:
+    image: traefik:v3.0
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./chronos-gateway/traefik.yml:/etc/traefik/traefik.yml
+      - ./chronos-gateway/dynamic.yml:/etc/traefik/dynamic.yml
+    depends_on:
+      - chronos-ui
+      - chronos-hds
+      - chronos-sds
+
   chronos-hds:
     image: maven:3.9.6-eclipse-temurin-17-alpine
     container_name: chronos-hds
