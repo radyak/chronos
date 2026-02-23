@@ -1,0 +1,53 @@
+http:
+  routers:
+
+    chronos-sds:
+      entryPoints:
+        - web
+      rule: "PathPrefix(`/api/schema`)"
+      service: chronos-sds
+      #      middlewares:
+      #        - strip-api-prefix
+      priority: 100
+
+    chronos-hds:
+      entryPoints:
+        - web
+      rule: "PathPrefix(`/api`)"
+      service: chronos-hds
+      #      middlewares:
+      #        - strip-api-prefix
+      priority: 99
+
+    chronos-ui:
+      entryPoints:
+        - web
+      rule: "PathPrefix(`/`)"
+      service: chronos-ui
+      priority: 1
+
+  #  middlewares:
+  #    strip-api-prefix:
+  #      stripPrefix:
+  #        prefixes:
+  #          - "/api"
+
+  services:
+
+    chronos-sds:
+      loadBalancer:
+        passHostHeader: true
+        servers:
+          - url: "http://chronos-sds:8090"
+
+    chronos-hds:
+      loadBalancer:
+        passHostHeader: true
+        servers:
+          - url: "http://chronos-hds:8080"
+
+    chronos-ui:
+      loadBalancer:
+        passHostHeader: true
+        servers:
+          - url: "http://chronos-ui:4200"
