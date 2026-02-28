@@ -1,7 +1,7 @@
 package net.fvogel.chronos.schema.testutils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import net.fvogel.chronos.commons.security.DevJwtGenerator;
+import net.fvogel.chronos.commons.security.TestJwtGenerator;
 import net.fvogel.chronos.schema.domain.schema.persistence.model.entity.EntityPO;
 import net.fvogel.chronos.schema.domain.schema.persistence.repository.EntityPORepository;
 import net.fvogel.chronos.schema.shared.dev.TestDataManager;
@@ -32,7 +32,7 @@ public abstract class BaseIntegrationTest {
     @Value("${app.auth.admin-role}")
     protected String adminRole;
     @Autowired
-    protected DevJwtGenerator jwtGenerator;
+    protected TestJwtGenerator jwtGenerator;
     @Autowired
     protected TestDataManager testDataManager;
     @Autowired

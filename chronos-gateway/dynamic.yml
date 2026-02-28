@@ -44,7 +44,7 @@ http:
       loadBalancer:
         passHostHeader: true
         servers:
-          - url: "http://chronos-hds:8080"
+          - url: "http://chronos-hds:8010"
 
     chronos-ui:
       loadBalancer:

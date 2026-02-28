@@ -35,7 +35,7 @@ import { AuthServiceMock } from './general/security/auth.service.mock';
     {
       provide: AuthService,
       useFactory: () => {
-        if (environment.mockAuth) {
+        if (environment.authMode === 'mock') {
           return new AuthServiceMock();
         }
         return new AuthService(inject(OAuthService), inject(WebAppConfigService));
