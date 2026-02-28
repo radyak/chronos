@@ -1,3 +1,5 @@
-export const environment = {
-  mockAuth: true
+import { Environment } from './environment.interface';
+
+export const environment: Environment = {
+  authMode: 'dev'
 }

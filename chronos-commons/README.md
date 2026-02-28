@@ -13,9 +13,9 @@ The following Spring profiles are intended to be used *only for development* and
 
 Set some properties, such as log levels, for debugging.
 
-#### `dev-security`
+#### `test-security`
 
-Activates components and configs to generate and validate JWTs locally.
+Activates components and configs to generate and validate JWTs locally & for tests.
 
 #### `in-memory-persistence`
 

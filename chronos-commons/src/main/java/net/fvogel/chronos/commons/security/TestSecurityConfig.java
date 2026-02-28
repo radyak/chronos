@@ -16,11 +16,11 @@ import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 
 /**
- * Provides JWT en- and decoder for development, which use an own public/private key pair.
+ * Provides JWT en- and decoder for development and tests, which use an own public/private key pair.
  */
 @Configuration
-@Profile({"test", "dev-security"})
-public class DevSecurityConfig {
+@Profile({"test", "test-security"})
+public class TestSecurityConfig {
 
     @Value("classpath:dev-jwt-private.key")
     private RSAPrivateKey privateKey;

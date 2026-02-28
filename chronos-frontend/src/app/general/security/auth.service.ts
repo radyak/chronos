@@ -3,6 +3,7 @@ import {OAuthService} from "angular-oauth2-oidc";
 import {filter, map, Observable, ReplaySubject, Subject} from "rxjs";
 import {UserProfile} from "./user-profile.interface";
 import { WebAppConfigService } from 'src/app/general/webconfig/web-app-config.service';
+import {environment} from "../../../environments/environment";
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +23,7 @@ export class AuthService {
               private webAppConfigService: WebAppConfigService) {
     this.oAuthService.configure({
       ...this.webAppConfigService.config,
+      requireHttps: (environment.authMode === 'prod'),
       //issuer: 'http://localhost:8020/realms/radshift',
       //clientId: 'chronos-admin-ui',
       redirectUri: window.location.origin,

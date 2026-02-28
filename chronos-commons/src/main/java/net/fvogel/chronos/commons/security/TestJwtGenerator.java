@@ -17,14 +17,14 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Generates JWTs for development, encoded/signed by dev JWT encoder (using own public/private key pair;
- * see DevSecurityConfig).
+ * Generates JWTs for development and tests, encoded/signed by dev JWT encoder (using own public/private key pair;
+ * see TestSecurityConfig).
  */
 @Component
-@Profile({"test", "dev-security"})
-public class DevJwtGenerator {
+@Profile({"test", "test-security"})
+public class TestJwtGenerator {
 
-    Logger logger = LoggerFactory.getLogger(DevJwtGenerator.class);
+    Logger logger = LoggerFactory.getLogger(TestJwtGenerator.class);
 
     @Value("${app.auth.admin-role}")
     String adminRole;
