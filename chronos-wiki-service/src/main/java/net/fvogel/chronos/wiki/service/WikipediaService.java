@@ -14,6 +14,8 @@ import net.fvogel.chronos.wiki.dto.search.WikipediaSearchResultDto;
 import net.fvogel.chronos.wiki.mapper.WikipediaModelMapper;
 import net.fvogel.chronos.wiki.model.WikipediaArticleInfo;
 import net.fvogel.chronos.wiki.model.WikipediaArticleSummary;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,8 @@ import java.util.List;
 
 @Service
 public class WikipediaService {
+
+    private static final Logger logger = LoggerFactory.getLogger(WikipediaService.class);
 
     private final WikipediaApiClient apiClient;
 
@@ -39,7 +43,7 @@ public class WikipediaService {
      */
     @Cacheable(CachingConfig.CACHE_NAME_WIKI_ARTICLES_SEARCH)
     public List<WikipediaArticleInfo> searchWikipediaArticlesByTitle(String title, SupportedLanguage lang, Integer offset) {
-        System.out.println("Searching for title " + title + ", lang " + lang + ", offset " + offset);
+        logger.debug("Searching for title " + title + ", lang " + lang + ", offset " + offset);
         if (title == null || title.length() < 3) {
             throw new InvalidParameterException();
         }
@@ -66,7 +70,7 @@ public class WikipediaService {
      */
     @Cacheable(CachingConfig.CACHE_NAME_WIKI_ARTICLE)
     public WikipediaArticleSummary findWikipediaSummaryByQid(String qid, SupportedLanguage lang) {
-        System.out.println("Loading for ID " + qid + ", lang " + lang);
+        logger.debug("Loading for ID " + qid + ", lang " + lang);
         if (qid == null || !qid.startsWith("Q")) {
             throw new InvalidParameterException();
         }
