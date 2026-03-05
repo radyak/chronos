@@ -83,7 +83,24 @@ services:
     #      - ./data:/var/lib/postgresql/data
     #      - ./logs:/var/log/postgresql
     #      - ./certs:/var/lib/postgresql/certs
-  
+
+  chronos-ws:
+    image: maven:3.9.6-eclipse-temurin-17-alpine
+    container_name: chronos-ws
+    working_dir: /app/chronos-wiki-service
+    command: mvn spring-boot:run -PinContainer
+    volumes:
+      - .:/app
+      - ~/.m2:/root/.m2
+    ports:
+      - "8050:8050"
+    extra_hosts:
+      - "auth.localhost:host-gateway"
+    environment:
+      SPRING_PROFILES_ACTIVE: test-security,dev
+      PORT: 8050
+      APP_OAUTH_ISSUER: http://auth.localhost:7020
+
   chronos-ui:
     image: node:21.7.2-alpine3.18
     container_name: chronos-ui

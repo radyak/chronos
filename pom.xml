@@ -23,6 +23,7 @@
         <module>chronos-frontend</module>
         <module>chronos-historical-data-service</module>
         <module>chronos-schema-definition-service</module>
+        <module>chronos-wiki-service</module>
     </modules>
 
     <dependencyManagement>
