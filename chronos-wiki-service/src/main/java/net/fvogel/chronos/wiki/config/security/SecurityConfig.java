@@ -27,7 +27,7 @@ public class SecurityConfig {
         http.csrf(Customizer.withDefaults());
         http.authorizeHttpRequests(
                 httpRequests -> httpRequests
-                        .requestMatchers("/api/admin/**").hasRole(adminRole)
+                        .requestMatchers("/api/wiki/admin/**").hasRole(adminRole)
                         .anyRequest().anonymous()
         );
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
