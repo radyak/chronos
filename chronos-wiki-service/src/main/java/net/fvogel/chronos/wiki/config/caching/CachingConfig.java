@@ -1,4 +1,4 @@
-package net.fvogel.chronos.data.config.caching;
+package net.fvogel.chronos.wiki.config.caching;
 
 import org.springframework.boot.autoconfigure.cache.CacheManagerCustomizer;
 import org.springframework.cache.annotation.EnableCaching;
