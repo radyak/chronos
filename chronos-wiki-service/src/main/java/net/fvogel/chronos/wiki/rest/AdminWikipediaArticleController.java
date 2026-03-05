@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/admin/wiki/articles")
+@RequestMapping("/api/wiki/admin/articles")
 public class AdminWikipediaArticleController {
 
     private final WikipediaService wikipediaService;

@@ -19,7 +19,7 @@ public class AdminApiSecurityIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void unauthenticatedUserCannotSearchWikiArticle() throws Exception {
-        mvc.perform(get("/api/admin/wiki/articles/search?q=otho"))
+        mvc.perform(get("/api/wiki/admin/articles/search?q=otho"))
                 .andExpect(status().isUnauthorized());
 
         verifyNoInteractions(wikipediaApiClient);
@@ -27,7 +27,7 @@ public class AdminApiSecurityIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void unauthorizedUserCannotSearchWikiArticle() throws Exception {
-        mvc.perform(get("/api/admin/wiki/articles/search?q=otho")
+        mvc.perform(get("/api/wiki/admin/articles/search?q=otho")
                 .header("Authorization", authHeader("user"))
         ).andExpect(status().isForbidden());
 
@@ -36,7 +36,7 @@ public class AdminApiSecurityIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void adminRoleAuthorizedUserCanSearchWikiArticle() throws Exception {
-        mvc.perform(get("/api/admin/wiki/articles/search?q=otho")
+        mvc.perform(get("/api/wiki/admin/articles/search?q=otho")
                 .header("Authorization", adminAuthHeader())
         ).andExpect(status().isOk());
 

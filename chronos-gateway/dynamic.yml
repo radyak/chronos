@@ -10,6 +10,13 @@ http:
       #        - strip-api-prefix
       priority: 100
 
+    chronos-wiki:
+      entryPoints:
+        - web
+      rule: "PathPrefix(`/api/wiki`)"
+      service: chronos-ws
+      priority: 99
+
     chronos-hds:
       entryPoints:
         - web
@@ -17,7 +24,7 @@ http:
       service: chronos-hds
       #      middlewares:
       #        - strip-api-prefix
-      priority: 99
+      priority: 80
 
     chronos-ui:
       entryPoints:

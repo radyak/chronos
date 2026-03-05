@@ -70,7 +70,7 @@ public class CachingIntegrationTest extends BaseIntegrationTest {
         when(wikipediaApiClient.searchWikipediaArticleInfos(eq("otho"), eq(SupportedLanguage.EN), eq(null))).thenReturn(defaultWikipediaSearchResultDto());
 
         // WHEN
-        mvc.perform(get("/api/admin/wiki/articles/search?q=otho")
+        mvc.perform(get("/api/wiki/admin/articles/search?q=otho")
                 .header("Authorization", adminAuthHeader())
         ).andExpect(status().isOk());
 
@@ -79,7 +79,7 @@ public class CachingIntegrationTest extends BaseIntegrationTest {
 
 
         // WHEN (requesting again)
-        mvc.perform(get("/api/admin/wiki/articles/search?q=otho")
+        mvc.perform(get("/api/wiki/admin/articles/search?q=otho")
                 .header("Authorization", adminAuthHeader())
         ).andExpect(status().isOk());
 
