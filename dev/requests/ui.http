@@ -1,0 +1,5 @@
+### 
+GET http://localhost:8040/api/ui/images/jumbotron.jpg
+
+### Jumbotron
+GET http://localhost:8040/api/ui/config/app-config.json

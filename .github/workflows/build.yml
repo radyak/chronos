@@ -78,6 +78,7 @@ jobs:
             ./chronos-historical-data-service/target/*.jar
             ./chronos-schema-definition-service/target/*.jar
             ./chronos-wiki-service/target/*.jar
+            ./chronos-ui-service/target/*.jar
   
 
   ### BUILD: IMAGES
@@ -94,6 +95,7 @@ jobs:
           - chronos-historical-data-service
           - chronos-schema-definition-service
           - chronos-wiki-service
+          - chronos-ui-service
     steps:
       - name: Repository checkout
         uses: actions/checkout@v4
