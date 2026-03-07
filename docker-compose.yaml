@@ -20,7 +20,7 @@ services:
     volumes:
       - .:/app
       - ~/.m2:/root/.m2
-      - ./dev/exampledata/img:/app/data/img:ro
+    #      - ./dev/exampledata/img:/app/data/img:ro
     depends_on:
       - chronos-hds-db
     ports:
@@ -99,6 +99,24 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: test-security,dev
       PORT: 8050
+      APP_OAUTH_ISSUER: http://auth.localhost:7020
+
+  chronos-uis:
+    image: maven:3.9.6-eclipse-temurin-17-alpine
+    container_name: chronos-uis
+    working_dir: /app/chronos-ui-service
+    command: mvn spring-boot:run -PinContainer
+    volumes:
+      - .:/app
+      - ~/.m2:/root/.m2
+      - ./dev/exampledata/img:/app/data/img:ro
+    ports:
+      - "8040:8040"
+    #    extra_hosts:
+    #      - "auth.localhost:host-gateway"
+    environment:
+      SPRING_PROFILES_ACTIVE: debug
+      PORT: 8040
       APP_OAUTH_ISSUER: http://auth.localhost:7020
 
   chronos-ui:

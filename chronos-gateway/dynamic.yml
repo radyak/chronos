@@ -17,6 +17,13 @@ http:
       service: chronos-ws
       priority: 99
 
+    chronos-uis:
+      entryPoints:
+        - web
+      rule: "PathPrefix(`/api/ui`)"
+      service: chronos-uis
+      priority: 98
+
     chronos-hds:
       entryPoints:
         - web
@@ -52,6 +59,18 @@ http:
         passHostHeader: true
         servers:
           - url: "http://chronos-hds:8010"
+
+    chronos-uis:
+      loadBalancer:
+        passHostHeader: true
+        servers:
+          - url: "http://chronos-uis:8040"
+
+    chronos-wiki:
+      loadBalancer:
+        passHostHeader: true
+        servers:
+          - url: "http://chronos-ws:8050"
 
     chronos-ui:
       loadBalancer:
