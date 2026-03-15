@@ -26,7 +26,12 @@ import { AuthServiceMock } from './general/security/auth.service.mock';
     HttpClientModule,
     OAuthModule.forRoot({
       resourceServer: {
-        allowedUrls: ['/api/admin'],
+        allowedUrls: [
+          '/api/entities/admin',
+          '/api/schema/admin',
+          '/api/wiki/admin',
+          '/api/admin/persons'
+        ],
         sendAccessToken: true
       },
     })

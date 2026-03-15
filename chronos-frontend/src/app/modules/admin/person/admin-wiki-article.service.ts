@@ -20,7 +20,7 @@ export class AdminWikiArticlesService {
     if (!!offset) {
       params = params.set('offset', offset)
     }
-    return this.http.get<Array<WikipediaArticleInfo>>("/api/admin/wiki/articles/search", { params })
+    return this.http.get<Array<WikipediaArticleInfo>>("/api/wiki/admin/articles/search", { params })
   }
 
 }
