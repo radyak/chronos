@@ -1,7 +1,8 @@
 services:
 
-  traefik:
+  chronos-gateway:
     image: traefik:v3.0
+    container_name: chronos-gateway
     ports:
       - "5000:5000"
     volumes:
@@ -16,7 +17,7 @@ services:
     image: maven:3.9.6-eclipse-temurin-17-alpine
     container_name: chronos-hds
     working_dir: /app/chronos-historical-data-service
-    command: mvn spring-boot:run -PinContainer
+    command: mvn spring-boot:run -PinContainer -Dmaven.test.skip=true
     volumes:
       - .:/app
       - ~/.m2:/root/.m2
@@ -34,6 +35,7 @@ services:
       APP_GDP_HOST: chronos-hds-db
       APP_GDB_USERNAME: neo4j
       APP_GDB_PASSWORD: password
+      APP_OAUTH_ADMIN_ROLE: chronos_client_admin
 
   chronos-hds-db:
     container_name: chronos-hds-db
@@ -52,7 +54,7 @@ services:
     image: maven:3.9.6-eclipse-temurin-17-alpine
     container_name: chronos-sds
     working_dir: /app/chronos-schema-definition-service
-    command: mvn spring-boot:run -PinContainer
+    command: mvn spring-boot:run -PinContainer -Dmaven.test.skip=true
     volumes:
       - .:/app
       - ~/.m2:/root/.m2
@@ -67,6 +69,7 @@ services:
       APP_DB_HOST: chronos-sds-db
       APP_DB_USER: sds-db-user
       APP_DB_PASSWORD: sds-db-password
+      APP_OAUTH_ADMIN_ROLE: chronos_client_admin
 
   chronos-sds-db:
     image: postgres:18.1-alpine3.23
@@ -88,7 +91,7 @@ services:
     image: maven:3.9.6-eclipse-temurin-17-alpine
     container_name: chronos-ws
     working_dir: /app/chronos-wiki-service
-    command: mvn spring-boot:run -PinContainer
+    command: mvn spring-boot:run -PinContainer -Dmaven.test.skip=true
     volumes:
       - .:/app
       - ~/.m2:/root/.m2
@@ -97,9 +100,10 @@ services:
     extra_hosts:
       - "auth.localhost:host-gateway"
     environment:
-      SPRING_PROFILES_ACTIVE: test-security,dev
+      SPRING_PROFILES_ACTIVE: dev-security,debug
       PORT: 8050
       APP_OAUTH_ISSUER: http://auth.localhost:7020
+      APP_OAUTH_ADMIN_ROLE: chronos_client_admin
 
   chronos-uis:
     image: maven:3.9.6-eclipse-temurin-17-alpine
