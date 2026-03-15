@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -23,19 +24,29 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        // Default CORS
         http.cors(Customizer.withDefaults());
-        http.csrf(Customizer.withDefaults());
+
+        // Disable CSRF
+        http.csrf(AbstractHttpConfigurer::disable);
+
+        // Protect
         http.authorizeHttpRequests(
                 httpRequests -> httpRequests
                         .requestMatchers("/api/admin/**").hasRole(adminRole)
                         .anyRequest().anonymous()
         );
+
+        // Stateless session mgmt
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
+        // Enable JWT Auth
         http.oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer
                 .jwt(jwt -> jwt
                         .jwtAuthenticationConverter(jwtAuthConverter)
                 )
         );
+
         return http.build();
     }
 }
