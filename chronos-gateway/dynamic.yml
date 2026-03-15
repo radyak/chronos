@@ -10,7 +10,7 @@ http:
       #        - strip-api-prefix
       priority: 100
 
-    chronos-wiki:
+    chronos-ws:
       entryPoints:
         - web
       rule: "PathPrefix(`/api/wiki`)"
@@ -66,7 +66,7 @@ http:
         servers:
           - url: "http://chronos-uis:8040"
 
-    chronos-wiki:
+    chronos-ws:
       loadBalancer:
         passHostHeader: true
         servers:
