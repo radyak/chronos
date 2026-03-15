@@ -7,8 +7,9 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
 import { WikipediaSummaryComponent } from 'src/app/common/components/wikipedia-summary/wikipedia-summary.component';
 import { WikiArticlesService } from '../../admin/person/wiki-article.service';
-import { Observable, of } from 'rxjs';
+import { filter, Observable, of, switchMap } from 'rxjs';
 import { WikipediaSummary } from 'src/app/common/model/general/wikipedia/wikipedia-summary.model';
+import { EntitiesService } from '../../admin/person/entities.service';
 
 @Component({
   selector: 'chronos-public-overview',
@@ -29,12 +30,16 @@ export class PublicOverviewComponent implements OnInit {
 
   wikipediaSummary$: Observable<WikipediaSummary> = of();
 
-  constructor(private wikiArticlesService: WikiArticlesService) {
-
-  }
+  constructor(
+    private wikiArticlesService: WikiArticlesService,
+    private entriesService: EntitiesService,
+  ) { }
 
   ngOnInit(): void {
-    this. wikipediaSummary$ = this.wikiArticlesService.getRandomArticle(); //.subscribe(wikipediaSummary => this.wikipediaSummary = wikipediaSummary);
+    this.wikipediaSummary$ = this.entriesService.getRandomEntityWithQid$().pipe(
+      filter(entity => !!entity.qid),
+      switchMap(entitiy => this.wikiArticlesService.getArticleByQid(entitiy.qid!))
+    );
   }
 
 }

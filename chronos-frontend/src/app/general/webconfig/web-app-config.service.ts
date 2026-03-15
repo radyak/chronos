@@ -12,7 +12,7 @@ export class WebAppConfigService {
     constructor(private http: HttpClient) { }
 
     loadAppConfig() {
-        return this.http.get<WebAppConfig>('/api/config/web/app-config.json')
+        return this.http.get<WebAppConfig>('/api/ui/config/app-config.json')
             .toPromise()
             .then(data => {
                 this._config = data!;
