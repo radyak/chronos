@@ -1,0 +1,7 @@
+@use "../../../theme/variables";
+
+.btn-link {
+    color: variables.$gray-600;
+    margin-right: 10px;
+    text-decoration: none;
+}
