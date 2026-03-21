@@ -124,7 +124,7 @@ services:
       APP_OAUTH_ISSUER: http://auth.localhost:7020
 
   chronos-ui:
-    image: node:21.7.2-alpine3.18
+    image: node:24.14.0-alpine3.22
     container_name: chronos-ui
     working_dir: /app
     command: npm run start:dev -- --host=0.0.0.0
@@ -134,7 +134,7 @@ services:
       - ./chronos-frontend:/app
 
   chronos-dev-auth:
-    image: node:21.7.2-alpine3.18
+    image: node:24.14.0-alpine3.22
     container_name: chronos-dev-auth
     working_dir: /app
     command: npm start
