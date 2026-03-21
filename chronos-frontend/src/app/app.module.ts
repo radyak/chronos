@@ -13,10 +13,11 @@ import {environment} from "../environments/environment";
 import { AuthService } from './general/security/auth.service';
 import { AuthServiceMock } from './general/security/auth.service.mock';
 
-@NgModule({ declarations: [
-        AppComponent,
-    ],
-    bootstrap: [AppComponent], imports: [BrowserModule,
+@NgModule({
+    declarations: [AppComponent,],
+    bootstrap: [AppComponent],
+    imports: [
+        BrowserModule,
         BrowserAnimationsModule,
         AppRoutingModule,
         NavbarComponent,
@@ -31,7 +32,9 @@ import { AuthServiceMock } from './general/security/auth.service.mock';
                 ],
                 sendAccessToken: true
             },
-        })], providers: [
+        })
+    ],
+    providers: [
         {
             provide: AuthService,
             useFactory: () => {
@@ -53,5 +56,6 @@ import { AuthServiceMock } from './general/security/auth.service.mock';
             }
         },
         provideHttpClient(withInterceptorsFromDi())
-    ] })
+    ]
+})
 export class AppModule { }
