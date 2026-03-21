@@ -1,3 +1,5 @@
+@use "variables";
+
 // Custom rules for theme
 
 // Headings
@@ -88,10 +90,12 @@ th input {
 // Links/Actions
 a {
   cursor: pointer;
+  color: variables.$gray-600;
 
   &.action {
     margin-right: 10px;
   }
+
 }
 
 
@@ -133,6 +137,9 @@ input[type=number] {
 .breadcrumb {
   margin-top: 20px;
   margin-bottom: -20px;
+  padding: 10px;
+  border-radius: variables.$border-radius;
+  background-color: variables.$gray-800;
 }
 
 // Footer

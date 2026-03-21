@@ -1,8 +1,8 @@
-@import "../../../theme/variables";
+@use "../../../theme/variables";
 
 .article {
   margin-top: 3px;
-  border-radius: $border-radius;
+  border-radius: variables.$border-radius;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -19,7 +19,7 @@
   height: 50px;
   margin-right: 10px;
   justify-content: center;
-  border-radius: $border-radius;
+  border-radius: variables.$border-radius;
 }
 
 .title-container {

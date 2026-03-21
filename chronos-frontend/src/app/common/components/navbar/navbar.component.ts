@@ -4,6 +4,8 @@ import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import {CommonModule} from "@angular/common";
 import {filter, map, Observable} from "rxjs";
 import { AuthService } from 'src/app/general/security/auth.service';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
 
 
 export interface MenuItem {
@@ -20,10 +22,12 @@ export interface MenuItem {
         CommonModule,
         RouterModule,
         NgbModule,
+        FontAwesomeModule
     ]
 })
 export class NavbarComponent {
   isMenuCollapsed = true;
+  profileIcon = faUser;
 
   @Input()
   title?: MenuItem;

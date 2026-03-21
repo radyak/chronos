@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-md bg-primary" data-bs-theme="dark">
+<nav class="navbar navbar-expand-md" data-bs-theme="dark">
   <div class="container">
     @if (title) {
       <a class="navbar-brand" [routerLink]="title.routerLink">
@@ -46,13 +46,13 @@
 
       @if (isLoggedIn()) {
         <div>
-          <button class="btn btn-primary"
+          <button class="btn btn-link"
             type="button"
             aria-controls="navbarColor01"
             aria-expanded="false"
-            aria-label="Go to profile"
-            disabled>
-            {{ userName$() | async }}
+            aria-label="Go to profile">
+              <fa-icon [icon]="profileIcon"></fa-icon>
+              {{ userName$() | async }}
           </button>
           <button class="btn btn-outline-danger"
             type="button"
