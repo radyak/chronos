@@ -13,16 +13,15 @@ import { CommonModule } from '@angular/common';
 
 
 @Component({
-  selector: 'chronos-admin-persons',
-  templateUrl: './admin-persons.component.html',
-  styleUrls: ['./admin-persons.component.scss'],
-  standalone: true,
-  imports: [
-    CommonModule,
-    FontAwesomeModule,
-    EntitiesTableComponent,
-    RouterModule
-  ]
+    selector: 'chronos-admin-persons',
+    templateUrl: './admin-persons.component.html',
+    styleUrls: ['./admin-persons.component.scss'],
+    imports: [
+        CommonModule,
+        FontAwesomeModule,
+        EntitiesTableComponent,
+        RouterModule
+    ]
 })
 export class AdminPersonsComponent extends AbstractQueryDrivenComponent {
 

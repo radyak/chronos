@@ -18,19 +18,18 @@ import { WikiArticlesService } from '../../person/wiki-article.service';
 
 
 @Component({
-  selector: 'chronos-admin-person',
-  templateUrl: './admin-person.component.html',
-  styleUrls: ['./admin-person.component.scss'],
-  standalone: true,
-  imports: [
-    CommonModule,
-    WikipediaSummaryComponent,
-    RouterModule,
-    FormsModule,
-    FontAwesomeModule,
-    DateInputComponent,
-    WikipediaArticleInfoComponent,
-  ]
+    selector: 'chronos-admin-person',
+    templateUrl: './admin-person.component.html',
+    styleUrls: ['./admin-person.component.scss'],
+    imports: [
+        CommonModule,
+        WikipediaSummaryComponent,
+        RouterModule,
+        FormsModule,
+        FontAwesomeModule,
+        DateInputComponent,
+        WikipediaArticleInfoComponent,
+    ]
 })
 export class AdminPersonComponent implements OnInit, OnDestroy {
 

@@ -1,4 +1,4 @@
-import {APP_INITIALIZER, inject, NgModule} from '@angular/core';
+import { inject, NgModule, provideAppInitializer } from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 
 import {AppRoutingModule} from './app-routing.module';
@@ -44,17 +44,15 @@ import { AuthServiceMock } from './general/security/auth.service.mock';
                 return new AuthService(inject(OAuthService), inject(WebAppConfigService));
             }
         },
-        {
-            provide: APP_INITIALIZER,
-            multi: true,
-            deps: [WebAppConfigService],
-            useFactory: (webAppConfigService: WebAppConfigService) => {
+        provideAppInitializer(() => {
+        const initializerFn = ((webAppConfigService: WebAppConfigService) => {
                 return () => {
                     //Make sure to return a promise!
                     return webAppConfigService.loadAppConfig();
                 };
-            }
-        },
+            })(inject(WebAppConfigService));
+        return initializerFn();
+      }),
         provideHttpClient(withInterceptorsFromDi())
     ]
 })

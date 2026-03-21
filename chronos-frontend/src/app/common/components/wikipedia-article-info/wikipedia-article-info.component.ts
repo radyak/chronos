@@ -6,16 +6,15 @@ import { faQuestion } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
 
 @Component({
-  standalone: true,
-  selector: 'chronos-wikipedia-article-info',
-  templateUrl: './wikipedia-article-info.component.html',
-  styleUrls: ['./wikipedia-article-info.component.scss'],
-  imports: [
-    NgIf,
-    NgbAccordionModule,
-    FontAwesomeModule,
-    NgStyle
-],
+    selector: 'chronos-wikipedia-article-info',
+    templateUrl: './wikipedia-article-info.component.html',
+    styleUrls: ['./wikipedia-article-info.component.scss'],
+    imports: [
+        NgIf,
+        NgbAccordionModule,
+        FontAwesomeModule,
+        NgStyle
+    ]
 })
 export class WikipediaArticleInfoComponent {
 

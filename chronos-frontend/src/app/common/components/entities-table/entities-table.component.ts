@@ -25,18 +25,17 @@ export interface EntitiesTableSearch {
 }
 
 @Component({
-  standalone: true,
-  selector: 'chronos-enitities-table',
-  templateUrl: './entities-table.component.html',
-  styleUrls: ['./entities-table.component.scss'],
-  imports: [
-    FormsModule,
-    FontAwesomeModule,
-    NgForOf,
-    NgIf,
-    NgClass,
-    NgbDropdownModule
-  ]
+    selector: 'chronos-enitities-table',
+    templateUrl: './entities-table.component.html',
+    styleUrls: ['./entities-table.component.scss'],
+    imports: [
+        FormsModule,
+        FontAwesomeModule,
+        NgForOf,
+        NgIf,
+        NgClass,
+        NgbDropdownModule
+    ]
 })
 export class EntitiesTableComponent {
 

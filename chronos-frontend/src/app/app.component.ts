@@ -3,9 +3,10 @@ import {MenuItem} from "./common/components/navbar/navbar.component";
 import {of} from "rxjs";
 
 @Component({
-  selector: 'chronos-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+    selector: 'chronos-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.scss'],
+    standalone: false
 })
 export class AppComponent {
 

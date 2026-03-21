@@ -5,14 +5,13 @@ import {faInfoCircle} from "@fortawesome/free-solid-svg-icons";
 import { WikipediaSummary } from 'src/app/common/model/general/wikipedia/wikipedia-summary.model';
 
 @Component({
-  standalone: true,
-  selector: 'chronos-wikipedia-summary',
-  templateUrl: './wikipedia-summary.component.html',
-  imports: [
-    NgIf,
-    FontAwesomeModule,
-  ],
-  styleUrls: ['./wikipedia-summary.component.scss']
+    selector: 'chronos-wikipedia-summary',
+    templateUrl: './wikipedia-summary.component.html',
+    imports: [
+        NgIf,
+        FontAwesomeModule,
+    ],
+    styleUrls: ['./wikipedia-summary.component.scss']
 })
 export class WikipediaSummaryComponent {
 

@@ -12,18 +12,17 @@ import { WikipediaSummary } from 'src/app/common/model/general/wikipedia/wikiped
 import { EntitiesService } from '../../admin/person/entities.service';
 
 @Component({
-  selector: 'chronos-public-overview',
-  templateUrl: './public-overview.component.html',
-  styleUrls: ['./public-overview.component.scss'],
-  standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule,
-    NgbTypeaheadModule,
-    FormsModule,
-    WikipediaSummaryComponent,
-    FontAwesomeModule,
-  ]
+    selector: 'chronos-public-overview',
+    templateUrl: './public-overview.component.html',
+    styleUrls: ['./public-overview.component.scss'],
+    imports: [
+        CommonModule,
+        RouterModule,
+        NgbTypeaheadModule,
+        FormsModule,
+        WikipediaSummaryComponent,
+        FontAwesomeModule,
+    ]
 })
 export class PublicOverviewComponent implements OnInit {
 

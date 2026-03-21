@@ -10,19 +10,18 @@ import { DateInputComponent } from 'src/app/common/components/date-input/date-in
 
 
 @Component({
-  selector: 'chronos-admin-copy-person',
-  templateUrl: '../admin-person/admin-person.component.html',
-  styleUrls: ['../admin-person/admin-person.component.scss'],
-  standalone: true,
-  imports: [
-    CommonModule,
-    WikipediaSummaryComponent,
-    RouterModule,
-    FormsModule,
-    FontAwesomeModule,
-    DateInputComponent,
-    WikipediaArticleInfoComponent
-  ]
+    selector: 'chronos-admin-copy-person',
+    templateUrl: '../admin-person/admin-person.component.html',
+    styleUrls: ['../admin-person/admin-person.component.scss'],
+    imports: [
+        CommonModule,
+        WikipediaSummaryComponent,
+        RouterModule,
+        FormsModule,
+        FontAwesomeModule,
+        DateInputComponent,
+        WikipediaArticleInfoComponent
+    ]
 })
 export class AdminCopyPersonComponent extends AdminPersonComponent {
 
