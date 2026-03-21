@@ -99,10 +99,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "chronos-frontend:build:production"
+              "buildTarget": "chronos-frontend:build:production"
             },
             "development": {
-              "browserTarget": "chronos-frontend:build:development"
+              "buildTarget": "chronos-frontend:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -110,7 +110,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "chronos-frontend:build"
+            "buildTarget": "chronos-frontend:build"
           }
         },
         "test": {
