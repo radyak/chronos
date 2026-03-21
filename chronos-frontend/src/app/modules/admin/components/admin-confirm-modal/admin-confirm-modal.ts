@@ -1,14 +1,12 @@
 import {Component, inject, Input} from '@angular/core';
 import {NgbActiveModal} from "@ng-bootstrap/ng-bootstrap";
-import {NgIf} from "@angular/common";
+
 
 
 @Component({
     selector: 'chronos-admin-confirm-modal',
     templateUrl: './admin-confirm-modal.html',
-    imports: [
-        NgIf
-    ],
+    imports: [],
     styleUrls: ['./admin-confirm-modal.scss']
 })
 export class AdminConfirmModal {

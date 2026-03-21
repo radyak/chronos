@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {FormsModule} from "@angular/forms";
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
-import {NgClass, NgForOf, NgIf} from "@angular/common";
+import { NgClass } from "@angular/common";
 import {IconDefinition} from "@fortawesome/fontawesome-svg-core";
 import {faClose, faEllipsis, faSearch} from "@fortawesome/free-solid-svg-icons";
 import { Entity } from 'src/app/common/model/domain/entity.model';
@@ -29,13 +29,11 @@ export interface EntitiesTableSearch {
     templateUrl: './entities-table.component.html',
     styleUrls: ['./entities-table.component.scss'],
     imports: [
-        FormsModule,
-        FontAwesomeModule,
-        NgForOf,
-        NgIf,
-        NgClass,
-        NgbDropdownModule
-    ]
+    FormsModule,
+    FontAwesomeModule,
+    NgClass,
+    NgbDropdownModule
+]
 })
 export class EntitiesTableComponent {
 

@@ -39,10 +39,10 @@
     </div>
 
     <div class="col-md-6">
-      <ng-container *ngIf="wikipediaSummary$ | async as wikipediaSummary">
+      @if (wikipediaSummary$ | async; as wikipediaSummary) {
         <chronos-wikipedia-summary [wikiSummary]="wikipediaSummary">
         </chronos-wikipedia-summary>
-      </ng-container>
+      }
     </div>
   </div>
 </div>
