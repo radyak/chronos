@@ -4,13 +4,12 @@ import {NgIf} from "@angular/common";
 
 
 @Component({
-  standalone: true,
-  selector: 'chronos-admin-confirm-modal',
-  templateUrl: './admin-confirm-modal.html',
-  imports: [
-    NgIf
-  ],
-  styleUrls: ['./admin-confirm-modal.scss']
+    selector: 'chronos-admin-confirm-modal',
+    templateUrl: './admin-confirm-modal.html',
+    imports: [
+        NgIf
+    ],
+    styleUrls: ['./admin-confirm-modal.scss']
 })
 export class AdminConfirmModal {
 

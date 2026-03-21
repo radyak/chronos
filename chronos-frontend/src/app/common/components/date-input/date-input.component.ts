@@ -14,15 +14,14 @@ interface EditDate {
 }
 
 @Component({
-  standalone: true,
-  selector: 'chronos-date-input',
-  templateUrl: './date-input.component.html',
-  styleUrls: ['./date-input.component.scss'],
-  imports: [
-    CommonModule,
-    NgbModule,
-    FormsModule
-  ]
+    selector: 'chronos-date-input',
+    templateUrl: './date-input.component.html',
+    styleUrls: ['./date-input.component.scss'],
+    imports: [
+        CommonModule,
+        NgbModule,
+        FormsModule
+    ]
 })
 export class DateInputComponent {
 

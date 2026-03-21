@@ -3,14 +3,13 @@ import { RouterModule } from '@angular/router';
 import { NotificationsComponent } from 'src/app/common/components/notifications/notifications.component';
 
 @Component({
-  selector: 'chronos-admin',
-  templateUrl: './admin.component.html',
-  styleUrls: ['./admin.component.scss'],
-  standalone: true,
-  imports: [
-    RouterModule,
-    NotificationsComponent
-  ]
+    selector: 'chronos-admin',
+    templateUrl: './admin.component.html',
+    styleUrls: ['./admin.component.scss'],
+    imports: [
+        RouterModule,
+        NotificationsComponent
+    ]
 })
 export class AdminComponent {
 }

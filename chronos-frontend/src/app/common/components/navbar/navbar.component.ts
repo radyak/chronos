@@ -13,15 +13,14 @@ export interface MenuItem {
 }
 
 @Component({
-  standalone: true,
-  selector: 'chronos-navbar, [chronos-navbar]',
-  templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.scss'],
-  imports: [
-    CommonModule,
-    RouterModule,
-    NgbModule,
-  ]
+    selector: 'chronos-navbar, [chronos-navbar]',
+    templateUrl: './navbar.component.html',
+    styleUrls: ['./navbar.component.scss'],
+    imports: [
+        CommonModule,
+        RouterModule,
+        NgbModule,
+    ]
 })
 export class NavbarComponent {
   isMenuCollapsed = true;

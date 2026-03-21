@@ -6,17 +6,16 @@ import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxColorsModule } from 'ngx-colors';
 
 @Component({
-  standalone: true,
-  selector: 'chronos-theme-showcase-view',
-  templateUrl: './theme-showcase-view.component.html',
-  styleUrls: ['./theme-showcase-view.component.scss'],
-  imports: [
-    CommonModule,
-    FormsModule,
-    FontAwesomeModule,
-    NgbDropdownModule,
-    NgxColorsModule,
-  ]
+    selector: 'chronos-theme-showcase-view',
+    templateUrl: './theme-showcase-view.component.html',
+    styleUrls: ['./theme-showcase-view.component.scss'],
+    imports: [
+        CommonModule,
+        FormsModule,
+        FontAwesomeModule,
+        NgbDropdownModule,
+        NgxColorsModule,
+    ]
 })
 export class ThemeShowcaseViewComponent {
 
