@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import {MonoTypeOperatorFunction, Observable, tap} from "rxjs";
 import {NotificationService} from "../../../common/components/notifications/notification.service";
 import { Entity as Person } from 'src/app/common/model/domain/entity.model';
