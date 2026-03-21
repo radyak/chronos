@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {CommonModule} from "@angular/common";
+
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import {FormsModule} from "@angular/forms";
 import { paddedString } from 'src/app/common/util/padded-string.function';
@@ -18,10 +18,9 @@ interface EditDate {
     templateUrl: './date-input.component.html',
     styleUrls: ['./date-input.component.scss'],
     imports: [
-        CommonModule,
-        NgbModule,
-        FormsModule
-    ]
+    NgbModule,
+    FormsModule
+]
 })
 export class DateInputComponent {
 

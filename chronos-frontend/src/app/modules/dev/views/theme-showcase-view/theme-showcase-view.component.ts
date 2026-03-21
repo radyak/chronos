@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {Component} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -10,12 +10,11 @@ import { NgxColorsModule } from 'ngx-colors';
     templateUrl: './theme-showcase-view.component.html',
     styleUrls: ['./theme-showcase-view.component.scss'],
     imports: [
-        CommonModule,
-        FormsModule,
-        FontAwesomeModule,
-        NgbDropdownModule,
-        NgxColorsModule,
-    ]
+    FormsModule,
+    FontAwesomeModule,
+    NgbDropdownModule,
+    NgxColorsModule
+]
 })
 export class ThemeShowcaseViewComponent {
 

@@ -1,8 +1,8 @@
 <div class="article">
   <div class="image-container" [ngStyle]="getStyle()">
-    <ng-container *ngIf="!article.image?.url">
+    @if (!article.image?.url) {
       <fa-icon [icon]="noImageIcon"></fa-icon>
-    </ng-container>
+    }
   </div>
 
   <div class="title-container">

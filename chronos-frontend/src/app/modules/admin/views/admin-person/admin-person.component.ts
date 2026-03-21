@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from "@angular/router";
@@ -22,14 +22,13 @@ import { WikiArticlesService } from '../../person/wiki-article.service';
     templateUrl: './admin-person.component.html',
     styleUrls: ['./admin-person.component.scss'],
     imports: [
-        CommonModule,
-        WikipediaSummaryComponent,
-        RouterModule,
-        FormsModule,
-        FontAwesomeModule,
-        DateInputComponent,
-        WikipediaArticleInfoComponent,
-    ]
+    WikipediaSummaryComponent,
+    RouterModule,
+    FormsModule,
+    FontAwesomeModule,
+    DateInputComponent,
+    WikipediaArticleInfoComponent
+]
 })
 export class AdminPersonComponent implements OnInit, OnDestroy {
 
