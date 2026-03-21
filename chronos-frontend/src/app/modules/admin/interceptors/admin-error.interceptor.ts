@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
+import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import {Observable, tap} from 'rxjs';
 import {NotificationService} from "../../../common/components/notifications/notification.service";
 

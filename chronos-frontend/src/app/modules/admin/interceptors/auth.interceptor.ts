@@ -1,5 +1,5 @@
 import {Injectable, Optional} from '@angular/core';
-import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
+import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import {catchError, Observable} from 'rxjs';
 import {OAuthModuleConfig, OAuthResourceServerErrorHandler, OAuthStorage} from "angular-oauth2-oidc";
 
