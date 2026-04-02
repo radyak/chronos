@@ -1,0 +1,41 @@
+<div class="container">
+
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a [routerLink]="['..', '..']">Administration</a></li>
+    <li class="breadcrumb-item"><a [routerLink]="['..',]">Schema</a></li>
+    <li class="breadcrumb-item active">{{ isNew() ? 'New Entity' : 'Entity: ' + entity.value()?.key }}</li>
+  </ol>
+
+  <h1>Administration: {{ isNew() ? 'Create New Entity' : 'Edit "' + entity.value()?.key + '"' }}</h1>
+    <!-- <p class="text-primary-emphasis small">
+        Some explanation here ...
+    </p> -->
+
+  <div class="row">
+    <div class="col admin-controls">
+      <button class="btn btn-outline-danger" (click)="cancel()">
+        <fa-icon [icon]="cancelIcon"></fa-icon>
+        Cancel
+      </button>
+      <button class="btn btn-outline-success" (click)="save()">
+        <fa-icon [icon]="saveIcon"></fa-icon>
+        Save
+      </button>
+    </div>
+  </div>
+
+  <div class="row">
+    @if (entity.isLoading()) {
+      <p>Loading...</p>
+    }
+
+    @if (entity.error()) {
+      <p>Error loading data</p>
+    }
+
+    @if (entity.value(); as entityVal) {
+        {{ entityVal.key }} ({{ entityVal.id }})
+    }
+  </div>
+
+</div>

@@ -1,0 +1,59 @@
+<div class="container">
+
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a [routerLink]="['..']">Administration</a></li>
+    <li class="breadcrumb-item active">Schema</li>
+  </ol>
+
+  <h1>Administration: Schema</h1>
+    <!-- <p class="text-primary-emphasis small">
+        Some explanation here ...
+    </p> -->
+
+  <div class="row">
+    <div class="col admin-controls">
+      <button class="btn btn-outline-success" (click)="newEntity()">
+        <fa-icon [icon]="newIcon"></fa-icon>
+        New Schema Entity
+      </button>
+    </div>
+  </div>
+
+  <div class="row">
+    @if (schema.isLoading()) {
+      <p>Loading...</p>
+    }
+
+    @if (schema.error()) {
+      <p>Error loading data</p>
+    }
+
+    @if (schema.value()?.entities?.elements; as entities) {
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th scope="col">
+              Key
+            </th>
+            <th scope="col">
+              Explanation
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (entity of entities; track entity.id) {
+            <tr class="pointer" (click)="editEntity(entity)">
+              <td>
+                {{ entity.key }}
+              </td>
+              <td>
+                {{ entity.explanation }}
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </div>
+
+</div>
