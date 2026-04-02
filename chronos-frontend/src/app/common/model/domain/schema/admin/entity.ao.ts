@@ -1,0 +1,11 @@
+import { AttributeAO } from "./attribute.ao";
+import { RelationAO } from "./relation.ao";
+
+export interface EntityAO {
+    id?: number;
+    key?: string;
+    explanation?: string;
+    examples?: string;
+    attributes?: Array<AttributeAO>;
+    relations?: Array<RelationAO>;
+}

@@ -1,7 +1,6 @@
 import { Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { faCross, faSave, faX, faXmark } from '@fortawesome/free-solid-svg-icons';
-import { EntityDTO } from 'src/app/common/model/domain/schema/entity.dto';
+import { faSave, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { SchemaService } from 'src/app/modules/admin/services/schema.service';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
