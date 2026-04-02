@@ -1,7 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, Resource, resource, ResourceRef, Signal, signal } from '@angular/core';
 import { firstValueFrom, map, of } from 'rxjs';
+import { EntityAO } from 'src/app/common/model/domain/schema/admin/entity.ao';
 import { EntityDTO } from 'src/app/common/model/domain/schema/entity.dto';
+import { EntityMapper } from 'src/app/common/model/domain/schema/mappers/entity.mapper';
 import { SchemaResponseDTO } from 'src/app/common/model/domain/schema/schema-response.dto';
 
 @Injectable({
@@ -19,7 +21,7 @@ export class SchemaService {
     });
   }
 
-  public schemaEntityResource(entityIdentifier: Signal<string>): ResourceRef<EntityDTO | undefined> {
+  public schemaEntityResource(entityIdentifier: Signal<string>): ResourceRef<EntityAO | undefined> {
     return resource({
       loader: async () => {
         if (!entityIdentifier()) {
@@ -27,9 +29,8 @@ export class SchemaService {
         }
         return await firstValueFrom(
           this.http.get<SchemaResponseDTO>(`${this.apiUrl}/${entityIdentifier()}`).pipe(
-            map(schema => schema.entities.elements.find(
-              el => el.key === entityIdentifier()
-            )))
+            map(EntityMapper.fromSchemaResponseDTO)
+          )
         );
       },
     });
