@@ -3,13 +3,15 @@ import { Route } from "@angular/router";
 import { AdminErrorInterceptor } from "./interceptors/admin-error.interceptor";
 import { AuthInterceptor } from "./interceptors/auth.interceptor";
 import { AdminConfirmService } from "./services/admin-confirm.service";
-import { AdminCopyPersonComponent } from "./views/admin-copy-person/admin-copy-person.component";
-import { AdminNewPersonComponent } from "./views/admin-new-person/admin-new-person.component";
-import { AdminOverviewComponent } from './views/admin-overview/admin-overview.component';
-import { AdminPersonComponent } from "./views/admin-person/admin-person.component";
-import { AdminPersonsComponent } from './views/admin-persons/admin-persons.component';
+import { AdminCopyPersonComponent } from "./views/admin/data/admin-copy-person/admin-copy-person.component";
+import { AdminNewPersonComponent } from "./views/admin/data/admin-new-person/admin-new-person.component";
+import { AdminPersonComponent } from "./views/admin/data/admin-person/admin-person.component";
+import { AdminPersonsComponent } from './views/admin/data/admin-persons/admin-persons.component';
 import { AdminComponent } from './views/admin/admin.component';
+import { SchemaComponent } from "./views/admin/schema/schema.component";
+import { EditEntityComponent } from "./views/admin/schema/edit-entity/edit-entity.component";
 
+export const CREATE_ROUTE_KEYWORD = 'new'
 
 export const adminRoutes: Route[] = [
   {
@@ -28,11 +30,19 @@ export const adminRoutes: Route[] = [
         multi: true
       }
     ],
+  },
+  {
+    path: 'schema',
+    component: SchemaComponent,
+  },
+  {
+    path: 'schema/:id',
+    component: EditEntityComponent,
+  },
+  {
+    path: 'data',
+    component: AdminPersonsComponent,
     children: [
-      {
-        path: '',
-        component: AdminOverviewComponent,
-      },
       {
         path: 'persons',
         component: AdminPersonsComponent,
@@ -50,5 +60,5 @@ export const adminRoutes: Route[] = [
         component: AdminCopyPersonComponent
       },
     ]
-  }
+  },
 ]

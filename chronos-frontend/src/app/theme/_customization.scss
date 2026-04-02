@@ -16,7 +16,7 @@ h2 {
 h3,
 h4,
 h5,
-h6, {
+h6 {
   font-family: variables.$headings-font-family;
 }
 
@@ -167,6 +167,19 @@ footer {
     margin: 0 10px;
   }
 }
+
+// Admin
+
+.admin-controls {
+  text-align: right;
+  position: sticky;
+  top: 0;
+
+  & > * {
+    margin-left: 5px;
+  }
+}
+
 
 // Common Util CSS
 

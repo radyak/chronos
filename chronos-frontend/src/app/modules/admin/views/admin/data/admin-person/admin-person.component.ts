@@ -11,10 +11,10 @@ import { WikipediaSummaryComponent } from 'src/app/common/components/wikipedia-s
 import { Entity } from 'src/app/common/model/domain/entity.model';
 import { WikipediaArticleInfo } from 'src/app/common/model/general/wikipedia/wikipedia-article-info.model';
 import { WikipediaSummary } from 'src/app/common/model/general/wikipedia/wikipedia-summary.model';
-import { AdminPersonService } from '../../person/admin-person.service';
-import { AdminWikiArticlesService } from '../../person/admin-wiki-article.service';
-import { PersonService } from '../../person/entries.service';
-import { WikiArticlesService } from '../../person/wiki-article.service';
+import { AdminPersonService } from '../../../../person/admin-person.service';
+import { AdminWikiArticlesService } from '../../../../person/admin-wiki-article.service';
+import { PersonService } from '../../../../person/entries.service';
+import { WikiArticlesService } from '../../../../person/wiki-article.service';
 
 
 @Component({
