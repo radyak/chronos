@@ -62,6 +62,8 @@ services:
       - chronos-sds-db
     ports:
       - "8090:8090"
+    extra_hosts:
+      - "auth.localhost:host-gateway"
     environment:
       SPRING_PROFILES_ACTIVE: dev-security,test-data,debug
       PORT: 8090
@@ -116,8 +118,6 @@ services:
       - ./dev/exampledata/img:/app/data/img:ro
     ports:
       - "8040:8040"
-    #    extra_hosts:
-    #      - "auth.localhost:host-gateway"
     environment:
       SPRING_PROFILES_ACTIVE: debug
       PORT: 8040

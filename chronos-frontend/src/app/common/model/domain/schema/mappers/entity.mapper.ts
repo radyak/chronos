@@ -23,10 +23,8 @@ export class EntityMapper {
             key: dto.key,
             examples: dto.examples,
             explanation: dto.explanation,
-            attributes: [
-                ...dto.attributes?.map(AttributeMapper.dtoToAo) ?? [],
-                ...schemaPartial.entities.defaultAttributes?.map(AttributeMapper.dtoToAo) ?? [],
-            ],
+            attributes: dto.attributes?.map(AttributeMapper.dtoToAo),
+            defaultAttributes: schemaPartial.entities.defaultAttributes?.map(AttributeMapper.dtoToAo),
             relations: schemaPartial.relations.elements.map(rel => RelationMapper.dtoToAo(rel, schemaPartial))
         };
         return ao;

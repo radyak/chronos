@@ -1,7 +1,7 @@
 # Wikimedia Query API
 # https://www.mediawiki.org/w/api.php?action=help&modules=query
 
-GET http://en.wikipedia.org/w/api.php? action=query
+GET http://en.wikipedia.org/w/api.php?action=query
       &prop=extracts|pageimages|info
       &inprop=url
       &exsentences=10
