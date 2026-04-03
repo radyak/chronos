@@ -12,6 +12,7 @@ import {WebAppConfigService} from "./general/webconfig/web-app-config.service";
 import {environment} from "../environments/environment";
 import { AuthService } from './general/security/auth.service';
 import { AuthServiceMock } from './general/security/auth.service.mock';
+import { NotificationsComponent } from './common/components/notifications/notifications.component';
 
 @NgModule({
     declarations: [AppComponent,],
@@ -32,7 +33,8 @@ import { AuthServiceMock } from './general/security/auth.service.mock';
                 ],
                 sendAccessToken: true
             },
-        })
+        }),
+        NotificationsComponent
     ],
     providers: [
         {
