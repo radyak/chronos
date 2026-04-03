@@ -9,7 +9,6 @@ import { AdminConfirmService } from 'src/app/modules/admin/services/admin-confir
 import { CREATE_ROUTE_KEYWORD } from 'src/app/modules/admin/admin.routes';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NotificationService } from 'src/app/common/components/notifications/notification.service';
-import { NotificationsComponent } from 'src/app/common/components/notifications/notifications.component';
 import { EditEntityFormMapper } from './edit-entity-form.mapper';
 
 @Component({
@@ -17,8 +16,7 @@ import { EditEntityFormMapper } from './edit-entity-form.mapper';
   imports: [
     RouterModule,
     FontAwesomeModule,
-    ReactiveFormsModule,
-    NotificationsComponent
+    ReactiveFormsModule
   ],
   templateUrl: './edit-entity.component.html',
   styleUrl: './edit-entity.component.scss',

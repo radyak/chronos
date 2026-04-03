@@ -1,18 +1,15 @@
 import {Component} from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faCircleNodes, faDatabase } from '@fortawesome/free-solid-svg-icons';
+import { RouterOutlet } from '@angular/router';
+import { BreadcrumbsComponent } from "src/app/common/components/breadcrumbs/breadcrumbs.component";
 
 @Component({
     selector: 'chronos-admin',
     templateUrl: './admin.component.html',
     styleUrls: ['./admin.component.scss'],
     imports: [
-        RouterModule,
-        FontAwesomeModule
+        RouterOutlet,
+        BreadcrumbsComponent
     ]
 })
 export class AdminComponent {
-    protected schemaIcon = faCircleNodes;
-    protected dataIcon = faDatabase;
 }
