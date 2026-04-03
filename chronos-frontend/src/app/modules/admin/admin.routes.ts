@@ -42,23 +42,21 @@ export const adminRoutes: Route[] = [
   {
     path: 'data',
     component: AdminPersonsComponent,
-    children: [
-      {
-        path: 'persons',
-        component: AdminPersonsComponent,
-      },
-      {
-        path: 'persons/new',
-        component: AdminNewPersonComponent
-      },
-      {
-        path: 'persons/:id',
-        component: AdminPersonComponent
-      },
-      {
-        path: 'persons/:id/copy',
-        component: AdminCopyPersonComponent
-      },
-    ]
+  },
+  {
+    path: 'data/persons',
+    component: AdminPersonsComponent,
+  },
+  {
+    path: 'data/persons/new',
+    component: AdminNewPersonComponent
+  },
+  {
+    path: 'data/persons/:id',
+    component: AdminPersonComponent
+  },
+  {
+    path: 'data/persons/:id/copy',
+    component: AdminCopyPersonComponent
   },
 ]

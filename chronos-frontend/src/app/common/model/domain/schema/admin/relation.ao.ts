@@ -7,6 +7,7 @@ export interface RelationAO {
     explanation?: string;
     examples?: string;
     attributes?: Array<AttributeAO>;
+    defaultAttributes?: Array<AttributeAO>;
     source?: EntityAO;
     target?: EntityAO;
 }

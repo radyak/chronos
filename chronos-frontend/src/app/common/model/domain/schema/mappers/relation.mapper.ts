@@ -11,10 +11,8 @@ export class RelationMapper {
             key: dto.key,
             examples: dto.examples,
             explanation: dto.explanation,
-            attributes: [
-                ...dto.attributes?.map(AttributeMapper.dtoToAo),
-                ...schemaPartial.relations.defaultAttributes?.map(AttributeMapper.dtoToAo) ?? [],
-            ],
+            attributes: dto.attributes?.map(AttributeMapper.dtoToAo),
+            defaultAttributes: schemaPartial.relations.defaultAttributes?.map(AttributeMapper.dtoToAo),
             source: schemaPartial.entities.elements.find(ent => ent.id === dto.sourceEntityId),
             target: schemaPartial.entities.elements.find(ent => ent.id === dto.targetEntityId)
         };

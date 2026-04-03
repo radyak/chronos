@@ -3,15 +3,19 @@
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a [routerLink]="['..', '..']">Administration</a></li>
     <li class="breadcrumb-item"><a [routerLink]="['..',]">Schema</a></li>
-    <li class="breadcrumb-item active">{{ isNew() ? 'New Entity' : 'Entity: ' + entity.value()?.key }}</li>
+    <li class="breadcrumb-item active">{{ isNew() ? 'New Entity' : 'Entity: ' + entityResource.value()?.key }}</li>
   </ol>
 
-  <h1>Administration: {{ isNew() ? 'Create New Entity' : 'Edit "' + entity.value()?.key + '"' }}</h1>
+  <h1>Administration: {{ isNew() ? 'Create New Entity' : 'Edit "' + entityResource.value()?.key + '"' }}</h1>
     <!-- <p class="text-primary-emphasis small">
         Some explanation here ...
     </p> -->
 
   <div class="row">
+    <!-- <a href="#base-data">Base Data</a>
+    <a href="#attributes">Attributes</a>
+    <a href="#relations">Relations</a> -->
+
     <div class="col admin-controls">
       <button class="btn btn-outline-danger" (click)="cancel()">
         <fa-icon [icon]="cancelIcon"></fa-icon>
@@ -25,17 +29,76 @@
   </div>
 
   <div class="row">
-    @if (entity.isLoading()) {
+    @if (entityResource.isLoading()) {
       <p>Loading...</p>
     }
 
-    @if (entity.error()) {
+    @if (entityResource.error()) {
       <p>Error loading data</p>
     }
 
-    @if (entity.value(); as entityVal) {
-        {{ entityVal.key }} ({{ entityVal.id }})
+    @if (entityResource.value(); as entity) {
+
+        <div class="row">
+            <form [formGroup]="form" (ngSubmit)="save()">
+
+                <h2 id="base-data">Base Data</h2>
+                <fieldset>
+                    <div class="form-group">
+                        <label class="form-label mt-4" for="key">Key:</label>
+                        <input class="form-control"
+                                formControlName="key"
+                                id="key"
+                                name="key"
+                                type="text">
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="form-group col-6">
+                                <label class="form-label mt-4" for="explanation">Explanation:</label>
+                                <input class="form-control"
+                                        formControlName="explanation"
+                                        id="explanation"
+                                        name="explanation"
+                                        type="text">
+                            </div>
+                            <div class="form-group col-6">
+                                <label class="form-label mt-4" for="examples">Examples:</label>
+                                <input class="form-control"
+                                        formControlName="examples"
+                                        id="examples"
+                                        name="examples"
+                                        type="text">
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <h2 id="relations">Attributes</h2>
+                <fieldset>
+                    @for (attribute of entity.attributes; track attribute) {
+                        <div>
+                            {{ attribute.key }}
+                        </div>
+                    }
+                </fieldset>
+                
+                <h2 id="relations">Relations</h2>
+                <fieldset>
+                    @for (relation of entity.relations; track relation) {
+                        <div>
+                            {{ relation.key }}
+                        </div>
+                    }
+                </fieldset>
+                
+            </form>
+
+        </div>
     }
+
   </div>
 
 </div>
+
+<chronos-notifications></chronos-notifications>

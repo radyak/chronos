@@ -7,5 +7,6 @@ export interface EntityAO {
     explanation?: string;
     examples?: string;
     attributes?: Array<AttributeAO>;
+    defaultAttributes?: Array<AttributeAO>;
     relations?: Array<RelationAO>;
 }

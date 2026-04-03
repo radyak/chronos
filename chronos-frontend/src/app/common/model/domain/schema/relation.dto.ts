@@ -6,6 +6,7 @@ export interface RelationDTO {
     explanation: string;
     examples: string;
     attributes: Array<AttributeDTO>;
+    defaultAttributes: Array<AttributeDTO>;
     sourceEntityId: number;
     targetEntityId: number;
 }
