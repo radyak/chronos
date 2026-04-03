@@ -2,14 +2,12 @@ import {Component} from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCircleNodes, faDatabase } from '@fortawesome/free-solid-svg-icons';
-import { NotificationsComponent } from 'src/app/common/components/notifications/notifications.component';
 
 @Component({
     selector: 'chronos-admin',
     templateUrl: './admin.component.html',
     styleUrls: ['./admin.component.scss'],
     imports: [
-        NotificationsComponent,
         RouterModule,
         FontAwesomeModule
     ]
