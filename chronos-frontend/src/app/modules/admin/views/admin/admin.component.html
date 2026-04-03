@@ -1,53 +1,6 @@
 <div class="container">
 
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item active"><a [routerLink]="['/', 'admin']">Administration</a></li>
-  </ol>
+  <chronos-breadcrumbs></chronos-breadcrumbs>
 
-  <h1>Administration</h1>
-
-  <div class="container mt-4">
-    <div class="row d-flex align-items-stretch">
-      <div class="col-12 col-lg-4 d-flex">
-        <div class="card border-light mb-4 w-100">
-          <div class="card-body">
-            <h4 class="card-title">
-              <fa-icon [icon]="schemaIcon"></fa-icon>
-              Schema
-            </h4>
-            <div class="card-text">
-              Define schema of entities and relations between them.
-            </div>
-          </div>
-          <div class="card-footer">
-            &rarr;
-            <a [routerLink]="['schema']">
-              Manage Schema
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-12 col-lg-4 d-flex">
-        <div class="card border-light mb-4 w-100">
-          <div class="card-body">
-            <h4 class="card-title">
-              <fa-icon [icon]="dataIcon"></fa-icon>
-              Data
-            </h4>
-            <div class="card-text">
-              Manage historical data.
-            </div>
-          </div>
-          <div class="card-footer">
-            &rarr;
-            <a [routerLink]="['data', 'persons']">
-              Manage Data
-            </a>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div>
+  <router-outlet></router-outlet>
 </div>

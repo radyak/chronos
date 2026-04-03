@@ -1,0 +1,22 @@
+<!-- CUSTOM -->
+<!-- <ol class="breadcrumb">
+  <li class="breadcrumb-item"><a [routerLink]="['..', '..']">Administration</a></li>
+  <li class="breadcrumb-item"><a [routerLink]="['..',]">Schema</a></li>
+  <li class="breadcrumb-item active">{{ isNew() ? 'New Entity' : 'Entity: ' + entityResource.value()?.key }}</li>
+</ol> -->
+
+
+<!-- CLAUDE -->
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    @for (crumb of breadcrumbs$ | async; track crumb.url; let last = $last) {
+      <li class="breadcrumb-item" [class.active]="last">
+        @if (!last) {
+          <a [routerLink]="crumb.url">{{ crumb.label }}</a>
+        } @else {
+          {{ crumb.label }}
+        }
+      </li>
+    }
+  </ol>
+</nav>
