@@ -151,6 +151,12 @@ input[type=number] {
   background-color: variables.$gray-800;
 }
 
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
 // Footer
 footer {
   margin-top: 2rem;
