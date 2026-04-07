@@ -4,95 +4,156 @@
     isNew() ? "Create New Entity" : 'Edit "' + entityResource.value()?.key + '"'
   }}
 </h1>
-<!-- <p class="text-primary-emphasis small">
-        Some explanation here ...
-    </p> -->
+<p class="text-secondary-emphasis small">
+  Edit an existing schema entity and its attributes and relations to other entities.
+</p>
 
-<div class="row">
+<div class="admin-controls">
   <!-- <a href="#base-data">Base Data</a>
-    <a href="#attributes">Attributes</a>
-    <a href="#relations">Relations</a> -->
+  <a href="#attributes">Attributes</a>
+  <a href="#relations">Relations</a> -->
 
-  <div class="col admin-controls">
-    <button class="btn btn-outline-danger" (click)="cancel()">
-      <fa-icon [icon]="cancelIcon"></fa-icon>
-      Cancel
-    </button>
-    <button class="btn btn-outline-success" (click)="save()">
-      <fa-icon [icon]="saveIcon"></fa-icon>
-      Save
-    </button>
-  </div>
+  <button class="btn btn-outline-danger" (click)="cancel()">
+    <fa-icon [icon]="cancelIcon"></fa-icon>
+    Cancel
+  </button>
+  <button class="btn btn-outline-success" (click)="save()">
+    <fa-icon [icon]="saveIcon"></fa-icon>
+    Save
+  </button>
 </div>
 
-<div class="row">
-  @if (entityResource.isLoading()) {
-    <p>Loading...</p>
-  }
+@if (entityResource.isLoading()) {
+  <p>Loading...</p>
+}
 
-  @if (entityResource.error()) {
-    <p>Error loading data</p>
-  }
+@if (entityResource.error()) {
+  <p>Error loading data</p>
+}
 
-  @if (entityResource.value(); as entity) {
-    <form [formGroup]="form" (ngSubmit)="save()">
-      <h2 id="base-data">Base Data</h2>
-      <fieldset>
-        <div class="form-group">
-          <label class="form-label mt-4" for="key">Key:</label>
-          <input
-            class="form-control"
-            formControlName="key"
-            id="key"
-            name="key"
-            type="text"
-          />
-        </div>
-        <div class="form-group">
-          <div class="row">
-            <div class="form-group col-6">
-              <label class="form-label mt-4" for="explanation"
-                >Explanation:</label
-              >
-              <input
-                class="form-control"
-                formControlName="explanation"
-                id="explanation"
-                name="explanation"
-                type="text"
-              />
-            </div>
-            <div class="form-group col-6">
-              <label class="form-label mt-4" for="examples">Examples:</label>
-              <input
-                class="form-control"
-                formControlName="examples"
-                id="examples"
-                name="examples"
-                type="text"
-              />
-            </div>
+@if (entityResource.value(); as entity) {
+  <form [formGroup]="form">
+    <h2 id="base-data">Base Data</h2>
+    <fieldset>
+      <div class="form-group">
+        <label class="form-label mt-4" for="key">Key:</label>
+        <input
+          class="form-control"
+          formControlName="key"
+          id="key"
+          name="key"
+          type="text"
+        />
+        <!-- input: .is-invalid -->
+        <!-- <div class="invalid-feedback">
+          Please choose a username.
+        </div> -->
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <div class="form-group col-6">
+            <label class="form-label mt-4" for="explanation"
+              >Explanation:</label
+            >
+            <input
+              class="form-control"
+              formControlName="explanation"
+              id="explanation"
+              name="explanation"
+              type="text"
+            />
+          </div>
+          <div class="form-group col-6">
+            <label class="form-label mt-4" for="examples">Examples:</label>
+            <input
+              class="form-control"
+              formControlName="examples"
+              id="examples"
+              name="examples"
+              type="text"
+            />
           </div>
         </div>
-      </fieldset>
+      </div>
+    </fieldset>
 
-      <h2 id="relations">Attributes</h2>
-      <fieldset>
-        @for (attribute of entity.attributes; track attribute) {
-          <div>
-            {{ attribute.key }}
-          </div>
-        }
-      </fieldset>
+    <h2 id="attributes">Attributes</h2>
 
-      <h2 id="relations">Relations</h2>
-      <fieldset>
-        @for (relation of entity.relations; track relation) {
-          <div>
-            {{ relation.key }}
-          </div>
-        }
-      </fieldset>
-    </form>
-  }
-</div>
+    <div class="text-secondary-emphasis small">
+      Default attributes (gray) are always present and cannot be modified.
+    </div>
+
+    <div class="admin-controls">
+      <button class="btn btn-outline-success"
+              (click)="editNewAttribute()">
+              Add attribute
+      </button>
+    </div>
+
+    <div>
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th scope="col">Key</th>
+            <th scope="col">Type</th>
+            <th scope="col">Explanation</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (attribute of entity.attributes; track attribute.key) {
+            <tr class="pointer">
+              <td (click)="editAttribute(attribute)">
+                {{ attribute.key }}
+              </td>
+              <td (click)="editAttribute(attribute)">
+                {{ attribute.type }}
+              </td>
+              <td (click)="editAttribute(attribute)">
+                {{ attribute.explanation }}
+              </td>
+              <td class="actions">
+                <div class="btn-group">
+                  <button class="btn btn-sm btn-outline-success"
+                          (click)="editAttribute(attribute)">
+                    <fa-icon [icon]="editIcon"></fa-icon>
+                  </button>
+                  <button class="btn btn-sm btn-outline-danger"
+                          (click)="deleteAttribute(attribute)">
+                    <fa-icon [icon]="deleteIcon"></fa-icon>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+
+          @for (attribute of entity.defaultAttributes; track attribute.key) {
+            <tr class="pointer default-attr">
+              <td>
+                {{ attribute.key }}
+              </td>
+              <td>
+                {{ attribute.type }}
+              </td>
+              <td>
+                {{ attribute.explanation }}
+              </td>
+              <td class="actions"></td>
+            </tr>
+          }
+
+        </tbody>
+      </table>
+    </div>
+
+
+    <h2 id="relations">Relations</h2>
+    <fieldset>
+      @for (relation of entity.relations; track relation) {
+        <div>
+          {{ relation.key }}
+        </div>
+      }
+    </fieldset>
+  </form>
+}

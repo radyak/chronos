@@ -1,0 +1,70 @@
+<div class="modal-header">
+  <h4 class="modal-title" id="modal-basic-title">
+    Edit Attribute '{{ attribute()?.key }}'
+  </h4>
+  <button
+    type="button"
+    class="btn-close"
+    aria-label="Close"
+    (click)="cancel()"
+  ></button>
+</div>
+<div class="modal-body">
+  <form [formGroup]="form">
+    <div class="form-group">
+      <div class="row">
+        <div class="form-group">
+          <label class="form-label mt-4" for="key">Key:</label>
+          <input
+            class="form-control"
+            formControlName="key"
+            id="key"
+            name="key"
+            type="text"
+          />
+          <!-- input: .is-invalid -->
+          <!-- <div class="invalid-feedback">
+            Please choose a username.
+        </div> -->
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-6">
+          <label class="form-label mt-4" for="explanation">Explanation:</label>
+          <input
+            class="form-control"
+            formControlName="explanation"
+            id="explanation"
+            name="explanation"
+            type="text"
+          />
+        </div>
+        <div class="form-group col-6">
+          <label class="form-label mt-4" for="examples">Examples:</label>
+          <input
+            class="form-control"
+            formControlName="examples"
+            id="examples"
+            name="examples"
+            type="text"
+          />
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button
+    type="button"
+    class="btn btn-outline-danger"
+    (click)="cancel()">
+    Cancel
+  </button>
+  <button
+    type="button"
+    class="btn btn-outline-success"
+    (click)="confirm()">
+    Confirm
+  </button>
+</div>
