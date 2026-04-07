@@ -1,0 +1,16 @@
+@use '../../../../../../theme/variables';
+
+table {
+  width: 100%;
+  table-layout: auto;
+}
+
+table th:last-child,
+table td:last-child {
+  white-space: nowrap;
+  width: 1%;
+}
+
+tr.default-attr > td {
+    color: variables.$gray-600;
+}

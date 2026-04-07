@@ -1,23 +1,28 @@
-import { Component, computed, effect, inject } from '@angular/core';
+import { Component, computed, effect, inject, signal, WritableSignal } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { faSave, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faPen, faSave, faTrash, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { SchemaService } from 'src/app/modules/admin/services/schema.service';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { firstValueFrom, map } from 'rxjs';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AdminConfirmService } from 'src/app/modules/admin/services/admin-confirm.service';
 import { CREATE_ROUTE_KEYWORD } from 'src/app/modules/admin/admin.routes';
-import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormGroup, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NotificationService } from 'src/app/common/components/notifications/notification.service';
 import { EditEntityFormMapper } from './edit-entity-form.mapper';
+import { NgbAccordionModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { AttributeAO } from 'src/app/common/model/domain/schema/admin/attribute.ao';
+import { EditEntityAttributeDialogComponent } from './edit-entity-attribute-dialog/edit-entity-attribute-dialog.component';
+import { EntityAO } from 'src/app/common/model/domain/schema/admin/entity.ao';
 
 @Component({
   selector: 'chronos-edit-entity',
   imports: [
     RouterModule,
     FontAwesomeModule,
-    ReactiveFormsModule
-  ],
+    ReactiveFormsModule,
+    NgbAccordionModule
+],
   templateUrl: './edit-entity.component.html',
   styleUrl: './edit-entity.component.scss',
 })
@@ -30,10 +35,13 @@ export class EditEntityComponent {
   private schemaService = inject(SchemaService);
   private fb = inject(NonNullableFormBuilder);
   private notificationService = inject(NotificationService);
+  private modalService = inject(NgbModal);
 
   // Icons
   protected saveIcon = faSave;
   protected cancelIcon = faXmark;
+  protected editIcon = faPen;
+  protected deleteIcon = faTrash;
 
   // Derived Data Fields
   protected entityId = toSignal(
@@ -45,45 +53,82 @@ export class EditEntityComponent {
   );
   protected entityResource = this.schemaService.schemaEntityResource(this.entityId);
   protected isNew = computed(() => !this.entityResource.value()?.id);
-  protected form = this.fb.group(
-    {
-      key: [
-        '',
-        [
-          Validators.required,
-          Validators.minLength(3),
-          Validators.maxLength(64)
-        ],
-        // [this.usernameTakenValidator()]
-      ],
-      explanation: ['', 
-        [
-          Validators.minLength(3),
-          Validators.maxLength(255)
-        ]
-      ],
-      examples: ['', 
-        [
-          Validators.minLength(3),
-          Validators.maxLength(255)
-        ]
-      ]
-    },
-    // { validators: this.passwordMatchValidator }
-  );
 
+  // Form & controls
+  protected form!: FormGroup;
+  protected currentAttribute: WritableSignal<AttributeAO | undefined> = signal(undefined);
 
   // Init
   constructor() {
     effect(() => {
       const entity = this.entityResource.value();
-
-      if (entity) {
-        this.form.patchValue(entity); // partial safe update
+      if (!entity) {
+        return;
       }
+      this.form = this.fb.group(
+        {
+          key: [
+            '',
+            [
+              Validators.required,
+              Validators.minLength(3),
+              Validators.maxLength(64)
+            ],
+            // [this.usernameTakenValidator()]
+          ],
+          explanation: ['', 
+            [
+              Validators.minLength(3),
+              Validators.maxLength(255)
+            ]
+          ],
+          examples: ['', 
+            [
+              Validators.minLength(3),
+              Validators.maxLength(255)
+            ]
+          ],
+        },
+        // { validators: this.passwordMatchValidator }
+      );
+
+      this.form.patchValue(entity); // partial safe update
     });
   }
 
+  protected editAttribute(attr: AttributeAO): void {
+    const modalRef = this.modalService.open(EditEntityAttributeDialogComponent);
+    modalRef.componentInstance.attribute.set(attr);
+
+    modalRef.result.then(resultAttribute => {
+      if (!resultAttribute) {
+        return;
+      }
+      const entity = this.entityResource.value();
+      if (!entity) {
+        return;
+      }
+      entity.attributes = entity.attributes ?? [];
+      let index = entity?.attributes?.indexOf(attr);
+      if (index === -1) {
+        index = entity.attributes.length;
+      }
+      entity.attributes[index] = resultAttribute;
+    },
+    (err) => {
+      // Nothing to do
+    })
+
+    if (this.currentAttribute() == attr) {
+      this.currentAttribute.set(undefined);
+    } else {
+      this.currentAttribute.set(attr);
+    }
+  }
+
+  protected editNewAttribute(): void {
+    this.editAttribute({});
+  }
 
   // Methods
   protected save(): void {
@@ -110,7 +155,26 @@ export class EditEntityComponent {
         this.back()
       },
       () => {
-        console.debug('Editing cancelled')
+        // Nothing todo
+      }
+    )
+  }
+
+  protected deleteAttribute(attribute: AttributeAO): void {
+    this.adminConfirmService.confirm(
+      `Delete Attribute`,
+      `Do you want to delete attribute '${attribute.key}'?`
+    ).then(
+      () => {
+        const entity = this.entityResource.value();
+        let index = entity?.attributes?.indexOf(attribute);
+        if (index === undefined || index === -1) {
+          return;
+        }
+        entity?.attributes?.splice(index, 1);
+      },
+      () => {
+        // Nothing todo
       }
     )
   }

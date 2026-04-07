@@ -6,10 +6,11 @@
          (click)="toggle(t1)">
 </fa-icon>
 
-<div class="text-primary-emphasis small"
-     *ngIf="inline && active">
-  <ng-container [ngTemplateOutlet]="template"></ng-container>
-</div>
+@if (inline && active) {
+  <div class="text-secondary-emphasis small">
+    <ng-container [ngTemplateOutlet]="template"></ng-container>
+  </div>
+}
 
 <ng-template #template>
   <ng-content></ng-content>
