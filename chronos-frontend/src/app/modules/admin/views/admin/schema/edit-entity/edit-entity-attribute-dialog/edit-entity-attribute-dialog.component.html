@@ -30,6 +30,27 @@
       </div>
 
       <div class="row">
+        <div class="form-group">
+          <label class="form-label mt-4" for="key">Type:</label>
+          <select aria-label="Default select example"
+                  class="form-control"
+                  formControlName="type"
+                  id="type"
+                  name="type"
+                  type="type">
+            @for(type of types; track type) {
+              <option [selected]="attribute()?.type === type"
+                      [value]="type">{{ type }}</option>
+            }
+          </select>
+          <!-- input: .is-invalid -->
+          <!-- <div class="invalid-feedback">
+            Please choose a username.
+        </div> -->
+        </div>
+      </div>
+
+      <div class="row">
         <div class="form-group col-6">
           <label class="form-label mt-4" for="explanation">Explanation:</label>
           <input

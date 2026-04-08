@@ -7,13 +7,12 @@ import { firstValueFrom, map } from 'rxjs';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AdminConfirmService } from 'src/app/modules/admin/services/admin-confirm.service';
 import { CREATE_ROUTE_KEYWORD } from 'src/app/modules/admin/admin.routes';
-import { FormGroup, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NotificationService } from 'src/app/common/components/notifications/notification.service';
 import { EditEntityFormMapper } from './edit-entity-form.mapper';
 import { NgbAccordionModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AttributeAO } from 'src/app/common/model/domain/schema/admin/attribute.ao';
 import { EditEntityAttributeDialogComponent } from './edit-entity-attribute-dialog/edit-entity-attribute-dialog.component';
-import { EntityAO } from 'src/app/common/model/domain/schema/admin/entity.ao';
 
 @Component({
   selector: 'chronos-edit-entity',
@@ -33,7 +32,7 @@ export class EditEntityComponent {
   private router = inject(Router);
   private adminConfirmService = inject(AdminConfirmService);
   private schemaService = inject(SchemaService);
-  private fb = inject(NonNullableFormBuilder);
+  private fb = inject(FormBuilder);
   private notificationService = inject(NotificationService);
   private modalService = inject(NgbModal);
 
@@ -68,7 +67,7 @@ export class EditEntityComponent {
       this.form = this.fb.group(
         {
           key: [
-            '',
+            null,
             [
               Validators.required,
               Validators.minLength(3),
@@ -76,13 +75,15 @@ export class EditEntityComponent {
             ],
             // [this.usernameTakenValidator()]
           ],
-          explanation: ['', 
+          explanation: [
+            null, 
             [
               Validators.minLength(3),
               Validators.maxLength(255)
             ]
           ],
-          examples: ['', 
+          examples: [
+            null, 
             [
               Validators.minLength(3),
               Validators.maxLength(255)

@@ -113,16 +113,14 @@
                 {{ attribute.explanation }}
               </td>
               <td class="actions">
-                <div class="btn-group">
-                  <button class="btn btn-sm btn-outline-success"
-                          (click)="editAttribute(attribute)">
-                    <fa-icon [icon]="editIcon"></fa-icon>
-                  </button>
-                  <button class="btn btn-sm btn-outline-danger"
-                          (click)="deleteAttribute(attribute)">
-                    <fa-icon [icon]="deleteIcon"></fa-icon>
-                  </button>
-                </div>
+                <button class="btn btn-sm btn-link btn-outline-success"
+                        (click)="editAttribute(attribute)">
+                  <fa-icon [icon]="editIcon"></fa-icon>
+                </button>
+                <button class="btn btn-sm btn-link btn-outline-danger"
+                        (click)="deleteAttribute(attribute)">
+                  <fa-icon [icon]="deleteIcon"></fa-icon>
+                </button>
               </td>
             </tr>
           }

@@ -1,7 +1,8 @@
 import { Component, effect, inject, model, ModelSignal } from '@angular/core';
-import { FormGroup, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { AttributeAO } from 'src/app/common/model/domain/schema/admin/attribute.ao';
+import { AttributeTypeDTO } from 'src/app/common/model/domain/schema/attribute-type.dto';
 
 @Component({
   selector: 'chronos-edit-entity-attribute-dialog',
@@ -14,7 +15,7 @@ import { AttributeAO } from 'src/app/common/model/domain/schema/admin/attribute.
 export class EditEntityAttributeDialogComponent {
 
   // Dependencies
-  private fb = inject(NonNullableFormBuilder);
+  private fb = inject(FormBuilder);
   private activeModal = inject(NgbActiveModal);
 
   // Input
@@ -22,28 +23,40 @@ export class EditEntityAttributeDialogComponent {
 
   // Form & controls
   protected form!: FormGroup;
+  // type AttributeTypeKey = keyof typeof AttributeTypeDTO
+  protected types: AttributeTypeDTO[] = Object.values(AttributeTypeDTO)
+      .filter(t => typeof t !== "number")
+      .map(t => t as unknown as AttributeTypeDTO);
 
   // Init
   constructor() {
     this.form = this.fb.group({
       key: [
-        '',
+        null,
         [
           Validators.required,
           Validators.minLength(3),
           Validators.maxLength(64)
         ],
       ],
-      explanation: ['', 
+      explanation: [
+        null, 
         [
           Validators.minLength(3),
           Validators.maxLength(255)
         ]
       ],
-      examples: ['', 
+      examples: [
+        null, 
         [
           Validators.minLength(3),
           Validators.maxLength(255)
+        ]
+      ],
+      type: [
+        null, 
+        [
+          Validators.required
         ]
       ],
     });
