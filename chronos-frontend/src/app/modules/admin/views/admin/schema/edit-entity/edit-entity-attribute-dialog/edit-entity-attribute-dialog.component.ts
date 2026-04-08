@@ -31,32 +31,44 @@ export class EditEntityAttributeDialogComponent {
   // Init
   constructor() {
     this.form = this.fb.group({
-      key: [
-        null,
+      key: [null,
         [
           Validators.required,
           Validators.minLength(3),
           Validators.maxLength(64)
         ],
       ],
-      explanation: [
-        null, 
+      explanation: [null, 
         [
           Validators.minLength(3),
           Validators.maxLength(255)
         ]
       ],
-      examples: [
-        null, 
+      examples: [null, 
         [
           Validators.minLength(3),
           Validators.maxLength(255)
         ]
       ],
-      type: [
-        null, 
+      type: [null, 
         [
           Validators.required
+        ]
+      ],
+      isArray: [null],
+      isMandatory: [null],
+      valuePattern: [
+        null, 
+        [
+          Validators.minLength(3),
+          Validators.maxLength(255)
+        ]
+      ],
+      valueRange: [
+        null, 
+        [
+          Validators.minLength(3),
+          Validators.maxLength(255)
         ]
       ],
     });
