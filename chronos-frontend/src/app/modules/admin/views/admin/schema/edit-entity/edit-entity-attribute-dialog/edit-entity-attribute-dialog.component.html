@@ -1,6 +1,10 @@
 <div class="modal-header">
   <h4 class="modal-title" id="modal-basic-title">
-    Edit Attribute '{{ attribute()?.key }}'
+    @if (isNew()) {
+      Create Attribute
+    } @else {
+      Edit Attribute "{{ attribute()?.key }}"
+    }
   </h4>
   <button
     type="button"
@@ -21,11 +25,13 @@
             id="key"
             name="key"
             type="text"
+            [class.is-invalid]="isInvalid('key')"
           />
-          <!-- input: .is-invalid -->
-          <!-- <div class="invalid-feedback">
-            Please choose a username.
-        </div> -->
+          <div class="invalid-feedback">
+            @for (error of errors('key', 'Key'); track error) {
+              {{ error }}
+            }
+          </div>
         </div>
       </div>
 
@@ -37,16 +43,19 @@
                   formControlName="type"
                   id="type"
                   name="type"
-                  type="type">
+                  type="type"
+                  [class.is-invalid]="isInvalid('type')"
+                >
             @for(type of types; track type) {
               <option [selected]="attribute()?.type === type"
                       [value]="type">{{ type }}</option>
             }
           </select>
-          <!-- input: .is-invalid -->
-          <!-- <div class="invalid-feedback">
-            Please choose a username.
-        </div> -->
+          <div class="invalid-feedback">
+            @for (error of errors('type', 'Type'); track error) {
+              {{ error }}
+            }
+          </div>
         </div>
       </div>
 
@@ -59,7 +68,13 @@
             id="explanation"
             name="explanation"
             type="text"
+            [class.is-invalid]="isInvalid('explanation')"
           />
+          <div class="invalid-feedback">
+            @for (error of errors('explanation', 'Explanation'); track error) {
+              {{ error }}
+            }
+          </div>
         </div>
         <div class="form-group col-6">
           <label class="form-label mt-4" for="examples">Examples:</label>
@@ -69,7 +84,13 @@
             id="examples"
             name="examples"
             type="text"
+            [class.is-invalid]="isInvalid('examples')"
           />
+          <div class="invalid-feedback">
+            @for (error of errors('examples', 'Examples'); track error) {
+              {{ error }}
+            }
+          </div>
         </div>
       </div>
 
@@ -92,10 +113,6 @@
                    name="isMandatory">
             <label class="form-check-label" for="isMandatory">Is Mandatory?</label>
           </div>
-          <!-- input: .is-invalid -->
-          <!-- <div class="invalid-feedback">
-            Please choose a username.
-          </div> -->
         </div>
       </div>
 
@@ -108,7 +125,13 @@
             id="valuePattern"
             name="valuePattern"
             type="text"
+            [class.is-invalid]="isInvalid('valuePattern')"
           />
+          <div class="invalid-feedback">
+            @for (error of errors('valuePattern', 'Value Pattern'); track error) {
+              {{ error }}
+            }
+          </div>
         </div>
         <div class="form-group col-6">
           <label class="form-label mt-4" for="valueRange">Value Range:</label>
@@ -118,7 +141,42 @@
             id="valueRange"
             name="valueRange"
             type="text"
+            [class.is-invalid]="isInvalid('valueRange')"
           />
+          <div class="invalid-feedback">
+            @for (error of errors('valueRange', 'Value Range'); track error) {
+              {{ error }}
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-12">
+          <label class="form-label mt-4" for="valueRange">Allowed Values:</label>
+          @for (allowedValue of attribute()?.allowedValues; track allowedValue) {
+            <div class="attribute-allowed-value">
+              <button type="button"
+                      class="btn btn-sm btn-link btn-outline-danger"
+                      (click)="deleteAllowedValue(allowedValue)">
+                <fa-icon [icon]="deleteIcon"></fa-icon>
+              </button>
+              <div class="value">
+                {{ allowedValue }}
+              </div>
+            </div>
+          }
+
+          <div class="attribute-allowed-value new">
+            <button class="btn btn-sm btn-success"
+                    (click)="addAllowedValue()">
+              <fa-icon [icon]="addIcon"></fa-icon>
+            </button>
+            <input [(ngModel)]="newAllowedValue"
+                    [ngModelOptions]="{standalone: true}"
+                    autofocus
+                    (keyup.enter)="addAllowedValue(); false;">
+          </div>
         </div>
       </div>
 
@@ -135,7 +193,8 @@
   <button
     type="button"
     class="btn btn-outline-success"
-    (click)="confirm()">
+    (click)="confirm()"
+    [disabled]="!form.valid">
     Confirm
   </button>
 </div>
