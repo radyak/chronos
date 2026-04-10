@@ -134,7 +134,6 @@ export class EditEntityComponent {
   // Methods
   protected save(): void {
     const entity = EditEntityFormMapper.toAO(this.form.getRawValue(), this.entityResource.value());
-    console.log("Saving entity:", entity);
     firstValueFrom(this.schemaService.saveEntity(entity)).then(
       () => {
         this.notificationService.success(`Entity "${entity.key}" saved successfully`);
@@ -142,7 +141,6 @@ export class EditEntityComponent {
       },
       (err) => {
         this.notificationService.error(`Error while saving entity "${entity.key}"`);
-        console.log("Error saving", err)
       }
     );
   }
@@ -159,6 +157,33 @@ export class EditEntityComponent {
         // Nothing todo
       }
     )
+  }
+
+  protected delete(): void {
+    const entity = this.entityResource.value();
+    if (!entity) {
+      return;
+    }
+    this.adminConfirmService.confirm(
+      `Confirm Delete ${entity?.key}`,
+      `Do you want to delete schema entity ${entity?.key}?`
+    ).then(
+      () => {
+        firstValueFrom(this.schemaService.deleteEntity(entity)).then(
+          () => {
+            this.notificationService.success(`Entity "${entity.key}" deleted successfully`);
+            this.back();
+          },
+          (err) => {
+            this.notificationService.error(`Error while deleting entity "${entity.key}"`);
+          }
+        );
+      },
+      () => {
+        // Nothing todo
+      }
+    )
+    
   }
 
   protected deleteAttribute(attribute: AttributeAO): void {
