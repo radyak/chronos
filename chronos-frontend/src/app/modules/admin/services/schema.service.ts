@@ -45,4 +45,11 @@ export class SchemaService {
       return this.http.post<void>(`${this.adminApiUrl}`, entity).pipe(take(1));
     }
   }
+
+  public deleteEntity(entity: EntityAO): Observable<void> {
+    if (entity.key) {
+      return this.http.delete<void>(`${this.adminApiUrl}/${entity.key}`).pipe(take(1));
+    }
+    return of()
+  }
 }

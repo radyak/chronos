@@ -13,6 +13,12 @@
   <a href="#attributes">Attributes</a>
   <a href="#relations">Relations</a> -->
 
+  @if (!isNew()) {
+    <button class="btn btn-danger" (click)="delete()">
+      <fa-icon [icon]="deleteIcon"></fa-icon>
+      Delete
+    </button>
+  }
   <button class="btn btn-outline-danger" (click)="cancel()">
     <fa-icon [icon]="cancelIcon"></fa-icon>
     Cancel
