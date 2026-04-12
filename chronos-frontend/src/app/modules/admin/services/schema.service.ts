@@ -1,36 +1,39 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable, Resource, resource, ResourceRef, Signal, signal } from '@angular/core';
-import { firstValueFrom, map, Observable, of, take } from 'rxjs';
-import { EntityAO } from 'src/app/common/model/domain/schema/admin/entity.ao';
-import { EntityDTO } from 'src/app/common/model/domain/schema/entity.dto';
-import { EntityMapper } from 'src/app/common/model/domain/schema/mappers/entity.mapper';
+import { inject, Injectable, resource, ResourceRef, Signal } from '@angular/core';
+import { AdminConfirmService } from './admin-confirm.service';
+import { SchemaClient } from './schema.client';
 import { SchemaResponseDTO } from 'src/app/common/model/domain/schema/schema-response.dto';
+import { catchError, firstValueFrom, from, map, Observable, of, tap } from 'rxjs';
+import { EntityAO } from 'src/app/common/model/domain/schema/admin/entity.ao';
+import { EntityMapper } from 'src/app/common/model/domain/schema/mappers/entity.mapper';
+import { NotificationService } from 'src/app/common/components/notifications/notification.service';
+import { toObservable } from '@angular/core/rxjs-interop';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SchemaService {
-  private http = inject(HttpClient);
-  private apiUrl = '/api/schema';
-  private adminApiUrl = '/api/schema/admin/entities';
+  private schemaClient = inject(SchemaClient);
+  private confirmService = inject(AdminConfirmService);
+  private notificationService = inject(NotificationService);
   
-  
-  public schemaResource(/*reloadTrigger: Signal<unknown>*/): ResourceRef<SchemaResponseDTO | undefined> {
+  public schemaResource(reloadTrigger: Signal<number>): ResourceRef<SchemaResponseDTO | undefined> {
     return resource({
-      loader: (param) => {
-        return firstValueFrom(this.http.get<SchemaResponseDTO>(this.apiUrl));
+      params: () => reloadTrigger(),
+      loader: async (param) => {
+        return await firstValueFrom(this.schemaClient.getSchema());
       },
     });
   }
 
-  public schemaEntityResource(entityIdentifier: Signal<string>): ResourceRef<EntityAO | undefined> {
+  public schemaEntityResource(entityIdentifier: string): ResourceRef<EntityAO | undefined> {
     return resource({
       loader: async () => {
-        if (!entityIdentifier()) {
+        if (!entityIdentifier) {
           return firstValueFrom(of({}))
         }
         return await firstValueFrom(
-          this.http.get<SchemaResponseDTO>(`${this.apiUrl}/${entityIdentifier()}`).pipe(
+          this.schemaClient.getEntity(entityIdentifier).pipe(
             map(EntityMapper.fromSchemaResponseDTO)
           )
         );
@@ -39,17 +42,38 @@ export class SchemaService {
   }
 
   public saveEntity(entity: EntityAO): Observable<void> {
-    if (entity.id) {
-      return this.http.put<void>(`${this.adminApiUrl}/${entity.key}`, entity).pipe(take(1));
-    } else {
-      return this.http.post<void>(`${this.adminApiUrl}`, entity).pipe(take(1));
-    }
+    return this.schemaClient.saveEntity(entity).pipe(
+      catchError((err: any, caught: Observable<void>) => {
+        this.notificationService.error(`Error while saving entity "${entity.key}"`);
+        throw new Error("Entity not saved");
+      }),
+      tap(() => {
+        this.notificationService.success(`Entity "${entity.key}" saved successfully`);
+      })
+    );
   }
 
   public deleteEntity(entity: EntityAO): Observable<void> {
-    if (entity.key) {
-      return this.http.delete<void>(`${this.adminApiUrl}/${entity.key}`).pipe(take(1));
-    }
-    return of()
+    return from(
+      this.confirmService.confirm(
+        `Confirm Delete ${entity.key}`,
+        `Do you want to delete schema entity ${entity?.key}?`
+      ).then(
+        () => 
+          firstValueFrom(this.schemaClient.deleteEntity(entity)).then(
+            () => {
+              this.notificationService.success(`Entity "${entity.key}" deleted successfully`);
+            },
+            (err) => {
+              this.notificationService.error(`Error while deleting entity "${entity.key}"`);
+              throw new Error("Entitiy not deleted");
+            }
+          ),
+        () => {
+          // Nothing todo
+        }
+      )
+    );
   }
+
 }
