@@ -107,6 +107,9 @@ export class EditEntityComponent {
   protected editAttribute(attr: AttributeAO): void {
     const modalRef = this.modalService.open(EditEntityAttributeDialogComponent);
     modalRef.componentInstance.attribute.set(attr);
+    const takenAttributeNames = this.entityResource.value()?.attributes?.filter(a => a !== attr).map(a => a.key);
+    modalRef.componentInstance.attribute.set(attr);
+    modalRef.componentInstance.takenAttributeNames.set(takenAttributeNames);
 
     modalRef.result.then(resultAttribute => {
       if (!resultAttribute) {

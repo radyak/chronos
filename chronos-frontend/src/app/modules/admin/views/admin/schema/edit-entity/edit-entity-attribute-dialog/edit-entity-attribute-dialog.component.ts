@@ -1,11 +1,12 @@
 import { Component, computed, effect, inject, model, ModelSignal, signal, WritableSignal } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, NgModel, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { AttributeAO } from 'src/app/common/model/domain/schema/admin/attribute.ao';
 import { AttributeTypeDTO } from 'src/app/common/model/domain/schema/attribute-type.dto';
 import { FormService } from 'src/app/common/util/form.service';
+import { uniqueValidator } from 'src/app/common/util/unique-validator';
 
 @Component({
   selector: 'chronos-edit-entity-attribute-dialog',
@@ -24,8 +25,9 @@ export class EditEntityAttributeDialogComponent {
   private activeModal = inject(NgbActiveModal);
   private formService = inject(FormService);
 
-  // Input
+  // Inputs
   protected attribute: ModelSignal<AttributeAO | undefined> = model();
+  protected takenAttributeNames: ModelSignal<string[] | undefined> = model();
 
   // Icons
   protected deleteIcon = faTrash;
@@ -46,7 +48,8 @@ export class EditEntityAttributeDialogComponent {
         [
           Validators.required,
           Validators.minLength(3),
-          Validators.maxLength(64)
+          Validators.maxLength(64),
+          uniqueValidator(this.takenAttributeNames)
         ],
       ],
       explanation: [null, 
