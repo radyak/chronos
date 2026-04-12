@@ -10,6 +10,7 @@ export class FormService {
     required: (key: string) => `"${key}" is required`,
     minlength: (key: string, params: any) => `"${key}" must have at least ${params.requiredLength} characters`,
     maxlength: (key: string, params: any) => `"${key}" may have at most ${params.requiredLength} characters`,
+    notUnique: (key: string) => `"${key}" must be unique`,
   }
 
   public extractErrors(field: string, label: string, form: FormGroup): string[] {
