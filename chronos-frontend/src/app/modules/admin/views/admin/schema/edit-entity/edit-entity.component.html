@@ -23,7 +23,9 @@
     <fa-icon [icon]="cancelIcon"></fa-icon>
     Cancel
   </button>
-  <button class="btn btn-outline-success" (click)="save()">
+  <button class="btn btn-outline-success"
+          (click)="save()"
+          [disabled]="!form.valid">
     <fa-icon [icon]="saveIcon"></fa-icon>
     Save
   </button>
@@ -49,11 +51,13 @@
           id="key"
           name="key"
           type="text"
+          [class.is-invalid]="isInvalid('key')"
         />
-        <!-- input: .is-invalid -->
-        <!-- <div class="invalid-feedback">
-          Please choose a username.
-        </div> -->
+        <div class="invalid-feedback">
+          @for (error of errors('key', 'Key'); track error) {
+            {{ error }}
+          }
+        </div>
       </div>
       <div class="form-group">
         <div class="row">
@@ -67,7 +71,13 @@
               id="explanation"
               name="explanation"
               type="text"
+              [class.is-invalid]="isInvalid('explanation')"
             />
+            <div class="invalid-feedback">
+              @for (error of errors('explanation', 'Explanation'); track error) {
+                {{ error }}
+              }
+            </div>
           </div>
           <div class="form-group col-6">
             <label class="form-label mt-4" for="examples">Examples:</label>
@@ -77,7 +87,13 @@
               id="examples"
               name="examples"
               type="text"
+              [class.is-invalid]="isInvalid('examples')"
             />
+            <div class="invalid-feedback">
+              @for (error of errors('examples', 'Examples'); track error) {
+                {{ error }}
+              }
+            </div>
           </div>
         </div>
       </div>

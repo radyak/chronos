@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable, resource, ResourceRef, Signal } from '@angular/core';
+import { inject, Injectable, resource, ResourceRef, signal, Signal } from '@angular/core';
 import { AdminConfirmService } from './admin-confirm.service';
 import { SchemaClient } from './schema.client';
 import { SchemaResponseDTO } from 'src/app/common/model/domain/schema/schema-response.dto';
@@ -17,9 +17,9 @@ export class SchemaService {
   private confirmService = inject(AdminConfirmService);
   private notificationService = inject(NotificationService);
   
-  public schemaResource(reloadTrigger: Signal<number>): ResourceRef<SchemaResponseDTO | undefined> {
+  public schemaResource(reloadTrigger: Signal<number> = signal(0)): ResourceRef<SchemaResponseDTO | undefined> {
     return resource({
-      params: () => reloadTrigger(),
+      params: () => reloadTrigger?.(),
       loader: async (param) => {
         return await firstValueFrom(this.schemaClient.getSchema());
       },
