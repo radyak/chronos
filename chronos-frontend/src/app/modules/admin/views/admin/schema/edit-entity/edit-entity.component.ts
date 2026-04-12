@@ -5,9 +5,9 @@ import { firstValueFrom, map } from 'rxjs';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AdminConfirmService } from 'src/app/modules/admin/services/admin-confirm.service';
 import { CREATE_ROUTE_KEYWORD } from 'src/app/modules/admin/admin.routes';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, NgModel, ReactiveFormsModule, Validators } from '@angular/forms';
 import { EditEntityFormMapper } from './edit-entity-form.mapper';
-import { NgbAccordionModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAccordionModule, NgbDropdownModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AttributeAO } from 'src/app/common/model/domain/schema/admin/attribute.ao';
 import { EditEntityAttributeDialogComponent } from './edit-entity-attribute-dialog/edit-entity-attribute-dialog.component';
 import { SchemaService } from 'src/app/modules/admin/services/schema.service';
@@ -19,7 +19,9 @@ import { IconsService } from 'src/app/modules/admin/services/icons.service';
     RouterModule,
     FontAwesomeModule,
     ReactiveFormsModule,
-    NgbAccordionModule
+    NgbAccordionModule,
+    NgbDropdownModule,
+    FormsModule
 ],
   templateUrl: './edit-entity.component.html',
   styleUrl: './edit-entity.component.scss',
@@ -33,12 +35,18 @@ export class EditEntityComponent {
   private schemaService = inject(SchemaService);
   private fb = inject(FormBuilder);
   private modalService = inject(NgbModal);
+  private iconsService = inject(IconsService);
 
   // Icons
   protected saveIcon = IconsService.ICON_SAVE;
   protected cancelIcon = IconsService.ICON_CANCEL;
   protected editIcon = IconsService.ICON_EDIT;
   protected deleteIcon = IconsService.ICON_DELETE;
+  protected iconNames = computed(() => 
+    this.iconsService.iconNames.filter(icon => {
+      icon.toLowerCase().includes(this.iconSearch())
+    })
+  )
 
   // Derived Data Fields
   protected entityId = toSignal(
@@ -54,6 +62,7 @@ export class EditEntityComponent {
   // Form & controls
   protected form!: FormGroup;
   protected currentAttribute: WritableSignal<AttributeAO | undefined> = signal(undefined);
+  protected iconSearch = signal("");
 
   // Init
   constructor() {
@@ -169,26 +178,6 @@ export class EditEntityComponent {
         // Nothing todo
       }
     );
-    // this.adminConfirmService.confirm(
-    //   `Confirm Delete ${entity?.key}`,
-    //   `Do you want to delete schema entity ${entity?.key}?`
-    // ).then(
-    //   () => {
-    //     firstValueFrom(this.schemaService.deleteEntity(entity)).then(
-    //       () => {
-    //         this.notificationService.success(`Entity "${entity.key}" deleted successfully`);
-    //         this.back();
-    //       },
-    //       (err) => {
-    //         this.notificationService.error(`Error while deleting entity "${entity.key}"`);
-    //       }
-    //     );
-    //   },
-    //   () => {
-    //     // Nothing todo
-    //   }
-    // )
-    
   }
 
   protected deleteAttribute(attribute: AttributeAO): void {
@@ -212,6 +201,15 @@ export class EditEntityComponent {
 
   protected back(): void {
     this.router.navigate(['..'], { relativeTo: this.route })
+  }
+
+  protected selectIcon(icon: string): void {
+    const entity = this.entityResource.value();
+    if (!entity) {
+      return;
+    }
+    entity.icon = icon;
+    this.iconSearch.set("");
   }
 
 }

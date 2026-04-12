@@ -12,5 +12,12 @@ table td:last-child {
 }
 
 tr.default-attr > td {
-    color: variables.$gray-600;
+  color: variables.$gray-600;
+}
+
+input.search {
+  border: 0;
+  width: 100%;
+  background-color: rgba(255,255,255,0.05);
+  padding: 10px
 }

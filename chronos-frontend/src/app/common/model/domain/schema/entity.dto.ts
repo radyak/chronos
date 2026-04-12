@@ -5,5 +5,6 @@ export interface EntityDTO {
     key?: string;
     explanation?: string;
     examples?: string;
+    icon?: string;
     attributes?: Array<AttributeDTO>;
 }

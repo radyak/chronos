@@ -3,6 +3,8 @@ table {
   table-layout: auto;
 }
 
+table th:first-child,
+table td:first-child,
 table th:last-child,
 table td:last-child {
   white-space: nowrap;
