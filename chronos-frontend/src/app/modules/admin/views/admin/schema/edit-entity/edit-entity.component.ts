@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, signal, WritableSignal } from '@angular/core';
+import { Component, computed, effect, inject, Signal, signal, WritableSignal } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { firstValueFrom, map } from 'rxjs';
@@ -12,6 +12,8 @@ import { AttributeAO } from 'src/app/common/model/domain/schema/admin/attribute.
 import { EditEntityAttributeDialogComponent } from './edit-entity-attribute-dialog/edit-entity-attribute-dialog.component';
 import { SchemaService } from 'src/app/modules/admin/services/schema.service';
 import { IconsService } from 'src/app/modules/admin/services/icons.service';
+import { uniqueValidator } from 'src/app/common/util/unique-validator';
+import { FormService } from 'src/app/common/util/form.service';
 
 @Component({
   selector: 'chronos-edit-entity',
@@ -36,6 +38,7 @@ export class EditEntityComponent {
   private fb = inject(FormBuilder);
   private modalService = inject(NgbModal);
   private iconsService = inject(IconsService);
+  private formService = inject(FormService);
 
   // Icons
   protected saveIcon = IconsService.ICON_SAVE;
@@ -57,12 +60,22 @@ export class EditEntityComponent {
     { initialValue: null }
   );
   protected entityResource = this.schemaService.schemaEntityResource(this.entityId());
+  protected schemaResource = this.schemaService.schemaResource();
+  protected takenEntityNames: Signal<(string)[]> = computed(() => {
+    const entity = this.entityResource.value();
+    console.log('Compare', entity);
+    return this.schemaResource.value()?.entities.elements
+          .filter(el => !!el && el !== entity && el.id !== entity?.id && el.key)
+          .map(el => el.key as string)
+           ?? []
+  });
   protected isNew = computed(() => !this.entityResource.value()?.id);
 
   // Form & controls
   protected form!: FormGroup;
   protected currentAttribute: WritableSignal<AttributeAO | undefined> = signal(undefined);
   protected iconSearch = signal("");
+  protected submitted = false;
 
   // Init
   constructor() {
@@ -73,31 +86,27 @@ export class EditEntityComponent {
       }
       this.form = this.fb.group(
         {
-          key: [
-            null,
+          key: [null,
             [
               Validators.required,
               Validators.minLength(3),
-              Validators.maxLength(64)
+              Validators.maxLength(64),
+              uniqueValidator(this.takenEntityNames)
             ],
-            // [this.usernameTakenValidator()]
           ],
-          explanation: [
-            null, 
+          explanation: [null, 
             [
               Validators.minLength(3),
               Validators.maxLength(255)
             ]
           ],
-          examples: [
-            null, 
+          examples: [null, 
             [
               Validators.minLength(3),
               Validators.maxLength(255)
             ]
           ],
         },
-        // { validators: this.passwordMatchValidator }
       );
 
       this.form.patchValue(entity); // partial safe update
@@ -143,6 +152,7 @@ export class EditEntityComponent {
 
   // Methods
   protected save(): void {
+    this.submitted = true;
     const entity = EditEntityFormMapper.toAO(this.form.getRawValue(), this.entityResource.value());
     firstValueFrom(this.schemaService.saveEntity(entity)).then(
       () => {
@@ -213,6 +223,15 @@ export class EditEntityComponent {
     }
     entity.icon = icon;
     this.iconSearch.set("");
+  }
+
+  protected isInvalid(field: string): boolean {
+    const ctrl = this.form.get(field);
+    return !!(ctrl?.invalid && (this.submitted || ctrl?.touched));
+  }
+
+  protected errors(field: string, label: string): string[] {
+    return this.formService.extractErrors(field, label, this.form);
   }
 
 }
