@@ -24,16 +24,27 @@
       <tr>
         <th scope="col">Key</th>
         <th scope="col">Explanation</th>
+        <th scope="col"></th>
       </tr>
     </thead>
     <tbody>
       @for (entity of entities; track entity.id) {
-        <tr class="pointer" (click)="editEntity(entity)">
-          <td>
+        <tr class="pointer">
+          <td (click)="editEntity(entity)">
             {{ entity.key }}
           </td>
-          <td>
+          <td (click)="editEntity(entity)">
             {{ entity.explanation }}
+          </td>
+          <td class="actions">
+            <button class="btn btn-sm btn-link btn-outline-success"
+                    (click)="editEntity(entity)">
+              <fa-icon [icon]="editIcon"></fa-icon>
+            </button>
+            <button class="btn btn-sm btn-link btn-outline-danger"
+                    (click)="deleteEntity(entity)">
+              <fa-icon [icon]="deleteIcon"></fa-icon>
+            </button>
           </td>
         </tr>
       }

@@ -1,10 +1,11 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { SchemaService } from '../../../services/schema.service';
 import { EntityDTO } from 'src/app/common/model/domain/schema/entity.dto';
 import { CREATE_ROUTE_KEYWORD } from '../../../admin.routes';
+import { SchemaService } from '../../../services/schema.service';
+import { IconsService } from '../../../services/icons.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'chronos-schema',
@@ -16,11 +17,16 @@ import { CREATE_ROUTE_KEYWORD } from '../../../admin.routes';
   styleUrl: './schema.component.scss',
 })
 export class SchemaComponent{
-  protected schema = inject(SchemaService).schemaResource();
+  protected schemaService = inject(SchemaService);
   protected router = inject(Router);
   protected route = inject(ActivatedRoute);
 
-  protected newIcon = faPlus;
+  protected reloadTrigger = signal(0);
+  protected schema = this.schemaService.schemaResource(this.reloadTrigger);
+
+  protected newIcon = IconsService.ICON_ADD;
+  protected editIcon = IconsService.ICON_EDIT;
+  protected deleteIcon = IconsService.ICON_DELETE;
 
   protected newEntity(): void {
     this.router.navigate([CREATE_ROUTE_KEYWORD], { relativeTo: this.route });
@@ -28,6 +34,14 @@ export class SchemaComponent{
 
   protected editEntity(entity: EntityDTO): void {
     this.router.navigate([entity.key], { relativeTo: this.route });
+  }
+
+  protected deleteEntity(entity: EntityDTO): void {
+    firstValueFrom(this.schemaService.deleteEntity(entity)).then(
+      () => {
+        this.reloadTrigger.update(v => v + 1);
+      }
+    );
   }
 
 }

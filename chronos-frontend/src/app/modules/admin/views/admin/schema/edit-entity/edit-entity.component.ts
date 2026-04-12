@@ -1,18 +1,17 @@
 import { Component, computed, effect, inject, signal, WritableSignal } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { faPen, faSave, faTrash, faXmark } from '@fortawesome/free-solid-svg-icons';
-import { SchemaService } from 'src/app/modules/admin/services/schema.service';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { firstValueFrom, map } from 'rxjs';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AdminConfirmService } from 'src/app/modules/admin/services/admin-confirm.service';
 import { CREATE_ROUTE_KEYWORD } from 'src/app/modules/admin/admin.routes';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { NotificationService } from 'src/app/common/components/notifications/notification.service';
 import { EditEntityFormMapper } from './edit-entity-form.mapper';
 import { NgbAccordionModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AttributeAO } from 'src/app/common/model/domain/schema/admin/attribute.ao';
 import { EditEntityAttributeDialogComponent } from './edit-entity-attribute-dialog/edit-entity-attribute-dialog.component';
+import { SchemaService } from 'src/app/modules/admin/services/schema.service';
+import { IconsService } from 'src/app/modules/admin/services/icons.service';
 
 @Component({
   selector: 'chronos-edit-entity',
@@ -33,14 +32,13 @@ export class EditEntityComponent {
   private adminConfirmService = inject(AdminConfirmService);
   private schemaService = inject(SchemaService);
   private fb = inject(FormBuilder);
-  private notificationService = inject(NotificationService);
   private modalService = inject(NgbModal);
 
   // Icons
-  protected saveIcon = faSave;
-  protected cancelIcon = faXmark;
-  protected editIcon = faPen;
-  protected deleteIcon = faTrash;
+  protected saveIcon = IconsService.ICON_SAVE;
+  protected cancelIcon = IconsService.ICON_CANCEL;
+  protected editIcon = IconsService.ICON_EDIT;
+  protected deleteIcon = IconsService.ICON_DELETE;
 
   // Derived Data Fields
   protected entityId = toSignal(
@@ -50,7 +48,7 @@ export class EditEntityComponent {
     ),
     { initialValue: null }
   );
-  protected entityResource = this.schemaService.schemaEntityResource(this.entityId);
+  protected entityResource = this.schemaService.schemaEntityResource(this.entityId());
   protected isNew = computed(() => !this.entityResource.value()?.id);
 
   // Form & controls
@@ -136,11 +134,10 @@ export class EditEntityComponent {
     const entity = EditEntityFormMapper.toAO(this.form.getRawValue(), this.entityResource.value());
     firstValueFrom(this.schemaService.saveEntity(entity)).then(
       () => {
-        this.notificationService.success(`Entity "${entity.key}" saved successfully`);
         this.back();
       },
       (err) => {
-        this.notificationService.error(`Error while saving entity "${entity.key}"`);
+        // Nothing todo
       }
     );
   }
@@ -164,25 +161,33 @@ export class EditEntityComponent {
     if (!entity) {
       return;
     }
-    this.adminConfirmService.confirm(
-      `Confirm Delete ${entity?.key}`,
-      `Do you want to delete schema entity ${entity?.key}?`
-    ).then(
+    firstValueFrom(this.schemaService.deleteEntity(entity)).then(
       () => {
-        firstValueFrom(this.schemaService.deleteEntity(entity)).then(
-          () => {
-            this.notificationService.success(`Entity "${entity.key}" deleted successfully`);
-            this.back();
-          },
-          (err) => {
-            this.notificationService.error(`Error while deleting entity "${entity.key}"`);
-          }
-        );
+        this.back();
       },
-      () => {
+      (err) => {
         // Nothing todo
       }
-    )
+    );
+    // this.adminConfirmService.confirm(
+    //   `Confirm Delete ${entity?.key}`,
+    //   `Do you want to delete schema entity ${entity?.key}?`
+    // ).then(
+    //   () => {
+    //     firstValueFrom(this.schemaService.deleteEntity(entity)).then(
+    //       () => {
+    //         this.notificationService.success(`Entity "${entity.key}" deleted successfully`);
+    //         this.back();
+    //       },
+    //       (err) => {
+    //         this.notificationService.error(`Error while deleting entity "${entity.key}"`);
+    //       }
+    //     );
+    //   },
+    //   () => {
+    //     // Nothing todo
+    //   }
+    // )
     
   }
 
