@@ -13,6 +13,7 @@ public class Entity {
     String key;
     String explanation;
     String examples;
+    String icon;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     List<Attribute> attributes = new ArrayList<>();
 }

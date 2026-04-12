@@ -26,6 +26,7 @@ public class ModelMapper {
         dto.setKey(entityPO.getKey());
         dto.setExamples(entityPO.getExamples());
         dto.setExplanation(entityPO.getExplanation());
+        dto.setIcon(entityPO.getIcon());
         dto.setAttributes(entityPO.getAttributes().stream().map(this::toDto).toList());
         return dto;
     }

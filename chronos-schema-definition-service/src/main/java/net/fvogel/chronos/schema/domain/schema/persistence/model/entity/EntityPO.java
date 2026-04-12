@@ -36,6 +36,8 @@ public class EntityPO {
     @Size(min = 3, max = 255, message = I18nConstants.Errors.INVALID_LENGTH)
     String examples;
 
+    String icon;
+
     @OneToMany
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "entity_id")
