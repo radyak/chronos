@@ -13,7 +13,10 @@ export class FormService {
     notUnique: (key: string) => `"${key}" must be unique`,
   }
 
-  public extractErrors(field: string, label: string, form: FormGroup): string[] {
+  public extractErrors(field: string, label: string, form?: FormGroup): string[] {
+    if (!form) {
+      return [];
+    }
     const errors = form.get(field)?.errors;
     if (!errors) {
       return [];

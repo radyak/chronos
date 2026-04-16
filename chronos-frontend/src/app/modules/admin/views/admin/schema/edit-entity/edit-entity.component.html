@@ -25,7 +25,7 @@
   </button>
   <button class="btn btn-outline-success"
           (click)="save()"
-          [disabled]="!form.valid">
+          [disabled]="!form?.valid">
     <fa-icon [icon]="saveIcon"></fa-icon>
     Save
   </button>
@@ -39,7 +39,7 @@
   <p>Error loading data</p>
 }
 
-@if (entityResource.value(); as entity) {
+@if (form && entityResource.value(); as entity) {
   <form [formGroup]="form">
     <h2 id="base-data">Base Data</h2>
     <fieldset>
@@ -117,12 +117,14 @@
                        placeholder="Type to filter ..."
                        [(ngModel)]="iconSearch"
                        [ngModelOptions]="{standalone: true}">
-                @for (icon of iconNames(); track icon) {
-                  <button ngbDropdownItem (click)="selectIcon(icon)">
-                    <fa-icon [icon]="icon"></fa-icon>
-                    ({{ icon }})
-                  </button>
-                }
+                <div class="dropdown-options">
+                  @for (icon of iconNames(); track icon) {
+                    <button ngbDropdownItem (click)="selectIcon(icon)">
+                      <fa-icon [icon]="icon"></fa-icon>
+                      ({{ icon }})
+                    </button>
+                  }
+                </div>
               </div>
             </div>
 
