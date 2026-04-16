@@ -14,6 +14,7 @@ import { SchemaService } from 'src/app/modules/admin/services/schema.service';
 import { IconsService } from 'src/app/modules/admin/services/icons.service';
 import { uniqueValidator } from 'src/app/common/util/unique-validator';
 import { FormService } from 'src/app/common/util/form.service';
+import { AdminIconsService } from 'src/app/modules/admin/services/admin-icons.service';
 
 @Component({
   selector: 'chronos-edit-entity',
@@ -37,7 +38,7 @@ export class EditEntityComponent {
   private schemaService = inject(SchemaService);
   private fb = inject(FormBuilder);
   private modalService = inject(NgbModal);
-  private iconsService = inject(IconsService);
+  private adminIconsService = inject(AdminIconsService);
   private formService = inject(FormService);
 
   // Icons
@@ -47,7 +48,7 @@ export class EditEntityComponent {
   protected deleteIcon = IconsService.ICON_DELETE;
   protected iconNames = computed(() => {
     const search = this.iconSearch().toLocaleLowerCase();
-    return this.iconsService.iconNames.filter(icon =>
+    return this.adminIconsService.iconNames.filter(icon =>
       icon.toLowerCase().includes(search)
     )
   });
