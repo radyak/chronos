@@ -18,17 +18,25 @@ export class IconsService {
   public static readonly ICON_EDIT = faPen;
   public static readonly ICON_DELETE = faTrash;
   
-  // icon names
-  // Enumerate in html with:
-  // @for(icon of iconNames; track icon) {
-  //   <fa-icon [icon]="icon"></fa-icon>
-  // }
-  public readonly iconNames: string[] = [];
+  /** 
+   * Icon names
+   * Can be enumerated in html:
+   * @example:
+   * ```
+   * @for(icon of iconNames; track icon) {
+   *   <fa-icon [icon]="icon"></fa-icon>
+   * }
+   * ```
+   */
+  public get iconNames(): string[] {
+    if (!this._iconNames) {
+      this.faLib.addIconPacks(fas);
+      this._iconNames = Object.keys((this.faLib as any).definitions.fas);
+    }
+    return this._iconNames ?? [];
+  };
+  private _iconNames?: string[];
   
   constructor() {
-    this.faLib.addIconPacks(fas);
-
-    // library.add(fas);
-    this.iconNames = Object.keys((this.faLib as any).definitions.fas);
   }
 }
