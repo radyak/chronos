@@ -45,11 +45,12 @@ export class EditEntityComponent {
   protected cancelIcon = IconsService.ICON_CANCEL;
   protected editIcon = IconsService.ICON_EDIT;
   protected deleteIcon = IconsService.ICON_DELETE;
-  protected iconNames = computed(() => 
-    this.iconsService.iconNames.filter(icon => {
-      icon.toLowerCase().includes(this.iconSearch())
-    })
-  )
+  protected iconNames = computed(() => {
+    const search = this.iconSearch().toLocaleLowerCase();
+    return this.iconsService.iconNames.filter(icon =>
+      icon.toLowerCase().includes(search)
+    )
+  });
 
   // Derived Data Fields
   protected entityId = toSignal(
@@ -63,7 +64,6 @@ export class EditEntityComponent {
   protected schemaResource = this.schemaService.schemaResource();
   protected takenEntityNames: Signal<(string)[]> = computed(() => {
     const entity = this.entityResource.value();
-    console.log('Compare', entity);
     return this.schemaResource.value()?.entities.elements
           .filter(el => !!el && el !== entity && el.id !== entity?.id && el.key)
           .map(el => el.key as string)
@@ -72,7 +72,7 @@ export class EditEntityComponent {
   protected isNew = computed(() => !this.entityResource.value()?.id);
 
   // Form & controls
-  protected form!: FormGroup;
+  protected form?: FormGroup;
   protected currentAttribute: WritableSignal<AttributeAO | undefined> = signal(undefined);
   protected iconSearch = signal("");
   protected submitted = false;
@@ -153,7 +153,7 @@ export class EditEntityComponent {
   // Methods
   protected save(): void {
     this.submitted = true;
-    const entity = EditEntityFormMapper.toAO(this.form.getRawValue(), this.entityResource.value());
+    const entity = EditEntityFormMapper.toAO(this.form?.getRawValue(), this.entityResource.value());
     firstValueFrom(this.schemaService.saveEntity(entity)).then(
       () => {
         this.back();
@@ -226,7 +226,7 @@ export class EditEntityComponent {
   }
 
   protected isInvalid(field: string): boolean {
-    const ctrl = this.form.get(field);
+    const ctrl = this.form?.get(field);
     return !!(ctrl?.invalid && (this.submitted || ctrl?.touched));
   }
 
