@@ -141,73 +141,115 @@
 
     <div class="admin-controls">
       <button class="btn btn-outline-success"
-              (click)="editNewAttribute()">
+              (click)="addNewAttribute()">
               Add attribute
       </button>
     </div>
 
-    <div>
-      <table class="table table-hover">
-        <thead>
-          <tr>
-            <th scope="col">Key</th>
-            <th scope="col">Type</th>
-            <th scope="col">Explanation</th>
-            <th></th>
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th scope="col">Key</th>
+          <th scope="col">Type</th>
+          <th scope="col">Explanation</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (attribute of entity.attributes; track attribute.key) {
+          <tr class="pointer">
+            <td (click)="editAttribute(attribute)">
+              {{ attribute.key }}
+            </td>
+            <td (click)="editAttribute(attribute)">
+              {{ attribute.type }}
+            </td>
+            <td (click)="editAttribute(attribute)">
+              {{ attribute.explanation }}
+            </td>
+            <td class="actions">
+              <button class="btn btn-sm btn-link btn-outline-success"
+                      (click)="editAttribute(attribute)">
+                <fa-icon [icon]="editIcon"></fa-icon>
+              </button>
+              <button class="btn btn-sm btn-link btn-outline-danger"
+                      (click)="deleteAttribute(attribute)">
+                <fa-icon [icon]="deleteIcon"></fa-icon>
+              </button>
+            </td>
           </tr>
-        </thead>
-        <tbody>
-          @for (attribute of entity.attributes; track attribute.key) {
-            <tr class="pointer">
-              <td (click)="editAttribute(attribute)">
-                {{ attribute.key }}
-              </td>
-              <td (click)="editAttribute(attribute)">
-                {{ attribute.type }}
-              </td>
-              <td (click)="editAttribute(attribute)">
-                {{ attribute.explanation }}
-              </td>
-              <td class="actions">
-                <button class="btn btn-sm btn-link btn-outline-success"
-                        (click)="editAttribute(attribute)">
-                  <fa-icon [icon]="editIcon"></fa-icon>
-                </button>
-                <button class="btn btn-sm btn-link btn-outline-danger"
-                        (click)="deleteAttribute(attribute)">
-                  <fa-icon [icon]="deleteIcon"></fa-icon>
-                </button>
-              </td>
-            </tr>
-          }
+        }
 
-          @for (attribute of entity.defaultAttributes; track attribute.key) {
-            <tr class="pointer default-attr">
-              <td>
-                {{ attribute.key }}
-              </td>
-              <td>
-                {{ attribute.type }}
-              </td>
-              <td>
-                {{ attribute.explanation }}
-              </td>
-              <td class="actions"></td>
-            </tr>
-          }
+        @for (attribute of entity.defaultAttributes; track attribute.key) {
+          <tr class="pointer default-attr">
+            <td>
+              {{ attribute.key }}
+            </td>
+            <td>
+              {{ attribute.type }}
+            </td>
+            <td>
+              {{ attribute.explanation }}
+            </td>
+            <td class="actions"></td>
+          </tr>
+        }
 
-        </tbody>
-      </table>
-    </div>
+      </tbody>
+    </table>
 
 
     <h2 id="relations">Relations</h2>
-    <fieldset>
+    <!-- <fieldset>
       @for (relation of entity.relations; track relation) {
         <div>
           {{ relation.key }}
         </div>
       }
-    </fieldset>
+    </fieldset> -->
+
+    <div class="admin-controls">
+      <button class="btn btn-outline-success"
+              (click)="addNewRelation()">
+              Add relation
+      </button>
+    </div>
+
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th scope="col">Key</th>
+          <th scope="col">Target</th>
+          <th scope="col">Explanation</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (relation of entity.relations; track relation.key) {
+          <tr class="pointer">
+            <td (click)="editRelation(relation)">
+              {{ relation.key }}
+            </td>
+            <td (click)="editRelation(relation)">
+              {{ relation.target?.key }}
+            </td>
+            <td (click)="editRelation(relation)">
+              {{ relation.explanation }}
+            </td>
+            <td class="actions">
+              <button class="btn btn-sm btn-link btn-outline-success"
+                      (click)="editRelation(relation)">
+                <fa-icon [icon]="editIcon"></fa-icon>
+              </button>
+              <button class="btn btn-sm btn-link btn-outline-danger"
+                      (click)="deleteRelation(relation)">
+                <fa-icon [icon]="deleteIcon"></fa-icon>
+              </button>
+            </td>
+          </tr>
+        }
+
+      </tbody>
+    </table>
   </form>
 }
