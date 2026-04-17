@@ -15,6 +15,7 @@ import { IconsService } from 'src/app/modules/admin/services/icons.service';
 import { uniqueValidator } from 'src/app/common/util/unique-validator';
 import { FormService } from 'src/app/common/util/form.service';
 import { AdminIconsService } from 'src/app/modules/admin/services/admin-icons.service';
+import { RelationAO } from 'src/app/common/model/domain/schema/admin/relation.ao';
 
 @Component({
   selector: 'chronos-edit-entity',
@@ -147,8 +148,16 @@ export class EditEntityComponent {
     }
   }
 
-  protected editNewAttribute(): void {
+  protected addNewAttribute(): void {
     this.editAttribute({});
+  }
+
+  protected editRelation(rel: RelationAO): void {
+    
+  }
+
+  protected addNewRelation(): void {
+    this.editRelation({});
   }
 
   // Methods
@@ -206,6 +215,25 @@ export class EditEntityComponent {
           return;
         }
         entity?.attributes?.splice(index, 1);
+      },
+      () => {
+        // Nothing todo
+      }
+    )
+  }
+
+  protected deleteRelation(relation: RelationAO): void {
+    this.adminConfirmService.confirm(
+      `Delete Relation`,
+      `Do you want to delete relation '${relation.key} (-> ${relation.target?.key})'?`
+    ).then(
+      () => {
+        const entity = this.entityResource.value();
+        let index = entity?.relations?.indexOf(relation);
+        if (index === undefined || index === -1) {
+          return;
+        }
+        entity?.relations?.splice(index, 1);
       },
       () => {
         // Nothing todo
