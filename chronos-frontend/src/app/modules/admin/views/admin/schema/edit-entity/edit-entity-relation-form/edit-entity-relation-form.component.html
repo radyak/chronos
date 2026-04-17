@@ -1,0 +1,86 @@
+<div class="container">
+  <div class="offcanvas-header">
+    <h3 class="offcanvas-title">
+      Edit Relation {{ relation?.key }} &rarr; {{ relation?.target?.key }}
+    </h3>
+  </div>
+  <div class="offcanvas-body">
+    <form [formGroup]="form">
+      <h2 id="base-data">Base Data</h2>
+      <fieldset>
+        <div class="form-group">
+          <label class="form-label mt-4" for="key">Key:</label>
+          <input
+            class="form-control"
+            formControlName="key"
+            id="key"
+            name="key"
+            type="text"
+            [class.is-invalid]="isInvalid('key')"
+          />
+          <div class="invalid-feedback">
+            @for (error of errors("key", "Key"); track error) {
+              {{ error }}
+            }
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="form-group col-6">
+              <label class="form-label mt-4" for="explanation"
+                >Explanation:</label
+              >
+              <input
+                class="form-control"
+                formControlName="explanation"
+                id="explanation"
+                name="explanation"
+                type="text"
+                [class.is-invalid]="isInvalid('explanation')"
+              />
+              <div class="invalid-feedback">
+                @for (
+                  error of errors("explanation", "Explanation");
+                  track error
+                ) {
+                  {{ error }}
+                }
+              </div>
+            </div>
+            <div class="form-group col-6">
+              <label class="form-label mt-4" for="examples">Examples:</label>
+              <input
+                class="form-control"
+                formControlName="examples"
+                id="examples"
+                name="examples"
+                type="text"
+                [class.is-invalid]="isInvalid('examples')"
+              />
+              <div class="invalid-feedback">
+                @for (error of errors("examples", "Examples"); track error) {
+                  {{ error }}
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+
+  <div class="offcanvas-footer">
+    <button class="btn btn-outline-danger" (click)="cancel()">
+      <fa-icon [icon]="cancelIcon"></fa-icon>
+      Cancel
+    </button>
+    <button
+      class="btn btn-outline-success"
+      (click)="confirm()"
+      [disabled]="!form.valid"
+    >
+      <fa-icon [icon]="saveIcon"></fa-icon>
+      Save
+    </button>
+  </div>
+</div>

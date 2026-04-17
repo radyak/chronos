@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, Signal, signal, WritableSignal } from '@angular/core';
+import { Component, computed, effect, inject, Signal, signal, TemplateRef, WritableSignal } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { firstValueFrom, map } from 'rxjs';
@@ -7,7 +7,7 @@ import { AdminConfirmService } from 'src/app/modules/admin/services/admin-confir
 import { CREATE_ROUTE_KEYWORD } from 'src/app/modules/admin/admin.routes';
 import { FormBuilder, FormGroup, FormsModule, NgModel, ReactiveFormsModule, Validators } from '@angular/forms';
 import { EditEntityFormMapper } from './edit-entity-form.mapper';
-import { NgbAccordionModule, NgbDropdownModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAccordionModule, NgbDropdownModule, NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { AttributeAO } from 'src/app/common/model/domain/schema/admin/attribute.ao';
 import { EditEntityAttributeDialogComponent } from './edit-entity-attribute-dialog/edit-entity-attribute-dialog.component';
 import { SchemaService } from 'src/app/modules/admin/services/schema.service';
@@ -16,6 +16,7 @@ import { uniqueValidator } from 'src/app/common/util/unique-validator';
 import { FormService } from 'src/app/common/util/form.service';
 import { AdminIconsService } from 'src/app/modules/admin/services/admin-icons.service';
 import { RelationAO } from 'src/app/common/model/domain/schema/admin/relation.ao';
+import { EditEntityRelationFormComponent } from './edit-entity-relation-form/edit-entity-relation-form.component';
 
 @Component({
   selector: 'chronos-edit-entity',
@@ -41,6 +42,7 @@ export class EditEntityComponent {
   private modalService = inject(NgbModal);
   private adminIconsService = inject(AdminIconsService);
   private formService = inject(FormService);
+	private offcanvasService = inject(NgbOffcanvas);
 
   // Icons
   protected saveIcon = IconsService.ICON_SAVE;
@@ -153,7 +155,30 @@ export class EditEntityComponent {
   }
 
   protected editRelation(rel: RelationAO): void {
-    
+		const offcanvasRef = this.offcanvasService.open(EditEntityRelationFormComponent, {
+      position: 'bottom',
+      backdrop: 'static'
+    });
+		offcanvasRef.componentInstance.relation = rel;
+
+    offcanvasRef.result.then(resultRelation => {
+      if (!resultRelation) {
+        return;
+      }
+      const entity = this.entityResource.value();
+      if (!entity) {
+        return;
+      }
+      entity.relations = entity.relations ?? [];
+      let index = entity?.relations?.indexOf(rel);
+      if (index === -1) {
+        index = entity.relations.length;
+      }
+      entity.relations[index] = resultRelation;
+    },
+    (err) => {
+      // Nothing to do
+    })
   }
 
   protected addNewRelation(): void {
