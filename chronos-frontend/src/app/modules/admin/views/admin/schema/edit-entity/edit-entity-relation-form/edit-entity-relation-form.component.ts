@@ -1,11 +1,14 @@
 import { Component, effect, inject, Input, model, ModelSignal, OnInit, WritableSignal } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { NgbActiveOffcanvas } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveOffcanvas, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { AttributeAO } from 'src/app/common/model/domain/schema/admin/attribute.ao';
 import { RelationAO } from 'src/app/common/model/domain/schema/admin/relation.ao';
 import { FormService } from 'src/app/common/util/form.service';
 import { uniqueValidator } from 'src/app/common/util/unique-validator';
 import { IconsService } from 'src/app/modules/admin/services/icons.service';
+import { EditEntityAttributeDialogComponent } from '../edit-entity-attribute-dialog/edit-entity-attribute-dialog.component';
+import { AdminConfirmService } from 'src/app/modules/admin/services/admin-confirm.service';
 
 @Component({
   selector: 'chronos-edit-entity-relation-form',
@@ -21,6 +24,8 @@ export class EditEntityRelationFormComponent {
 	protected offcanvas = inject(NgbActiveOffcanvas);
   private fb = inject(FormBuilder);
   private formService = inject(FormService);
+  private modalService = inject(NgbModal);
+  private adminConfirmService = inject(AdminConfirmService);
 
   // Inputs
   protected relation: ModelSignal<RelationAO> = model({});
@@ -76,14 +81,63 @@ export class EditEntityRelationFormComponent {
     return this.formService.extractErrors(field, label, this.form);
   }
 
-  protected confirm() {
+  protected confirm(): void {
     this.submitted = true;
-    const relation = this.form?.getRawValue();
+    const relation: RelationAO = {
+      ...this.relation(),
+      ...this.form?.getRawValue(),      
+    };
     this.offcanvas.close(relation);
   }
 
-  protected cancel() {
+  protected cancel(): void {
     this.offcanvas.dismiss();
+  }
+
+  protected addNewAttribute(): void {
+    this.editAttribute({});
+  }
+
+  protected editAttribute(attr: AttributeAO): void {
+    const modalRef = this.modalService.open(EditEntityAttributeDialogComponent);
+    modalRef.componentInstance.attribute.set(attr);
+    const takenAttributeNames = this.relation()?.attributes?.filter(a => a !== attr).map(a => a.key);
+    modalRef.componentInstance.takenAttributeNames.set(takenAttributeNames);
+
+    modalRef.result.then(resultAttribute => {
+      if (!resultAttribute) {
+        return;
+      }
+      const relation = this.relation();
+      relation.attributes = relation.attributes ?? [];
+      let index = relation?.attributes?.indexOf(attr);
+      if (index === -1) {
+        index = relation.attributes.length;
+      }
+      relation.attributes[index] = resultAttribute;
+    },
+    (err) => {
+      // Nothing to do
+    })
+  }
+
+  protected deleteAttribute(attribute: AttributeAO): void {
+    this.adminConfirmService.confirm(
+      `Delete Attribute`,
+      `Do you want to delete attribute '${attribute.key}'?`
+    ).then(
+      () => {
+        const relation = this.relation();
+        let index = relation?.attributes?.indexOf(attribute);
+        if (index === undefined || index === -1) {
+          return;
+        }
+        relation?.attributes?.splice(index, 1);
+      },
+      () => {
+        // Nothing todo
+      }
+    )
   }
 
 }
