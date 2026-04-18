@@ -121,7 +121,6 @@ export class EditEntityComponent {
     const modalRef = this.modalService.open(EditEntityAttributeDialogComponent);
     modalRef.componentInstance.attribute.set(attr);
     const takenAttributeNames = this.entityResource.value()?.attributes?.filter(a => a !== attr).map(a => a.key);
-    modalRef.componentInstance.attribute.set(attr);
     modalRef.componentInstance.takenAttributeNames.set(takenAttributeNames);
 
     modalRef.result.then(resultAttribute => {
@@ -159,7 +158,9 @@ export class EditEntityComponent {
       position: 'bottom',
       backdrop: 'static'
     });
-		offcanvasRef.componentInstance.relation = rel;
+    const takenKeys = this.entityResource.value()?.relations?.filter(a => a !== rel).map(a => a.key);
+		offcanvasRef.componentInstance.relation.set(rel);
+		offcanvasRef.componentInstance.takenKeys.set(takenKeys);
 
     offcanvasRef.result.then(resultRelation => {
       if (!resultRelation) {

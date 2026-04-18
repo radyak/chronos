@@ -1,10 +1,10 @@
-import { Component, inject, Input, OnInit, WritableSignal } from '@angular/core';
+import { Component, effect, inject, Input, model, ModelSignal, OnInit, WritableSignal } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbActiveOffcanvas } from '@ng-bootstrap/ng-bootstrap';
-import { AttributeAO } from 'src/app/common/model/domain/schema/admin/attribute.ao';
 import { RelationAO } from 'src/app/common/model/domain/schema/admin/relation.ao';
 import { FormService } from 'src/app/common/util/form.service';
+import { uniqueValidator } from 'src/app/common/util/unique-validator';
 import { IconsService } from 'src/app/modules/admin/services/icons.service';
 
 @Component({
@@ -17,13 +17,14 @@ import { IconsService } from 'src/app/modules/admin/services/icons.service';
   templateUrl: './edit-entity-relation-form.component.html',
   styleUrl: './edit-entity-relation-form.component.scss',
 })
-export class EditEntityRelationFormComponent  implements OnInit {
+export class EditEntityRelationFormComponent {
 	protected offcanvas = inject(NgbActiveOffcanvas);
   private fb = inject(FormBuilder);
   private formService = inject(FormService);
 
   // Inputs
-  @Input() relation!: RelationAO;
+  protected relation: ModelSignal<RelationAO> = model({});
+  protected takenKeys: ModelSignal<string[]> = model([] as string[]);
 
   // Icons
   protected saveIcon = IconsService.ICON_SAVE;
@@ -40,7 +41,7 @@ export class EditEntityRelationFormComponent  implements OnInit {
           Validators.required,
           Validators.minLength(3),
           Validators.maxLength(64),
-          // uniqueValidator(this.takenEntityNames)
+          uniqueValidator(this.takenKeys)
         ],
       ],
       explanation: [null, 
@@ -59,8 +60,10 @@ export class EditEntityRelationFormComponent  implements OnInit {
   );
 
   // Init
-  ngOnInit() {
-    this.form.patchValue(this.relation); // partial safe update
+  constructor() {
+    effect(() => {
+      this.form.patchValue(this.relation()); // partial safe update
+    });
   }
 
   // Methods
