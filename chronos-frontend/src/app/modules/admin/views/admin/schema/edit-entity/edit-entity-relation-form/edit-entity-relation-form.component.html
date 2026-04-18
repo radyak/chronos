@@ -1,12 +1,12 @@
 <div class="container">
   <div class="offcanvas-header">
-    <h3 class="offcanvas-title">
+    <h2 class="offcanvas-title">
       Edit Relation {{ relation().key }} &rarr; {{ relation().target?.key }}
-    </h3>
+    </h2>
   </div>
   <div class="offcanvas-body">
     <form [formGroup]="form">
-      <h2 id="base-data">Base Data</h2>
+      <h3 id="base-data">Base Data</h3>
       <fieldset>
         <div class="form-group">
           <label class="form-label mt-4" for="key">Key:</label>
@@ -66,6 +66,72 @@
           </div>
         </div>
       </fieldset>
+
+      <h3 id="attributes">Attributes</h3>
+
+      <div class="text-secondary-emphasis small">
+        Default attributes (gray) are always present and cannot be modified.
+      </div>
+
+      <div class="admin-controls">
+        <button class="btn btn-outline-success"
+                (click)="addNewAttribute()">
+                Add attribute
+        </button>
+      </div>
+
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th scope="col">Key</th>
+            <th scope="col">Type</th>
+            <th scope="col">Explanation</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (attribute of relation().attributes; track attribute.key) {
+            <tr class="pointer">
+              <td (click)="editAttribute(attribute)">
+                {{ attribute.key }}
+              </td>
+              <td (click)="editAttribute(attribute)">
+                {{ attribute.type }}
+              </td>
+              <td (click)="editAttribute(attribute)">
+                {{ attribute.explanation }}
+              </td>
+              <td class="actions">
+                <button class="btn btn-sm btn-link btn-outline-success"
+                        (click)="editAttribute(attribute)">
+                  <fa-icon [icon]="editIcon"></fa-icon>
+                </button>
+                <button class="btn btn-sm btn-link btn-outline-danger"
+                        (click)="deleteAttribute(attribute)">
+                  <fa-icon [icon]="deleteIcon"></fa-icon>
+                </button>
+              </td>
+            </tr>
+          }
+
+          @for (attribute of relation().defaultAttributes; track attribute.key) {
+            <tr class="pointer default-attr">
+              <td>
+                {{ attribute.key }}
+              </td>
+              <td>
+                {{ attribute.type }}
+              </td>
+              <td>
+                {{ attribute.explanation }}
+              </td>
+              <td class="actions"></td>
+            </tr>
+          }
+
+        </tbody>
+      </table>
+
     </form>
   </div>
 
