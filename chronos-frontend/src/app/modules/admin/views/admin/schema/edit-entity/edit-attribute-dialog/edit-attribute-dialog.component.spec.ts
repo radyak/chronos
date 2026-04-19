@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EditEntityAttributeDialogComponent } from './edit-entity-attribute-dialog.component';
+import { EditAttributeDialogComponent } from './edit-attribute-dialog.component';
 
 describe('EditEntityAttributeDialogComponent', () => {
-  let component: EditEntityAttributeDialogComponent;
-  let fixture: ComponentFixture<EditEntityAttributeDialogComponent>;
+  let component: EditAttributeDialogComponent;
+  let fixture: ComponentFixture<EditAttributeDialogComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [EditEntityAttributeDialogComponent]
+      imports: [EditAttributeDialogComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(EditEntityAttributeDialogComponent);
+    fixture = TestBed.createComponent(EditAttributeDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

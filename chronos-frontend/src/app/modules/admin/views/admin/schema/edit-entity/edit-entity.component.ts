@@ -9,14 +9,14 @@ import { FormBuilder, FormGroup, FormsModule, NgModel, ReactiveFormsModule, Vali
 import { EditEntityFormMapper } from './edit-entity-form.mapper';
 import { NgbAccordionModule, NgbDropdownModule, NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { AttributeAO } from 'src/app/common/model/domain/schema/admin/attribute.ao';
-import { EditEntityAttributeDialogComponent } from './edit-entity-attribute-dialog/edit-entity-attribute-dialog.component';
+import { EditAttributeDialogComponent } from './edit-attribute-dialog/edit-attribute-dialog.component';
 import { SchemaService } from 'src/app/modules/admin/services/schema.service';
 import { IconsService } from 'src/app/modules/admin/services/icons.service';
 import { uniqueValidator } from 'src/app/common/util/unique-validator';
 import { FormService } from 'src/app/common/util/form.service';
 import { AdminIconsService } from 'src/app/modules/admin/services/admin-icons.service';
 import { RelationAO } from 'src/app/common/model/domain/schema/admin/relation.ao';
-import { EditEntityRelationFormComponent } from './edit-entity-relation-form/edit-entity-relation-form.component';
+import { EditRelationOffcanvasComponent } from './edit-relation-offcanvas/edit-relation-offcanvas.component';
 
 @Component({
   selector: 'chronos-edit-entity',
@@ -118,7 +118,7 @@ export class EditEntityComponent {
   }
 
   protected editAttribute(attr: AttributeAO): void {
-    const modalRef = this.modalService.open(EditEntityAttributeDialogComponent);
+    const modalRef = this.modalService.open(EditAttributeDialogComponent);
     modalRef.componentInstance.attribute.set(attr);
     const takenAttributeNames = this.entityResource.value()?.attributes?.filter(a => a !== attr).map(a => a.key);
     modalRef.componentInstance.takenAttributeNames.set(takenAttributeNames);
@@ -154,7 +154,7 @@ export class EditEntityComponent {
   }
 
   protected editRelation(rel: RelationAO): void {
-		const offcanvasRef = this.offcanvasService.open(EditEntityRelationFormComponent, {
+		const offcanvasRef = this.offcanvasService.open(EditRelationOffcanvasComponent, {
       position: 'bottom',
       backdrop: 'static'
     });

@@ -9,16 +9,16 @@ import { FormService } from 'src/app/common/util/form.service';
 import { uniqueValidator } from 'src/app/common/util/unique-validator';
 
 @Component({
-  selector: 'chronos-edit-entity-attribute-dialog',
+  selector: 'chronos-edit-attribute-dialog',
   imports: [
     ReactiveFormsModule,
     FontAwesomeModule,
     FormsModule
   ],
-  templateUrl: './edit-entity-attribute-dialog.component.html',
-  styleUrl: './edit-entity-attribute-dialog.component.scss',
+  templateUrl: './edit-attribute-dialog.component.html',
+  styleUrl: './edit-attribute-dialog.component.scss',
 })
-export class EditEntityAttributeDialogComponent {
+export class EditAttributeDialogComponent {
 
   // Dependencies
   private fb = inject(FormBuilder);
