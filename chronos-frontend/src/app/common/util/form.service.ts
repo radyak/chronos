@@ -11,6 +11,7 @@ export class FormService {
     minlength: (key: string, params: any) => `"${key}" must have at least ${params.requiredLength} characters`,
     maxlength: (key: string, params: any) => `"${key}" may have at most ${params.requiredLength} characters`,
     notUnique: (key: string) => `"${key}" must be unique`,
+    pattern: (key: string, params: any) => `"${key}" has an invalid format`,
   }
 
   public extractErrors(field: string, label: string, form?: FormGroup): string[] {

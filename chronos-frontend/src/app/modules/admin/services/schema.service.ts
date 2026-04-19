@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, resource, ResourceRef, signal, Signal } from '@angular/core';
 import { AdminConfirmService } from './admin-confirm.service';
 import { SchemaClient } from './schema.client';
@@ -7,7 +6,6 @@ import { catchError, firstValueFrom, from, map, Observable, of, tap } from 'rxjs
 import { EntityAO } from 'src/app/common/model/domain/schema/admin/entity.ao';
 import { EntityMapper } from 'src/app/common/model/domain/schema/mappers/entity.mapper';
 import { NotificationService } from 'src/app/common/components/notifications/notification.service';
-import { toObservable } from '@angular/core/rxjs-interop';
 
 @Injectable({
   providedIn: 'root',
@@ -17,11 +15,13 @@ export class SchemaService {
   private confirmService = inject(AdminConfirmService);
   private notificationService = inject(NotificationService);
   
-  public schemaResource(reloadTrigger: Signal<number> = signal(0)): ResourceRef<SchemaResponseDTO | undefined> {
+  public allEntities(reloadTrigger: Signal<number> = signal(0)): ResourceRef<EntityAO[] | undefined> {
     return resource({
       params: () => reloadTrigger?.(),
       loader: async (param) => {
-        return await firstValueFrom(this.schemaClient.getSchema());
+        const schemaDto = await firstValueFrom(this.schemaClient.getSchema());
+        return (schemaDto.entities.elements ?? [])
+          .map(entity => EntityMapper.dtoToAo(entity, schemaDto))
       },
     });
   }
