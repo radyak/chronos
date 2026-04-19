@@ -11,12 +11,13 @@ import { NgbAccordionModule, NgbDropdownModule, NgbModal, NgbOffcanvas } from '@
 import { AttributeAO } from 'src/app/common/model/domain/schema/admin/attribute.ao';
 import { EditAttributeDialogComponent } from './edit-attribute-dialog/edit-attribute-dialog.component';
 import { SchemaService } from 'src/app/modules/admin/services/schema.service';
-import { IconsService } from 'src/app/modules/admin/services/icons.service';
+import { IconsService } from 'src/app/modules/admin/services/icons.config';
 import { uniqueValidator } from 'src/app/common/util/unique-validator';
 import { FormService } from 'src/app/common/util/form.service';
 import { AdminIconsService } from 'src/app/modules/admin/services/admin-icons.service';
 import { RelationAO } from 'src/app/common/model/domain/schema/admin/relation.ao';
 import { EditRelationOffcanvasComponent } from './edit-relation-offcanvas/edit-relation-offcanvas.component';
+import { EntityAO } from 'src/app/common/model/domain/schema/admin/entity.ao';
 
 @Component({
   selector: 'chronos-edit-entity',
@@ -65,13 +66,16 @@ export class EditEntityComponent {
     { initialValue: null }
   );
   protected entityResource = this.schemaService.schemaEntityResource(this.entityId());
-  protected schemaResource = this.schemaService.schemaResource();
-  protected takenEntityNames: Signal<(string)[]> = computed(() => {
+  protected allEntities = this.schemaService.allEntities();
+  protected takenEntityNames: Signal<string[]> = computed(() => {
     const entity = this.entityResource.value();
-    return this.schemaResource.value()?.entities.elements
+    return (this.allEntities.value() ?? [])
           .filter(el => !!el && el !== entity && el.id !== entity?.id && el.key)
           .map(el => el.key as string)
            ?? []
+  });
+  protected existingEntites: Signal<EntityAO[]> = computed(() => {
+    return this.allEntities.value() ?? []
   });
   protected isNew = computed(() => !this.entityResource.value()?.id);
 
@@ -161,6 +165,7 @@ export class EditEntityComponent {
     const takenKeys = this.entityResource.value()?.relations?.filter(a => a !== rel).map(a => a.key);
 		offcanvasRef.componentInstance.relation.set(rel);
 		offcanvasRef.componentInstance.takenKeys.set(takenKeys);
+		offcanvasRef.componentInstance.selectableEntities.set(this.existingEntites());
 
     offcanvasRef.result.then(resultRelation => {
       if (!resultRelation) {

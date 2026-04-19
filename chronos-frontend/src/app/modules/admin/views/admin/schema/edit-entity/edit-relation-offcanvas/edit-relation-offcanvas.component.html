@@ -6,6 +6,7 @@
   </div>
   <div class="offcanvas-body">
     <form [formGroup]="form">
+
       <h3 id="base-data">Base Data</h3>
       <fieldset>
         <div class="form-group">
@@ -16,6 +17,7 @@
             id="key"
             name="key"
             type="text"
+            pattern="[A-Z_]*"
             [class.is-invalid]="isInvalid('key')"
           />
           <div class="invalid-feedback">
@@ -66,6 +68,47 @@
           </div>
         </div>
       </fieldset>
+
+      <h3 id="target">Target</h3>
+
+      <div class="form-group">
+        <div class="row">
+          <div class="form-group col-6">
+            <label class="form-label mt-4" for="icon">Target:</label>
+            
+            <div ngbDropdown>
+              <button type="button" id="icon" class="form-control btn btn-outline-secondary" ngbDropdownToggle>
+                @if (relation().target) {
+                  @if (relation().target?.icon) {
+                      <fa-icon [icon]="relation().target?.icon"></fa-icon>
+                  }
+                  {{ relation().target?.key }}
+                } @else {
+                  (no target selected)
+                }
+              </button>
+              <div ngbDropdownMenu aria-labelledby="icon">
+                <input class="search"
+                       autofocus
+                       placeholder="Type to filter ..."
+                       [(ngModel)]="targetEntitySearch"
+                       [ngModelOptions]="{standalone: true}">
+                <div class="dropdown-options">
+                  @for (target of filteredTargetEntities(); track target) {
+                    <button ngbDropdownItem (click)="selectTarget(target)">
+                      @if (target.icon) {
+                          <fa-icon [icon]="target.icon"></fa-icon>
+                      }
+                      {{ target.key }}
+                    </button>
+                  }
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
 
       <h3 id="attributes">Attributes</h3>
 
