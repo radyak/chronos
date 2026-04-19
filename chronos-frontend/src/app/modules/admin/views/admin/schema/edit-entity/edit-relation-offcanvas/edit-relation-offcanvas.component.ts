@@ -7,20 +7,21 @@ import { RelationAO } from 'src/app/common/model/domain/schema/admin/relation.ao
 import { FormService } from 'src/app/common/util/form.service';
 import { uniqueValidator } from 'src/app/common/util/unique-validator';
 import { IconsService } from 'src/app/modules/admin/services/icons.service';
-import { EditEntityAttributeDialogComponent } from '../edit-entity-attribute-dialog/edit-entity-attribute-dialog.component';
+import { EditAttributeDialogComponent } from '../edit-attribute-dialog/edit-attribute-dialog.component';
 import { AdminConfirmService } from 'src/app/modules/admin/services/admin-confirm.service';
 
 @Component({
-  selector: 'chronos-edit-entity-relation-form',
+  selector: 'chronos-edit-relation-offcanvas',
   imports: [
     FontAwesomeModule,
     ReactiveFormsModule,
     FormsModule
   ],
-  templateUrl: './edit-entity-relation-form.component.html',
-  styleUrl: './edit-entity-relation-form.component.scss',
+  templateUrl: './edit-relation-offcanvas.component.html',
+  styleUrl: './edit-relation-offcanvas.component.scss',
 })
-export class EditEntityRelationFormComponent {
+export class EditRelationOffcanvasComponent {
+  // Dependencies
 	protected offcanvas = inject(NgbActiveOffcanvas);
   private fb = inject(FormBuilder);
   private formService = inject(FormService);
@@ -99,7 +100,7 @@ export class EditEntityRelationFormComponent {
   }
 
   protected editAttribute(attr: AttributeAO): void {
-    const modalRef = this.modalService.open(EditEntityAttributeDialogComponent);
+    const modalRef = this.modalService.open(EditAttributeDialogComponent);
     modalRef.componentInstance.attribute.set(attr);
     const takenAttributeNames = this.relation()?.attributes?.filter(a => a !== attr).map(a => a.key);
     modalRef.componentInstance.takenAttributeNames.set(takenAttributeNames);

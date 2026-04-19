@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EditEntityRelationFormComponent } from './edit-entity-relation-form.component';
+import { EditRelationOffcanvasComponent } from './edit-relation-offcanvas.component';
 
 describe('EditEntityRelationFormComponent', () => {
-  let component: EditEntityRelationFormComponent;
-  let fixture: ComponentFixture<EditEntityRelationFormComponent>;
+  let component: EditRelationOffcanvasComponent;
+  let fixture: ComponentFixture<EditRelationOffcanvasComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [EditEntityRelationFormComponent]
+      imports: [EditRelationOffcanvasComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(EditEntityRelationFormComponent);
+    fixture = TestBed.createComponent(EditRelationOffcanvasComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
