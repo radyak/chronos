@@ -14,10 +14,10 @@ import { SchemaService } from 'src/app/modules/admin/services/schema.service';
 import { IconsService } from 'src/app/modules/admin/services/icons.config';
 import { uniqueValidator } from 'src/app/common/util/unique-validator';
 import { FormService } from 'src/app/common/util/form.service';
-import { AdminIconsService } from 'src/app/modules/admin/services/admin-icons.service';
 import { RelationAO } from 'src/app/common/model/domain/schema/admin/relation.ao';
 import { EditRelationOffcanvasComponent } from './edit-relation-offcanvas/edit-relation-offcanvas.component';
 import { EntityAO } from 'src/app/common/model/domain/schema/admin/entity.ao';
+import { IconSelectComponent } from "./icon-select/icon-select.component";
 
 @Component({
   selector: 'chronos-edit-entity',
@@ -27,7 +27,8 @@ import { EntityAO } from 'src/app/common/model/domain/schema/admin/entity.ao';
     ReactiveFormsModule,
     NgbAccordionModule,
     NgbDropdownModule,
-    FormsModule
+    FormsModule,
+    IconSelectComponent
 ],
   templateUrl: './edit-entity.component.html',
   styleUrl: './edit-entity.component.scss',
@@ -41,7 +42,6 @@ export class EditEntityComponent {
   private schemaService = inject(SchemaService);
   private fb = inject(FormBuilder);
   private modalService = inject(NgbModal);
-  private adminIconsService = inject(AdminIconsService);
   private formService = inject(FormService);
 	private offcanvasService = inject(NgbOffcanvas);
 
@@ -50,12 +50,6 @@ export class EditEntityComponent {
   protected cancelIcon = IconsService.ICON_CANCEL;
   protected editIcon = IconsService.ICON_EDIT;
   protected deleteIcon = IconsService.ICON_DELETE;
-  protected iconNames = computed(() => {
-    const search = this.iconSearch().toLocaleLowerCase();
-    return this.adminIconsService.iconNames.filter(icon =>
-      icon.toLowerCase().includes(search)
-    )
-  });
 
   // Derived Data Fields
   protected entityId = toSignal(
@@ -82,7 +76,6 @@ export class EditEntityComponent {
   // Form & controls
   protected form?: FormGroup;
   protected currentAttribute: WritableSignal<AttributeAO | undefined> = signal(undefined);
-  protected iconSearch = signal("");
   protected submitted = false;
 
   // Init
@@ -112,6 +105,11 @@ export class EditEntityComponent {
             [
               Validators.minLength(3),
               Validators.maxLength(255)
+            ]
+          ],
+          icon: [null, 
+            [
+              Validators.required
             ]
           ],
         },
@@ -274,15 +272,6 @@ export class EditEntityComponent {
 
   protected back(): void {
     this.router.navigate(['..'], { relativeTo: this.route })
-  }
-
-  protected selectIcon(icon: string): void {
-    const entity = this.entityResource.value();
-    if (!entity) {
-      return;
-    }
-    entity.icon = icon;
-    this.iconSearch.set("");
   }
 
   protected isInvalid(field: string): boolean {

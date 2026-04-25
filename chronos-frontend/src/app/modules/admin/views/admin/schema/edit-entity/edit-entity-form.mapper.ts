@@ -6,7 +6,8 @@ export class EditEntityFormMapper {
             ...original,
             key: formData.key,
             examples: formData.examples,
-            explanation: formData.explanation
+            explanation: formData.explanation,
+            icon: formData.icon
         };
     }
 }
