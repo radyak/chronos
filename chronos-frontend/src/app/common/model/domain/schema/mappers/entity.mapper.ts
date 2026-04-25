@@ -31,4 +31,11 @@ export class EntityMapper {
         return ao;
     }
 
+    public static onlyDefaults(schemaPartial: SchemaResponseDTO): EntityAO {
+        const ao: EntityAO = {
+            defaultAttributes: schemaPartial.entities.defaultAttributes?.map(AttributeMapper.dtoToAo),
+        };
+        return ao;
+    }
+
 }

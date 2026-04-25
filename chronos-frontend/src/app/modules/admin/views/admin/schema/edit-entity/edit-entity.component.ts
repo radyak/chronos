@@ -179,7 +179,9 @@ export class EditEntityComponent {
   }
 
   protected addNewRelation(): void {
-    this.editRelation({});
+    this.editRelation({
+      defaultAttributes: this.schemaService.defaultRelationAttributes()
+    });
   }
 
   // Methods

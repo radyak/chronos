@@ -1,24 +1,33 @@
-import { inject, Injectable, resource, ResourceRef, signal, Signal } from '@angular/core';
+import { computed, inject, Injectable, resource, ResourceRef, signal, Signal } from '@angular/core';
 import { AdminConfirmService } from './admin-confirm.service';
 import { SchemaClient } from './schema.client';
-import { SchemaResponseDTO } from 'src/app/common/model/domain/schema/schema-response.dto';
-import { catchError, firstValueFrom, from, map, Observable, of, tap } from 'rxjs';
+import { catchError, firstValueFrom, from, map, Observable, tap } from 'rxjs';
 import { EntityAO } from 'src/app/common/model/domain/schema/admin/entity.ao';
 import { EntityMapper } from 'src/app/common/model/domain/schema/mappers/entity.mapper';
 import { NotificationService } from 'src/app/common/components/notifications/notification.service';
+import { RelationAO } from 'src/app/common/model/domain/schema/admin/relation.ao';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { AttributeMapper } from 'src/app/common/model/domain/schema/mappers/attribute.mapper';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SchemaService {
+
+  // Injected Dependencies
   private schemaClient = inject(SchemaClient);
   private confirmService = inject(AdminConfirmService);
   private notificationService = inject(NotificationService);
+
+  // "Cache"
+  public readonly schema = toSignal(this.schemaClient.getSchema());
+  public readonly defaultEntityAttributes = computed(() => this.schema()?.entities.defaultAttributes?.map(AttributeMapper.dtoToAo) ?? []);
+  public readonly defaultRelationAttributes = computed(() => this.schema()?.relations.defaultAttributes?.map(AttributeMapper.dtoToAo) ?? []);
   
   public allEntities(reloadTrigger: Signal<number> = signal(0)): ResourceRef<EntityAO[] | undefined> {
     return resource({
       params: () => reloadTrigger?.(),
-      loader: async (param) => {
+      loader: async () => {
         const schemaDto = await firstValueFrom(this.schemaClient.getSchema());
         return (schemaDto.entities.elements ?? [])
           .map(entity => EntityMapper.dtoToAo(entity, schemaDto))
@@ -30,7 +39,9 @@ export class SchemaService {
     return resource({
       loader: async () => {
         if (!entityIdentifier) {
-          return firstValueFrom(of({}))
+          return {
+            defaultAttributes: this.defaultEntityAttributes(),
+          }
         }
         return await firstValueFrom(
           this.schemaClient.getEntity(entityIdentifier).pipe(
