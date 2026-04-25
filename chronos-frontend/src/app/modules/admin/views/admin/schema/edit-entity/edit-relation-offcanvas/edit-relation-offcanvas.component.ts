@@ -1,7 +1,7 @@
-import { Component, computed, effect, inject, model, ModelSignal, signal } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, effect, inject, model, ModelSignal } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { NgbActiveOffcanvas, NgbDropdownModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveOffcanvas, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AttributeAO } from 'src/app/common/model/domain/schema/admin/attribute.ao';
 import { RelationAO } from 'src/app/common/model/domain/schema/admin/relation.ao';
 import { FormService } from 'src/app/common/util/form.service';
@@ -9,16 +9,15 @@ import { uniqueValidator } from 'src/app/common/util/unique-validator';
 import { IconsService as IconsConfig } from 'src/app/modules/admin/services/icons.config';
 import { EditAttributeDialogComponent } from '../edit-attribute-dialog/edit-attribute-dialog.component';
 import { AdminConfirmService } from 'src/app/modules/admin/services/admin-confirm.service';
-import { EntityAO } from 'src/app/common/model/domain/schema/admin/entity.ao';
+import { EntitySelectComponent } from '../entity-select/entity-select.component';
 
 @Component({
   selector: 'chronos-edit-relation-offcanvas',
   imports: [
     FontAwesomeModule,
     ReactiveFormsModule,
-    FormsModule,
-    NgbDropdownModule
-  ],
+    EntitySelectComponent
+],
   templateUrl: './edit-relation-offcanvas.component.html',
   styleUrl: './edit-relation-offcanvas.component.scss',
 })
@@ -32,13 +31,7 @@ export class EditRelationOffcanvasComponent {
 
   // Inputs
   protected relation: ModelSignal<RelationAO> = model({});
-  protected selectableEntities: ModelSignal<EntityAO[]> = model([] as EntityAO[]);
   protected takenKeys: ModelSignal<string[]> = model([] as string[]);
-  protected filteredTargetEntities = computed(() => 
-    this.selectableEntities().filter(entity => 
-      entity.key && entity.key.toLowerCase().indexOf(this.targetEntitySearch()) > -1
-    )
-  );
 
   // Icons
   protected saveIcon = IconsConfig.ICON_SAVE;
@@ -48,7 +41,6 @@ export class EditRelationOffcanvasComponent {
 
   // Form & controls
   protected submitted = false;
-  protected targetEntitySearch = signal("");
   protected form: FormGroup = this.fb.group(
     {
       key: [null,
@@ -69,6 +61,11 @@ export class EditRelationOffcanvasComponent {
         [
           Validators.minLength(3),
           Validators.maxLength(255)
+        ]
+      ],
+      target: [null, 
+        [
+          Validators.required
         ]
       ],
     },
@@ -148,11 +145,6 @@ export class EditRelationOffcanvasComponent {
         // Nothing todo
       }
     )
-  }
-
-  protected selectTarget(targetEntity: EntityAO): void {
-    this.relation().target = targetEntity;
-    this.targetEntitySearch.set("");
   }
 
 }

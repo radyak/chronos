@@ -27,7 +27,7 @@ export class IconSelectComponent implements ControlValueAccessor {
   private adminIconsService = inject(AdminIconsService);
 
   // Form control
-  private onChange: (value: string) => void = () => {};
+  private onChange: (value?: string) => void = () => {};
   private onTouched: () => void = () => {};
 
   // Internals
@@ -54,7 +54,7 @@ export class IconSelectComponent implements ControlValueAccessor {
   }
 
   // Custom Methods
-  protected selectIcon(icon: string): void {
+  protected selectIcon(icon?: string): void {
     this.icon = icon;
     this.iconSearch.set("");
     this.onChange(icon);

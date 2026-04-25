@@ -1,11 +1,11 @@
-import { Component, computed, effect, inject, Signal, signal, TemplateRef, WritableSignal } from '@angular/core';
+import { Component, computed, effect, inject, Signal, signal, WritableSignal } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { firstValueFrom, map } from 'rxjs';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AdminConfirmService } from 'src/app/modules/admin/services/admin-confirm.service';
 import { CREATE_ROUTE_KEYWORD } from 'src/app/modules/admin/admin.routes';
-import { FormBuilder, FormGroup, FormsModule, NgModel, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { EditEntityFormMapper } from './edit-entity-form.mapper';
 import { NgbAccordionModule, NgbDropdownModule, NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { AttributeAO } from 'src/app/common/model/domain/schema/admin/attribute.ao';
@@ -16,7 +16,6 @@ import { uniqueValidator } from 'src/app/common/util/unique-validator';
 import { FormService } from 'src/app/common/util/form.service';
 import { RelationAO } from 'src/app/common/model/domain/schema/admin/relation.ao';
 import { EditRelationOffcanvasComponent } from './edit-relation-offcanvas/edit-relation-offcanvas.component';
-import { EntityAO } from 'src/app/common/model/domain/schema/admin/entity.ao';
 import { IconSelectComponent } from "./icon-select/icon-select.component";
 
 @Component({
@@ -26,8 +25,6 @@ import { IconSelectComponent } from "./icon-select/icon-select.component";
     FontAwesomeModule,
     ReactiveFormsModule,
     NgbAccordionModule,
-    NgbDropdownModule,
-    FormsModule,
     IconSelectComponent
 ],
   templateUrl: './edit-entity.component.html',
@@ -67,9 +64,6 @@ export class EditEntityComponent {
           .filter(el => !!el && el !== entity && el.id !== entity?.id && el.key)
           .map(el => el.key as string)
            ?? []
-  });
-  protected existingEntites: Signal<EntityAO[]> = computed(() => {
-    return this.allEntities.value() ?? []
   });
   protected isNew = computed(() => !this.entityResource.value()?.id);
 
@@ -163,7 +157,6 @@ export class EditEntityComponent {
     const takenKeys = this.entityResource.value()?.relations?.filter(a => a !== rel).map(a => a.key);
 		offcanvasRef.componentInstance.relation.set(rel);
 		offcanvasRef.componentInstance.takenKeys.set(takenKeys);
-		offcanvasRef.componentInstance.selectableEntities.set(this.existingEntites());
 
     offcanvasRef.result.then(resultRelation => {
       if (!resultRelation) {
