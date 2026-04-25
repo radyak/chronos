@@ -19,4 +19,11 @@ export class RelationMapper {
         return ao;
     }
 
+    public static onlyDefaults(schemaPartial: SchemaResponseDTO): RelationAO {
+        const ao: RelationAO = {
+            defaultAttributes: schemaPartial.relations.defaultAttributes?.map(AttributeMapper.dtoToAo),
+        };
+        return ao;
+    }
+
 }
