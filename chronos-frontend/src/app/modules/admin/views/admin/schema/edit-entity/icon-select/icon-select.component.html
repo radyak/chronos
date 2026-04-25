@@ -21,6 +21,9 @@
       [ngModelOptions]="{ standalone: true }"
     />
     <div class="dropdown-options">
+      <button ngbDropdownItem (click)="selectIcon(undefined)">
+        (none)
+      </button>
       @for (icon of iconNames(); track icon) {
         <button ngbDropdownItem (click)="selectIcon(icon)">
           <fa-icon [icon]="icon"></fa-icon>

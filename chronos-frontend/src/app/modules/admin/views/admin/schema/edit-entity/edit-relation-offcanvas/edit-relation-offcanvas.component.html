@@ -75,37 +75,16 @@
         <div class="row">
           <div class="form-group col-6">
             <label class="form-label mt-4" for="icon">Target:</label>
-            
-            <div ngbDropdown>
-              <button type="button" id="icon" class="form-control btn btn-outline-secondary" ngbDropdownToggle>
-                @if (relation().target) {
-                  @if (relation().target?.icon) {
-                      <fa-icon [icon]="relation().target?.icon"></fa-icon>
-                  }
-                  {{ relation().target?.key }}
-                } @else {
-                  (no target selected)
-                }
-              </button>
-              <div ngbDropdownMenu aria-labelledby="icon">
-                <input class="search"
-                       autofocus
-                       placeholder="Type to filter ..."
-                       [(ngModel)]="targetEntitySearch"
-                       [ngModelOptions]="{standalone: true}">
-                <div class="dropdown-options">
-                  @for (target of filteredTargetEntities(); track target) {
-                    <button ngbDropdownItem (click)="selectTarget(target)">
-                      @if (target.icon) {
-                          <fa-icon [icon]="target.icon"></fa-icon>
-                      }
-                      {{ target.key }}
-                    </button>
-                  }
-                </div>
-              </div>
+            <chronos-entity-select formControlName="target"
+                                   id="target"
+                                   name="target"
+                                   [class.is-invalid]="isInvalid('target')">
+            </chronos-entity-select>
+            <div class="invalid-feedback">
+              @for (error of errors("target", "Target"); track error) {
+                {{ error }}
+              }
             </div>
-
           </div>
         </div>
       </div>
