@@ -1,21 +1,21 @@
 services:
 
-  chronos-gateway:
+  gateway:
     image: traefik:v3.0
-    container_name: chronos-gateway
+    container_name: gateway
     ports:
       - "5000:5000"
     volumes:
       - ./chronos-gateway/traefik.yml:/etc/traefik/traefik.yml
       - ./chronos-gateway/dynamic.yml:/etc/traefik/dynamic.yml
     depends_on:
-      - chronos-ui
-      - chronos-hds
-      - chronos-sds
+      - ui
+      - data
+      - schema
 
-  chronos-hds:
+  data:
     image: maven:3.9.6-eclipse-temurin-17-alpine
-    container_name: chronos-hds
+    container_name: data
     working_dir: /app/chronos-historical-data-service
     command: mvn spring-boot:run -PinContainer -Dmaven.test.skip=true
     volumes:
@@ -23,7 +23,7 @@ services:
       - ~/.m2:/root/.m2
     #      - ./dev/exampledata/img:/app/data/img:ro
     depends_on:
-      - chronos-hds-db
+      - data-db
     ports:
       - "8010:8010"
     extra_hosts:
@@ -32,13 +32,13 @@ services:
       SPRING_PROFILES_ACTIVE: dev-security,test-data,debug
       PORT: 8010
       APP_OAUTH_ISSUER: http://auth.localhost:7020
-      APP_GDP_HOST: chronos-hds-db
+      APP_GDP_HOST: data-db
       APP_GDB_USERNAME: neo4j
       APP_GDB_PASSWORD: password
       APP_OAUTH_ADMIN_ROLE: chronos_client_admin
 
-  chronos-hds-db:
-    container_name: chronos-hds-db
+  data-db:
+    container_name: data-db
     image: neo4j:5.26.14-community-bullseye
     ports:
       - "7474:7474"
@@ -50,16 +50,16 @@ services:
     #      - "./dev/chronos-postgres-data:/var/lib/postgresql/data"
     #      - "./dev/chronos-neo4j-data:/data"
 
-  chronos-sds:
+  schema:
     image: maven:3.9.6-eclipse-temurin-17-alpine
-    container_name: chronos-sds
+    container_name: schema
     working_dir: /app/chronos-schema-definition-service
     command: mvn spring-boot:run -PinContainer -Dmaven.test.skip=true
     volumes:
       - .:/app
       - ~/.m2:/root/.m2
     depends_on:
-      - chronos-sds-db
+      - schema-db
     ports:
       - "8090:8090"
     extra_hosts:
@@ -68,18 +68,18 @@ services:
       SPRING_PROFILES_ACTIVE: dev-security,test-data,debug
       PORT: 8090
       APP_OAUTH_ISSUER: http://auth.localhost:7020
-      APP_DB_HOST: chronos-sds-db
-      APP_DB_USER: sds-db-user
-      APP_DB_PASSWORD: sds-db-password
+      APP_DB_HOST: schema-db
+      APP_DB_USER: schema-db-user
+      APP_DB_PASSWORD: schema-db-password
       APP_OAUTH_ADMIN_ROLE: chronos_client_admin
 
-  chronos-sds-db:
+  schema-db:
     image: postgres:18.1-alpine3.23
-    container_name: chronos-sds-db
+    container_name: schema-db
     shm_size: 128mb
     environment:
-      POSTGRES_USER: sds-db-user
-      POSTGRES_PASSWORD: sds-db-password
+      POSTGRES_USER: schema-db-user
+      POSTGRES_PASSWORD: schema-db-password
       POSTGRES_DB: chronos-schema-definition
     ports:
       - 5432:5432
@@ -89,9 +89,9 @@ services:
     #      - ./logs:/var/log/postgresql
     #      - ./certs:/var/lib/postgresql/certs
 
-  chronos-ws:
+  wiki:
     image: maven:3.9.6-eclipse-temurin-17-alpine
-    container_name: chronos-ws
+    container_name: wiki
     working_dir: /app/chronos-wiki-service
     command: mvn spring-boot:run -PinContainer -Dmaven.test.skip=true
     volumes:
@@ -107,9 +107,9 @@ services:
       APP_OAUTH_ISSUER: http://auth.localhost:7020
       APP_OAUTH_ADMIN_ROLE: chronos_client_admin
 
-  chronos-uis:
+  ui-backend:
     image: maven:3.9.6-eclipse-temurin-17-alpine
-    container_name: chronos-uis
+    container_name: ui-backend
     working_dir: /app/chronos-ui-service
     command: mvn spring-boot:run -PinContainer
     volumes:
@@ -123,9 +123,9 @@ services:
       PORT: 8040
       APP_OAUTH_ISSUER: http://auth.localhost:7020
 
-  chronos-ui:
+  ui:
     image: node:24.14.0-alpine3.22
-    container_name: chronos-ui
+    container_name: ui
     working_dir: /app
     command: npm run start:dev -- --host=0.0.0.0
     ports:
@@ -133,9 +133,9 @@ services:
     volumes:
       - ./chronos-frontend:/app
 
-  chronos-dev-auth:
+  auth:
     image: node:24.14.0-alpine3.22
-    container_name: chronos-dev-auth
+    container_name: auth
     working_dir: /app
     command: npm start
     ports:
