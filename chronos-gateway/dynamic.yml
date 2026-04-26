@@ -1,43 +1,43 @@
 http:
   routers:
 
-    chronos-sds:
+    schema:
       entryPoints:
         - web
       rule: "PathPrefix(`/api/schema`)"
-      service: chronos-sds
+      service: schema
       #      middlewares:
       #        - strip-api-prefix
       priority: 100
 
-    chronos-ws:
+    wiki:
       entryPoints:
         - web
       rule: "PathPrefix(`/api/wiki`)"
-      service: chronos-ws
+      service: wiki
       priority: 99
 
-    chronos-uis:
+    ui-backend:
       entryPoints:
         - web
       rule: "PathPrefix(`/api/ui`)"
-      service: chronos-uis
+      service: ui-backend
       priority: 98
 
-    chronos-hds:
+    data:
       entryPoints:
         - web
       rule: "PathPrefix(`/api`)"
-      service: chronos-hds
+      service: data
       #      middlewares:
       #        - strip-api-prefix
       priority: 80
 
-    chronos-ui:
+    ui:
       entryPoints:
         - web
       rule: "PathPrefix(`/`)"
-      service: chronos-ui
+      service: ui
       priority: 1
 
   #  middlewares:
@@ -48,32 +48,32 @@ http:
 
   services:
 
-    chronos-sds:
+    schema:
       loadBalancer:
         passHostHeader: true
         servers:
-          - url: "http://chronos-sds:8090"
+          - url: "http://schema:8090"
 
-    chronos-hds:
+    data:
       loadBalancer:
         passHostHeader: true
         servers:
-          - url: "http://chronos-hds:8010"
+          - url: "http://data:8010"
 
-    chronos-uis:
+    ui-backend:
       loadBalancer:
         passHostHeader: true
         servers:
-          - url: "http://chronos-uis:8040"
+          - url: "http://ui-backend:8040"
 
-    chronos-ws:
+    wiki:
       loadBalancer:
         passHostHeader: true
         servers:
-          - url: "http://chronos-ws:8050"
+          - url: "http://wiki:8050"
 
-    chronos-ui:
+    ui:
       loadBalancer:
         passHostHeader: true
         servers:
-          - url: "http://chronos-ui:4200"
+          - url: "http://ui:4200"
