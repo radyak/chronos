@@ -1,9 +1,9 @@
 import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { CREATE_ROUTE_KEYWORD } from '../../../admin.routes';
-import { SchemaService } from '../../../services/schema.service';
-import { IconsService } from '../../../services/icons.config';
+import { CREATE_ROUTE_KEYWORD } from '../../admin.routes';
+import { SchemaService } from '../../services/schema.service';
+import { IconsService } from '../../services/icons.config';
 import { firstValueFrom } from 'rxjs';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { EntityAO } from 'src/app/common/model/domain/schema/admin/entity.ao';
