@@ -1,4 +1,4 @@
-package net.fvogel.chronos.data.domain.generic.integration;
+package net.fvogel.chronos.data.domain.persistence;
 
 import java.util.Map;
 import java.util.stream.Collectors;

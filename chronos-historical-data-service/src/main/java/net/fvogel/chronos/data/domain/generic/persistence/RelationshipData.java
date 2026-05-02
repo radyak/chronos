@@ -1,6 +1,6 @@
 package net.fvogel.chronos.data.domain.generic.persistence;
 
-import net.fvogel.chronos.data.domain.common.ChronosDateSpec;
+import net.fvogel.chronos.data.domain.common.validation.ChronosDateSpec;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 

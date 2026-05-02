@@ -1,4 +1,4 @@
-package net.fvogel.chronos.data.domain.generic.integration.query.node;
+package net.fvogel.chronos.data.domain.persistence.query.node;
 
 import java.util.Map;
 

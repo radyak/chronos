@@ -1,5 +1,5 @@
 # All
-GET http://localhost:8080/api/entries
+GET http://localhost:8080/api/data/entries
 
 ###
 

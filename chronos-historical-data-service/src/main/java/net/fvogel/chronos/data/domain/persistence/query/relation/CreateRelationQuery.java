@@ -1,10 +1,10 @@
-package net.fvogel.chronos.data.domain.generic.integration.query.relation;
+package net.fvogel.chronos.data.domain.persistence.query.relation;
 
 import lombok.AllArgsConstructor;
 
 import java.util.Arrays;
 
-import static net.fvogel.chronos.data.domain.generic.integration.QueryUtils.*;
+import static net.fvogel.chronos.data.domain.persistence.QueryUtils.*;
 
 public class CreateRelationQuery extends AbstractRelationQuery {
 

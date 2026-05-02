@@ -2,11 +2,11 @@ package net.fvogel.chronos.data.domain.generic.service;
 
 import net.fvogel.chronos.commons.exception.NotFoundException;
 import net.fvogel.chronos.data.domain.generic.integration.QueryService;
-import net.fvogel.chronos.data.domain.generic.integration.query.node.CreateNodeQuery;
-import net.fvogel.chronos.data.domain.generic.integration.query.node.DeleteNodeQuery;
-import net.fvogel.chronos.data.domain.generic.integration.query.node.UpdateNodeQuery;
 import net.fvogel.chronos.data.domain.generic.persistence.Entity;
 import net.fvogel.chronos.data.domain.generic.persistence.LabelledEntity;
+import net.fvogel.chronos.data.domain.persistence.query.node.CreateNodeQuery;
+import net.fvogel.chronos.data.domain.persistence.query.node.DeleteNodeQuery;
+import net.fvogel.chronos.data.domain.persistence.query.node.UpdateNodeQuery;
 import org.neo4j.driver.Driver;
 import org.neo4j.driver.Session;
 import org.neo4j.driver.types.Node;
@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
-import static net.fvogel.chronos.data.domain.generic.integration.QueryUtils.wrapWith;
+import static net.fvogel.chronos.data.domain.persistence.QueryUtils.wrapWith;
 
 
 @Service

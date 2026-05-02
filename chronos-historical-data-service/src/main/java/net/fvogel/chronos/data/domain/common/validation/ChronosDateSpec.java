@@ -1,4 +1,4 @@
-package net.fvogel.chronos.data.domain.common;
+package net.fvogel.chronos.data.domain.common.validation;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
