@@ -14,7 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -72,7 +74,7 @@ public class DataService {
         }
     }
 
-    public Map<String, Integer> statistics() {
+    public List<CountResult> statistics() {
         var nodeName = "n";
         var n = Cypher.anyNode().named(nodeName);
         var statement = Cypher.match(n)
@@ -80,19 +82,17 @@ public class DataService {
                 .build();
         var renderedStatement = Renderer.getDefaultRenderer().render(statement);
 
-        Map<String, Integer> result = new HashMap<>();
         try (Session session = driver.session()) {
-            session.run(renderedStatement)
+            return session.run(renderedStatement)
                     .list(record -> {
                         Set<String> labels = record.get("labels").asList().stream().map(Object::toString).collect(Collectors.toSet());
                         Integer count = record.get("count").asInt();
                         CountResult countResult = new CountResult();
-                        countResult.setLabels(labels);
+                        countResult.setLabel(labels.stream().findFirst().orElse(""));
                         countResult.setCount(count);
                         return countResult;
-                    }).forEach(res -> result.put(res.getLabels().stream().findFirst().orElse(""), res.getCount()));
+                    });//.forEach(res -> result.put(res.getLabels().stream().findFirst().orElse(""), res.getCount()));
         }
-        return result;
     }
 
     private DataElement mapToEntry(Node node) {

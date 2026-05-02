@@ -1,6 +1,7 @@
 package net.fvogel.chronos.data.domain.rest;
 
 import jakarta.validation.Valid;
+import net.fvogel.chronos.data.domain.model.CountResult;
 import net.fvogel.chronos.data.domain.model.DataElement;
 import net.fvogel.chronos.data.domain.model.Query;
 import net.fvogel.chronos.data.domain.service.DataService;
@@ -8,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/data/entries")
@@ -23,7 +23,7 @@ public class DataController {
     }
 
     @GetMapping("/statistics")
-    public Map<String, Integer> statistics() {
+    public List<CountResult> statistics() {
         return this.dataService.statistics();
     }
 
