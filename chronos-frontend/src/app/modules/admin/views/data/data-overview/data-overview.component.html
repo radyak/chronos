@@ -96,7 +96,7 @@
         <label for="pageSize" class="mb-0">Rows per page:</label>
         <select id="pageSize"
                 class="form-select w-auto"
-                [ngModel]="query().pageSize"
+                [ngModel]="queryParams().pageSize"
                 (ngModelChange)="setPageSize($event)">
             <option value="5">5</option>
             <option value="10">10</option>
@@ -116,7 +116,7 @@
             </button>
             <button type="button"
                     class="btn btn-secondary">
-                    {{ (query().page ?? 0) + 1 }}
+                    {{ (queryParams().page) }}
             </button>
             <button type="button"
                     class="btn btn-secondary"

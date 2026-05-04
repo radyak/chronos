@@ -45,7 +45,7 @@ public class DataService {
         var statement = Cypher.match(n)
                 .returning(n)
                 .orderBy(sortList)
-                .skip(query.getPage() * query.getPageSize())
+                .skip((query.getPage() - 1) * query.getPageSize())
                 .limit(query.getPageSize())
                 .build();
         var renderedStatement = Renderer.getDefaultRenderer().render(statement);

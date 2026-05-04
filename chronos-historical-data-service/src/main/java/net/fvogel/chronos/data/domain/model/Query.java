@@ -7,9 +7,10 @@ import lombok.Data;
 public class Query {
     /**
      * Paging
+     * (Start counting with 1 for more intuitive user behavior)
      */
-    @Min(0)
-    Integer page = 0;
+    @Min(1)
+    Integer page = 1;
     @Min(1)
     Integer pageSize = 10;
 
