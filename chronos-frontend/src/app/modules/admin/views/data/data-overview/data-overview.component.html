@@ -63,10 +63,35 @@
   <table class="table table-hover">
     <thead>
       <tr>
-        <th scope="col">Id</th>
-        <th scope="col">Type</th>
-        <th scope="col">Name</th>
-        <th scope="col">From - To</th>
+        <th scope="col"
+            width="10%"
+            table-sort="key"
+            [sort]="queryParams()"
+            (onSort)="sortBy($event)">
+          Key
+        </th>
+        <th scope="col" width="20%">Type</th>
+        <th scope="col"
+            width="30%"
+            table-sort="name"
+            [sort]="queryParams()"
+            (onSort)="sortBy($event)">
+          Name
+        </th>
+        <th scope="col"
+            width="20%"
+            table-sort="from"
+            [sort]="queryParams()"
+            (onSort)="sortBy($event)">
+          From
+        </th>
+        <th scope="col"
+            width="20%"
+            table-sort="to"
+            [sort]="queryParams()"
+            (onSort)="sortBy($event)">
+          To
+        </th>
       </tr>
     </thead>
     <tbody>
@@ -82,7 +107,9 @@
             {{ element | attribute: 'name' }}
           </td>
           <td>
-            {{ element | attribute: 'from' }} - 
+            {{ element | attribute: 'from' }}
+          </td>
+          <td>
             {{ element | attribute: 'to' }}
           </td>
         </tr>

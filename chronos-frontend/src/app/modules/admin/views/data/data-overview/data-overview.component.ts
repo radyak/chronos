@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
+import { TableSortComponent } from 'src/app/common/components/table-sort/table-sort.component';
 
 function cleanParams(obj: Record<string, any>) {
   return Object.fromEntries(
@@ -18,6 +19,7 @@ function cleanParams(obj: Record<string, any>) {
   imports: [
     ElementAttributePipe,
     FormsModule,
+    TableSortComponent
   ],
   templateUrl: './data-overview.component.html',
   styleUrl: './data-overview.component.scss',
@@ -35,10 +37,16 @@ export class DataOverviewComponent {
       map(params => ({
         page: Number(params.get('page') ?? 1),
         pageSize: Number(params.get('pageSize') ?? 10),
-        // TODO: Add sorting
+        sortAsc: params.get('sortAsc') === 'true',
+        sortBy: params.get('sortBy') ?? undefined,
       }))
     ),
-    { initialValue: { page: 1, pageSize: 10 } }
+    { initialValue: {
+      page: 1,
+      pageSize: 10,
+      sortAsc: true,
+      sortBy: undefined,
+    } }
   );
   protected data = this.historicalDataService.search(this.queryParams);
   protected statistics = this.historicalDataService.statistics();
@@ -93,6 +101,15 @@ export class DataOverviewComponent {
       relativeTo: this.route,
       queryParams: cleanParams(next),
       replaceUrl: true,
+    });
+  }
+
+  protected sortBy(field: string): void {
+    const current = this.queryParams();
+    this.updateQuery({
+      sortBy: field,
+      sortAsc: current.sortBy === field ? !current.sortAsc : true,
+      page: 1
     });
   }
 
