@@ -7,6 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
 import { TableSortComponent } from 'src/app/common/components/table-sort/table-sort.component';
+import { SortOrder } from 'src/app/common/model/domain/data/sort-order.dto';
 
 function cleanParams(obj: Record<string, any>) {
   return Object.fromEntries(
@@ -34,17 +35,21 @@ export class DataOverviewComponent {
   // Derived Signals
   protected queryParams: Signal<QueryDTO> = toSignal(
     this.route.queryParamMap.pipe(
-      map(params => ({
-        page: Number(params.get('page') ?? 1),
-        pageSize: Number(params.get('pageSize') ?? 10),
-        sortAsc: params.get('sortAsc') === 'true',
-        sortBy: params.get('sortBy') ?? undefined,
-      }))
+      map(params => {
+        const sortOrderString: string | null = params.get('sortOrder');
+        const sortOrder: SortOrder = sortOrderString ? SortOrder[sortOrderString.toUpperCase() as keyof typeof SortOrder] : SortOrder.ASC;
+        return {
+          page: Number(params.get('page') ?? 1),
+          pageSize: Number(params.get('pageSize') ?? 10),
+          sortOrder: sortOrder,
+          sortBy: params.get('sortBy') ?? undefined,
+        }
+    })
     ),
     { initialValue: {
       page: 1,
       pageSize: 10,
-      sortAsc: true,
+      sortOrder: SortOrder.ASC,
       sortBy: undefined,
     } }
   );
@@ -108,7 +113,7 @@ export class DataOverviewComponent {
     const current = this.queryParams();
     this.updateQuery({
       sortBy: field,
-      sortAsc: current.sortBy === field ? !current.sortAsc : true,
+      sortOrder: current.sortBy === field ? (current.sortOrder === SortOrder.ASC ? SortOrder.DESC : SortOrder.ASC) : SortOrder.ASC,
       page: 1
     });
   }

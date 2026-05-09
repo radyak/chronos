@@ -4,6 +4,7 @@ import net.fvogel.chronos.commons.exception.NotFoundException;
 import net.fvogel.chronos.data.domain.model.CountResult;
 import net.fvogel.chronos.data.domain.model.DataElement;
 import net.fvogel.chronos.data.domain.model.Query;
+import net.fvogel.chronos.data.domain.model.SortOrder;
 import org.neo4j.cypherdsl.core.Cypher;
 import org.neo4j.cypherdsl.core.SortItem;
 import org.neo4j.cypherdsl.core.renderer.Renderer;
@@ -36,7 +37,7 @@ public class DataService {
 
         var sortList = new ArrayList<SortItem>();
         if (query.getSortBy() != null) {
-            var direction = query.getSortAsc() ? SortItem.Direction.ASC : SortItem.Direction.DESC;
+            var direction = query.getSortOrder() == SortOrder.ASC ? SortItem.Direction.ASC : SortItem.Direction.DESC;
             var property = query.getSortBy();
             var sort = Cypher.sort(n.property(property), direction);
             sortList.add(sort);

@@ -17,6 +17,6 @@ public class Query {
     /**
      * Sorting
      */
-    Boolean sortAsc = true;
+    SortOrder sortOrder = SortOrder.ASC;
     String sortBy;
 }
