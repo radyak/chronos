@@ -1,0 +1,21 @@
+:host {
+    position: relative;
+}
+
+.loading-backdrop {
+    ::ng-deep & > fa-icon > svg {
+        background-color: transparent !important;
+        --bs-table-bg: transparent !important;
+    }
+
+    position: absolute;
+    inset: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(2px);
+
+    width: 100%;
+    height: 100%;
+}

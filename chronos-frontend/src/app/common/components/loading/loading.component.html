@@ -1,0 +1,7 @@
+<ng-content></ng-content>
+
+@if (loading()) {
+  <div class="loading-backdrop">
+    <fa-icon [icon]="loadingIcon" animation="spin" size="2x" />
+  </div>
+}

@@ -8,6 +8,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
 import { SortByComponent } from 'src/app/common/components/sort-by/sort-by.component';
 import { SortOrder } from 'src/app/common/model/domain/data/sort-order.dto';
+import { LoadingComponent } from 'src/app/common/components/loading/loading.component';
 
 function cleanParams(obj: Record<string, any>) {
   return Object.fromEntries(
@@ -20,7 +21,8 @@ function cleanParams(obj: Record<string, any>) {
   imports: [
     ElementAttributePipe,
     FormsModule,
-    SortByComponent
+    SortByComponent,
+    LoadingComponent
   ],
   templateUrl: './data-overview.component.html',
   styleUrl: './data-overview.component.scss',
