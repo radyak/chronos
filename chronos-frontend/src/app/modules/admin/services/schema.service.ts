@@ -23,12 +23,12 @@ export class SchemaService {
   public readonly schema = toSignal(this.schemaClient.getSchema());
   public readonly defaultEntityAttributes = computed(() => this.schema()?.entities.defaultAttributes?.map(AttributeMapper.dtoToAo) ?? []);
   public readonly defaultRelationAttributes = computed(() => this.schema()?.relations.defaultAttributes?.map(AttributeMapper.dtoToAo) ?? []);
-  
+
   public allEntities(reloadTrigger: Signal<number> = signal(0)): ResourceRef<EntityAO[] | undefined> {
     return rxResource({
       params: () => reloadTrigger?.(),
       stream: () => this.schemaClient.getSchema().pipe(
-          map((schemaDto: SchemaResponseDTO) => 
+          map((schemaDto: SchemaResponseDTO) =>
             (schemaDto?.entities.elements ?? []).map(entity => EntityMapper.dtoToAo(entity, schemaDto))
           )
         )
@@ -68,7 +68,7 @@ export class SchemaService {
         `Confirm Delete ${entity.key}`,
         `Do you want to delete schema entity ${entity?.key}?`
       ).then(
-        () => 
+        () =>
           firstValueFrom(this.schemaClient.deleteEntity(entity)).then(
             () => {
               this.notificationService.success(`Entity "${entity.key}" deleted successfully`);
