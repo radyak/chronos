@@ -10,21 +10,21 @@ interface SortState {
 
 
 @Component({
-  selector: '[table-sort]',
+  selector: '[sortBy]',
   imports: [
     FontAwesomeModule
   ],
-  templateUrl: './table-sort.component.html',
-  styleUrl: './table-sort.component.scss',
+  templateUrl: './sort-by.component.html',
+  styleUrl: './sort-by.component.scss',
 })
-export class TableSortComponent {
+export class SortByComponent {
 
   // Inputs
   sort = input.required<SortState>();
   field = input.required<string>({
-    alias: 'table-sort'
+    alias: 'sortBy'
   });
-  onSort = output<string>();
+  onSortBy = output<string>();
 
   // Icons
   protected readonly faSort = faSort;
@@ -37,7 +37,7 @@ export class TableSortComponent {
 
   @HostListener('click')
   toggleSort(): void {
-    this.onSort.emit(this.field());
+    this.onSortBy.emit(this.field());
   }
 
 }

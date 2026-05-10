@@ -6,7 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
-import { TableSortComponent } from 'src/app/common/components/table-sort/table-sort.component';
+import { SortByComponent } from 'src/app/common/components/sort-by/sort-by.component';
 import { SortOrder } from 'src/app/common/model/domain/data/sort-order.dto';
 
 function cleanParams(obj: Record<string, any>) {
@@ -20,7 +20,7 @@ function cleanParams(obj: Record<string, any>) {
   imports: [
     ElementAttributePipe,
     FormsModule,
-    TableSortComponent
+    SortByComponent
   ],
   templateUrl: './data-overview.component.html',
   styleUrl: './data-overview.component.scss',

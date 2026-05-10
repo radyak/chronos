@@ -65,31 +65,31 @@
       <tr>
         <th scope="col"
             width="10%"
-            table-sort="key"
+            sortBy="key"
             [sort]="queryParams()"
-            (onSort)="sortBy($event)">
+            (onSortBy)="sortBy($event)">
           Key
         </th>
         <th scope="col" width="20%">Type</th>
         <th scope="col"
             width="30%"
-            table-sort="name"
+            sortBy="name"
             [sort]="queryParams()"
-            (onSort)="sortBy($event)">
+            (onSortBy)="sortBy($event)">
           Name
         </th>
         <th scope="col"
             width="20%"
-            table-sort="from"
+            sortBy="from"
             [sort]="queryParams()"
-            (onSort)="sortBy($event)">
+            (onSortBy)="sortBy($event)">
           From
         </th>
         <th scope="col"
             width="20%"
-            table-sort="to"
+            sortBy="to"
             [sort]="queryParams()"
-            (onSort)="sortBy($event)">
+            (onSortBy)="sortBy($event)">
           To
         </th>
       </tr>
