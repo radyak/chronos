@@ -1,13 +1,13 @@
-import { computed, inject, Injectable, resource, ResourceRef, signal, Signal } from '@angular/core';
+import { computed, inject, Injectable, ResourceRef, signal, Signal } from '@angular/core';
 import { AdminConfirmService } from './admin-confirm.service';
 import { SchemaClient } from './schema.client';
-import { catchError, firstValueFrom, from, map, Observable, tap } from 'rxjs';
+import { catchError, firstValueFrom, from, map, Observable, of, tap } from 'rxjs';
 import { EntityAO } from 'src/app/common/model/domain/schema/admin/entity.ao';
 import { EntityMapper } from 'src/app/common/model/domain/schema/mappers/entity.mapper';
 import { NotificationService } from 'src/app/common/components/notifications/notification.service';
-import { RelationAO } from 'src/app/common/model/domain/schema/admin/relation.ao';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { rxResource, toSignal } from '@angular/core/rxjs-interop';
 import { AttributeMapper } from 'src/app/common/model/domain/schema/mappers/attribute.mapper';
+import { SchemaResponseDTO } from 'src/app/common/model/domain/schema/schema-response.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -23,30 +23,28 @@ export class SchemaService {
   public readonly schema = toSignal(this.schemaClient.getSchema());
   public readonly defaultEntityAttributes = computed(() => this.schema()?.entities.defaultAttributes?.map(AttributeMapper.dtoToAo) ?? []);
   public readonly defaultRelationAttributes = computed(() => this.schema()?.relations.defaultAttributes?.map(AttributeMapper.dtoToAo) ?? []);
-  
+
   public allEntities(reloadTrigger: Signal<number> = signal(0)): ResourceRef<EntityAO[] | undefined> {
-    return resource({
+    return rxResource({
       params: () => reloadTrigger?.(),
-      loader: async () => {
-        const schemaDto = await firstValueFrom(this.schemaClient.getSchema());
-        return (schemaDto.entities.elements ?? [])
-          .map(entity => EntityMapper.dtoToAo(entity, schemaDto))
-      },
+      stream: () => this.schemaClient.getSchema().pipe(
+          map((schemaDto: SchemaResponseDTO) =>
+            (schemaDto?.entities.elements ?? []).map(entity => EntityMapper.dtoToAo(entity, schemaDto))
+          )
+        )
     });
   }
 
   public schemaEntityResource(entityIdentifier: string): ResourceRef<EntityAO | undefined> {
-    return resource({
-      loader: async () => {
+    return rxResource({
+      stream: () => {
         if (!entityIdentifier) {
-          return {
+          return of({
             defaultAttributes: this.defaultEntityAttributes(),
-          }
+          } as EntityAO);
         }
-        return await firstValueFrom(
-          this.schemaClient.getEntity(entityIdentifier).pipe(
-            map(EntityMapper.fromSchemaResponseDTO)
-          )
+        return this.schemaClient.getEntity(entityIdentifier).pipe(
+          map(EntityMapper.fromSchemaResponseDTO)
         );
       },
     });
@@ -70,7 +68,7 @@ export class SchemaService {
         `Confirm Delete ${entity.key}`,
         `Do you want to delete schema entity ${entity?.key}?`
       ).then(
-        () => 
+        () =>
           firstValueFrom(this.schemaClient.deleteEntity(entity)).then(
             () => {
               this.notificationService.success(`Entity "${entity.key}" deleted successfully`);

@@ -1,0 +1,23 @@
+# Get all (default: first 10 elements, no sorting)
+GET http://localhost:8010/api/data/entries
+
+###
+
+# Paging example)
+GET http://localhost:8010/api/data/entries?pageSize=5&page=2
+
+### 
+
+# Sorting example
+GET http://localhost:8010/api/data/entries?sortBy=from&sortAsc=false
+
+
+###
+
+# Statistics
+GET http://localhost:8010/api/data/entries/statistics
+
+###
+
+# By ID
+GET http://localhost:8010/api/data/entries/th

@@ -1,0 +1,11 @@
+<ng-content></ng-content>
+
+@if (sort().sortBy === field()) {
+    <span class="ms-1">
+        @if (sort().sortOrder === 'asc') {
+            <fa-icon [icon]="faSortUp"></fa-icon>
+        } @else {
+            <fa-icon [icon]="faSortDown"></fa-icon>
+        }
+    </span>
+}

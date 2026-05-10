@@ -3,10 +3,11 @@ import { Route } from "@angular/router";
 import { AdminErrorInterceptor } from "./interceptors/admin-error.interceptor";
 import { AuthInterceptor } from "./interceptors/auth.interceptor";
 import { AdminConfirmService } from "./services/admin-confirm.service";
-import { AdminComponent } from './views/admin/admin.component';
-import { SchemaComponent } from "./views/admin/schema/schema.component";
-import { EditEntityComponent } from "./views/admin/schema/edit-entity/edit-entity.component";
-import { AdminOverviewComponent } from "./views/admin/overview/admin-overview/admin-overview.component";
+import { AdminComponent } from './views/admin.component';
+import { SchemaComponent } from "./views/schema/schema.component";
+import { EditEntityComponent } from "./views/schema/edit-entity/edit-entity.component";
+import { AdminOverviewComponent } from "./views/overview/admin-overview/admin-overview.component";
+import { DataOverviewComponent } from "./views/data/data-overview/data-overview.component";
 
 export const CREATE_ROUTE_KEYWORD = 'new'
 
@@ -51,6 +52,18 @@ export const adminRoutes: Route[] = [
             data: {
               breadCrumb: 'Edit Entity'
             }
+          },
+        ]
+      },
+      {
+        path: 'data',
+        data: {
+          breadCrumb: 'Data'
+        },
+        children: [
+          {
+            path: '',
+            component: DataOverviewComponent,
           },
         ]
       },
