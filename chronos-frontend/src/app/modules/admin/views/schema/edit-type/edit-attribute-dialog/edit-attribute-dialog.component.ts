@@ -3,8 +3,8 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { AttributeAO } from 'src/app/common/model/domain/schema/admin/attribute.ao';
-import { AttributeTypeDTO } from 'src/app/common/model/domain/schema/attribute-type.dto';
+import { AttributeAO } from 'src/app/common/model/schema/admin/attribute.ao';
+import { AttributeTypeDTO } from 'src/app/common/model/schema/attribute-type.dto';
 import { FormService } from 'src/app/common/util/form.service';
 import { uniqueValidator } from 'src/app/common/util/unique-validator';
 

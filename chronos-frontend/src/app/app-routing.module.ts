@@ -1,7 +1,7 @@
 import {inject, isDevMode, NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import { adminRoutes } from './modules/admin/admin.routes';
-import { PublicOverviewComponent } from './modules/public/public-overview/public-overview.component';
+import { PublicOverviewComponent } from './modules/public/views/public-overview/public-overview.component';
 import { AuthService } from './general/security/auth.service';
 
 const routes: Routes = [

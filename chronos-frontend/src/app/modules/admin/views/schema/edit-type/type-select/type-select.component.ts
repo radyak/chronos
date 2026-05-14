@@ -2,8 +2,8 @@ import { Component, computed, forwardRef, inject, signal } from '@angular/core';
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
-import { TypeAO } from 'src/app/common/model/domain/schema/admin/type.ao';
-import { SchemaService } from 'src/app/modules/admin/services/schema.service';
+import { TypeAO } from 'src/app/common/model/schema/admin/type.ao';
+import { AdminSchemaService } from 'src/app/modules/admin/services/admin-schema.service';
 
 @Component({
   selector: 'chronos-type-select',
@@ -25,7 +25,7 @@ import { SchemaService } from 'src/app/modules/admin/services/schema.service';
 export class TypeSelectComponent implements ControlValueAccessor {
 
   // Injected Depedencies
-  protected allTypes = inject(SchemaService).allTypes().asReadonly();
+  protected allTypes = inject(AdminSchemaService).allTypes().asReadonly();
 
   // Form control
   private onChange: (value?: TypeAO) => void = () => {};

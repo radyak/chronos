@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { DataElementDTO } from '../model/domain/data/data-element.dto';
+import { DataElementDTO } from '../model/data/data-element.dto';
 
 @Pipe({
   name: 'attribute',

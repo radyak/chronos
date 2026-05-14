@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import { HttpClient, HttpParams } from "@angular/common/http";
 import {Observable} from "rxjs";
-import { WikipediaArticleInfo } from 'src/app/common/model/domain/wikipedia/wikipedia-article-info.model';
+import { WikipediaArticleInfo } from 'src/app/common/model/wikipedia/wikipedia-article-info.model';
 
 @Injectable({
   providedIn: 'root'

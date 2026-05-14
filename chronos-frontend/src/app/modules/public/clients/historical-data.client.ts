@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CountResultDTO } from 'src/app/common/model/domain/data/count-result.dto';
-import { DataElementDTO } from 'src/app/common/model/domain/data/data-element.dto';
-import { QueryDTO } from 'src/app/common/model/domain/data/query.model.dto';
+import { CountResultDTO } from 'src/app/common/model/data/count-result.dto';
+import { DataElementDTO } from 'src/app/common/model/data/data-element.dto';
+import { QueryDTO } from 'src/app/common/model/data/query.model.dto';
 
 @Injectable({
   providedIn: 'root',

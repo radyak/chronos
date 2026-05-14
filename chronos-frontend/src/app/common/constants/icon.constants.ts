@@ -4,7 +4,7 @@ import { faPen, faPlus, faSave, faTrash, faXmark } from '@fortawesome/free-solid
 @Injectable({
   providedIn: 'root',
 })
-export class IconsService {
+export class IconConstants {
 
   // public readonly fields
   // icons

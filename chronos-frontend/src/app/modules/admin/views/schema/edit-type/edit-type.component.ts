@@ -8,13 +8,13 @@ import { CREATE_ROUTE_KEYWORD } from 'src/app/modules/admin/admin.routes';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { EditTypeFormMapper } from './edit-type-form.mapper';
 import { NgbAccordionModule, NgbDropdownModule, NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
-import { AttributeAO } from 'src/app/common/model/domain/schema/admin/attribute.ao';
+import { AttributeAO } from 'src/app/common/model/schema/admin/attribute.ao';
 import { EditAttributeDialogComponent } from './edit-attribute-dialog/edit-attribute-dialog.component';
-import { SchemaService } from 'src/app/modules/admin/services/schema.service';
-import { IconsService } from 'src/app/modules/admin/services/icons.config';
+import { AdminSchemaService } from 'src/app/modules/admin/services/admin-schema.service';
+import { IconConstants } from 'src/app/common/constants/icon.constants';
 import { uniqueValidator } from 'src/app/common/util/unique-validator';
 import { FormService } from 'src/app/common/util/form.service';
-import { RelationAO } from 'src/app/common/model/domain/schema/admin/relation.ao';
+import { RelationAO } from 'src/app/common/model/schema/admin/relation.ao';
 import { EditRelationOffcanvasComponent } from './edit-relation-offcanvas/edit-relation-offcanvas.component';
 import { IconSelectComponent } from "./icon-select/icon-select.component";
 
@@ -36,17 +36,17 @@ export class EditTypeComponent {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private adminConfirmService = inject(AdminConfirmService);
-  private schemaService = inject(SchemaService);
+  private schemaService = inject(AdminSchemaService);
   private fb = inject(FormBuilder);
   private modalService = inject(NgbModal);
   private formService = inject(FormService);
 	private offcanvasService = inject(NgbOffcanvas);
 
   // Icons
-  protected saveIcon = IconsService.ICON_SAVE;
-  protected cancelIcon = IconsService.ICON_CANCEL;
-  protected editIcon = IconsService.ICON_EDIT;
-  protected deleteIcon = IconsService.ICON_DELETE;
+  protected saveIcon = IconConstants.ICON_SAVE;
+  protected cancelIcon = IconConstants.ICON_CANCEL;
+  protected editIcon = IconConstants.ICON_EDIT;
+  protected deleteIcon = IconConstants.ICON_DELETE;
 
   // Derived Data Fields
   protected typeId = toSignal(
