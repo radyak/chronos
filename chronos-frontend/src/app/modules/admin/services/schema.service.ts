@@ -1,6 +1,5 @@
 import { computed, inject, Injectable, ResourceRef, signal, Signal } from '@angular/core';
 import { AdminConfirmService } from './admin-confirm.service';
-import { SchemaClient } from './schema.client';
 import { catchError, firstValueFrom, from, map, Observable, of, tap } from 'rxjs';
 import { TypeAO } from 'src/app/common/model/domain/schema/admin/type.ao';
 import { TypeMapper } from 'src/app/common/model/domain/schema/mappers/type.mapper';
@@ -8,6 +7,7 @@ import { NotificationService } from 'src/app/common/components/notifications/not
 import { rxResource, toSignal } from '@angular/core/rxjs-interop';
 import { AttributeMapper } from 'src/app/common/model/domain/schema/mappers/attribute.mapper';
 import { SchemaResponseDTO } from 'src/app/common/model/domain/schema/schema-response.dto';
+import { SchemaClient } from '../clients/schema.client';
 
 @Injectable({
   providedIn: 'root',

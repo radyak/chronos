@@ -1,15 +1,15 @@
 import { CommonModule } from '@angular/common';
 import {} from '@angular/common/http';
-import {Component, OnInit} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
 import { WikipediaSummaryComponent } from 'src/app/common/components/wikipedia-summary/wikipedia-summary.component';
-import { WikiArticlesService } from '../../admin/person/wiki-article.service';
 import { filter, Observable, of, switchMap } from 'rxjs';
-import { WikipediaSummary } from 'src/app/common/model/general/wikipedia/wikipedia-summary.model';
-import { EntitiesService } from '../../admin/person/entities.service';
+import { WikipediaSummary } from 'src/app/common/model/domain/wikipedia/wikipedia-summary.model';
+import { WikiArticlesClient } from '../../admin/clients/wiki-article.client';
+import { EntitiesClient } from '../../admin/clients/entities.client';
 
 @Component({
     selector: 'chronos-public-overview',
@@ -26,11 +26,14 @@ import { EntitiesService } from '../../admin/person/entities.service';
 })
 export class PublicOverviewComponent implements OnInit {
 
+  // Injected dependencies
+  private wikiArticlesService = inject(WikiArticlesClient);
+  private entriesService = inject(EntitiesClient);
+
+  // Local state
   wikipediaSummary$: Observable<WikipediaSummary> = of();
 
   constructor(
-    private wikiArticlesService: WikiArticlesService,
-    private entriesService: EntitiesService,
   ) { }
 
   ngOnInit(): void {

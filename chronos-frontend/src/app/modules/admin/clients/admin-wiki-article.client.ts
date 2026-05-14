@@ -1,12 +1,12 @@
 import {Injectable} from '@angular/core';
 import { HttpClient, HttpParams } from "@angular/common/http";
 import {Observable} from "rxjs";
-import { WikipediaArticleInfo } from 'src/app/common/model/general/wikipedia/wikipedia-article-info.model';
+import { WikipediaArticleInfo } from 'src/app/common/model/domain/wikipedia/wikipedia-article-info.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AdminWikiArticlesService {
+export class AdminWikiArticlesClient {
 
   constructor(private http: HttpClient) { }
 

@@ -1,17 +1,12 @@
 import {Injectable} from '@angular/core';
 import { HttpClient, HttpParams } from "@angular/common/http";
 import {Observable} from "rxjs";
-import { WikipediaSummary } from 'src/app/common/model/general/wikipedia/wikipedia-summary.model';
-
-export interface PersonSearchParams {
-  from?: number;
-  to?: number;
-}
+import { WikipediaSummary } from 'src/app/common/model/domain/wikipedia/wikipedia-summary.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class WikiArticlesService {
+export class WikiArticlesClient {
 
   constructor(private http: HttpClient) { }
 

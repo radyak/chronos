@@ -1,9 +1,9 @@
 import { inject, Injectable, ResourceRef, Signal } from '@angular/core';
-import { HistoricalDataClient } from './historical-data.client';
 import { QueryDTO } from 'src/app/common/model/domain/data/query.model.dto';
 import { DataElementDTO } from 'src/app/common/model/domain/data/data-element.dto';
 import { CountResultDTO } from 'src/app/common/model/domain/data/count-result.dto';
 import { rxResource } from '@angular/core/rxjs-interop';
+import { HistoricalDataClient } from '../clients/historical-data.client';
 
 @Injectable({
   providedIn: 'root',
