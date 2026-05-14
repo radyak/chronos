@@ -2,7 +2,7 @@ package net.fvogel.chronos.data.service;
 
 import net.fvogel.chronos.commons.exception.NotFoundException;
 import net.fvogel.chronos.data.model.CountResult;
-import net.fvogel.chronos.data.model.DataElement;
+import net.fvogel.chronos.data.model.Entry;
 import net.fvogel.chronos.data.model.Query;
 import net.fvogel.chronos.data.model.SortOrder;
 import org.neo4j.cypherdsl.core.Cypher;
@@ -31,7 +31,7 @@ public class DataService {
     @Autowired
     private Driver driver;
 
-    public List<DataElement> findAll(Query query) {
+    public List<Entry> findAll(Query query) {
         var nodeName = "n";
         var n = Cypher.anyNode().named(nodeName);
 
@@ -59,7 +59,7 @@ public class DataService {
         }
     }
 
-    public DataElement findById(String id) {
+    public Entry findById(String id) {
         var nodeName = "n";
         var n = Cypher.anyNode().named(nodeName).withProperties("id", Cypher.literalOf(id));
         var statement = Cypher.match(n)
@@ -96,8 +96,8 @@ public class DataService {
         }
     }
 
-    private DataElement mapToEntry(Node node) {
-        DataElement entry = new DataElement();
+    private Entry mapToEntry(Node node) {
+        Entry entry = new Entry();
         entry.setElementId(node.elementId());
         node.labels().forEach(label -> entry.getLabels().add(label));
         node.keys().forEach(key -> entry.getProperties().put(key, nullEscaped(node.get(key).asString())));

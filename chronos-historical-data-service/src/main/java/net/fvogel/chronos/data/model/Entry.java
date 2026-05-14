@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 @Data
-public class DataElement {
+public class Entry {
     String elementId;
     Set<String> labels = new HashSet<>();
     Map<String, Object> properties = new HashMap<>();

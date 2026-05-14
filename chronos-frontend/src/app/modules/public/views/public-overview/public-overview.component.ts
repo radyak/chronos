@@ -28,7 +28,7 @@ export class PublicOverviewComponent implements OnInit {
 
   // Injected dependencies
   private wikiArticlesService = inject(WikiArticlesClient);
-  private entriesService = inject(EntitiesClient);
+  private entitiesClient = inject(EntitiesClient);
 
   // Local state
   wikipediaSummary$: Observable<WikipediaSummary> = of();
@@ -37,7 +37,7 @@ export class PublicOverviewComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.wikipediaSummary$ = this.entriesService.getRandomEntityWithQid$().pipe(
+    this.wikipediaSummary$ = this.entitiesClient.getRandomEntityWithQid$().pipe(
       filter(entity => !!entity.qid),
       switchMap(entitiy => this.wikiArticlesService.getArticleByQid(entitiy.qid!))
     );
