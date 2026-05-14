@@ -7,7 +7,7 @@
 /img/
 
 ## Test DB
-dev/chronos-neo4j-data
+dev/containerdata
 
 ## Custom profiles
 application-developer-*.properties
