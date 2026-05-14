@@ -37,8 +37,8 @@ public class SchemaController {
     }
 
     @GetMapping("/{key}")
-    public SchemaResponse getEntity(@PathVariable("key") String key) {
-        TypePO typePO = schemaService.getEntityByKey(key);
+    public SchemaResponse getType(@PathVariable("key") String key) {
+        TypePO typePO = schemaService.getTypeByKey(key);
 
         SchemaResponse response = new SchemaResponse();
         modelMapper.extractToResponseDto(typePO, response);

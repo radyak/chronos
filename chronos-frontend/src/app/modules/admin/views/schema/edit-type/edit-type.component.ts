@@ -6,7 +6,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AdminConfirmService } from 'src/app/modules/admin/services/admin-confirm.service';
 import { CREATE_ROUTE_KEYWORD } from 'src/app/modules/admin/admin.routes';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { EditEntityFormMapper } from './edit-entity-form.mapper';
+import { EditTypeFormMapper } from './edit-type-form.mapper';
 import { NgbAccordionModule, NgbDropdownModule, NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { AttributeAO } from 'src/app/common/model/domain/schema/admin/attribute.ao';
 import { EditAttributeDialogComponent } from './edit-attribute-dialog/edit-attribute-dialog.component';
@@ -19,7 +19,7 @@ import { EditRelationOffcanvasComponent } from './edit-relation-offcanvas/edit-r
 import { IconSelectComponent } from "./icon-select/icon-select.component";
 
 @Component({
-  selector: 'chronos-edit-entity',
+  selector: 'chronos-edit-type',
   imports: [
     RouterModule,
     FontAwesomeModule,
@@ -27,10 +27,10 @@ import { IconSelectComponent } from "./icon-select/icon-select.component";
     NgbAccordionModule,
     IconSelectComponent
 ],
-  templateUrl: './edit-entity.component.html',
-  styleUrl: './edit-entity.component.scss',
+  templateUrl: './edit-type.component.html',
+  styleUrl: './edit-type.component.scss',
 })
-export class EditEntityComponent {
+export class EditTypeComponent {
 
   // Dependencies
   private route = inject(ActivatedRoute);
@@ -49,23 +49,23 @@ export class EditEntityComponent {
   protected deleteIcon = IconsService.ICON_DELETE;
 
   // Derived Data Fields
-  protected entityId = toSignal(
+  protected typeId = toSignal(
     this.route.params.pipe(
       map(params => params['id']),
       map(id => id === CREATE_ROUTE_KEYWORD ? null : id)
     ),
     { initialValue: null }
   );
-  protected entityResource = this.schemaService.schemaEntityResource(this.entityId());
-  protected allEntities = this.schemaService.allEntities();
-  protected takenEntityNames: Signal<string[]> = computed(() => {
-    const entity = this.entityResource.value();
-    return (this.allEntities.value() ?? [])
-          .filter(el => !!el && el !== entity && el.id !== entity?.id && el.key)
+  protected typeResource = this.schemaService.schemaTypeResource(this.typeId());
+  protected allTypes = this.schemaService.allTypes();
+  protected takenTypeNames: Signal<string[]> = computed(() => {
+    const type = this.typeResource.value();
+    return (this.allTypes.value() ?? [])
+          .filter(el => !!el && el !== type && el.id !== type?.id && el.key)
           .map(el => el.key as string)
            ?? []
   });
-  protected isNew = computed(() => !this.entityResource.value()?.id);
+  protected isNew = computed(() => !this.typeResource.value()?.id);
 
   // Form & controls
   protected form?: FormGroup;
@@ -75,8 +75,8 @@ export class EditEntityComponent {
   // Init
   constructor() {
     effect(() => {
-      const entity = this.entityResource.value();
-      if (!entity) {
+      const type = this.typeResource.value();
+      if (!type) {
         return;
       }
       this.form = this.fb.group(
@@ -86,7 +86,7 @@ export class EditEntityComponent {
               Validators.required,
               Validators.minLength(3),
               Validators.maxLength(64),
-              uniqueValidator(this.takenEntityNames)
+              uniqueValidator(this.takenTypeNames)
             ],
           ],
           explanation: [null, 
@@ -109,30 +109,30 @@ export class EditEntityComponent {
         },
       );
 
-      this.form.patchValue(entity); // partial safe update
+      this.form.patchValue(type); // partial safe update
     });
   }
 
   protected editAttribute(attr: AttributeAO): void {
     const modalRef = this.modalService.open(EditAttributeDialogComponent);
     modalRef.componentInstance.attribute.set(attr);
-    const takenAttributeNames = this.entityResource.value()?.attributes?.filter(a => a !== attr).map(a => a.key);
+    const takenAttributeNames = this.typeResource.value()?.attributes?.filter(a => a !== attr).map(a => a.key);
     modalRef.componentInstance.takenAttributeNames.set(takenAttributeNames);
 
     modalRef.result.then(resultAttribute => {
       if (!resultAttribute) {
         return;
       }
-      const entity = this.entityResource.value();
-      if (!entity) {
+      const type = this.typeResource.value();
+      if (!type) {
         return;
       }
-      entity.attributes = entity.attributes ?? [];
-      let index = entity?.attributes?.indexOf(attr);
+      type.attributes = type.attributes ?? [];
+      let index = type?.attributes?.indexOf(attr);
       if (index === -1) {
-        index = entity.attributes.length;
+        index = type.attributes.length;
       }
-      entity.attributes[index] = resultAttribute;
+      type.attributes[index] = resultAttribute;
     },
     (err) => {
       // Nothing to do
@@ -154,7 +154,7 @@ export class EditEntityComponent {
       position: 'bottom',
       backdrop: 'static'
     });
-    const takenKeys = this.entityResource.value()?.relations?.filter(a => a !== rel).map(a => a.key);
+    const takenKeys = this.typeResource.value()?.relations?.filter(a => a !== rel).map(a => a.key);
 		offcanvasRef.componentInstance.relation.set(rel);
 		offcanvasRef.componentInstance.takenKeys.set(takenKeys);
 
@@ -162,16 +162,16 @@ export class EditEntityComponent {
       if (!resultRelation) {
         return;
       }
-      const entity = this.entityResource.value();
-      if (!entity) {
+      const type = this.typeResource.value();
+      if (!type) {
         return;
       }
-      entity.relations = entity.relations ?? [];
-      let index = entity?.relations?.indexOf(rel);
+      type.relations = type.relations ?? [];
+      let index = type?.relations?.indexOf(rel);
       if (index === -1) {
-        index = entity.relations.length;
+        index = type.relations.length;
       }
-      entity.relations[index] = resultRelation;
+      type.relations[index] = resultRelation;
     },
     (err) => {
       // Nothing to do
@@ -187,8 +187,8 @@ export class EditEntityComponent {
   // Methods
   protected save(): void {
     this.submitted = true;
-    const entity = EditEntityFormMapper.toAO(this.form?.getRawValue(), this.entityResource.value());
-    firstValueFrom(this.schemaService.saveEntity(entity)).then(
+    const type = EditTypeFormMapper.toAO(this.form?.getRawValue(), this.typeResource.value());
+    firstValueFrom(this.schemaService.saveType(type)).then(
       () => {
         this.back();
       },
@@ -201,7 +201,7 @@ export class EditEntityComponent {
   protected cancel(): void {
     this.adminConfirmService.confirm(
       'Confirm Cancel Edit',
-      'Do you want to cancel editing this schema entity and leave without saving?'
+      'Do you want to cancel editing this schema type and leave without saving?'
     ).then(
       () => {
         this.back()
@@ -213,11 +213,11 @@ export class EditEntityComponent {
   }
 
   protected delete(): void {
-    const entity = this.entityResource.value();
-    if (!entity) {
+    const type = this.typeResource.value();
+    if (!type) {
       return;
     }
-    firstValueFrom(this.schemaService.deleteEntity(entity)).then(
+    firstValueFrom(this.schemaService.deleteType(type)).then(
       () => {
         this.back();
       },
@@ -233,12 +233,12 @@ export class EditEntityComponent {
       `Do you want to delete attribute '${attribute.key}'?`
     ).then(
       () => {
-        const entity = this.entityResource.value();
-        let index = entity?.attributes?.indexOf(attribute);
+        const type = this.typeResource.value();
+        let index = type?.attributes?.indexOf(attribute);
         if (index === undefined || index === -1) {
           return;
         }
-        entity?.attributes?.splice(index, 1);
+        type?.attributes?.splice(index, 1);
       },
       () => {
         // Nothing todo
@@ -252,12 +252,12 @@ export class EditEntityComponent {
       `Do you want to delete relation '${relation.key} (-> ${relation.target?.key})'?`
     ).then(
       () => {
-        const entity = this.entityResource.value();
-        let index = entity?.relations?.indexOf(relation);
+        const type = this.typeResource.value();
+        let index = type?.relations?.indexOf(relation);
         if (index === undefined || index === -1) {
           return;
         }
-        entity?.relations?.splice(index, 1);
+        type?.relations?.splice(index, 1);
       },
       () => {
         // Nothing todo

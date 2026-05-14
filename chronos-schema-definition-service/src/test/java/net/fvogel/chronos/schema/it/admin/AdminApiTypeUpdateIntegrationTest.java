@@ -34,7 +34,7 @@ public class AdminApiTypeUpdateIntegrationTest {
 
             type.setExplanation("An individual human");
 
-            mvc.perform(put("/api/schema/admin/entities/Person")
+            mvc.perform(put("/api/schema/admin/types/Person")
                     .content(objectMapper.writeValueAsString(type))
                     .header("Authorization", adminAuthHeader())
                     .contentType(MediaType.APPLICATION_JSON)
@@ -42,8 +42,8 @@ public class AdminApiTypeUpdateIntegrationTest {
 
             // After: Exists, with changed attribute and old relations
             getType("Person").andExpect(status().isOk())
-                    .andExpect(jsonPath("$.entities.elements[?(@.key == 'Person')].explanation").value("An individual human"))
-                    .andExpect(jsonPath("$.entities.elements[?(@.key == 'Person')].attributes.length()").value(1))
+                    .andExpect(jsonPath("$.types.elements[?(@.key == 'Person')].explanation").value("An individual human"))
+                    .andExpect(jsonPath("$.types.elements[?(@.key == 'Person')].attributes.length()").value(1))
                     .andExpect(jsonPath("$.relations.length()").value(2));
         }
 
@@ -55,7 +55,7 @@ public class AdminApiTypeUpdateIntegrationTest {
 
             type.setId(15L);
 
-            mvc.perform(put("/api/schema/admin/entities/Person")
+            mvc.perform(put("/api/schema/admin/types/Person")
                             .content(objectMapper.writeValueAsString(type))
                             .header("Authorization", adminAuthHeader())
                             .contentType(MediaType.APPLICATION_JSON)
@@ -69,7 +69,7 @@ public class AdminApiTypeUpdateIntegrationTest {
 
             // After: Exists, with changed attribute and old relations
             getType("Person").andExpect(status().isOk())
-                    .andExpect(jsonPath("$.entities.elements[?(@.key == 'Person')]").exists());
+                    .andExpect(jsonPath("$.types.elements[?(@.key == 'Person')]").exists());
         }
 
     }
@@ -89,7 +89,7 @@ public class AdminApiTypeUpdateIntegrationTest {
             type.getAttributes().stream().filter(attr -> attr.getKey().equals("gender")).findFirst().get()
                     .setExplanation("The biological sex of the individual human");
 
-            mvc.perform(put("/api/schema/admin/entities/Person")
+            mvc.perform(put("/api/schema/admin/types/Person")
                     .content(objectMapper.writeValueAsString(type))
                     .header("Authorization", adminAuthHeader())
                     .contentType(MediaType.APPLICATION_JSON)
@@ -97,8 +97,8 @@ public class AdminApiTypeUpdateIntegrationTest {
 
             // After: Exists, with changed attribute and old relations
             getType("Person").andExpect(status().isOk())
-                    .andExpect(jsonPath("$.entities.elements[?(@.key == 'Person')].attributes.length()").value(1))
-                    .andExpect(jsonPath("$.entities.elements[?(@.key == 'Person')].attributes[?(@.key == 'gender')].explanation").value("The biological sex of the individual human"))
+                    .andExpect(jsonPath("$.types.elements[?(@.key == 'Person')].attributes.length()").value(1))
+                    .andExpect(jsonPath("$.types.elements[?(@.key == 'Person')].attributes[?(@.key == 'gender')].explanation").value("The biological sex of the individual human"))
                     .andExpect(jsonPath("$.relations.length()").value(2));
         }
 
@@ -116,7 +116,7 @@ public class AdminApiTypeUpdateIntegrationTest {
                             .build()
             );
 
-            mvc.perform(put("/api/schema/admin/entities/Person")
+            mvc.perform(put("/api/schema/admin/types/Person")
                     .content(objectMapper.writeValueAsString(type))
                     .header("Authorization", adminAuthHeader())
                     .contentType(MediaType.APPLICATION_JSON)
@@ -124,9 +124,9 @@ public class AdminApiTypeUpdateIntegrationTest {
 
             // After: Exists, with new attribute and old relations
             getType("Person").andExpect(status().isOk())
-                    .andExpect(jsonPath("$.entities.elements[?(@.key == 'Person')].attributes.length()").value(2))
-                    .andExpect(jsonPath("$.entities.elements[?(@.key == 'Person')].attributes[?(@.key == 'isFictional')].type").value("ENUM"))
-                    .andExpect(jsonPath("$.entities.elements[?(@.key == 'Person')].attributes[?(@.key == 'isFictional')].allowedValues.length()").value(3))
+                    .andExpect(jsonPath("$.types.elements[?(@.key == 'Person')].attributes.length()").value(2))
+                    .andExpect(jsonPath("$.types.elements[?(@.key == 'Person')].attributes[?(@.key == 'isFictional')].type").value("ENUM"))
+                    .andExpect(jsonPath("$.types.elements[?(@.key == 'Person')].attributes[?(@.key == 'isFictional')].allowedValues.length()").value(3))
                     .andExpect(jsonPath("$.relations.length()").value(2));
         }
 
@@ -144,7 +144,7 @@ public class AdminApiTypeUpdateIntegrationTest {
                             .build()
             );
 
-            mvc.perform(put("/api/schema/admin/entities/Person")
+            mvc.perform(put("/api/schema/admin/types/Person")
                             .content(objectMapper.writeValueAsString(type))
                             .header("Authorization", adminAuthHeader())
                             .contentType(MediaType.APPLICATION_JSON)
@@ -162,7 +162,7 @@ public class AdminApiTypeUpdateIntegrationTest {
 
             // After: Exists, with old attributes and old relations
             getType("Person").andExpect(status().isOk())
-                    .andExpect(jsonPath("$.entities.elements[?(@.key == 'Person')].attributes.length()").value(1))
+                    .andExpect(jsonPath("$.types.elements[?(@.key == 'Person')].attributes.length()").value(1))
                     .andExpect(jsonPath("$.relations.length()").value(2));
         }
 
@@ -175,7 +175,7 @@ public class AdminApiTypeUpdateIntegrationTest {
 
             type.getAttributes().remove(0);
 
-            mvc.perform(put("/api/schema/admin/entities/Person")
+            mvc.perform(put("/api/schema/admin/types/Person")
                     .content(objectMapper.writeValueAsString(type))
                     .header("Authorization", adminAuthHeader())
                     .contentType(MediaType.APPLICATION_JSON)
@@ -183,7 +183,7 @@ public class AdminApiTypeUpdateIntegrationTest {
 
             // After: Exists, without attributes and old relations
             getType("Person").andExpect(status().isOk())
-                    .andExpect(jsonPath("$.entities.elements[?(@.key == 'Person')].attributes.length()").doesNotHaveJsonPath())
+                    .andExpect(jsonPath("$.types.elements[?(@.key == 'Person')].attributes.length()").doesNotHaveJsonPath())
                     .andExpect(jsonPath("$.relations.length()").value(2));
         }
     }
@@ -206,7 +206,7 @@ public class AdminApiTypeUpdateIntegrationTest {
 
             assertThat(relation.getAttributes().size(), is(1));
 
-            mvc.perform(put("/api/schema/admin/entities/Person")
+            mvc.perform(put("/api/schema/admin/types/Person")
                     .content(objectMapper.writeValueAsString(type))
                     .header("Authorization", adminAuthHeader())
                     .contentType(MediaType.APPLICATION_JSON)
@@ -229,7 +229,7 @@ public class AdminApiTypeUpdateIntegrationTest {
                             .filter(rel -> rel.getKey().equals("RELATIONSHIP_WITH")).findFirst().get();
             type.getRelations().remove(relation);
 
-            mvc.perform(put("/api/schema/admin/entities/Person")
+            mvc.perform(put("/api/schema/admin/types/Person")
                     .content(objectMapper.writeValueAsString(type))
                     .header("Authorization", adminAuthHeader())
                     .contentType(MediaType.APPLICATION_JSON)
@@ -259,7 +259,7 @@ public class AdminApiTypeUpdateIntegrationTest {
                             .build();
             type.getRelations().add(relation);
 
-            mvc.perform(put("/api/schema/admin/entities/Person")
+            mvc.perform(put("/api/schema/admin/types/Person")
                     .content(objectMapper.writeValueAsString(type))
                     .header("Authorization", adminAuthHeader())
                     .contentType(MediaType.APPLICATION_JSON)
@@ -286,7 +286,7 @@ public class AdminApiTypeUpdateIntegrationTest {
                             .build()
             );
 
-            mvc.perform(put("/api/schema/admin/entities/Person")
+            mvc.perform(put("/api/schema/admin/types/Person")
                     .content(objectMapper.writeValueAsString(type))
                     .header("Authorization", adminAuthHeader())
                     .contentType(MediaType.APPLICATION_JSON)
@@ -307,7 +307,7 @@ public class AdminApiTypeUpdateIntegrationTest {
             RelationPO relation = type.getRelations().stream().filter(rel -> rel.getKey().equals("RULED")).findFirst().get();
             relation.getAttributes().removeIf(attr -> attr.getKey().equals("status"));
 
-            mvc.perform(put("/api/schema/admin/entities/Person")
+            mvc.perform(put("/api/schema/admin/types/Person")
                     .content(objectMapper.writeValueAsString(type))
                     .header("Authorization", adminAuthHeader())
                     .contentType(MediaType.APPLICATION_JSON)
@@ -337,7 +337,7 @@ public class AdminApiTypeUpdateIntegrationTest {
                             .build();
             type.getRelations().add(relation);
 
-            mvc.perform(put("/api/schema/admin/entities/Person")
+            mvc.perform(put("/api/schema/admin/types/Person")
                             .content(objectMapper.writeValueAsString(type))
                             .header("Authorization", adminAuthHeader())
                             .contentType(MediaType.APPLICATION_JSON)
@@ -371,7 +371,7 @@ public class AdminApiTypeUpdateIntegrationTest {
                             .build()
             );
 
-            mvc.perform(put("/api/schema/admin/entities/Person")
+            mvc.perform(put("/api/schema/admin/types/Person")
                             .content(objectMapper.writeValueAsString(type))
                             .header("Authorization", adminAuthHeader())
                             .contentType(MediaType.APPLICATION_JSON)

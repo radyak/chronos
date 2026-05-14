@@ -26,7 +26,7 @@ public class AdminApiTypeCreationIntegrationTest extends BaseIntegrationTest {
         // Before: Doesn't exist
         getType("Event").andExpect(status().isNotFound());
 
-        mvc.perform(post("/api/schema/admin/entities")
+        mvc.perform(post("/api/schema/admin/types")
                 .content(objectMapper.writeValueAsString(createMinimalType("Event")))
                 .header("Authorization", adminAuthHeader())
                 .contentType(MediaType.APPLICATION_JSON)
@@ -34,9 +34,9 @@ public class AdminApiTypeCreationIntegrationTest extends BaseIntegrationTest {
 
         // After: Exists, but without attributes or relations
         getType("Event").andExpect(status().isOk())
-                .andExpect(jsonPath("$.entities.elements.length()").value(1))
-                .andExpect(jsonPath("$.entities.elements[?(@.key == 'Event')]").exists())
-                .andExpect(jsonPath("$.entities.elements[?(@.key == 'Event')].attributes").doesNotExist())
+                .andExpect(jsonPath("$.types.elements.length()").value(1))
+                .andExpect(jsonPath("$.types.elements[?(@.key == 'Event')]").exists())
+                .andExpect(jsonPath("$.types.elements[?(@.key == 'Event')].attributes").doesNotExist())
                 .andExpect(jsonPath("$.relations.elements.length()").value(0));
     }
 
@@ -47,7 +47,7 @@ public class AdminApiTypeCreationIntegrationTest extends BaseIntegrationTest {
         // Before: Doesn't exist
         getType("Event").andExpect(status().isNotFound());
 
-        mvc.perform(post("/api/schema/admin/entities")
+        mvc.perform(post("/api/schema/admin/types")
                 .content(objectMapper.writeValueAsString(type))
                 .header("Authorization", adminAuthHeader())
                 .contentType(MediaType.APPLICATION_JSON)
@@ -55,9 +55,9 @@ public class AdminApiTypeCreationIntegrationTest extends BaseIntegrationTest {
 
         // After: Exists, with attributes and relations
         getType("Event").andExpect(status().isOk())
-                .andExpect(jsonPath("$.entities.elements.length()").value(1))
-                .andExpect(jsonPath("$.entities.elements[?(@.key == 'Event')]").exists())
-                .andExpect(jsonPath("$.entities.elements[?(@.key == 'Event')].attributes.length()").value(4))
+                .andExpect(jsonPath("$.types.elements.length()").value(1))
+                .andExpect(jsonPath("$.types.elements[?(@.key == 'Event')]").exists())
+                .andExpect(jsonPath("$.types.elements[?(@.key == 'Event')].attributes.length()").value(4))
                 .andExpect(jsonPath("$.relations.elements.length()").value(0));
     }
 
@@ -69,7 +69,7 @@ public class AdminApiTypeCreationIntegrationTest extends BaseIntegrationTest {
         // Before: Doesn't exist
         getType("Event").andExpect(status().isNotFound());
 
-        mvc.perform(post("/api/schema/admin/entities")
+        mvc.perform(post("/api/schema/admin/types")
                 .content(objectMapper.writeValueAsString(type))
                 .header("Authorization", adminAuthHeader())
                 .contentType(MediaType.APPLICATION_JSON)
@@ -77,9 +77,9 @@ public class AdminApiTypeCreationIntegrationTest extends BaseIntegrationTest {
 
         // After: Exists, with attributes and relations
         getType("Event").andExpect(status().isOk())
-                .andExpect(jsonPath("$.entities.elements.length()").value(2))
-                .andExpect(jsonPath("$.entities.elements[?(@.key == 'Event')]").exists())
-                .andExpect(jsonPath("$.entities.elements[?(@.key == 'Event')].attributes.length()").value(4))
+                .andExpect(jsonPath("$.types.elements.length()").value(2))
+                .andExpect(jsonPath("$.types.elements[?(@.key == 'Event')]").exists())
+                .andExpect(jsonPath("$.types.elements[?(@.key == 'Event')].attributes.length()").value(4))
                 .andExpect(jsonPath("$.relations.elements.length()").value(1));
     }
 
@@ -88,7 +88,7 @@ public class AdminApiTypeCreationIntegrationTest extends BaseIntegrationTest {
         // Before: Already exists
         getType("Territory").andExpect(status().isOk());
 
-        mvc.perform(post("/api/schema/admin/entities")
+        mvc.perform(post("/api/schema/admin/types")
                         .content(objectMapper.writeValueAsString(createMinimalType("Territory")))
                         .header("Authorization", adminAuthHeader())
                         .contentType(MediaType.APPLICATION_JSON)
@@ -108,7 +108,7 @@ public class AdminApiTypeCreationIntegrationTest extends BaseIntegrationTest {
         TypePO typePO = createMinimalType("Territory");
         typePO.setKey(null);
 
-        mvc.perform(post("/api/schema/admin/entities")
+        mvc.perform(post("/api/schema/admin/types")
                         .content(objectMapper.writeValueAsString(typePO))
                         .header("Authorization", adminAuthHeader())
                         .contentType(MediaType.APPLICATION_JSON)
@@ -125,7 +125,7 @@ public class AdminApiTypeCreationIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void cannotCreateTypeWithTooShortKey() throws Exception {
-        mvc.perform(post("/api/schema/admin/entities")
+        mvc.perform(post("/api/schema/admin/types")
                         .content(objectMapper.writeValueAsString(createMinimalType("Te")))
                         .header("Authorization", adminAuthHeader())
                         .contentType(MediaType.APPLICATION_JSON)
@@ -152,7 +152,7 @@ public class AdminApiTypeCreationIntegrationTest extends BaseIntegrationTest {
         // Before: Doesn't exist
         getType("Event").andExpect(status().isNotFound());
 
-        mvc.perform(post("/api/schema/admin/entities")
+        mvc.perform(post("/api/schema/admin/types")
                         .content(objectMapper.writeValueAsString(type))
                         .header("Authorization", adminAuthHeader())
                         .contentType(MediaType.APPLICATION_JSON)
@@ -180,7 +180,7 @@ public class AdminApiTypeCreationIntegrationTest extends BaseIntegrationTest {
         // Before: Doesn't exist
         getType("Event").andExpect(status().isNotFound());
 
-        mvc.perform(post("/api/schema/admin/entities")
+        mvc.perform(post("/api/schema/admin/types")
                         .content(objectMapper.writeValueAsString(type))
                         .header("Authorization", adminAuthHeader())
                         .contentType(MediaType.APPLICATION_JSON)

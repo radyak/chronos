@@ -13,8 +13,8 @@ export class RelationMapper {
             explanation: dto.explanation,
             attributes: dto.attributes?.map(AttributeMapper.dtoToAo),
             defaultAttributes: schemaPartial.relations.defaultAttributes?.map(AttributeMapper.dtoToAo),
-            source: schemaPartial.entities.elements.find(ent => ent.id === dto.sourceEntityId),
-            target: schemaPartial.entities.elements.find(ent => ent.id === dto.targetEntityId)
+            source: schemaPartial.types.elements.find(ent => ent.id === dto.sourceTypeId),
+            target: schemaPartial.types.elements.find(ent => ent.id === dto.targetTypeId)
         };
         return ao;
     }

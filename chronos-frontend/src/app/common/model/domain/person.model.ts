@@ -1,5 +1,5 @@
-import { Entity } from "./entity.model";
+import { Type } from "./type.model";
 
 
-export interface Person extends Entity {
+export interface Person extends Type {
 }

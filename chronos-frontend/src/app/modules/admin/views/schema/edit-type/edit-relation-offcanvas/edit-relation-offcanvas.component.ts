@@ -9,14 +9,14 @@ import { uniqueValidator } from 'src/app/common/util/unique-validator';
 import { IconsService as IconsConfig } from 'src/app/modules/admin/services/icons.config';
 import { EditAttributeDialogComponent } from '../edit-attribute-dialog/edit-attribute-dialog.component';
 import { AdminConfirmService } from 'src/app/modules/admin/services/admin-confirm.service';
-import { EntitySelectComponent } from '../entity-select/entity-select.component';
+import { TypeSelectComponent } from '../type-select/type-select.component';
 
 @Component({
   selector: 'chronos-edit-relation-offcanvas',
   imports: [
     FontAwesomeModule,
     ReactiveFormsModule,
-    EntitySelectComponent
+    TypeSelectComponent
 ],
   templateUrl: './edit-relation-offcanvas.component.html',
   styleUrl: './edit-relation-offcanvas.component.scss',

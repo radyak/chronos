@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import { HttpClient, HttpParams } from "@angular/common/http";
 import {Observable} from "rxjs";
-import { Entity as Person } from 'src/app/common/model/domain/entity.model';
+import { Type as Person } from 'src/app/common/model/domain/type.model';
 
 export interface PersonSearchParams {
   from?: number;

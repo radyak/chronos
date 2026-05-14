@@ -1,11 +1,11 @@
 <h1>
   Administration:
   {{
-    isNew() ? "Create New Entity" : 'Edit "' + entityResource.value()?.key + '"'
+    isNew() ? "Create New Type" : 'Type "' + typeResource.value()?.key + '"'
   }}
 </h1>
 <p class="text-secondary-emphasis small">
-  Edit an existing schema entity and its attributes and relations to other entities.
+  Edit an existing schema type and its attributes and relations to other types.
 </p>
 
 <div class="admin-controls">
@@ -31,15 +31,15 @@
   </button>
 </div>
 
-@if (entityResource.isLoading()) {
+@if (typeResource.isLoading()) {
   <p>Loading...</p>
 }
 
-@if (entityResource.error()) {
+@if (typeResource.error()) {
   <p>Error loading data</p>
 }
 
-@if (form && entityResource.value(); as entity) {
+@if (form && typeResource.value(); as type) {
   <form [formGroup]="form">
     <h2 id="base-data">Base Data</h2>
     <fieldset>
@@ -139,7 +139,7 @@
         </tr>
       </thead>
       <tbody>
-        @for (attribute of entity.attributes; track attribute.key) {
+        @for (attribute of type.attributes; track attribute.key) {
           <tr class="pointer">
             <td (click)="editAttribute(attribute)">
               {{ attribute.key }}
@@ -163,7 +163,7 @@
           </tr>
         }
 
-        @for (attribute of entity.defaultAttributes; track attribute.key) {
+        @for (attribute of type.defaultAttributes; track attribute.key) {
           <tr class="pointer default-attr">
             <td>
               {{ attribute.key }}
@@ -201,7 +201,7 @@
         </tr>
       </thead>
       <tbody>
-        @for (relation of entity.relations; track relation.key) {
+        @for (relation of type.relations; track relation.key) {
           <tr class="pointer">
             <td (click)="editRelation(relation)">
               {{ relation.key }}

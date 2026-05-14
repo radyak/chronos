@@ -1,5 +1,5 @@
 import { AttributeDTO } from "./attribute.dto";
-import { EntityDTO } from "./entity.dto";
+import { TypeDTO } from "./type.dto";
 import { RelationDTO } from "./relation.dto";
 
 export interface SchemaResponseDTO {
@@ -8,8 +8,8 @@ export interface SchemaResponseDTO {
         query: string;
         base: string;
     };
-    entities: {
-        elements: Array<EntityDTO>;
+    types: {
+        elements: Array<TypeDTO>;
         defaultAttributes: Array<AttributeDTO>;
     }
     relations: {

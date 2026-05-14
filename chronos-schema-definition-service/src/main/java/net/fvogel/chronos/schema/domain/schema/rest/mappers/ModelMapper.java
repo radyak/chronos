@@ -54,10 +54,10 @@ public class ModelMapper {
         dto.setExplanation(relationPO.getExplanation());
         dto.setAttributes(relationPO.getAttributes().stream().map(this::toDto).toList());
         if (relationPO.getSource() != null) {
-            dto.setSourceEntityId(relationPO.getSource().getId());
+            dto.setSourceTypeId(relationPO.getSource().getId());
         }
         if (relationPO.getTarget() != null) {
-            dto.setTargetEntityId(relationPO.getTarget().getId());
+            dto.setTargetTypeId(relationPO.getTarget().getId());
         }
         return dto;
     }
@@ -78,23 +78,23 @@ public class ModelMapper {
     }
 
     public void extractToResponseDto(TypePO typePO, SchemaResponse responseDTO) {
-        responseDTO.getEntities().getElements().add(this.toDto(typePO));
+        responseDTO.getTypes().getElements().add(this.toDto(typePO));
         responseDTO.getRelations().getElements().addAll(typePO.getRelations().stream()
                 .map(this::toDto)
                 .collect(Collectors.toSet()));
         responseDTO.getRelations().getElements().addAll(typePO.getInboundRelations().stream()
                 .map(this::toDto)
                 .collect(Collectors.toSet()));
-        responseDTO.getEntities().getElements().addAll(typePO.getRelations().stream()
+        responseDTO.getTypes().getElements().addAll(typePO.getRelations().stream()
                 .map(RelationPO::getTarget)
                 .map(this::toDto)
                 .collect(Collectors.toSet()));
-        responseDTO.getEntities().getElements().addAll(typePO.getInboundRelations().stream()
+        responseDTO.getTypes().getElements().addAll(typePO.getInboundRelations().stream()
                 .map(RelationPO::getSource)
                 .map(this::toDto)
                 .collect(Collectors.toSet()));
 
-        responseDTO.getEntities().setDefaultAttributes(defaultTypeAttributesRule.getDefaultTypeAttributes());
+        responseDTO.getTypes().setDefaultAttributes(defaultTypeAttributesRule.getDefaultTypeAttributes());
         responseDTO.getRelations().setDefaultAttributes(defaultTypeAttributesRule.getDefaultRelationAttributes());
     }
 

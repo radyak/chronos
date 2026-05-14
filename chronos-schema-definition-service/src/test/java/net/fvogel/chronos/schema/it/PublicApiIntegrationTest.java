@@ -16,28 +16,28 @@ public class PublicApiIntegrationTest extends BaseIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.meta.base").value("*"))
 
-                .andExpect(jsonPath("$.entities.elements.length()").value(2))
-                .andExpect(jsonPath("$.entities.defaultAttributes.length()").value(3))
+                .andExpect(jsonPath("$.types.elements.length()").value(2))
+                .andExpect(jsonPath("$.types.defaultAttributes.length()").value(3))
 
                 .andExpect(jsonPath("$.relations.elements.length()").value(2))
                 .andExpect(jsonPath("$.relations.defaultAttributes.length()").value(3));
     }
 
     @Test
-    void getSingleEntity() throws Exception {
+    void getSingleType() throws Exception {
         mvc.perform(get("/api/schema/{key}", "Territory"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.meta.base").value("Territory"))
 
-                .andExpect(jsonPath("$.entities.elements.length()").value(2))
-                .andExpect(jsonPath("$.entities.defaultAttributes.length()").value(3))
+                .andExpect(jsonPath("$.types.elements.length()").value(2))
+                .andExpect(jsonPath("$.types.defaultAttributes.length()").value(3))
 
                 .andExpect(jsonPath("$.relations.elements.length()").value(1))
                 .andExpect(jsonPath("$.relations.defaultAttributes.length()").value(3));
     }
 
     @Test
-    void cannotGetUnknownEntity() throws Exception {
+    void cannotGetUnknownType() throws Exception {
         mvc.perform(get("/api/schema/{key}", "Dynasty"))
                 .andExpect(status().isNotFound());
     }

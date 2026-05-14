@@ -33,14 +33,14 @@ public class TestDataManager {
     public void importTestData(String resourcePath) throws IOException {
         long existingEntriesCount = schemaService.typeCount();
         if (existingEntriesCount > 0) {
-            logger.info("Database already contains {} entities - no test data will be inserted", existingEntriesCount);
+            logger.info("Database already contains {} types - no test data will be inserted", existingEntriesCount);
             return;
         }
         List<TypePO> typePOS = readTypes(resourcePath);
 
-        logger.info("Database empty - inserting {} entities", typePOS.size());
+        logger.info("Database empty - inserting {} types", typePOS.size());
 
-        // CREATE ENTITIES FIRST, COLLECT RELATIONS FOR SUBSEQUENT, SEPARATE CREATION
+        // CREATE TYPES FIRST, COLLECT RELATIONS FOR SUBSEQUENT, SEPARATE CREATION
         List<RelationPO> relationPOs = new ArrayList<>();
         typePOS.forEach(typePO -> {
             relationPOs.addAll(typePO.getRelations());

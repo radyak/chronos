@@ -8,7 +8,7 @@ import java.util.Set;
 @Data
 public class SchemaResponse {
     SchemaResponseMetaInfoDTO meta = new SchemaResponseMetaInfoDTO();
-    TypesInfoDTO entities = new TypesInfoDTO();
+    TypesInfoDTO types = new TypesInfoDTO();
     RelationsInfoDTO relations = new RelationsInfoDTO();
 
     @Data

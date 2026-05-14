@@ -48,19 +48,19 @@ public class SchemaService {
         return new HashSet<>(this.typePORepository.findAll());
     }
 
-    @Cacheable({CachingConfig.CacheNames.ENTITY_CACHE})
-    public TypePO getEntityByKey(String key) {
+    @Cacheable({CachingConfig.CacheNames.TYPE_CACHE})
+    public TypePO getTypeByKey(String key) {
         return this.typePORepository.findByKey(key).orElseThrow(NotFoundException::new);
     }
 
     public void assertTypeExistsByKey(String key) {
-        getEntityByKey(key);
+        getTypeByKey(key);
     }
 
     @CacheEvict(
             value = {
                     CachingConfig.CacheNames.SCHEMA_CACHE,
-                    CachingConfig.CacheNames.ENTITY_CACHE
+                    CachingConfig.CacheNames.TYPE_CACHE
             },
             allEntries = true
     )
@@ -89,13 +89,13 @@ public class SchemaService {
 
     @CacheEvict(
             value = {
-                    CachingConfig.CacheNames.ENTITY_CACHE,
+                    CachingConfig.CacheNames.TYPE_CACHE,
                     CachingConfig.CacheNames.SCHEMA_CACHE,
             },
             allEntries = true
     )
     public void delete(String key) {
-        TypePO typePO = this.getEntityByKey(key);
+        TypePO typePO = this.getTypeByKey(key);
         this.typePORepository.delete(typePO);
     }
 

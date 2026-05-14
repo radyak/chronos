@@ -18,10 +18,10 @@ public class AdminSchemaController {
     @Autowired
     ModelMapper modelMapper;
 
-    @PostMapping("/entities")
+    @PostMapping("/types")
     public SchemaResponse createType(@Valid @RequestBody TypePO typePO) {
         schemaService.save(typePO);
-        typePO = schemaService.getEntityByKey(typePO.getKey());
+        typePO = schemaService.getTypeByKey(typePO.getKey());
 
         SchemaResponse response = new SchemaResponse();
         modelMapper.extractToResponseDto(typePO, response);
@@ -32,7 +32,7 @@ public class AdminSchemaController {
         return response;
     }
 
-    @PutMapping("/entities/{key}")
+    @PutMapping("/types/{key}")
     public SchemaResponse updateType(@Valid @RequestBody TypePO typePO,
                                      @PathVariable String key) {
         // Ensure the type already exists
@@ -49,7 +49,7 @@ public class AdminSchemaController {
         return response;
     }
 
-    @DeleteMapping("/entities/{key}")
+    @DeleteMapping("/types/{key}")
     public void deleteType(@PathVariable("key") String key) {
         schemaService.delete(key);
     }

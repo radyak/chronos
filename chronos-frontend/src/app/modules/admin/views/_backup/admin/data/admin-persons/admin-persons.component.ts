@@ -5,7 +5,7 @@ import {ActivatedRoute, Params, Router, RouterModule} from "@angular/router";
 import {AdminConfirmService} from "../../../../services/admin-confirm.service";
 import {AbstractQueryDrivenComponent} from "../../../../../../common/components/abstract-query-driven-component.directive";
 import {EntitiesTableAction, EntitiesTableComponent, EntitiesTableSearch} from "../../../../../../common/components/entities-table/entities-table.component";
-import { Entity } from 'src/app/common/model/domain/entity.model';
+import { Type } from 'src/app/common/model/domain/type.model';
 import { AdminPersonService } from '../../../../person/admin-person.service';
 import { PersonService } from '../../../../person/entries.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -28,23 +28,23 @@ export class AdminPersonsComponent extends AbstractQueryDrivenComponent {
   newIcon = faPlus;
   batchActionIcon = faListCheck;
 
-  entities$: Observable<Array<Entity>> = of([]);
-  selectedEntities: Array<Entity> = [];
+  entities$: Observable<Array<Type>> = of([]);
+  selectedEntities: Array<Type> = [];
 
   entitySearch: EntitiesTableSearch = {};
   tableActions: Array<EntitiesTableAction> = [
     {
-      fn: (entity: Entity) => this.editEntity(entity),
+      fn: (entity: Type) => this.editEntity(entity),
       icon: faPenToSquare,
       text: 'Edit'
     },
     {
-      fn: (entity: Entity) => this.copyEntity(entity),
+      fn: (entity: Type) => this.copyEntity(entity),
       icon: faCopy,
       text: 'Copy'
     },
     {
-      fn: (entity: Entity) => this.deleteEntity(entity),
+      fn: (entity: Type) => this.deleteEntity(entity),
       icon: faTrash,
       color: 'danger',
       text: 'Delete'
@@ -75,7 +75,7 @@ export class AdminPersonsComponent extends AbstractQueryDrivenComponent {
     };
   }
 
-  editEntity(entity: Entity): void {
+  editEntity(entity: Type): void {
     this.router.navigate([entity.id], {relativeTo: this.route});
   }
 
@@ -83,7 +83,7 @@ export class AdminPersonsComponent extends AbstractQueryDrivenComponent {
     this.router.navigate(['new'], {relativeTo: this.route});
   }
 
-  deleteEntity(entity: Entity): void {
+  deleteEntity(entity: Type): void {
     this.confirmService.confirm(
       "Confirm deleting entity",
       `Do you want to delete entity ${entity.key}?`
@@ -93,7 +93,7 @@ export class AdminPersonsComponent extends AbstractQueryDrivenComponent {
     });
   }
 
-  copyEntity(entity: Entity): void {
+  copyEntity(entity: Type): void {
     this.router.navigate([entity.id, "copy"], {relativeTo: this.route});
   }
 

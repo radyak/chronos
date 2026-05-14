@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EntitySelectComponent } from './entity-select.component';
+import { EditTypeComponent } from './edit-type.component';
 
-describe('EntitySelectComponent', () => {
-  let component: EntitySelectComponent;
-  let fixture: ComponentFixture<EntitySelectComponent>;
+describe('EditTypeComponent', () => {
+  let component: EditTypeComponent;
+  let fixture: ComponentFixture<EditTypeComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [EntitySelectComponent]
+      imports: [EditTypeComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(EntitySelectComponent);
+    fixture = TestBed.createComponent(EditTypeComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

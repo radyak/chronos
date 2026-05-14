@@ -1,7 +1,11 @@
 <div class="container">
   <div class="offcanvas-header">
     <h2 class="offcanvas-title">
-      Edit Relation {{ relation().key }} &rarr; {{ relation().target?.key }}
+      @if(relation().id) {
+        Edit Relation {{ relation().key }} &rarr; {{ relation().target?.key }}
+      } @else {
+        Create Relation
+      }
     </h2>
   </div>
   <div class="offcanvas-body">
@@ -75,11 +79,11 @@
         <div class="row">
           <div class="form-group col-6">
             <label class="form-label mt-4" for="icon">Target:</label>
-            <chronos-entity-select formControlName="target"
+            <chronos-type-select formControlName="target"
                                    id="target"
                                    name="target"
                                    [class.is-invalid]="isInvalid('target')">
-            </chronos-entity-select>
+            </chronos-type-select>
             <div class="invalid-feedback">
               @for (error of errors("target", "Target"); track error) {
                 {{ error }}

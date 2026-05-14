@@ -1,5 +1,5 @@
 import { AttributeAO } from "./attribute.ao";
-import { EntityAO } from "./entity.ao";
+import { TypeAO } from "./type.ao";
 
 export interface RelationAO {
     id?: number;
@@ -8,6 +8,6 @@ export interface RelationAO {
     examples?: string;
     attributes?: Array<AttributeAO>;
     defaultAttributes?: Array<AttributeAO>;
-    source?: EntityAO;
-    target?: EntityAO;
+    source?: TypeAO;
+    target?: TypeAO;
 }

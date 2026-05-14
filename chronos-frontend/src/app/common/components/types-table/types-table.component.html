@@ -4,15 +4,15 @@
       <!-- Select -->
       @if (selectable) {
         <th scope="col">
-          <input (click)="toggleAllEntitiesSelection()"
-            [ngModel]="allEntitiesSelected()"
+          <input (click)="toggleAllTypesSelection()"
+            [ngModel]="allTypesSelected()"
             class="form-check-input"
-            id="select-all-entities"
+            id="select-all-types"
             type="checkbox"
             value="">
-          @if (selectedEntities.size > 0) {
+          @if (selectedTypes.size > 0) {
             <span>
-              ({{ selectedEntities.size }})
+              ({{ selectedTypes.size }})
             </span>
           }
         </th>
@@ -29,7 +29,7 @@
         <input (keydown.enter)="submit.emit()"
           [(ngModel)]="search.key"
           [disabled]="!searchable"
-          name="entity-search-key"
+          name="type-search-key"
           placeholder="Key"
           type="search"
           >
@@ -47,7 +47,7 @@
           [(ngModel)]="search.from"
           [disabled]="!searchable"
           class="right"
-          name="entity-search-dates-from"
+          name="type-search-dates-from"
           placeholder="From"
           type="search"
           >
@@ -69,7 +69,7 @@
         <input (keydown.enter)="submit.emit()"
           [(ngModel)]="search.to"
           [disabled]="!searchable"
-          name="entity-search-dates-to"
+          name="type-search-dates-to"
           placeholder="To"
           type="search"
           >
@@ -89,27 +89,27 @@
     </tr>
   </thead>
   <tbody>
-    @for (entity of filteredEntities(); track entity) {
-      <tr (click)="entityClick.emit(entity)" class="pointer">
+    @for (type of filteredTypes(); track type) {
+      <tr (click)="typeClick.emit(type)" class="pointer">
         <!-- Select -->
         @if (selectable) {
           <th scope="col">
-            <input (ngModelChange)="toggleEntitySelection(entity._original)"
-              [ngModel]="isEntitySelected(entity._original)"
+            <input (ngModelChange)="toggleTypeSelection(type._original)"
+              [ngModel]="isTypeSelected(type._original)"
               class="form-check-input"
-              id="select-entity-{{ entity.id }}"
+              id="select-type-{{ type.id }}"
               type="checkbox"
               value="">
           </th>
         }
         <!-- Key -->
-        <td (click)="entityClick.emit(entity._original)"
+        <td (click)="typeClick.emit(type._original)"
           class="main-column">
-          {{ entity.key }}
+          {{ type.key }}
         </td>
         <!-- Dates - Start -->
         <td class="secondary-column right">
-          {{ entity.from }}
+          {{ type.from }}
         </td>
         <!-- Dates - Separator -->
         <td class="secondary-column slim">
@@ -117,7 +117,7 @@
         </td>
         <!-- Dates - End -->
         <td class="secondary-column">
-          {{ entity.to }}
+          {{ type.to }}
         </td>
         <!-- Actions -->
         @if (actions.length > 0) {
@@ -128,7 +128,7 @@
               ngbDropdownToggle></fa-icon>
               <div aria-labelledby="dropdownBasic1" ngbDropdownMenu>
                 @for (action of actions; track action) {
-                  <button (click)="action.fn(entity); $event.stopPropagation()"
+                  <button (click)="action.fn(type); $event.stopPropagation()"
                     [ngClass]="action.color ? ('text-' + action.color) : ''"
                     ngbDropdownItem>
                     <fa-icon [icon]="action.icon"></fa-icon>

@@ -49,14 +49,14 @@ public class CachingIntegrationTest extends BaseIntegrationTest {
         getType("Territory")
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.meta.base").value("Territory"))
-                .andExpect(jsonPath("$.entities.elements.length()").value(2));
+                .andExpect(jsonPath("$.types.elements.length()").value(2));
 
         verify(typePORepository, times(1)).findByKey(eq("Territory"));
 
         getType("Territory")
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.meta.base").value("Territory"))
-                .andExpect(jsonPath("$.entities.elements.length()").value(2));
+                .andExpect(jsonPath("$.types.elements.length()").value(2));
 
         verifyNoMoreInteractions(typePORepository);
     }
@@ -78,14 +78,14 @@ public class CachingIntegrationTest extends BaseIntegrationTest {
         mvc.perform(get("/api/schema"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.meta.base").value("*"))
-                .andExpect(jsonPath("$.entities.elements.length()").value(2));
+                .andExpect(jsonPath("$.types.elements.length()").value(2));
 
         verify(typePORepository, times(1)).findAll();
 
         mvc.perform(get("/api/schema"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.meta.base").value("*"))
-                .andExpect(jsonPath("$.entities.elements.length()").value(2));
+                .andExpect(jsonPath("$.types.elements.length()").value(2));
 
         verifyNoMoreInteractions(typePORepository);
     }
@@ -94,13 +94,13 @@ public class CachingIntegrationTest extends BaseIntegrationTest {
     void updatingSingleTypeUpdatesCaches() throws Exception {
         getType("Person").andExpect(status().isOk());
         getType("Person").andExpect(status().isOk())
-                .andExpect(jsonPath("$.entities.elements[?(@.key == 'Person')].explanation").isEmpty());
+                .andExpect(jsonPath("$.types.elements[?(@.key == 'Person')].explanation").isEmpty());
         verify(typePORepository, times(1)).findByKey("Person");
 
         TypePO type = loadType("Person");
         type.setExplanation("An individual human");
 
-        mvc.perform(put("/api/schema/admin/entities/Person")
+        mvc.perform(put("/api/schema/admin/types/Person")
                 .content(objectMapper.writeValueAsString(type))
                 .header("Authorization", adminAuthHeader())
                 .contentType(MediaType.APPLICATION_JSON)
@@ -111,8 +111,8 @@ public class CachingIntegrationTest extends BaseIntegrationTest {
         // Retrieve type again - Cache PUT updated the TYPE cache already
         getType("Person").andExpect(status().isOk())
                 .andExpect(jsonPath("$.meta.base").value("Person"))
-                .andExpect(jsonPath("$.entities.elements.length()").value(2))
-                .andExpect(jsonPath("$.entities.elements[?(@.key == 'Person')].explanation").value("An individual human"));
+                .andExpect(jsonPath("$.types.elements.length()").value(2))
+                .andExpect(jsonPath("$.types.elements[?(@.key == 'Person')].explanation").value("An individual human"));
 
         verify(typePORepository, times(1)).findByKey("Person");
 
@@ -121,7 +121,7 @@ public class CachingIntegrationTest extends BaseIntegrationTest {
         mvc.perform(get("/api/schema"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.meta.base").value("*"))
-                .andExpect(jsonPath("$.entities.elements.length()").value(2));
+                .andExpect(jsonPath("$.types.elements.length()").value(2));
 
         verify(typePORepository, times(1)).findAll();
     }
@@ -132,7 +132,7 @@ public class CachingIntegrationTest extends BaseIntegrationTest {
         getType("Person").andExpect(status().isOk());
         verify(typePORepository, times(1)).findByKey("Person");
 
-        mvc.perform(delete("/api/schema/admin/entities/Person")
+        mvc.perform(delete("/api/schema/admin/types/Person")
                 .header("Authorization", adminAuthHeader())
                 .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk());
@@ -143,7 +143,7 @@ public class CachingIntegrationTest extends BaseIntegrationTest {
         verify(typePORepository, times(1)).findByKey("Person");
 
         mvc.perform(get("/api/schema")).andExpect(status().isOk())
-                .andExpect(jsonPath("$.entities.elements.length()").value(1));
+                .andExpect(jsonPath("$.types.elements.length()").value(1));
         verify(typePORepository, times(1)).findAll();
     }
 

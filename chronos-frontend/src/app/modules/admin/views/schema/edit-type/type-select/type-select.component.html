@@ -5,11 +5,11 @@
     class="form-control btn btn-outline-secondary"
     ngbDropdownToggle
   >
-    @if (entity) {
-      @if (entity.icon) {
-        <fa-icon [icon]="entity.icon"></fa-icon>
+    @if (type) {
+      @if (type.icon) {
+        <fa-icon [icon]="type.icon"></fa-icon>
       }
-      {{ entity.key }}
+      {{ type.key }}
     } @else {
       (no target selected)
     }
@@ -19,15 +19,15 @@
       class="search"
       autofocus
       placeholder="Type to filter ..."
-      [(ngModel)]="entitySearch"
+      [(ngModel)]="typeSearch"
       [ngModelOptions]="{ standalone: true }"
     />
     <div class="dropdown-options">
-      <button ngbDropdownItem (click)="selectEntity(undefined)">
+      <button ngbDropdownItem (click)="selectType(undefined)">
         (none)
       </button>
-      @for (target of entities(); track target) {
-        <button ngbDropdownItem (click)="selectEntity(target)">
+      @for (target of types(); track target) {
+        <button ngbDropdownItem (click)="selectType(target)">
           @if (target.icon) {
             <fa-icon [icon]="target.icon"></fa-icon>
           }

@@ -1,7 +1,7 @@
 import { AttributeAO } from "./attribute.ao";
 import { RelationAO } from "./relation.ao";
 
-export interface EntityAO {
+export interface TypeAO {
     id?: number;
     key?: string;
     explanation?: string;

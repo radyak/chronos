@@ -1,6 +1,6 @@
 import { AttributeDTO } from "./attribute.dto";
 
-export interface EntityDTO {
+export interface TypeDTO {
     id?: number;
     key?: string;
     explanation?: string;

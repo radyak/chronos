@@ -1,7 +1,7 @@
-import { EntityAO } from "src/app/common/model/domain/schema/admin/entity.ao";
+import { TypeAO } from "src/app/common/model/domain/schema/admin/type.ao";
 
-export class EditEntityFormMapper {
-    public static toAO(formData: any, original?: EntityAO): EntityAO {
+export class EditTypeFormMapper {
+    public static toAO(formData: any, original?: TypeAO): TypeAO {
         return {
             ...original,
             key: formData.key,

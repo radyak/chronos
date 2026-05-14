@@ -1,4 +1,4 @@
-export interface Entity {
+export interface Type {
   id?: string;
   key?: string;
   from?: string;

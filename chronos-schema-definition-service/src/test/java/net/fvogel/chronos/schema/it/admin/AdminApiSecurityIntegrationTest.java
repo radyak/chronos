@@ -16,26 +16,26 @@ public class AdminApiSecurityIntegrationTest extends BaseIntegrationTest {
     TypePORepository typePORepository;
 
     @Test
-    void unauthenticatedUserCannotDeleteEntity() throws Exception {
+    void unauthenticatedUserCannotDeleteType() throws Exception {
         assertThat(typePORepository.findByKey("Territory").isPresent());
-        mvc.perform(delete("/api/schema/admin/entities/{key}", "Territory"))
+        mvc.perform(delete("/api/schema/admin/types/{key}", "Territory"))
                 .andExpect(status().isUnauthorized());
         assertThat(typePORepository.findByKey("Territory").isPresent());
     }
 
     @Test
-    void unauthorizedUserCannotDeleteEntity() throws Exception {
+    void unauthorizedUserCannotDeleteType() throws Exception {
         assertThat(typePORepository.findByKey("Territory").isPresent());
-        mvc.perform(delete("/api/schema/admin/entities/{key}", "Territory")
+        mvc.perform(delete("/api/schema/admin/types/{key}", "Territory")
                 .header("Authorization", authHeader("user"))
         ).andExpect(status().isForbidden());
         assertThat(typePORepository.findByKey("Territory").isPresent());
     }
 
     @Test
-    void adminRoleAuthorizedUserCanDeleteEntity() throws Exception {
+    void adminRoleAuthorizedUserCanDeleteType() throws Exception {
         assertThat(typePORepository.findByKey("Territory").isPresent());
-        mvc.perform(delete("/api/schema/admin/entities/{key}", "Territory")
+        mvc.perform(delete("/api/schema/admin/types/{key}", "Territory")
                 .header("Authorization", adminAuthHeader())
         ).andExpect(status().isOk());
         assertThat(typePORepository.findByKey("Territory").isEmpty());

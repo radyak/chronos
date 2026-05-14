@@ -26,7 +26,7 @@ import { NotificationsComponent } from './common/components/notifications/notifi
         OAuthModule.forRoot({
             resourceServer: {
                 allowedUrls: [
-                    '/api/entities/admin',
+                    '/api/types/admin',
                     '/api/schema/admin',
                     '/api/wiki/admin',
                     '/api/admin/persons'

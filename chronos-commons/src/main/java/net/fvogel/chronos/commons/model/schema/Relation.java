@@ -14,6 +14,6 @@ public class Relation {
     String explanation;
     String examples;
     List<Attribute> attributes = new ArrayList<>();
-    Long sourceEntityId;
-    Long targetEntityId;
+    Long sourceTypeId;
+    Long targetTypeId;
 }

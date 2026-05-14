@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EditAttributeDialogComponent } from './edit-attribute-dialog.component';
 
-describe('EditEntityAttributeDialogComponent', () => {
+describe('EditAttributeDialogComponent', () => {
   let component: EditAttributeDialogComponent;
   let fixture: ComponentFixture<EditAttributeDialogComponent>;
 

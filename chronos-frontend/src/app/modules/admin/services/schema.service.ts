@@ -2,8 +2,8 @@ import { computed, inject, Injectable, ResourceRef, signal, Signal } from '@angu
 import { AdminConfirmService } from './admin-confirm.service';
 import { SchemaClient } from './schema.client';
 import { catchError, firstValueFrom, from, map, Observable, of, tap } from 'rxjs';
-import { EntityAO } from 'src/app/common/model/domain/schema/admin/entity.ao';
-import { EntityMapper } from 'src/app/common/model/domain/schema/mappers/entity.mapper';
+import { TypeAO } from 'src/app/common/model/domain/schema/admin/type.ao';
+import { TypeMapper } from 'src/app/common/model/domain/schema/mappers/type.mapper';
 import { NotificationService } from 'src/app/common/components/notifications/notification.service';
 import { rxResource, toSignal } from '@angular/core/rxjs-interop';
 import { AttributeMapper } from 'src/app/common/model/domain/schema/mappers/attribute.mapper';
@@ -21,61 +21,61 @@ export class SchemaService {
 
   // "Cache"
   public readonly schema = toSignal(this.schemaClient.getSchema());
-  public readonly defaultEntityAttributes = computed(() => this.schema()?.entities.defaultAttributes?.map(AttributeMapper.dtoToAo) ?? []);
+  public readonly defaultTypeAttributes = computed(() => this.schema()?.types.defaultAttributes?.map(AttributeMapper.dtoToAo) ?? []);
   public readonly defaultRelationAttributes = computed(() => this.schema()?.relations.defaultAttributes?.map(AttributeMapper.dtoToAo) ?? []);
 
-  public allEntities(reloadTrigger: Signal<number> = signal(0)): ResourceRef<EntityAO[] | undefined> {
+  public allTypes(reloadTrigger: Signal<number> = signal(0)): ResourceRef<TypeAO[] | undefined> {
     return rxResource({
       params: () => reloadTrigger?.(),
       stream: () => this.schemaClient.getSchema().pipe(
           map((schemaDto: SchemaResponseDTO) =>
-            (schemaDto?.entities.elements ?? []).map(entity => EntityMapper.dtoToAo(entity, schemaDto))
+            (schemaDto?.types.elements ?? []).map(type => TypeMapper.dtoToAo(type, schemaDto))
           )
         )
     });
   }
 
-  public schemaEntityResource(entityIdentifier: string): ResourceRef<EntityAO | undefined> {
+  public schemaTypeResource(typeIdentifier: string): ResourceRef<TypeAO | undefined> {
     return rxResource({
       stream: () => {
-        if (!entityIdentifier) {
+        if (!typeIdentifier) {
           return of({
-            defaultAttributes: this.defaultEntityAttributes(),
-          } as EntityAO);
+            defaultAttributes: this.defaultTypeAttributes(),
+          } as TypeAO);
         }
-        return this.schemaClient.getEntity(entityIdentifier).pipe(
-          map(EntityMapper.fromSchemaResponseDTO)
+        return this.schemaClient.getType(typeIdentifier).pipe(
+          map(TypeMapper.fromSchemaResponseDTO)
         );
       },
     });
   }
 
-  public saveEntity(entity: EntityAO): Observable<void> {
-    return this.schemaClient.saveEntity(entity).pipe(
+  public saveType(type: TypeAO): Observable<void> {
+    return this.schemaClient.saveType(type).pipe(
       catchError((err: any, caught: Observable<void>) => {
-        this.notificationService.error(`Error while saving entity "${entity.key}"`);
-        throw new Error("Entity not saved");
+        this.notificationService.error(`Error while saving type "${type.key}"`);
+        throw new Error("Type not saved");
       }),
       tap(() => {
-        this.notificationService.success(`Entity "${entity.key}" saved successfully`);
+        this.notificationService.success(`Type "${type.key}" saved successfully`);
       })
     );
   }
 
-  public deleteEntity(entity: EntityAO): Observable<void> {
+  public deleteType(type: TypeAO): Observable<void> {
     return from(
       this.confirmService.confirm(
-        `Confirm Delete ${entity.key}`,
-        `Do you want to delete schema entity ${entity?.key}?`
+        `Confirm Delete ${type.key}`,
+        `Do you want to delete schema type ${type?.key}?`
       ).then(
         () =>
-          firstValueFrom(this.schemaClient.deleteEntity(entity)).then(
+          firstValueFrom(this.schemaClient.deleteType(type)).then(
             () => {
-              this.notificationService.success(`Entity "${entity.key}" deleted successfully`);
+              this.notificationService.success(`Type "${type.key}" deleted successfully`);
             },
             (err) => {
-              this.notificationService.error(`Error while deleting entity "${entity.key}"`);
-              throw new Error("Entitiy not deleted");
+              this.notificationService.error(`Error while deleting type "${type.key}"`);
+              throw new Error("Type not deleted");
             }
           ),
         () => {

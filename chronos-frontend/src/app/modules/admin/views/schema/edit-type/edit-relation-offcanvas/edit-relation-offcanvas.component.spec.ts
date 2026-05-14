@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EditRelationOffcanvasComponent } from './edit-relation-offcanvas.component';
 
-describe('EditEntityRelationFormComponent', () => {
+describe('EditRelationOffcanvasComponent', () => {
   let component: EditRelationOffcanvasComponent;
   let fixture: ComponentFixture<EditRelationOffcanvasComponent>;
 
