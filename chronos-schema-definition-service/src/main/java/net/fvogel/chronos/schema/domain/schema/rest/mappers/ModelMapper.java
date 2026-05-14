@@ -1,14 +1,14 @@
 package net.fvogel.chronos.schema.domain.schema.rest.mappers;
 
 import net.fvogel.chronos.commons.model.schema.Attribute;
-import net.fvogel.chronos.commons.model.schema.Entity;
 import net.fvogel.chronos.commons.model.schema.Relation;
 import net.fvogel.chronos.commons.model.schema.SchemaResponse;
-import net.fvogel.chronos.schema.domain.schema.business.DefaultEntityAttributesRule;
-import net.fvogel.chronos.schema.domain.schema.persistence.model.entity.EntityAttributePO;
-import net.fvogel.chronos.schema.domain.schema.persistence.model.entity.EntityPO;
+import net.fvogel.chronos.commons.model.schema.Type;
+import net.fvogel.chronos.schema.domain.schema.business.DefaultTypeAttributesRule;
 import net.fvogel.chronos.schema.domain.schema.persistence.model.relation.RelationAttributePO;
 import net.fvogel.chronos.schema.domain.schema.persistence.model.relation.RelationPO;
+import net.fvogel.chronos.schema.domain.schema.persistence.model.type.TypeAttributePO;
+import net.fvogel.chronos.schema.domain.schema.persistence.model.type.TypePO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,20 +18,20 @@ import java.util.stream.Collectors;
 public class ModelMapper {
 
     @Autowired
-    DefaultEntityAttributesRule defaultEntityAttributesRule;
+    DefaultTypeAttributesRule defaultTypeAttributesRule;
 
-    public Entity toDto(EntityPO entityPO) {
-        Entity dto = new Entity();
-        dto.setId(entityPO.getId());
-        dto.setKey(entityPO.getKey());
-        dto.setExamples(entityPO.getExamples());
-        dto.setExplanation(entityPO.getExplanation());
-        dto.setIcon(entityPO.getIcon());
-        dto.setAttributes(entityPO.getAttributes().stream().map(this::toDto).toList());
+    public Type toDto(TypePO typePO) {
+        Type dto = new Type();
+        dto.setId(typePO.getId());
+        dto.setKey(typePO.getKey());
+        dto.setExamples(typePO.getExamples());
+        dto.setExplanation(typePO.getExplanation());
+        dto.setIcon(typePO.getIcon());
+        dto.setAttributes(typePO.getAttributes().stream().map(this::toDto).toList());
         return dto;
     }
 
-    public Attribute toDto(EntityAttributePO attribute) {
+    public Attribute toDto(TypeAttributePO attribute) {
         Attribute dto = new Attribute();
         dto.setId(attribute.getId());
         dto.setKey(attribute.getKey());
@@ -77,25 +77,25 @@ public class ModelMapper {
         return dto;
     }
 
-    public void extractToResponseDto(EntityPO entityPO, SchemaResponse responseDTO) {
-        responseDTO.getEntities().getElements().add(this.toDto(entityPO));
-        responseDTO.getRelations().getElements().addAll(entityPO.getRelations().stream()
+    public void extractToResponseDto(TypePO typePO, SchemaResponse responseDTO) {
+        responseDTO.getEntities().getElements().add(this.toDto(typePO));
+        responseDTO.getRelations().getElements().addAll(typePO.getRelations().stream()
                 .map(this::toDto)
                 .collect(Collectors.toSet()));
-        responseDTO.getRelations().getElements().addAll(entityPO.getInboundRelations().stream()
+        responseDTO.getRelations().getElements().addAll(typePO.getInboundRelations().stream()
                 .map(this::toDto)
                 .collect(Collectors.toSet()));
-        responseDTO.getEntities().getElements().addAll(entityPO.getRelations().stream()
+        responseDTO.getEntities().getElements().addAll(typePO.getRelations().stream()
                 .map(RelationPO::getTarget)
                 .map(this::toDto)
                 .collect(Collectors.toSet()));
-        responseDTO.getEntities().getElements().addAll(entityPO.getInboundRelations().stream()
+        responseDTO.getEntities().getElements().addAll(typePO.getInboundRelations().stream()
                 .map(RelationPO::getSource)
                 .map(this::toDto)
                 .collect(Collectors.toSet()));
 
-        responseDTO.getEntities().setDefaultAttributes(defaultEntityAttributesRule.getDefaultEntityAttributes());
-        responseDTO.getRelations().setDefaultAttributes(defaultEntityAttributesRule.getDefaultRelationAttributes());
+        responseDTO.getEntities().setDefaultAttributes(defaultTypeAttributesRule.getDefaultTypeAttributes());
+        responseDTO.getRelations().setDefaultAttributes(defaultTypeAttributesRule.getDefaultRelationAttributes());
     }
 
 

@@ -12,23 +12,23 @@ import java.io.InputStream;
 import java.util.Set;
 
 @Component
-public class DefaultEntityAttributesRule {
+public class DefaultTypeAttributesRule {
 
     private static final ObjectMapper mapper = new ObjectMapper();
 
     @Getter
-    private final Set<Attribute> defaultEntityAttributes;
+    private final Set<Attribute> defaultTypeAttributes;
 
     @Getter
     private final Set<Attribute> defaultRelationAttributes;
 
-    public DefaultEntityAttributesRule() throws IOException {
-        defaultEntityAttributes = loadDefaultAttributes("defaults/entity-attributes.json");
+    public DefaultTypeAttributesRule() throws IOException {
+        defaultTypeAttributes = loadDefaultAttributes("defaults/type-attributes.json");
         defaultRelationAttributes = loadDefaultAttributes("defaults/relation-attributes.json");
     }
 
-    public boolean isDefaultEntityAttribute(String attributeKey) {
-        return isDefaultAttribute(attributeKey, defaultEntityAttributes);
+    public boolean isDefaultTypeAttribute(String attributeKey) {
+        return isDefaultAttribute(attributeKey, defaultTypeAttributes);
     }
 
     public boolean isDefaultRelationAttribute(String attributeKey) {

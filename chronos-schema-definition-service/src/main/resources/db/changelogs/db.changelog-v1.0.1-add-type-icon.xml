@@ -3,7 +3,7 @@
                    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
     <changeSet author="birdman (generated)" id="1776024125632-1">
-        <addColumn tableName="entitypo">
+        <addColumn tableName="typepo">
             <column name="icon" type="VARCHAR(255)"/>
         </addColumn>
     </changeSet>

@@ -1,8 +1,8 @@
 package net.fvogel.chronos.schema.it.admin;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import net.fvogel.chronos.schema.domain.schema.persistence.model.entity.EntityPO;
-import net.fvogel.chronos.schema.domain.schema.persistence.repository.EntityPORepository;
+import net.fvogel.chronos.schema.domain.schema.persistence.model.type.TypePO;
+import net.fvogel.chronos.schema.domain.schema.persistence.repository.TypePORepository;
 import net.fvogel.chronos.schema.testutils.BaseIntegrationTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,26 +14,26 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
-public class AdminApiEntityCreationIntegrationTest extends BaseIntegrationTest {
+public class AdminApiTypeCreationIntegrationTest extends BaseIntegrationTest {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
-    EntityPORepository entityPORepository;
+    TypePORepository typePORepository;
 
     @Test
-    void canCreateMinimalEntity() throws Exception {
+    void canCreateMinimalType() throws Exception {
         // Before: Doesn't exist
-        getEntity("Event").andExpect(status().isNotFound());
+        getType("Event").andExpect(status().isNotFound());
 
         mvc.perform(post("/api/schema/admin/entities")
-                .content(objectMapper.writeValueAsString(createMinimalEntity("Event")))
+                .content(objectMapper.writeValueAsString(createMinimalType("Event")))
                 .header("Authorization", adminAuthHeader())
                 .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk());
 
         // After: Exists, but without attributes or relations
-        getEntity("Event").andExpect(status().isOk())
+        getType("Event").andExpect(status().isOk())
                 .andExpect(jsonPath("$.entities.elements.length()").value(1))
                 .andExpect(jsonPath("$.entities.elements[?(@.key == 'Event')]").exists())
                 .andExpect(jsonPath("$.entities.elements[?(@.key == 'Event')].attributes").doesNotExist())
@@ -41,20 +41,20 @@ public class AdminApiEntityCreationIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    void canCreateFullEntityWithoutRelations() throws Exception {
-        EntityPO entity = createFullDefaultEntity();
+    void canCreateFullTypeWithoutRelations() throws Exception {
+        TypePO type = createFullDefaultType();
 
         // Before: Doesn't exist
-        getEntity("Event").andExpect(status().isNotFound());
+        getType("Event").andExpect(status().isNotFound());
 
         mvc.perform(post("/api/schema/admin/entities")
-                .content(objectMapper.writeValueAsString(entity))
+                .content(objectMapper.writeValueAsString(type))
                 .header("Authorization", adminAuthHeader())
                 .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk());
 
         // After: Exists, with attributes and relations
-        getEntity("Event").andExpect(status().isOk())
+        getType("Event").andExpect(status().isOk())
                 .andExpect(jsonPath("$.entities.elements.length()").value(1))
                 .andExpect(jsonPath("$.entities.elements[?(@.key == 'Event')]").exists())
                 .andExpect(jsonPath("$.entities.elements[?(@.key == 'Event')].attributes.length()").value(4))
@@ -62,21 +62,21 @@ public class AdminApiEntityCreationIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    void canCreateFullEntityWithRelations() throws Exception {
-        EntityPO target = entityPORepository.findByKey("Person").get();
-        EntityPO entity = createFullDefaultEntityWithTarget(target);
+    void canCreateFullTypeWithRelations() throws Exception {
+        TypePO target = typePORepository.findByKey("Person").get();
+        TypePO type = createFullDefaultTypeWithTarget(target);
 
         // Before: Doesn't exist
-        getEntity("Event").andExpect(status().isNotFound());
+        getType("Event").andExpect(status().isNotFound());
 
         mvc.perform(post("/api/schema/admin/entities")
-                .content(objectMapper.writeValueAsString(entity))
+                .content(objectMapper.writeValueAsString(type))
                 .header("Authorization", adminAuthHeader())
                 .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk());
 
         // After: Exists, with attributes and relations
-        getEntity("Event").andExpect(status().isOk())
+        getType("Event").andExpect(status().isOk())
                 .andExpect(jsonPath("$.entities.elements.length()").value(2))
                 .andExpect(jsonPath("$.entities.elements[?(@.key == 'Event')]").exists())
                 .andExpect(jsonPath("$.entities.elements[?(@.key == 'Event')].attributes.length()").value(4))
@@ -84,12 +84,12 @@ public class AdminApiEntityCreationIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    void cannotCreateEntityWithAlreadyExistingKey() throws Exception {
+    void cannotCreateTypeWithAlreadyExistingKey() throws Exception {
         // Before: Already exists
-        getEntity("Territory").andExpect(status().isOk());
+        getType("Territory").andExpect(status().isOk());
 
         mvc.perform(post("/api/schema/admin/entities")
-                        .content(objectMapper.writeValueAsString(createMinimalEntity("Territory")))
+                        .content(objectMapper.writeValueAsString(createMinimalType("Territory")))
                         .header("Authorization", adminAuthHeader())
                         .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -104,12 +104,12 @@ public class AdminApiEntityCreationIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    void cannotCreateEntityWithoutKey() throws Exception {
-        EntityPO entityPO = createMinimalEntity("Territory");
-        entityPO.setKey(null);
+    void cannotCreateTypeWithoutKey() throws Exception {
+        TypePO typePO = createMinimalType("Territory");
+        typePO.setKey(null);
 
         mvc.perform(post("/api/schema/admin/entities")
-                        .content(objectMapper.writeValueAsString(entityPO))
+                        .content(objectMapper.writeValueAsString(typePO))
                         .header("Authorization", adminAuthHeader())
                         .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -124,9 +124,9 @@ public class AdminApiEntityCreationIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    void cannotCreateEntityWithTooShortKey() throws Exception {
+    void cannotCreateTypeWithTooShortKey() throws Exception {
         mvc.perform(post("/api/schema/admin/entities")
-                        .content(objectMapper.writeValueAsString(createMinimalEntity("Te")))
+                        .content(objectMapper.writeValueAsString(createMinimalType("Te")))
                         .header("Authorization", adminAuthHeader())
                         .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -142,18 +142,18 @@ public class AdminApiEntityCreationIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    void cannotCreateEntityWithDuplicateAttributeKey() throws Exception {
-        EntityPO entity = entity().withKey("Event")
-                .withAttribute(createMinimalEntityAttribute("isIncidental"))
-                .withAttribute(createMinimalEntityAttribute("localNames"))
-                .withAttribute(createMinimalEntityAttribute("isIncidental"))
+    void cannotCreateTypeWithDuplicateAttributeKey() throws Exception {
+        TypePO type = type().withKey("Event")
+                .withAttribute(createMinimalTypeAttribute("isIncidental"))
+                .withAttribute(createMinimalTypeAttribute("localNames"))
+                .withAttribute(createMinimalTypeAttribute("isIncidental"))
                 .build();
 
         // Before: Doesn't exist
-        getEntity("Event").andExpect(status().isNotFound());
+        getType("Event").andExpect(status().isNotFound());
 
         mvc.perform(post("/api/schema/admin/entities")
-                        .content(objectMapper.writeValueAsString(entity))
+                        .content(objectMapper.writeValueAsString(type))
                         .header("Authorization", adminAuthHeader())
                         .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -166,22 +166,22 @@ public class AdminApiEntityCreationIntegrationTest extends BaseIntegrationTest {
                 .andExpect(jsonPath("$.errors[0].arguments").doesNotExist());
 
         // After: Still doesn't exist
-        getEntity("Event").andExpect(status().isNotFound());
+        getType("Event").andExpect(status().isNotFound());
     }
 
     @Test
-    void cannotCreateEntityWithoutAttributeKey() throws Exception {
-        EntityPO entity = entity().withKey("Event")
-                .withAttribute(createMinimalEntityAttribute("isIncidental"))
-                .withAttribute(createMinimalEntityAttribute("localNames"))
-                .withAttribute(createMinimalEntityAttribute(null))
+    void cannotCreateTypeWithoutAttributeKey() throws Exception {
+        TypePO type = type().withKey("Event")
+                .withAttribute(createMinimalTypeAttribute("isIncidental"))
+                .withAttribute(createMinimalTypeAttribute("localNames"))
+                .withAttribute(createMinimalTypeAttribute(null))
                 .build();
 
         // Before: Doesn't exist
-        getEntity("Event").andExpect(status().isNotFound());
+        getType("Event").andExpect(status().isNotFound());
 
         mvc.perform(post("/api/schema/admin/entities")
-                        .content(objectMapper.writeValueAsString(entity))
+                        .content(objectMapper.writeValueAsString(type))
                         .header("Authorization", adminAuthHeader())
                         .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -194,7 +194,7 @@ public class AdminApiEntityCreationIntegrationTest extends BaseIntegrationTest {
                 .andExpect(jsonPath("$.errors[0].arguments").isEmpty());
 
         // After: Still doesn't exist
-        getEntity("Event").andExpect(status().isNotFound());
+        getType("Event").andExpect(status().isNotFound());
     }
 
 }

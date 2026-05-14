@@ -2,8 +2,8 @@ package net.fvogel.chronos.schema.shared.dev;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import net.fvogel.chronos.schema.domain.schema.persistence.model.entity.EntityPO;
 import net.fvogel.chronos.schema.domain.schema.persistence.model.relation.RelationPO;
+import net.fvogel.chronos.schema.domain.schema.persistence.model.type.TypePO;
 import net.fvogel.chronos.schema.domain.schema.service.SchemaService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,27 +31,27 @@ public class TestDataManager {
     }
 
     public void importTestData(String resourcePath) throws IOException {
-        long existingEntriesCount = schemaService.entityCount();
+        long existingEntriesCount = schemaService.typeCount();
         if (existingEntriesCount > 0) {
             logger.info("Database already contains {} entities - no test data will be inserted", existingEntriesCount);
             return;
         }
-        List<EntityPO> entityPOs = readEntities(resourcePath);
+        List<TypePO> typePOS = readTypes(resourcePath);
 
-        logger.info("Database empty - inserting {} entities", entityPOs.size());
+        logger.info("Database empty - inserting {} entities", typePOS.size());
 
         // CREATE ENTITIES FIRST, COLLECT RELATIONS FOR SUBSEQUENT, SEPARATE CREATION
         List<RelationPO> relationPOs = new ArrayList<>();
-        entityPOs.forEach(entityPO -> {
-            relationPOs.addAll(entityPO.getRelations());
-            entityPO.getRelations().clear();
-            this.schemaService.save(entityPO);
+        typePOS.forEach(typePO -> {
+            relationPOs.addAll(typePO.getRelations());
+            typePO.getRelations().clear();
+            this.schemaService.save(typePO);
         });
 
         // NOW CREATE RELATIONS
         relationPOs.forEach(relationPO -> {
-            relationPO.setTarget(findByKey(relationPO.getTarget().getKey(), entityPOs));
-            relationPO.setSource(findByKey(relationPO.getSource().getKey(), entityPOs));
+            relationPO.setTarget(findByKey(relationPO.getTarget().getKey(), typePOS));
+            relationPO.setSource(findByKey(relationPO.getSource().getKey(), typePOS));
             schemaService.save(relationPO);
         });
 
@@ -62,14 +62,14 @@ public class TestDataManager {
     }
 
     public void clearAll() {
-        this.schemaService.allEntities().forEach(entityPO -> schemaService.delete(entityPO.getKey()));
+        this.schemaService.allTypes().forEach(typePO -> schemaService.delete(typePO.getKey()));
     }
 
     public void clearTestData(String resourcePath) throws IOException {
-        this.readEntities(resourcePath).forEach(entityPO -> schemaService.delete(entityPO.getKey()));
+        this.readTypes(resourcePath).forEach(typePO -> schemaService.delete(typePO.getKey()));
     }
 
-    private List<EntityPO> readEntities(String resourcePath) throws IOException {
+    private List<TypePO> readTypes(String resourcePath) throws IOException {
 
         // READ & DESERIALIZE JSON
         InputStream is = TestDataManager.class
@@ -80,16 +80,16 @@ public class TestDataManager {
             throw new IllegalStateException("Resource not found");
         }
 
-        return mapper.readValue(is, new TypeReference<List<EntityPO>>() {
+        return mapper.readValue(is, new TypeReference<List<TypePO>>() {
         });
 
     }
 
-    private EntityPO findByKey(String key, List<EntityPO> entityPOs) {
-        return entityPOs.stream()
-                .filter(entityPO -> key.equals(entityPO.getKey()))
+    private TypePO findByKey(String key, List<TypePO> typePOS) {
+        return typePOS.stream()
+                .filter(typePO -> key.equals(typePO.getKey()))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("No EntityPO saved with key '" + key + "'"));
+                .orElseThrow(() -> new RuntimeException("No TypePO saved with key '" + key + "'"));
     }
 
 }

@@ -1,4 +1,4 @@
-package net.fvogel.chronos.schema.domain.schema.persistence.model.entity;
+package net.fvogel.chronos.schema.domain.schema.persistence.model.type;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -13,7 +13,7 @@ import java.util.Set;
 
 @Data
 @Entity
-public class EntityAttributePO {
+public class TypeAttributePO {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -1,4 +1,4 @@
-package net.fvogel.chronos.schema.domain.schema.persistence.model.entity;
+package net.fvogel.chronos.schema.domain.schema.persistence.model.type;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -16,7 +16,7 @@ import java.util.List;
 
 @Data
 @Entity
-public class EntityPO {
+public class TypePO {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -40,12 +40,12 @@ public class EntityPO {
 
     @OneToMany
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "entity_id")
+    @JoinColumn(name = "type_id")
     @Valid
-    List<EntityAttributePO> attributes = new ArrayList<>();
+    List<TypeAttributePO> attributes = new ArrayList<>();
 
     @OneToMany(mappedBy = "source", orphanRemoval = true, cascade = CascadeType.REMOVE)
-    // CascadeType.REMOVE targets to handle relations together with entities, not separately; it should be evaluated later on,
+    // CascadeType.REMOVE targets to handle relations together with types, not separately; it should be evaluated later on,
     // which behavior is more desirable
     @OnDelete(action = OnDeleteAction.CASCADE)
     @Valid

@@ -8,7 +8,7 @@ import java.util.Set;
 @Data
 public class SchemaResponse {
     SchemaResponseMetaInfoDTO meta = new SchemaResponseMetaInfoDTO();
-    EntitiesInfoDTO entities = new EntitiesInfoDTO();
+    TypesInfoDTO entities = new TypesInfoDTO();
     RelationsInfoDTO relations = new RelationsInfoDTO();
 
     @Data
@@ -19,8 +19,8 @@ public class SchemaResponse {
     }
 
     @Data
-    public static class EntitiesInfoDTO {
-        Set<Entity> elements = new HashSet<>();
+    public static class TypesInfoDTO {
+        Set<Type> elements = new HashSet<>();
         Set<Attribute> defaultAttributes = new HashSet<>();
     }
 

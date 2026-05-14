@@ -2,8 +2,8 @@ package net.fvogel.chronos.schema.testutils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.fvogel.chronos.commons.security.TestJwtGenerator;
-import net.fvogel.chronos.schema.domain.schema.persistence.model.entity.EntityPO;
-import net.fvogel.chronos.schema.domain.schema.persistence.repository.EntityPORepository;
+import net.fvogel.chronos.schema.domain.schema.persistence.model.type.TypePO;
+import net.fvogel.chronos.schema.domain.schema.persistence.repository.TypePORepository;
 import net.fvogel.chronos.schema.shared.dev.TestDataManager;
 import org.hibernate.Hibernate;
 import org.junit.jupiter.api.AfterEach;
@@ -38,7 +38,7 @@ public abstract class BaseIntegrationTest {
     @Autowired
     protected WebApplicationContext context;
     @Autowired
-    protected EntityPORepository entityPORepository;
+    protected TypePORepository typePORepository;
     protected MockMvc mvc;
 
     @BeforeEach
@@ -67,21 +67,21 @@ public abstract class BaseIntegrationTest {
         return "Bearer " + jwtGenerator.generateJWT(username, roles);
     }
 
-    protected ResultActions getEntity(String entityKey) throws Exception {
-        return mvc.perform(MockMvcRequestBuilders.get("/api/schema/{key}", entityKey));
+    protected ResultActions getType(String typeKey) throws Exception {
+        return mvc.perform(MockMvcRequestBuilders.get("/api/schema/{key}", typeKey));
     }
 
-    protected EntityPO loadEntity(String entityKey) {
-        EntityPO entity = entityPORepository.findByKey("Person").get();
-        Hibernate.initialize(entity);
-        entity.getRelations().forEach(relation -> {
+    protected TypePO loadType(String typeKey) {
+        TypePO type = typePORepository.findByKey(typeKey).get();
+        Hibernate.initialize(type);
+        type.getRelations().forEach(relation -> {
             relation.setSource(null);
-            EntityPO newTarget = new EntityPO();
+            TypePO newTarget = new TypePO();
             newTarget.setId(relation.getTarget().getId());
             relation.setTarget(newTarget);
         });
 
-        return entity;
+        return type;
     }
 
 }
