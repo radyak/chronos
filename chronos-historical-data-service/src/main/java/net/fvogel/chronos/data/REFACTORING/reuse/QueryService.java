@@ -1,9 +1,9 @@
 package net.fvogel.chronos.data.REFACTORING.reuse;
 
 import net.fvogel.chronos.commons.exception.InvalidDataException;
-import net.fvogel.chronos.data.REFACTORING.deprecated.Entity;
 import net.fvogel.chronos.data.REFACTORING.deprecated.EntityFieldMetadata;
 import net.fvogel.chronos.data.REFACTORING.deprecated.EntityMetadata;
+import net.fvogel.chronos.data.REFACTORING.deprecated.LegacyEntity;
 import net.fvogel.chronos.data.REFACTORING.deprecated.MetadataService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,26 +31,26 @@ public class QueryService {
         this.metadataService = metadataService;
     }
 
-    public CreateNodeQuery createNodeQuery(String type, Entity entity) {
+    public CreateNodeQuery createNodeQuery(String type, LegacyEntity legacyEntity) {
         if (!this.metadataService.entityExists(type)) {
             throw new InvalidDataException();
         }
 
         CreateNodeQuery.CreateNodeQueryBuilder qb = new CreateNodeQuery.CreateNodeQueryBuilder();
         return qb.label(type)
-                .properties(toMap(type, entity))
+                .properties(toMap(type, legacyEntity))
                 .build();
     }
 
-    public UpdateNodeQuery updateNodeQuery(String type, Entity entity) {
+    public UpdateNodeQuery updateNodeQuery(String type, LegacyEntity legacyEntity) {
         if (!this.metadataService.entityExists(type)) {
             throw new InvalidDataException();
         }
 
         UpdateNodeQuery.UpdateNodeQueryBuilder qb = new UpdateNodeQuery.UpdateNodeQueryBuilder();
         qb.label(type);
-        qb.id(entity.id);
-        qb.properties(toMap(type, entity));
+        qb.id(legacyEntity.id);
+        qb.properties(toMap(type, legacyEntity));
         return qb.build();
     }
 
@@ -65,7 +65,7 @@ public class QueryService {
         return qb.build();
     }
 
-    private Map<String, String> toMap(String type, Entity entity) {
+    private Map<String, String> toMap(String type, LegacyEntity legacyEntity) {
         EntityMetadata metadata = this.metadataService.getMetaData(type);
         List<EntityFieldMetadata> fields = metadata.getFields();
 
@@ -73,7 +73,7 @@ public class QueryService {
 
         for (EntityFieldMetadata field : fields) {
             try {
-                String value = getFieldStringValue(entity, field.getName());
+                String value = getFieldStringValue(legacyEntity, field.getName());
                 if (value == null) {
                     continue;
                 }

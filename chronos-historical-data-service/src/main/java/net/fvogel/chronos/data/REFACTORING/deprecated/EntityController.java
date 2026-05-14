@@ -21,12 +21,12 @@ public class EntityController {
     }
 
     @GetMapping("/random")
-    public Entity findRandom() {
+    public LegacyEntity findRandom() {
         return this.entityService.findRandomEntityWithQid();
     }
 
     @GetMapping()
-    public List<Entity> findAll() {
+    public List<LegacyEntity> findAll() {
         return this.entityService.findAll();
     }
 

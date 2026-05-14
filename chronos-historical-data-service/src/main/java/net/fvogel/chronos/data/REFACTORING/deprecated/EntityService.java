@@ -35,7 +35,7 @@ public class EntityService {
         this.queryService = queryService;
     }
 
-    public Entity findRandomEntityWithQid() {
+    public LegacyEntity findRandomEntityWithQid() {
         try (Session session = driver.session()) {
             return session.run("MATCH (n) WHERE n.qid IS NOT null RETURN n, rand() as r ORDER BY r LIMIT 1")
                     .list(record -> record.get("n").asNode())
@@ -44,7 +44,7 @@ public class EntityService {
         }
     }
 
-    public Entity findById(String id) {
+    public LegacyEntity findById(String id) {
         try (Session session = driver.session()) {
             return session.run("MATCH (n) WHERE n.id = " + wrapWith(id, "'") + " RETURN n")
                     .list(record -> record.get("n").asNode())
@@ -92,7 +92,7 @@ public class EntityService {
         return list;
     }
 
-    public List<Entity> findAll() {
+    public List<LegacyEntity> findAll() {
         try (Session session = driver.session()) {
             return session.run("MATCH (n) LIMIT 50 RETURN n")
                     .list(record -> record.get("n").asNode())
@@ -100,34 +100,34 @@ public class EntityService {
         }
     }
 
-    public Entity createEntity(String type, Entity entity) {
-        entity.id = UUID.randomUUID().toString();
-        CreateNodeQuery query = queryService.createNodeQuery(type, entity);
+    public LegacyEntity createEntity(String type, LegacyEntity legacyEntity) {
+        legacyEntity.id = UUID.randomUUID().toString();
+        CreateNodeQuery query = queryService.createNodeQuery(type, legacyEntity);
         try (Session session = driver.session()) {
             String createQuery = query.toString();
             logger.info("Executing create query: {}", createQuery);
             session.run(createQuery).single();
-            return this.findById(entity.id);
+            return this.findById(legacyEntity.id);
         }
     }
 
-    public Entity updateEntity(String type, String id, Entity entity) {
+    public LegacyEntity updateEntity(String type, String id, LegacyEntity legacyEntity) {
         // TODO: Add check for label
-        Entity existing = this.findById(id);
+        LegacyEntity existing = this.findById(id);
 
         // Do not override ID
-        entity.id = existing.id;
-        UpdateNodeQuery query = queryService.updateNodeQuery(type, entity);
+        legacyEntity.id = existing.id;
+        UpdateNodeQuery query = queryService.updateNodeQuery(type, legacyEntity);
         try (Session session = driver.session()) {
             String updateQuery = query.toString();
             logger.info("Executing update query: {}", updateQuery);
             session.run(updateQuery).single();
-            return this.findById(entity.id);
+            return this.findById(legacyEntity.id);
         }
     }
 
     public void deleteEntity(String type, String id) {
-        Entity existing = this.findById(id);
+        LegacyEntity existing = this.findById(id);
 
         DeleteNodeQuery query = queryService.deleteNodeQuery(type, id);
         try (Session session = driver.session()) {
@@ -137,22 +137,22 @@ public class EntityService {
         }
     }
 
-    private Entity mapToEntity(Node node) {
-        Entity entity = new Entity();
-        entity.id = nullEscaped(node.get("id").asString());
-        entity.key = nullEscaped(node.get("key").asString());
-        entity.from = nullEscaped(node.get("from").asString());
-        entity.to = nullEscaped(node.get("to").asString());
-        entity.qid = nullEscaped(node.get("qid").asString());
-        return entity;
+    private LegacyEntity mapToEntity(Node node) {
+        LegacyEntity legacyEntity = new LegacyEntity();
+        legacyEntity.id = nullEscaped(node.get("id").asString());
+        legacyEntity.key = nullEscaped(node.get("key").asString());
+        legacyEntity.from = nullEscaped(node.get("from").asString());
+        legacyEntity.to = nullEscaped(node.get("to").asString());
+        legacyEntity.qid = nullEscaped(node.get("qid").asString());
+        return legacyEntity;
     }
 
     private String nullEscaped(String string) {
         return "null".equals(string) ? null : string;
     }
 
-    private Entity mapToLabelledEntity(Node node) {
-        LabelledEntity entity = new LabelledEntity();
+    private LegacyEntity mapToLabelledEntity(Node node) {
+        LabelledLegacyEntity entity = new LabelledLegacyEntity();
         entity.id = nullEscaped(node.get("id").asString());
         entity.key = nullEscaped(node.get("key").asString());
         entity.from = nullEscaped(node.get("from").asString());

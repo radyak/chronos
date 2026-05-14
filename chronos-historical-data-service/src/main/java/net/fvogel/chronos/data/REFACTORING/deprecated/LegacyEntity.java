@@ -10,7 +10,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Deprecated
-public class Entity {
+public class LegacyEntity {
 
     @Id
     public String id = UUID.randomUUID().toString();

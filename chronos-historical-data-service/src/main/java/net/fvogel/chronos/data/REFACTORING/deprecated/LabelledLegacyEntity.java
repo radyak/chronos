@@ -9,6 +9,6 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Deprecated
-public class LabelledEntity extends Entity {
+public class LabelledLegacyEntity extends LegacyEntity {
     public Set<String> labels;
 }
