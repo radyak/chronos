@@ -38,8 +38,8 @@
       </div>
     </div>
 
-    <div class="col-md-6">
-      @if (wikipediaSummary$ | async; as wikipediaSummary) {
+    <div class="col-md-6" [loading]="randomWikiArticle.isLoading()">
+      @if (randomWikiArticle.value(); as wikipediaSummary) {
         <chronos-wikipedia-summary [wikiSummary]="wikipediaSummary">
         </chronos-wikipedia-summary>
       }

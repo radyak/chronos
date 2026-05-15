@@ -27,3 +27,9 @@ GET http://localhost:8010/api/data/th
 
 # Filter example: Entries before 200 AD with wikipedia QID
 GET http://localhost:8010/api/data?from:lt=0200&qid:not=null
+
+
+### 
+
+# Filter example: First random Entry with wikipedia QID
+GET http://localhost:8010/api/data?qid:not=null&sortBy=random

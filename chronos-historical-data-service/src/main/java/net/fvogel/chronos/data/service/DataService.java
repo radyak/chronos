@@ -42,7 +42,7 @@ public class DataService {
         if (sorting != null && sorting.getSortBy() != null) {
             var direction = sorting.getSortOrder() == SortOrder.ASC ? SortItem.Direction.ASC : SortItem.Direction.DESC;
             var property = sorting.getSortBy();
-            var sort = Cypher.sort(n.property(property), direction);
+            var sort = "random".equals(property) ? Cypher.sort(Cypher.rand()) : Cypher.sort(n.property(property), direction);
             sortList.add(sort);
         }
 
