@@ -1,16 +1,16 @@
 package net.fvogel.chronos.data.service;
 
 import net.fvogel.chronos.commons.exception.NotFoundException;
-import net.fvogel.chronos.data.model.CountResult;
-import net.fvogel.chronos.data.model.Entry;
-import net.fvogel.chronos.data.model.Query;
-import net.fvogel.chronos.data.model.SortOrder;
+import net.fvogel.chronos.data.model.*;
+import org.neo4j.cypherdsl.core.Condition;
 import org.neo4j.cypherdsl.core.Cypher;
 import org.neo4j.cypherdsl.core.SortItem;
 import org.neo4j.cypherdsl.core.renderer.Renderer;
 import org.neo4j.driver.Driver;
 import org.neo4j.driver.Session;
 import org.neo4j.driver.types.Node;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,36 +28,50 @@ import java.util.stream.Collectors;
 @Transactional
 public class DataService {
 
+    private static final Logger logger = LoggerFactory.getLogger(DataService.class);
+
     @Autowired
     private Driver driver;
 
-    public List<Entry> findAll(Query query) {
+    public List<Entry> findAll(DataQuery query) {
         var nodeName = "n";
         var n = Cypher.anyNode().named(nodeName);
 
         var sortList = new ArrayList<SortItem>();
-        if (query.getSortBy() != null) {
-            var direction = query.getSortOrder() == SortOrder.ASC ? SortItem.Direction.ASC : SortItem.Direction.DESC;
-            var property = query.getSortBy();
+        Sorting sorting = query.getSorting();
+        if (sorting != null && sorting.getSortBy() != null) {
+            var direction = sorting.getSortOrder() == SortOrder.ASC ? SortItem.Direction.ASC : SortItem.Direction.DESC;
+            var property = sorting.getSortBy();
             var sort = Cypher.sort(n.property(property), direction);
             sortList.add(sort);
         }
 
+        // TODO: Enable MultiValueMap for query.filters
+        List<Condition> conditions = query.getFilters().keySet().stream()
+                .map(filter -> CypherDslService.condition(filter, query.getFilters().get(filter), n))
+                .toList();
+        Condition union = CypherDslService.all(conditions);
+
+        Pagination pagination = query.getPagination();
         var statement = Cypher.match(n)
+                .where(union)
                 .returning(n)
                 .orderBy(sortList)
-                .skip((query.getPage() - 1) * query.getPageSize())
-                .limit(query.getPageSize())
+                .skip((pagination.getPage() - 1) * pagination.getPageSize())
+                .limit(pagination.getPageSize())
                 .build();
         var renderedStatement = Renderer.getDefaultRenderer().render(statement);
 
+
         try (Session session = driver.session()) {
+            logger.debug("Executing statement: {}", renderedStatement);
             return session.run(renderedStatement)
                     .list(record -> record.get(nodeName).asNode())
                     .stream().map(this::mapToEntry)
                     .collect(Collectors.toList());
         }
     }
+
 
     public Entry findById(String id) {
         var nodeName = "n";

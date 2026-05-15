@@ -9,7 +9,7 @@ GET http://localhost:8010/api/data?pageSize=5&page=2
 ### 
 
 # Sorting example
-GET http://localhost:8010/api/data?sortBy=from&sortAsc=false
+GET http://localhost:8010/api/data?sortBy=from&sortOrder=ASC
 
 
 ###
@@ -21,3 +21,9 @@ GET http://localhost:8010/api/data/statistics
 
 # By ID
 GET http://localhost:8010/api/data/th
+
+
+### 
+
+# Filter example: Entries before 200 AD with wikipedia QID
+GET http://localhost:8010/api/data?from:lt=0200&qid:not=null

@@ -1,4 +1,4 @@
-package net.fvogel.chronos.data.REFACTORING.deprecated;
+package net.fvogel.chronos.data.REFACTORING.reuse;
 
 import org.apache.commons.lang3.NotImplementedException;
 import org.slf4j.Logger;
@@ -9,10 +9,11 @@ import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
-@Deprecated
 public class ReflectionUtils {
 
     private static final Logger logger = LoggerFactory.getLogger(ReflectionUtils.class);
@@ -25,6 +26,7 @@ public class ReflectionUtils {
      * @param field The Field to derive the generic type from
      * @return The type's class
      */
+    @Deprecated
     public static Class<?> getListElementType(Field field) {
         // First check that the field is assignable from List
         if (!List.class.isAssignableFrom(field.getType())) {
@@ -61,6 +63,7 @@ public class ReflectionUtils {
      * @param annotationClass the annotation type to look for
      * @return list of Fields that are annotated with annotationClass
      */
+    @Deprecated
     public static List<Field> getAnnotatedFields(Class<?> clazz, Class<? extends Annotation> annotationClass) {
         List<Field> annotatedFields = new ArrayList<>();
 
@@ -86,6 +89,7 @@ public class ReflectionUtils {
      * @param annotationClass the annotation type to exclude fields with
      * @return list of Fields that are annotated with annotationClass
      */
+    @Deprecated
     public static List<Field> getNonAnnotatedFields(Class<?> clazz, Class<? extends Annotation> annotationClass) {
         List<Field> annotatedFields = new ArrayList<>();
 
@@ -112,6 +116,7 @@ public class ReflectionUtils {
      * @throws NoSuchFieldException
      * @throws IllegalAccessException
      */
+    @Deprecated
     public static String getFieldStringValue(Object obj, String key) throws NoSuchFieldException, IllegalAccessException {
         Field field = obj.getClass().getDeclaredField(key);
         Object value = field.get(obj);
@@ -122,6 +127,12 @@ public class ReflectionUtils {
             return null;
         }
         return (String) value;
+    }
+
+    public static List<String> getFieldNames(Class<?> clazz) {
+        return Arrays.stream(clazz.getDeclaredFields())
+                .map(Field::getName)
+                .collect(Collectors.toList());
     }
 
 }

@@ -18,7 +18,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static net.fvogel.chronos.data.REFACTORING.deprecated.ReflectionUtils.*;
+import static net.fvogel.chronos.data.REFACTORING.reuse.ReflectionUtils.*;
 
 
 @Service

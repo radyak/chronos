@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import static net.fvogel.chronos.data.REFACTORING.deprecated.ReflectionUtils.getFieldStringValue;
+import static net.fvogel.chronos.data.REFACTORING.reuse.ReflectionUtils.getFieldStringValue;
 
 
 @Service
