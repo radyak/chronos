@@ -15,7 +15,7 @@ public class CachingConfig implements CacheManagerCustomizer<ConcurrentMapCacheM
 
     public static class CacheNames {
         public static final String SCHEMA_CACHE = "cache.schema";
-        public static final String ENTITY_CACHE = "cache.entity";
+        public static final String TYPE_CACHE = "cache.type";
     }
 
 }

@@ -1,0 +1,17 @@
+import { Injectable } from '@angular/core';
+import { faPen, faPlus, faSave, faTrash, faXmark } from '@fortawesome/free-solid-svg-icons';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class IconConstants {
+
+  // public readonly fields
+  // icons
+  public static readonly ICON_ADD = faPlus;
+  public static readonly ICON_SAVE = faSave;
+  public static readonly ICON_CANCEL = faXmark;
+  public static readonly ICON_EDIT = faPen;
+  public static readonly ICON_DELETE = faTrash;
+  
+}

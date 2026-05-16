@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import {AdminConfirmModal} from "../components/admin-confirm-modal/admin-confirm-modal";
+import { AdminConfirmModal } from '../components/admin-confirm-modal/admin-confirm-modal';
 
 @Injectable({
   providedIn: 'root'

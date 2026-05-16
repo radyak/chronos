@@ -1,0 +1,178 @@
+<div class="container">
+  <div class="offcanvas-header">
+    <h2 class="offcanvas-title">
+      @if(relation().id) {
+        Edit Relation {{ relation().key }} &rarr; {{ relation().target?.key }}
+      } @else {
+        Create Relation
+      }
+    </h2>
+  </div>
+  <div class="offcanvas-body">
+    <form [formGroup]="form">
+
+      <h3 id="base-data">Base Data</h3>
+      <fieldset>
+        <div class="form-group">
+          <label class="form-label mt-4" for="key">Key:</label>
+          <input
+            class="form-control"
+            formControlName="key"
+            id="key"
+            name="key"
+            type="text"
+            pattern="[A-Z_]*"
+            [class.is-invalid]="isInvalid('key')"
+          />
+          <div class="invalid-feedback">
+            @for (error of errors("key", "Key"); track error) {
+              {{ error }}
+            }
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="form-group col-6">
+              <label class="form-label mt-4" for="explanation"
+                >Explanation:</label
+              >
+              <input
+                class="form-control"
+                formControlName="explanation"
+                id="explanation"
+                name="explanation"
+                type="text"
+                [class.is-invalid]="isInvalid('explanation')"
+              />
+              <div class="invalid-feedback">
+                @for (
+                  error of errors("explanation", "Explanation");
+                  track error
+                ) {
+                  {{ error }}
+                }
+              </div>
+            </div>
+            <div class="form-group col-6">
+              <label class="form-label mt-4" for="examples">Examples:</label>
+              <input
+                class="form-control"
+                formControlName="examples"
+                id="examples"
+                name="examples"
+                type="text"
+                [class.is-invalid]="isInvalid('examples')"
+              />
+              <div class="invalid-feedback">
+                @for (error of errors("examples", "Examples"); track error) {
+                  {{ error }}
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+
+      <h3 id="target">Target</h3>
+
+      <div class="form-group">
+        <div class="row">
+          <div class="form-group col-6">
+            <label class="form-label mt-4" for="icon">Target:</label>
+            <chronos-type-select formControlName="target"
+                                   id="target"
+                                   name="target"
+                                   [class.is-invalid]="isInvalid('target')">
+            </chronos-type-select>
+            <div class="invalid-feedback">
+              @for (error of errors("target", "Target"); track error) {
+                {{ error }}
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h3 id="attributes">Attributes</h3>
+
+      <div class="text-secondary-emphasis small">
+        Default attributes (gray) are always present and cannot be modified.
+      </div>
+
+      <div class="admin-controls">
+        <button class="btn btn-outline-success"
+                (click)="addNewAttribute()">
+                Add attribute
+        </button>
+      </div>
+
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th scope="col">Key</th>
+            <th scope="col">Type</th>
+            <th scope="col">Explanation</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (attribute of relation().attributes; track attribute.key) {
+            <tr class="pointer">
+              <td (click)="editAttribute(attribute)">
+                {{ attribute.key }}
+              </td>
+              <td (click)="editAttribute(attribute)">
+                {{ attribute.type }}
+              </td>
+              <td (click)="editAttribute(attribute)">
+                {{ attribute.explanation }}
+              </td>
+              <td class="actions">
+                <button class="btn btn-sm btn-link btn-outline-success"
+                        (click)="editAttribute(attribute)">
+                  <fa-icon [icon]="editIcon"></fa-icon>
+                </button>
+                <button class="btn btn-sm btn-link btn-outline-danger"
+                        (click)="deleteAttribute(attribute)">
+                  <fa-icon [icon]="deleteIcon"></fa-icon>
+                </button>
+              </td>
+            </tr>
+          }
+
+          @for (attribute of relation().defaultAttributes; track attribute.key) {
+            <tr class="pointer default-attr">
+              <td>
+                {{ attribute.key }}
+              </td>
+              <td>
+                {{ attribute.type }}
+              </td>
+              <td>
+                {{ attribute.explanation }}
+              </td>
+              <td class="actions"></td>
+            </tr>
+          }
+
+        </tbody>
+      </table>
+
+    </form>
+  </div>
+
+  <div class="offcanvas-footer">
+    <button class="btn btn-outline-danger" (click)="cancel()">
+      <fa-icon [icon]="cancelIcon"></fa-icon>
+      Cancel
+    </button>
+    <button
+      class="btn btn-outline-success"
+      (click)="confirm()"
+      [disabled]="!form.valid"
+    >
+      <fa-icon [icon]="saveIcon"></fa-icon>
+      Save
+    </button>
+  </div>
+</div>

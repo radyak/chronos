@@ -1,17 +1,17 @@
 package net.fvogel.chronos.schema.testutils.builder;
 
-import net.fvogel.chronos.schema.domain.schema.persistence.model.entity.EntityPO;
 import net.fvogel.chronos.schema.domain.schema.persistence.model.relation.RelationAttributePO;
 import net.fvogel.chronos.schema.domain.schema.persistence.model.relation.RelationPO;
+import net.fvogel.chronos.schema.domain.schema.persistence.model.type.TypePO;
 
 import java.util.List;
 
 public class RelationPOBuilder {
 
-    private final RelationPO entity;
+    private final RelationPO relation;
 
-    private RelationPOBuilder(RelationPO entity) {
-        this.entity = entity;
+    private RelationPOBuilder(RelationPO relation) {
+        this.relation = relation;
     }
 
     public static RelationPOBuilder builder() {
@@ -19,38 +19,38 @@ public class RelationPOBuilder {
     }
 
     public RelationPOBuilder withKey(String key) {
-        this.entity.setKey(key);
+        this.relation.setKey(key);
         return this;
     }
 
     public RelationPOBuilder withExamples(String examples) {
-        this.entity.setExamples(examples);
+        this.relation.setExamples(examples);
         return this;
     }
 
     public RelationPOBuilder withExplanation(String explanation) {
-        this.entity.setExplanation(explanation);
+        this.relation.setExplanation(explanation);
         return this;
     }
 
     public RelationPOBuilder withAttribute(RelationAttributePO attribute) {
-        this.entity.getAttributes().add(attribute);
+        this.relation.getAttributes().add(attribute);
         return this;
     }
 
     public RelationPOBuilder withAttributes(RelationAttributePO... attributes) {
-        this.entity.setAttributes(List.of(attributes));
+        this.relation.setAttributes(List.of(attributes));
         return this;
     }
 
-    public RelationPOBuilder withTarget(EntityPO entity) {
-        EntityPO target = new EntityPO();
-        target.setId(entity.getId());
-        this.entity.setTarget(target);
+    public RelationPOBuilder withTarget(TypePO type) {
+        TypePO target = new TypePO();
+        target.setId(type.getId());
+        this.relation.setTarget(target);
         return this;
     }
 
     public RelationPO build() {
-        return this.entity;
+        return this.relation;
     }
 }

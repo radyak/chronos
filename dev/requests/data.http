@@ -1,23 +1,35 @@
 # Get all (default: first 10 elements, no sorting)
-GET http://localhost:8010/api/data/entries
+GET http://localhost:8010/api/data
 
 ###
 
 # Paging example)
-GET http://localhost:8010/api/data/entries?pageSize=5&page=2
+GET http://localhost:8010/api/data?pageSize=5&page=2
 
 ### 
 
 # Sorting example
-GET http://localhost:8010/api/data/entries?sortBy=from&sortAsc=false
+GET http://localhost:8010/api/data?sortBy=from&sortOrder=ASC
 
 
 ###
 
 # Statistics
-GET http://localhost:8010/api/data/entries/statistics
+GET http://localhost:8010/api/data/statistics
 
 ###
 
 # By ID
-GET http://localhost:8010/api/data/entries/th
+GET http://localhost:8010/api/data/th
+
+
+### 
+
+# Filter example: Entries before 200 AD with wikipedia QID
+GET http://localhost:8010/api/data?from:lt=0200&qid:not=null
+
+
+### 
+
+# Filter example: First random Entry with wikipedia QID
+GET http://localhost:8010/api/data?qid:not=null&sortBy=random

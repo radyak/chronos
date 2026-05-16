@@ -5,7 +5,7 @@ import { AuthInterceptor } from "./interceptors/auth.interceptor";
 import { AdminConfirmService } from "./services/admin-confirm.service";
 import { AdminComponent } from './views/admin.component';
 import { SchemaComponent } from "./views/schema/schema.component";
-import { EditEntityComponent } from "./views/schema/edit-entity/edit-entity.component";
+import { EditTypeComponent as EditTypeComponent } from "./views/schema/edit-type/edit-type.component";
 import { AdminOverviewComponent } from "./views/overview/admin-overview/admin-overview.component";
 import { DataOverviewComponent } from "./views/data/data-overview/data-overview.component";
 
@@ -48,9 +48,9 @@ export const adminRoutes: Route[] = [
           },
           {
             path: ':id',
-            component: EditEntityComponent,
+            component: EditTypeComponent,
             data: {
-              breadCrumb: 'Edit Entity'
+              breadCrumb: 'Edit Type'
             }
           },
         ]
@@ -67,29 +67,6 @@ export const adminRoutes: Route[] = [
           },
         ]
       },
-      // {
-      //   path: 'data',
-      //   component: AdminPersonsComponent,
-      //   data: {
-      //     breadCrumb: 'Data'
-      //   }
-      // },
-      // {
-      //   path: 'data/persons',
-      //   component: AdminPersonsComponent,
-      // },
-      // {
-      //   path: 'data/persons/new',
-      //   component: AdminNewPersonComponent
-      // },
-      // {
-      //   path: 'data/persons/:id',
-      //   component: AdminPersonComponent
-      // },
-      // {
-      //   path: 'data/persons/:id/copy',
-      //   component: AdminCopyPersonComponent
-      // },
     ]
   },
 ]

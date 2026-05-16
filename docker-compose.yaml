@@ -21,7 +21,6 @@ services:
     volumes:
       - .:/app
       - ~/.m2:/root/.m2
-    #      - ./dev/exampledata/img:/app/data/img:ro
     depends_on:
       - data-db
     ports:
@@ -47,8 +46,7 @@ services:
       NEO4J_AUTH: neo4j/password
     #    Activate for persistent local testdata:
     #    volumes:
-    #      - "./dev/chronos-postgres-data:/var/lib/postgresql/data"
-    #      - "./dev/chronos-neo4j-data:/data"
+    #      - "./dev/containerdata/chronos-neo4j-data:/data"
 
   schema:
     image: maven:3.9.6-eclipse-temurin-17-alpine

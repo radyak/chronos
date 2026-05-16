@@ -1,0 +1,39 @@
+<div ngbDropdown>
+  <button
+    type="button"
+    id="icon"
+    class="form-control btn btn-outline-secondary"
+    ngbDropdownToggle
+  >
+    @if (type) {
+      @if (type.icon) {
+        <fa-icon [icon]="type.icon"></fa-icon>
+      }
+      {{ type.key }}
+    } @else {
+      (no target selected)
+    }
+  </button>
+  <div ngbDropdownMenu aria-labelledby="icon">
+    <input
+      class="search"
+      autofocus
+      placeholder="Type to filter ..."
+      [(ngModel)]="typeSearch"
+      [ngModelOptions]="{ standalone: true }"
+    />
+    <div class="dropdown-options">
+      <button ngbDropdownItem (click)="selectType(undefined)">
+        (none)
+      </button>
+      @for (target of types(); track target) {
+        <button ngbDropdownItem (click)="selectType(target)">
+          @if (target.icon) {
+            <fa-icon [icon]="target.icon"></fa-icon>
+          }
+          {{ target.key }}
+        </button>
+      }
+    </div>
+  </div>
+</div>

@@ -1,7 +1,7 @@
 package net.fvogel.chronos.schema.it;
 
-import net.fvogel.chronos.schema.domain.schema.persistence.model.entity.EntityPO;
-import net.fvogel.chronos.schema.domain.schema.persistence.repository.EntityPORepository;
+import net.fvogel.chronos.schema.domain.schema.persistence.model.type.TypePO;
+import net.fvogel.chronos.schema.domain.schema.persistence.repository.TypePORepository;
 import net.fvogel.chronos.schema.testutils.BaseIntegrationTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class CachingIntegrationTest extends BaseIntegrationTest {
 
     @MockitoSpyBean
-    EntityPORepository entityPORepository;
+    TypePORepository typePORepository;
 
     @Autowired
     private CacheManager cacheManager;
@@ -41,36 +41,36 @@ public class CachingIntegrationTest extends BaseIntegrationTest {
         super.setup();
 
         this.clearCaches();
-        Mockito.reset(entityPORepository);
+        Mockito.reset(typePORepository);
     }
 
     @Test
-    void singleEntityIsCached() throws Exception {
-        getEntity("Territory")
+    void singleTypeIsCached() throws Exception {
+        getType("Territory")
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.meta.base").value("Territory"))
-                .andExpect(jsonPath("$.entities.elements.length()").value(2));
+                .andExpect(jsonPath("$.types.elements.length()").value(2));
 
-        verify(entityPORepository, times(1)).findByKey(eq("Territory"));
+        verify(typePORepository, times(1)).findByKey(eq("Territory"));
 
-        getEntity("Territory")
+        getType("Territory")
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.meta.base").value("Territory"))
-                .andExpect(jsonPath("$.entities.elements.length()").value(2));
+                .andExpect(jsonPath("$.types.elements.length()").value(2));
 
-        verifyNoMoreInteractions(entityPORepository);
+        verifyNoMoreInteractions(typePORepository);
     }
 
     @Test
-    void singleEntityCachesDoNotCollide() throws Exception {
-        getEntity("Territory").andExpect(status().isOk());
-        getEntity("Person").andExpect(status().isOk());
-        verify(entityPORepository, times(1)).findByKey(eq("Territory"));
-        verify(entityPORepository, times(1)).findByKey(eq("Person"));
+    void singleTypeCachesDoNotCollide() throws Exception {
+        getType("Territory").andExpect(status().isOk());
+        getType("Person").andExpect(status().isOk());
+        verify(typePORepository, times(1)).findByKey(eq("Territory"));
+        verify(typePORepository, times(1)).findByKey(eq("Person"));
 
-        getEntity("Territory").andExpect(status().isOk());
-        getEntity("Person").andExpect(status().isOk());
-        verifyNoMoreInteractions(entityPORepository);
+        getType("Territory").andExpect(status().isOk());
+        getType("Person").andExpect(status().isOk());
+        verifyNoMoreInteractions(typePORepository);
     }
 
     @Test
@@ -78,73 +78,73 @@ public class CachingIntegrationTest extends BaseIntegrationTest {
         mvc.perform(get("/api/schema"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.meta.base").value("*"))
-                .andExpect(jsonPath("$.entities.elements.length()").value(2));
+                .andExpect(jsonPath("$.types.elements.length()").value(2));
 
-        verify(entityPORepository, times(1)).findAll();
+        verify(typePORepository, times(1)).findAll();
 
         mvc.perform(get("/api/schema"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.meta.base").value("*"))
-                .andExpect(jsonPath("$.entities.elements.length()").value(2));
+                .andExpect(jsonPath("$.types.elements.length()").value(2));
 
-        verifyNoMoreInteractions(entityPORepository);
+        verifyNoMoreInteractions(typePORepository);
     }
 
     @Test
-    void updatingSingleEntityUpdatesCaches() throws Exception {
-        getEntity("Person").andExpect(status().isOk());
-        getEntity("Person").andExpect(status().isOk())
-                .andExpect(jsonPath("$.entities.elements[?(@.key == 'Person')].explanation").isEmpty());
-        verify(entityPORepository, times(1)).findByKey("Person");
+    void updatingSingleTypeUpdatesCaches() throws Exception {
+        getType("Person").andExpect(status().isOk());
+        getType("Person").andExpect(status().isOk())
+                .andExpect(jsonPath("$.types.elements[?(@.key == 'Person')].explanation").isEmpty());
+        verify(typePORepository, times(1)).findByKey("Person");
 
-        EntityPO entity = loadEntity("Person");
-        entity.setExplanation("An individual human");
+        TypePO type = loadType("Person");
+        type.setExplanation("An individual human");
 
-        mvc.perform(put("/api/schema/admin/entities/Person")
-                .content(objectMapper.writeValueAsString(entity))
+        mvc.perform(put("/api/schema/admin/types/Person")
+                .content(objectMapper.writeValueAsString(type))
                 .header("Authorization", adminAuthHeader())
                 .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk());
 
-        Mockito.reset(entityPORepository);
+        Mockito.reset(typePORepository);
 
-        // Retrieve entity again - Cache PUT updated the ENTITY cache already
-        getEntity("Person").andExpect(status().isOk())
+        // Retrieve type again - Cache PUT updated the TYPE cache already
+        getType("Person").andExpect(status().isOk())
                 .andExpect(jsonPath("$.meta.base").value("Person"))
-                .andExpect(jsonPath("$.entities.elements.length()").value(2))
-                .andExpect(jsonPath("$.entities.elements[?(@.key == 'Person')].explanation").value("An individual human"));
+                .andExpect(jsonPath("$.types.elements.length()").value(2))
+                .andExpect(jsonPath("$.types.elements[?(@.key == 'Person')].explanation").value("An individual human"));
 
-        verify(entityPORepository, times(1)).findByKey("Person");
+        verify(typePORepository, times(1)).findByKey("Person");
 
 
         // Retrieve complete schema again - Cache EVICT had to empty SCHEMA cache
         mvc.perform(get("/api/schema"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.meta.base").value("*"))
-                .andExpect(jsonPath("$.entities.elements.length()").value(2));
+                .andExpect(jsonPath("$.types.elements.length()").value(2));
 
-        verify(entityPORepository, times(1)).findAll();
+        verify(typePORepository, times(1)).findAll();
     }
 
     @Test
-    void deletingSingleEntityUpdatesCaches() throws Exception {
-        getEntity("Person").andExpect(status().isOk());
-        getEntity("Person").andExpect(status().isOk());
-        verify(entityPORepository, times(1)).findByKey("Person");
+    void deletingSingleTypeUpdatesCaches() throws Exception {
+        getType("Person").andExpect(status().isOk());
+        getType("Person").andExpect(status().isOk());
+        verify(typePORepository, times(1)).findByKey("Person");
 
-        mvc.perform(delete("/api/schema/admin/entities/Person")
+        mvc.perform(delete("/api/schema/admin/types/Person")
                 .header("Authorization", adminAuthHeader())
                 .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk());
 
-        Mockito.reset(entityPORepository);
+        Mockito.reset(typePORepository);
 
-        getEntity("Person").andExpect(status().isNotFound());
-        verify(entityPORepository, times(1)).findByKey("Person");
+        getType("Person").andExpect(status().isNotFound());
+        verify(typePORepository, times(1)).findByKey("Person");
 
         mvc.perform(get("/api/schema")).andExpect(status().isOk())
-                .andExpect(jsonPath("$.entities.elements.length()").value(1));
-        verify(entityPORepository, times(1)).findAll();
+                .andExpect(jsonPath("$.types.elements.length()").value(1));
+        verify(typePORepository, times(1)).findAll();
     }
 
 }

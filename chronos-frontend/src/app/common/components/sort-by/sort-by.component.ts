@@ -1,7 +1,7 @@
 import { Component, HostBinding, HostListener, input, output } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSort, faSortDown, faSortUp } from '@fortawesome/free-solid-svg-icons';
-import { SortOrder } from '../../model/domain/data/sort-order.dto';
+import { SortOrder } from '../../model/data/sort-order.dto';
 
 interface SortState {
   sortBy?: string;

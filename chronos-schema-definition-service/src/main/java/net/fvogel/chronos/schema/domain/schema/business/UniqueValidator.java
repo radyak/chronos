@@ -1,11 +1,11 @@
 package net.fvogel.chronos.schema.domain.schema.business;
 
 import net.fvogel.chronos.schema.config.i18n.I18nConstants;
-import net.fvogel.chronos.schema.domain.schema.persistence.model.entity.EntityAttributePO;
-import net.fvogel.chronos.schema.domain.schema.persistence.model.entity.EntityPO;
 import net.fvogel.chronos.schema.domain.schema.persistence.model.relation.RelationAttributePO;
 import net.fvogel.chronos.schema.domain.schema.persistence.model.relation.RelationPO;
-import net.fvogel.chronos.schema.domain.schema.persistence.repository.EntityPORepository;
+import net.fvogel.chronos.schema.domain.schema.persistence.model.type.TypeAttributePO;
+import net.fvogel.chronos.schema.domain.schema.persistence.model.type.TypePO;
+import net.fvogel.chronos.schema.domain.schema.persistence.repository.TypePORepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -15,22 +15,22 @@ import java.util.*;
 public class UniqueValidator {
 
     @Autowired
-    EntityPORepository entityPORepository;
+    TypePORepository typePORepository;
 
-    public void validate(EntityPO entityPO) {
+    public void validate(TypePO typePO) {
         List<ValidationError> errors = new ArrayList<>();
 
-        if (hasDuplicateKey(entityPO)) {
+        if (hasDuplicateKey(typePO)) {
             errors.add(new ValidationError("key", "Unique", I18nConstants.Errors.DUPLICATE_KEY));
         }
 
-        List<String> duplicateAttributeKeys = getDuplicateKeys(entityPO.getAttributes().stream().map(EntityAttributePO::getKey).toList());
+        List<String> duplicateAttributeKeys = getDuplicateKeys(typePO.getAttributes().stream().map(TypeAttributePO::getKey).toList());
         if (!duplicateAttributeKeys.isEmpty()) {
             for (String duplicateKey : duplicateAttributeKeys) {
-                List<ValidationError> duplicatesList = entityPO.getAttributes().stream()
+                List<ValidationError> duplicatesList = typePO.getAttributes().stream()
                         .filter(attr -> duplicateKey.equals(attr.getKey()))
                         .map(attr -> {
-                            int i = entityPO.getAttributes().indexOf(attr);
+                            int i = typePO.getAttributes().indexOf(attr);
                             return new ValidationError("attributes[" + i + "].key", "Unique", I18nConstants.Errors.DUPLICATE_KEY);
                         })
                         .toList();
@@ -38,13 +38,13 @@ public class UniqueValidator {
             }
         }
 
-        List<String> duplicateRelationKeys = getDuplicateKeys(entityPO.getRelations().stream().map(RelationPO::getKey).toList());
+        List<String> duplicateRelationKeys = getDuplicateKeys(typePO.getRelations().stream().map(RelationPO::getKey).toList());
         if (!duplicateRelationKeys.isEmpty()) {
             for (String duplicateKey : duplicateRelationKeys) {
-                List<ValidationError> duplicatesList = entityPO.getRelations().stream()
+                List<ValidationError> duplicatesList = typePO.getRelations().stream()
                         .filter(rel -> duplicateKey.equals(rel.getKey()))
                         .map(relations -> {
-                            int i = entityPO.getRelations().indexOf(relations);
+                            int i = typePO.getRelations().indexOf(relations);
                             return new ValidationError("relations[" + i + "].key", "Unique", I18nConstants.Errors.DUPLICATE_KEY);
                         })
                         .toList();
@@ -52,11 +52,11 @@ public class UniqueValidator {
             }
         }
 
-        for (RelationPO relationPO : entityPO.getRelations()) {
+        for (RelationPO relationPO : typePO.getRelations()) {
             try {
                 validate(relationPO);
             } catch (ValidationException ve) {
-                int i = entityPO.getRelations().indexOf(relationPO);
+                int i = typePO.getRelations().indexOf(relationPO);
                 errors.addAll(
                         ve.getErrors().stream()
                                 .map(err -> new ValidationError("relations[" + i + "]." + err.getField(), err.getConstraint(), err.getMessage()))
@@ -93,9 +93,9 @@ public class UniqueValidator {
         }
     }
 
-    private boolean hasDuplicateKey(EntityPO entityPO) {
-        return entityPORepository.findByKey(entityPO.getKey())
-                .filter(po -> !Objects.equals(po.getId(), entityPO.getId()))
+    private boolean hasDuplicateKey(TypePO typePO) {
+        return typePORepository.findByKey(typePO.getKey())
+                .filter(po -> !Objects.equals(po.getId(), typePO.getId()))
                 .isPresent();
     }
 

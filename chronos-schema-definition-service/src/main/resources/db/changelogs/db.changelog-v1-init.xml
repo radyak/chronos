@@ -3,9 +3,9 @@
                    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
     <changeSet author="birdman (generated)" id="1768064337858-1">
-        <createTable tableName="entity_attributepo">
+        <createTable tableName="type_attributepo">
             <column name="id" type="BIGINT">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="entity_attributepo_pkey"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="type_attributepo_pkey"/>
             </column>
             <column name="allowed_values" type="VARCHAR(1024)"/>
             <column name="examples" type="VARCHAR(255)"/>
@@ -20,7 +20,7 @@
             </column>
             <column name="value_pattern" type="VARCHAR(255)"/>
             <column name="value_range" type="VARCHAR(255)"/>
-            <column name="entity_id" type="BIGINT"/>
+            <column name="type_id" type="BIGINT"/>
         </createTable>
     </changeSet>
     <changeSet author="birdman (generated)" id="1768064337858-2">
@@ -45,9 +45,9 @@
         </createTable>
     </changeSet>
     <changeSet author="birdman (generated)" id="1768064337858-3">
-        <createTable tableName="entitypo">
+        <createTable tableName="typepo">
             <column name="id" type="BIGINT">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="entitypo_pkey"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="typepo_pkey"/>
             </column>
             <column name="examples" type="VARCHAR(255)"/>
             <column name="explanation" type="VARCHAR(255)"/>
@@ -66,25 +66,25 @@
             <column name="technical_key" type="VARCHAR(64)">
                 <constraints nullable="false"/>
             </column>
-            <column name="source_entity_id" type="BIGINT">
+            <column name="source_type_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="target_entity_id" type="BIGINT">
+            <column name="target_type_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>
     <changeSet author="birdman (generated)" id="1768064337858-5">
-        <addUniqueConstraint columnNames="technical_key" constraintName="entitypo-technical_key-unique"
-                             tableName="entitypo"/>
+        <addUniqueConstraint columnNames="technical_key" constraintName="typepo-technical_key-unique"
+                             tableName="typepo"/>
     </changeSet>
     <changeSet author="birdman (generated)" id="1768064337858-6">
         <createSequence cacheSize="1" cycle="false" dataType="bigint" incrementBy="50" maxValue="9223372036854775807"
-                        minValue="1" sequenceName="entity_attributepo_seq" startValue="1"/>
+                        minValue="1" sequenceName="type_attributepo_seq" startValue="1"/>
     </changeSet>
     <changeSet author="birdman (generated)" id="1768064337858-7">
         <createSequence cacheSize="1" cycle="false" dataType="bigint" incrementBy="50" maxValue="9223372036854775807"
-                        minValue="1" sequenceName="entitypo_seq" startValue="1"/>
+                        minValue="1" sequenceName="typepo_seq" startValue="1"/>
     </changeSet>
     <changeSet author="birdman (generated)" id="1768064337858-8">
         <createSequence cacheSize="1" cycle="false" dataType="bigint" incrementBy="50" maxValue="9223372036854775807"
@@ -95,10 +95,10 @@
                         minValue="1" sequenceName="relationpo_seq" startValue="1"/>
     </changeSet>
     <changeSet author="birdman (generated)" id="1768064337858-10">
-        <addForeignKeyConstraint baseColumnNames="target_entity_id" baseTableName="relationpo"
-                                 constraintName="relationpo-target_entity_id-fk" deferrable="false"
+        <addForeignKeyConstraint baseColumnNames="target_type_id" baseTableName="relationpo"
+                                 constraintName="relationpo-target_type_id-fk" deferrable="false"
                                  initiallyDeferred="false" onDelete="CASCADE" onUpdate="NO ACTION"
-                                 referencedColumnNames="id" referencedTableName="entitypo" validate="true"/>
+                                 referencedColumnNames="id" referencedTableName="typepo" validate="true"/>
     </changeSet>
     <changeSet author="birdman (generated)" id="1768064337858-11">
         <addForeignKeyConstraint baseColumnNames="relation_id" baseTableName="relation_attributepo"
@@ -107,15 +107,15 @@
                                  referencedColumnNames="id" referencedTableName="relationpo" validate="true"/>
     </changeSet>
     <changeSet author="birdman (generated)" id="1768064337858-12">
-        <addForeignKeyConstraint baseColumnNames="entity_id" baseTableName="entity_attributepo"
-                                 constraintName="entity_attributepo-entity_id-fk" deferrable="false"
+        <addForeignKeyConstraint baseColumnNames="type_id" baseTableName="type_attributepo"
+                                 constraintName="type_attributepo-type_id-fk" deferrable="false"
                                  initiallyDeferred="false" onDelete="CASCADE" onUpdate="NO ACTION"
-                                 referencedColumnNames="id" referencedTableName="entitypo" validate="true"/>
+                                 referencedColumnNames="id" referencedTableName="typepo" validate="true"/>
     </changeSet>
     <changeSet author="birdman (generated)" id="1768064337858-13">
-        <addForeignKeyConstraint baseColumnNames="source_entity_id" baseTableName="relationpo"
-                                 constraintName="relationpo-source_entity_id-fk" deferrable="false"
+        <addForeignKeyConstraint baseColumnNames="source_type_id" baseTableName="relationpo"
+                                 constraintName="relationpo-source_type_id-fk" deferrable="false"
                                  initiallyDeferred="false" onDelete="CASCADE" onUpdate="NO ACTION"
-                                 referencedColumnNames="id" referencedTableName="entitypo" validate="true"/>
+                                 referencedColumnNames="id" referencedTableName="typepo" validate="true"/>
     </changeSet>
 </databaseChangeLog>

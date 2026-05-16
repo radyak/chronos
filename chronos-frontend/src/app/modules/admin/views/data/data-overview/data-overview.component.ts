@@ -1,13 +1,13 @@
 import { Component, computed, inject, Signal } from '@angular/core';
-import { HistoricalDataService } from '../../../services/historical-data.service';
-import { QueryDTO } from 'src/app/common/model/domain/data/query.model.dto';
+import { HistoricalDataService } from '../../../../public/services/historical-data.service';
+import { QueryDTO } from 'src/app/common/model/data/query.model.dto';
 import { ElementAttributePipe } from 'src/app/common/util/element-attribute.pipe';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
 import { SortByComponent } from 'src/app/common/components/sort-by/sort-by.component';
-import { SortOrder } from 'src/app/common/model/domain/data/sort-order.dto';
+import { SortOrder } from 'src/app/common/model/data/sort-order.dto';
 import { LoadingComponent } from 'src/app/common/components/loading/loading.component';
 
 function cleanParams(obj: Record<string, any>) {

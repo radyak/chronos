@@ -1,19 +1,19 @@
 package net.fvogel.chronos.schema.testutils.builder;
 
 import net.fvogel.chronos.commons.model.schema.AttributeType;
-import net.fvogel.chronos.schema.domain.schema.persistence.model.entity.EntityAttributePO;
-import net.fvogel.chronos.schema.domain.schema.persistence.model.entity.EntityPO;
+import net.fvogel.chronos.schema.domain.schema.persistence.model.type.TypeAttributePO;
+import net.fvogel.chronos.schema.domain.schema.persistence.model.type.TypePO;
 
 import java.util.Set;
 
 public class TestDataBuilder {
 
-    public static EntityPOBuilder entity() {
-        return EntityPOBuilder.builder();
+    public static TypePOBuilder type() {
+        return TypePOBuilder.builder();
     }
 
-    public static EntityAttributePOBuilder attribute() {
-        return EntityAttributePOBuilder.builder();
+    public static TypeAttributePOBuilder attribute() {
+        return TypeAttributePOBuilder.builder();
     }
 
     public static RelationAttributePOBuilder relationAttribute() {
@@ -24,16 +24,16 @@ public class TestDataBuilder {
         return RelationPOBuilder.builder();
     }
 
-    public static EntityPO createMinimalEntity(String key) {
-        return TestDataBuilder.entity().withKey(key).build();
+    public static TypePO createMinimalType(String key) {
+        return TestDataBuilder.type().withKey(key).build();
     }
 
-    public static EntityPO createFullDefaultEntity() {
-        return createFullDefaultEntityWithTarget(null);
+    public static TypePO createFullDefaultType() {
+        return createFullDefaultTypeWithTarget(null);
     }
 
-    public static EntityPO createFullDefaultEntityWithTarget(EntityPO target) {
-        EntityPOBuilder builder = TestDataBuilder.entity()
+    public static TypePO createFullDefaultTypeWithTarget(TypePO target) {
+        TypePOBuilder builder = TestDataBuilder.type()
                 .withKey("Event")
                 .withExamples("War, catastrophe, assassination")
                 .withExplanation("Something that happened")
@@ -94,7 +94,7 @@ public class TestDataBuilder {
         return builder.build();
     }
 
-    public static EntityAttributePO createMinimalEntityAttribute(String key) {
+    public static TypeAttributePO createMinimalTypeAttribute(String key) {
         return TestDataBuilder.attribute()
                 .withKey(key)
                 .withType(AttributeType.STRING)

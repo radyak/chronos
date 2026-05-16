@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import net.fvogel.chronos.schema.config.i18n.I18nConstants;
-import net.fvogel.chronos.schema.domain.schema.persistence.model.entity.EntityPO;
+import net.fvogel.chronos.schema.domain.schema.persistence.model.type.TypePO;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -44,11 +44,11 @@ public class RelationPO {
     List<RelationAttributePO> attributes = new ArrayList<>();
 
     @ManyToOne
-    @JoinColumn(name = "source_entity_id", nullable = false)
-    EntityPO source;
+    @JoinColumn(name = "source_type_id", nullable = false)
+    TypePO source;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "target_entity_id", nullable = false)
-    EntityPO target;
+    @JoinColumn(name = "target_type_id", nullable = false)
+    TypePO target;
 
 }

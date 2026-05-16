@@ -31,13 +31,13 @@
                 <div class="card-body">
                     <table class="w-100">
                         <tbody>
-                        @for (entry of statistics; track entry) {
+                        @for (typeStatistic of statistics; track typeStatistic) {
                             <tr>
                             <td class="w-25">
-                                {{ entry.label }}
+                                {{ typeStatistic.label }}
                             </td>
                             <td>
-                                {{ entry.count }}
+                                {{ typeStatistic.count }}
                             </td>
                             </tr>
                         }
