@@ -40,11 +40,11 @@ public class DataApiIntegrationTest {
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.length()").value(5))
                     .andExpect(toExactlyMatchKeys(
-                                    "vaballathus",
                                     "roman-empire",
                                     "otho",
                                     "vitellius",
-                                    "vespasian"
+                                    "vespasian",
+                                    "titus"
                             )
                     );
         }
