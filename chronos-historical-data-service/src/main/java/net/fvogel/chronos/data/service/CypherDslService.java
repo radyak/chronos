@@ -25,6 +25,10 @@ public class CypherDslService {
         ConditionOperator operator = ConditionOperator.EQUAL;
         if (filterComponents.length == 2) {
             operator = ConditionOperator.fromValue(filterComponents[1]);
+            if (operator == null) {
+                logger.warn("Invalid filter operator: {} = {}", filter, value);
+                throw new InvalidParameterException();
+            }
         }
 
         Property property = node.property(field);

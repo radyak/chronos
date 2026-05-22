@@ -2,7 +2,6 @@ package net.fvogel.chronos.data.config.web;
 
 
 import net.fvogel.chronos.data.config.web.converter.StringToSortOrderConverter;
-import net.fvogel.chronos.data.config.web.converter.StringToSupportedLanguagConverter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -12,7 +11,6 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addFormatters(FormatterRegistry registry) {
-        registry.addConverter(new StringToSupportedLanguagConverter());
         registry.addConverter(new StringToSortOrderConverter());
     }
 }
