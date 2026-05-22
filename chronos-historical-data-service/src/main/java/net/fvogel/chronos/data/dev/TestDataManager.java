@@ -3,24 +3,20 @@ package net.fvogel.chronos.data.dev;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.neo4j.core.Neo4jClient;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.time.Duration;
 
-@Profile("test-data")
-@Configuration
-public class TestDataImportConfig {
+@Profile({"test", "test-data"})
+@Component
+public class TestDataManager {
 
-    private static final Logger logger = LoggerFactory.getLogger(TestDataImportConfig.class);
-
-    @Value("${application.dev.test-data.forceClean}")
-    private boolean forceClean;
+    private static final Logger logger = LoggerFactory.getLogger(TestDataManager.class);
 
     @Autowired
     private Neo4jClient neo4jClient;
@@ -28,10 +24,6 @@ public class TestDataImportConfig {
     @EventListener(ApplicationReadyEvent.class)
     public void importTestData() throws InterruptedException, IOException {
         waitForDatabase();
-
-        if (forceClean) {
-            run("/testdata/cleanup.cql");
-        }
 
         long count = getDatabaseCount();
 
@@ -42,6 +34,10 @@ public class TestDataImportConfig {
             logger.info("Database already contained {} entries, no test data imported", count);
         }
 
+    }
+
+    public void clearAll() throws IOException {
+        run("/testdata/cleanup.cql");
     }
 
     public long getDatabaseCount() {

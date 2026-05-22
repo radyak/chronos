@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -47,9 +48,11 @@ public class DataService {
         }
 
         // TODO: Enable MultiValueMap for query.filters
-        List<Condition> conditions = query.getFilters().keySet().stream()
-                .map(filter -> CypherDslService.condition(filter, query.getFilters().get(filter), n))
-                .toList();
+        List<Condition> conditions = query.getFilters() == null ?
+                Collections.emptyList() :
+                query.getFilters().keySet().stream()
+                        .map(filter -> CypherDslService.condition(filter, query.getFilters().get(filter), n))
+                        .toList();
         Condition union = CypherDslService.all(conditions);
 
         Pagination pagination = query.getPagination();

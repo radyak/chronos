@@ -27,7 +27,7 @@ public enum ConditionOperator {
                 return c;
             }
         }
-        return EQUAL;
+        return null;
     }
 
 }
