@@ -26,7 +26,7 @@ GET http://localhost:8010/api/data/th
 ### 
 
 # Filter example: Entries before 200 AD with wikipedia QID
-GET http://localhost:8010/api/data?from:lt=0200&qid:not=null
+GET http://localhost:8010/api/data?sortBy=from&pageSize=5&from:gt=0032-04-28
 
 
 ### 

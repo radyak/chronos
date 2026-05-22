@@ -34,24 +34,30 @@ public class DataService {
     @Autowired
     private Driver driver;
 
-    public List<Entry> findAll(DataQuery query) {
-        var nodeName = "n";
-        var n = Cypher.anyNode().named(nodeName);
-
+    // Aspect: Query domain -> CypherDSL
+    private static ArrayList<SortItem> mapToSortItems(DataQuery query, org.neo4j.cypherdsl.core.Node n) {
         var sortList = new ArrayList<SortItem>();
-        Sorting sorting = query.getSorting();
+        Sorting sorting = query.getSorting().isEmpty() ? null : query.getSorting().get(0);
         if (sorting != null && sorting.getSortBy() != null) {
             var direction = sorting.getSortOrder() == SortOrder.ASC ? SortItem.Direction.ASC : SortItem.Direction.DESC;
             var property = sorting.getSortBy();
             var sort = "random".equals(property) ? Cypher.sort(Cypher.rand()) : Cypher.sort(n.property(property), direction);
             sortList.add(sort);
         }
+        return sortList;
+    }
+
+    public List<Entry> findAll(DataQuery query) {
+        var nodeName = "n";
+        var n = Cypher.anyNode().named(nodeName);
+
+        var sortList = mapToSortItems(query, n);
 
         // TODO: Enable MultiValueMap for query.filters
         List<Condition> conditions = query.getFilters() == null ?
                 Collections.emptyList() :
-                query.getFilters().keySet().stream()
-                        .map(filter -> CypherDslService.condition(filter, query.getFilters().get(filter), n))
+                query.getFilters().stream()
+                        .map(filter -> CypherDslService.condition(filter, n))
                         .toList();
         Condition union = CypherDslService.all(conditions);
 
@@ -60,7 +66,7 @@ public class DataService {
                 .where(union)
                 .returning(n)
                 .orderBy(sortList)
-                .skip((pagination.getPage() - 1) * pagination.getPageSize())
+                .skip(Integer.valueOf((pagination.getPage() - 1) * pagination.getPageSize()))
                 .limit(pagination.getPageSize())
                 .build();
         var renderedStatement = Renderer.getDefaultRenderer().render(statement);
@@ -74,7 +80,6 @@ public class DataService {
                     .collect(Collectors.toList());
         }
     }
-
 
     public Entry findById(String id) {
         var nodeName = "n";
@@ -104,7 +109,7 @@ public class DataService {
             return session.run(renderedStatement)
                     .list(record -> {
                         Set<String> labels = record.get("labels").asList().stream().map(Object::toString).collect(Collectors.toSet());
-                        Integer count = record.get("count").asInt();
+                        Integer count = Integer.valueOf(record.get("count").asInt());
                         CountResult countResult = new CountResult();
                         countResult.setLabel(labels.stream().findFirst().orElse(""));
                         countResult.setCount(count);
@@ -113,6 +118,7 @@ public class DataService {
         }
     }
 
+    // Aspect: CypherDSL -> Model
     private Entry mapToEntry(Node node) {
         Entry entry = new Entry();
         entry.setElementId(node.elementId());
@@ -121,6 +127,7 @@ public class DataService {
         return entry;
     }
 
+    // Aspect: CypherDSL -> Model
     private String nullEscaped(String string) {
         return "null".equals(string) ? null : string;
     }

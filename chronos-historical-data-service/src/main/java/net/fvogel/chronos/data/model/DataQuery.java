@@ -2,11 +2,12 @@ package net.fvogel.chronos.data.model;
 
 import lombok.Data;
 
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 public class DataQuery {
-    Sorting sorting = new Sorting();
+    List<Filter> filters = new ArrayList<>();
     Pagination pagination = new Pagination();
-    Map<String, String> filters;
+    List<Sorting> sorting = new ArrayList<>();
 }

@@ -1,6 +1,7 @@
 package net.fvogel.chronos.data.service;
 
 import net.fvogel.chronos.commons.exception.InvalidParameterException;
+import net.fvogel.chronos.data.model.Filter;
 import org.neo4j.cypherdsl.core.Condition;
 import org.neo4j.cypherdsl.core.Cypher;
 import org.neo4j.cypherdsl.core.Node;
@@ -14,27 +15,11 @@ public class CypherDslService {
 
     private static final Logger logger = LoggerFactory.getLogger(CypherDslService.class);
 
-    public static Condition condition(String filter, String value, Node node) {
-        if (filter == null || filter.trim().isEmpty() || value == null || value.trim().isEmpty()) {
-            logger.warn("Invalid filter: {} = {}", filter, value);
-            throw new InvalidParameterException();
-        }
-        String[] filterComponents = filter.split(":");
-        String field = filterComponents[0];
-
-        ConditionOperator operator = ConditionOperator.EQUAL;
-        if (filterComponents.length == 2) {
-            operator = ConditionOperator.fromValue(filterComponents[1]);
-            if (operator == null) {
-                logger.warn("Invalid filter operator: {} = {}", filter, value);
-                throw new InvalidParameterException();
-            }
-        }
-
-        Property property = node.property(field);
+    public static Condition condition(Filter filter, Node node) {
+        Property property = node.property(filter.getAttribute());
         // specific null value handling
-        if ("null".equalsIgnoreCase(value.trim())) {
-            switch (operator) {
+        if (null == filter.getValue()) {
+            switch (filter.getOperator()) {
                 case NOT -> {
                     return property.isNotNull();
                 }
@@ -42,14 +27,14 @@ public class CypherDslService {
                     return property.isNull();
                 }
                 default -> {
-                    logger.warn("Invalid filter: {} = {}", filter, value);
+                    logger.warn("Invalid filter: {}", filter);
                     throw new InvalidParameterException();
                 }
             }
         }
 
-
-        switch (operator) {
+        var value = filter.getValue();
+        switch (filter.getOperator()) {
             case NOT -> {
                 return property.isNotEqualTo(Cypher.literalOf(value));
             }

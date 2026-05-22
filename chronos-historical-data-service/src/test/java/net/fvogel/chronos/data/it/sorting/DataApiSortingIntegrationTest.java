@@ -1,9 +1,9 @@
 package net.fvogel.chronos.data.it.sorting;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import net.fvogel.chronos.data.model.Entry;
+import net.fvogel.chronos.data.model.dto.DataResponseDTO;
 import net.fvogel.chronos.data.testutils.BaseIntegrationTest;
+import org.hamcrest.core.IsNull;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -28,7 +28,7 @@ public class DataApiSortingIntegrationTest extends BaseIntegrationTest {
     void getDataWithDateSortByParamReturnsSortedPage() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/api/data?sortBy=from"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(10))
+                .andExpect(jsonPath("$.entries.length()").value(10))
                 .andExpect(toExactlyMatchKeys(
                         "vespasian",
                         "vitellius",
@@ -47,7 +47,7 @@ public class DataApiSortingIntegrationTest extends BaseIntegrationTest {
     void getDataWithAlphabeticalSortByParamAndPageSizeReturnsSortedPage() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/api/data?sortBy=key&pageSize=5"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(5))
+                .andExpect(jsonPath("$.entries.length()").value(5))
                 .andExpect(toExactlyMatchKeys(
                         "antiochus",
                         "aurelian",
@@ -61,7 +61,7 @@ public class DataApiSortingIntegrationTest extends BaseIntegrationTest {
     void getDataWithInvertedSortOrderParamReturnsSortedPage() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/api/data?sortBy=key&pageSize=5&sortOrder=desc"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(5))
+                .andExpect(jsonPath("$.entries.length()").value(5))
                 .andExpect(toExactlyMatchKeys(
                         "zenobia",
                         "vitellius",
@@ -101,15 +101,30 @@ public class DataApiSortingIntegrationTest extends BaseIntegrationTest {
     void getDataIgnoresInvalidSortByParam() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/api/data?sortBy=invalid"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(10));
+                .andExpect(jsonPath("$.entries.length()").value(10));
     }
 
     private List<String> keyList(String json) throws JsonProcessingException {
-        return objectMapper.readValue(json, new TypeReference<List<Entry>>() {
-                })
+        return objectMapper.readValue(json, DataResponseDTO.class)
+                .getEntries()
                 .stream()
                 .map(entry -> entry.getProperties().get("key").toString())
                 .toList();
+    }
+
+    @Test
+    void getDataIncludesAppropriateMetadata() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/api/data?sortBy=key&sortOrder=desc"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.meta.query.sorting.length()").value(1))
+                .andExpect(jsonPath("$.meta.query.sorting.[0].sortOrder").value("DESC"))
+                .andExpect(jsonPath("$.meta.query.sorting.[0].sortBy").value("key"));
+
+        mvc.perform(MockMvcRequestBuilders.get("/api/data"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.meta.query.sorting.length()").value(1))
+                .andExpect(jsonPath("$.meta.query.sorting.[0].sortOrder").value("ASC"))
+                .andExpect(jsonPath("$.meta.query.sorting.[0].sortBy").value(IsNull.nullValue()));
     }
 
 }
