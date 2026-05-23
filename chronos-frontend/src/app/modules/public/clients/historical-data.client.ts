@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CountResultDTO } from 'src/app/common/model/data/count-result.dto';
 import { EntryDTO } from 'src/app/common/model/data/data-element.dto';
+import { DataResponseDTO } from 'src/app/common/model/data/data-response.dto';
 import { QueryDTO } from 'src/app/common/model/data/query.model.dto';
 
 @Injectable({
@@ -13,8 +14,8 @@ export class HistoricalDataClient {
   private apiUrl = '/api/data';
   
 
-  public search(query?: QueryDTO, filters?: Record<string, string>): Observable<EntryDTO[]> {
-    return this.http.get<EntryDTO[]>(`${this.apiUrl}`, { params: {...query, ...filters} as any });
+  public search(query?: QueryDTO, filters?: Record<string, string>): Observable<DataResponseDTO> {
+    return this.http.get<DataResponseDTO>(`${this.apiUrl}`, { params: {...query, ...filters} as any });
   }
 
   public getStatistics(): Observable<CountResultDTO[]> {

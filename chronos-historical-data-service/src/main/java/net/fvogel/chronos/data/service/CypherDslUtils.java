@@ -1,40 +1,36 @@
 package net.fvogel.chronos.data.service;
 
 import net.fvogel.chronos.commons.exception.InvalidParameterException;
-import org.neo4j.cypherdsl.core.Condition;
-import org.neo4j.cypherdsl.core.Cypher;
-import org.neo4j.cypherdsl.core.Node;
-import org.neo4j.cypherdsl.core.Property;
+import net.fvogel.chronos.data.model.DataQuery;
+import net.fvogel.chronos.data.model.Filter;
+import net.fvogel.chronos.data.model.SortOrder;
+import net.fvogel.chronos.data.model.Sorting;
+import org.neo4j.cypherdsl.core.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
-public class CypherDslService {
+public class CypherDslUtils {
 
-    private static final Logger logger = LoggerFactory.getLogger(CypherDslService.class);
+    private static final Logger logger = LoggerFactory.getLogger(CypherDslUtils.class);
 
-    public static Condition condition(String filter, String value, Node node) {
-        if (filter == null || filter.trim().isEmpty() || value == null || value.trim().isEmpty()) {
-            logger.warn("Invalid filter: {} = {}", filter, value);
-            throw new InvalidParameterException();
-        }
-        String[] filterComponents = filter.split(":");
-        String field = filterComponents[0];
+    public static List<Condition> extractConditions(DataQuery query, Node node) {
+        return query.getFilters() == null ?
+                Collections.emptyList() :
+                query.getFilters().stream()
+                        .map(filter -> CypherDslUtils.mapFilterToCondition(filter, node))
+                        .toList();
+    }
 
-        ConditionOperator operator = ConditionOperator.EQUAL;
-        if (filterComponents.length == 2) {
-            operator = ConditionOperator.fromValue(filterComponents[1]);
-            if (operator == null) {
-                logger.warn("Invalid filter operator: {} = {}", filter, value);
-                throw new InvalidParameterException();
-            }
-        }
-
-        Property property = node.property(field);
+    private static Condition mapFilterToCondition(Filter filter, Node node) {
+        Property property = node.property(filter.getAttribute());
         // specific null value handling
-        if ("null".equalsIgnoreCase(value.trim())) {
-            switch (operator) {
+        if (null == filter.getValue()) {
+            switch (filter.getOperator()) {
                 case NOT -> {
                     return property.isNotNull();
                 }
@@ -42,14 +38,14 @@ public class CypherDslService {
                     return property.isNull();
                 }
                 default -> {
-                    logger.warn("Invalid filter: {} = {}", filter, value);
+                    logger.warn("Invalid filter: {}", filter);
                     throw new InvalidParameterException();
                 }
             }
         }
 
-
-        switch (operator) {
+        var value = filter.getValue();
+        switch (filter.getOperator()) {
             case NOT -> {
                 return property.isNotEqualTo(Cypher.literalOf(value));
             }
@@ -70,6 +66,19 @@ public class CypherDslService {
                 return property.eq(Cypher.literalOf(value));
             }
         }
+    }
+
+    // Aspect: Query domain -> CypherDSL
+    public static List<SortItem> extractSortItems(DataQuery query, Node n) {
+        var sortList = new ArrayList<SortItem>();
+        Sorting sorting = query.getSorting().isEmpty() ? null : query.getSorting().get(0);
+        if (sorting != null && sorting.getSortBy() != null) {
+            var direction = sorting.getSortOrder() == SortOrder.ASC ? SortItem.Direction.ASC : SortItem.Direction.DESC;
+            var property = sorting.getSortBy();
+            var sort = "random".equals(property) ? Cypher.sort(Cypher.rand()) : Cypher.sort(n.property(property), direction);
+            sortList.add(sort);
+        }
+        return sortList;
     }
 
     public static Condition all(Condition... conditions) {

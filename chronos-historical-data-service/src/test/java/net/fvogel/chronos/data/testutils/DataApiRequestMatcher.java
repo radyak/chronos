@@ -58,7 +58,7 @@ public class DataApiRequestMatcher {
     }
 
     private static List<String> extractKeys(MvcResult mvcResult) throws UnsupportedEncodingException {
-        String jsonPath = "$[*].properties.key";
+        String jsonPath = "$.entries.[*].properties.key";
         String responseJson = mvcResult.getResponse().getContentAsString();
         Collection<Object> values = JsonPath.read(responseJson, jsonPath);
 

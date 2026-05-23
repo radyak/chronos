@@ -20,35 +20,35 @@ public class DataApiPagingIntegrationTest extends BaseIntegrationTest {
     void getDataWithoutParamsReturnsFirstPage() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/api/data"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(10));
+                .andExpect(jsonPath("$.entries.length()").value(10));
     }
 
     @Test
     void getDataWithOnlyPageSizeParamReturnsFirstPage() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/api/data?pageSize=5"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(5));
+                .andExpect(jsonPath("$.entries.length()").value(5));
     }
 
     @Test
     void getDataWithPageSizeAndPageParamReturnsRespectivePage() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/api/data?pageSize=5&page=2"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(5));
+                .andExpect(jsonPath("$.entries.length()").value(5));
     }
 
     @Test
     void getDataWithOutOfBoundPageParamReturnsEmptyPage() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/api/data?pageSize=5&page=12"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(0));
+                .andExpect(jsonPath("$.entries.length()").value(0));
     }
 
     @Test
     void getDataWithPageSizeOutOfBoundReturnsOnlyRelevantEntries() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/api/data?pageSize=100"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(23));
+                .andExpect(jsonPath("$.entries.length()").value(23));
     }
 
     @Test
@@ -61,6 +61,19 @@ public class DataApiPagingIntegrationTest extends BaseIntegrationTest {
     void getDataThrowsBadRequestWithInvalidPageParam() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/api/data?page=0"))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void getDataIncludesAppropriateMetadata() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/api/data?pageSize=5&page=2"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.meta.query.pagination.pageSize").value(5))
+                .andExpect(jsonPath("$.meta.query.pagination.page").value(2));
+
+        mvc.perform(MockMvcRequestBuilders.get("/api/data"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.meta.query.pagination.pageSize").value(10))
+                .andExpect(jsonPath("$.meta.query.pagination.page").value(1));
     }
 
 }

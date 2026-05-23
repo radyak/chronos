@@ -4,6 +4,7 @@ import { EntryDTO } from 'src/app/common/model/data/data-element.dto';
 import { CountResultDTO } from 'src/app/common/model/data/count-result.dto';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { HistoricalDataClient } from '../clients/historical-data.client';
+import { map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -17,7 +18,12 @@ export class HistoricalDataService {
     return rxResource({
       params: () => query(),
       stream: ({ params }) => {
-        return this.historicalDataClient.search(params);
+        return this.historicalDataClient.search(params).pipe(
+          // Map the DataResponseDTO to just the entries for easier consumption
+          map(response => {
+            return response.entries;
+          })
+        );
       },
     });
   }
