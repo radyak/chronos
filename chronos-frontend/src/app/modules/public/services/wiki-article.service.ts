@@ -26,8 +26,8 @@ export class WikiArticleService {
         }, {
           "qid:not": "null"
         }).pipe(
-            switchMap(entities => {
-              const entity = entities[0];
+            switchMap(response => {
+              const entity = response.entries[0];
               return this.wikiArticlesClient.getArticleByQid(entity.properties["qid"]!)
             })
         );
