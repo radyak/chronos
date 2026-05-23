@@ -1,4 +1,4 @@
-package net.fvogel.chronos.data.service;
+package net.fvogel.chronos.data.model;
 
 import java.util.Locale;
 import java.util.Objects;

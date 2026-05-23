@@ -1,24 +1,21 @@
 package net.fvogel.chronos.data.service;
 
 import net.fvogel.chronos.commons.exception.NotFoundException;
-import net.fvogel.chronos.data.model.*;
+import net.fvogel.chronos.data.model.CountResult;
+import net.fvogel.chronos.data.model.DataQuery;
+import net.fvogel.chronos.data.model.Entry;
+import net.fvogel.chronos.data.model.Pagination;
+import net.fvogel.chronos.data.persistence.CypherClient;
 import org.neo4j.cypherdsl.core.Condition;
 import org.neo4j.cypherdsl.core.Cypher;
 import org.neo4j.cypherdsl.core.SortItem;
-import org.neo4j.cypherdsl.core.renderer.Renderer;
-import org.neo4j.driver.Driver;
-import org.neo4j.driver.Session;
-import org.neo4j.driver.types.Node;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -32,53 +29,31 @@ public class DataService {
     private static final Logger logger = LoggerFactory.getLogger(DataService.class);
 
     @Autowired
-    private Driver driver;
-
-    // Aspect: Query domain -> CypherDSL
-    private static ArrayList<SortItem> mapToSortItems(DataQuery query, org.neo4j.cypherdsl.core.Node n) {
-        var sortList = new ArrayList<SortItem>();
-        Sorting sorting = query.getSorting().isEmpty() ? null : query.getSorting().get(0);
-        if (sorting != null && sorting.getSortBy() != null) {
-            var direction = sorting.getSortOrder() == SortOrder.ASC ? SortItem.Direction.ASC : SortItem.Direction.DESC;
-            var property = sorting.getSortBy();
-            var sort = "random".equals(property) ? Cypher.sort(Cypher.rand()) : Cypher.sort(n.property(property), direction);
-            sortList.add(sort);
-        }
-        return sortList;
-    }
+    private CypherClient client;
+    @Autowired
+    private ResultMapper resultMapper;
 
     public List<Entry> findAll(DataQuery query) {
         var nodeName = "n";
         var n = Cypher.anyNode().named(nodeName);
 
-        var sortList = mapToSortItems(query, n);
-
-        // TODO: Enable MultiValueMap for query.filters
-        List<Condition> conditions = query.getFilters() == null ?
-                Collections.emptyList() :
-                query.getFilters().stream()
-                        .map(filter -> CypherDslService.condition(filter, n))
-                        .toList();
-        Condition union = CypherDslService.all(conditions);
-
+        List<SortItem> sortList = CypherDslUtils.extractSortItems(query, n);
+        Condition unionCondition = CypherDslUtils.all(CypherDslUtils.extractConditions(query, n));
         Pagination pagination = query.getPagination();
+
         var statement = Cypher.match(n)
-                .where(union)
+                .where(unionCondition)
                 .returning(n)
                 .orderBy(sortList)
                 .skip(Integer.valueOf((pagination.getPage() - 1) * pagination.getPageSize()))
                 .limit(pagination.getPageSize())
                 .build();
-        var renderedStatement = Renderer.getDefaultRenderer().render(statement);
 
-
-        try (Session session = driver.session()) {
-            logger.debug("Executing statement: {}", renderedStatement);
-            return session.run(renderedStatement)
-                    .list(record -> record.get(nodeName).asNode())
-                    .stream().map(this::mapToEntry)
-                    .collect(Collectors.toList());
-        }
+        return client.runStatement(statement, result ->
+                result.list(record -> record.get(nodeName).asNode())
+                        .stream().map(resultMapper::toEntry)
+                        .collect(Collectors.toList())
+        );
     }
 
     public Entry findById(String id) {
@@ -87,14 +62,12 @@ public class DataService {
         var statement = Cypher.match(n)
                 .returning(n)
                 .build();
-        var renderedStatement = Renderer.getDefaultRenderer().render(statement);
 
-        try (Session session = driver.session()) {
-            return session.run(renderedStatement)
-                    .list(record -> record.get(nodeName).asNode())
-                    .stream().map(this::mapToEntry).findFirst()
-                    .orElseThrow(NotFoundException::new);
-        }
+        return client.runStatement(statement, result -> result
+                .list(record -> record.get(nodeName).asNode())
+                .stream().map(resultMapper::toEntry).findFirst()
+                .orElseThrow(NotFoundException::new)
+        );
     }
 
     public List<CountResult> statistics() {
@@ -103,33 +76,8 @@ public class DataService {
         var statement = Cypher.match(n)
                 .returning(Cypher.count(n).as("count"), Cypher.labels(n).as("labels"))
                 .build();
-        var renderedStatement = Renderer.getDefaultRenderer().render(statement);
 
-        try (Session session = driver.session()) {
-            return session.run(renderedStatement)
-                    .list(record -> {
-                        Set<String> labels = record.get("labels").asList().stream().map(Object::toString).collect(Collectors.toSet());
-                        Integer count = Integer.valueOf(record.get("count").asInt());
-                        CountResult countResult = new CountResult();
-                        countResult.setLabel(labels.stream().findFirst().orElse(""));
-                        countResult.setCount(count);
-                        return countResult;
-                    });//.forEach(res -> result.put(res.getLabels().stream().findFirst().orElse(""), res.getCount()));
-        }
-    }
-
-    // Aspect: CypherDSL -> Model
-    private Entry mapToEntry(Node node) {
-        Entry entry = new Entry();
-        entry.setElementId(node.elementId());
-        node.labels().forEach(label -> entry.getLabels().add(label));
-        node.keys().forEach(key -> entry.getProperties().put(key, nullEscaped(node.get(key).asString())));
-        return entry;
-    }
-
-    // Aspect: CypherDSL -> Model
-    private String nullEscaped(String string) {
-        return "null".equals(string) ? null : string;
+        return client.runStatement(statement, result -> result.list(resultMapper::toCountResult));
     }
 
 }
