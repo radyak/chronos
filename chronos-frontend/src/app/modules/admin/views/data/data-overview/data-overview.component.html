@@ -49,6 +49,13 @@
     </div>
 }
 
+<div class="admin-controls">
+  <button class="btn btn-outline-success" (click)="newEntry()">
+    <fa-icon [icon]="newIcon"></fa-icon>
+    New Entry
+  </button>
+</div>
+
 
 @if (data.error()) {
   <p>Error loading data</p>

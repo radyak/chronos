@@ -9,6 +9,9 @@ import { map } from 'rxjs';
 import { SortByComponent } from 'src/app/common/components/sort-by/sort-by.component';
 import { SortOrder } from 'src/app/common/model/data/sort-order.dto';
 import { LoadingComponent } from 'src/app/common/components/loading/loading.component';
+import { IconConstants } from 'src/app/common/constants/icon.constants';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { CREATE_ROUTE_KEYWORD } from '../../../admin.routes';
 
 function cleanParams(obj: Record<string, any>) {
   return Object.fromEntries(
@@ -22,12 +25,15 @@ function cleanParams(obj: Record<string, any>) {
     ElementAttributePipe,
     FormsModule,
     SortByComponent,
-    LoadingComponent
+    LoadingComponent,
+    FontAwesomeModule
   ],
   templateUrl: './data-overview.component.html',
   styleUrl: './data-overview.component.scss',
 })
 export class DataOverviewComponent {
+
+  protected newIcon = IconConstants.ICON_ADD;
 
   // Injected Dependencies
   protected historicalDataService = inject(HistoricalDataService);
@@ -118,6 +124,10 @@ export class DataOverviewComponent {
       sortOrder: current.sortBy === field ? (current.sortOrder === SortOrder.ASC ? SortOrder.DESC : SortOrder.ASC) : SortOrder.ASC,
       page: 1
     });
+  }
+
+  protected newEntry(): void {
+      this.router.navigate([CREATE_ROUTE_KEYWORD], { relativeTo: this.route });
   }
 
 }
