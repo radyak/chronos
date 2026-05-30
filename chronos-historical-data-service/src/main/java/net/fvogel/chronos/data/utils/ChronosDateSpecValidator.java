@@ -1,4 +1,4 @@
-package net.fvogel.chronos.data.REFACTORING.reuse;
+package net.fvogel.chronos.data.utils;
 
 import jakarta.validation.ConstraintValidatorContext;
 
@@ -18,7 +18,7 @@ public class ChronosDateSpecValidator {
      */
     private static final Pattern PATTERN = Pattern.compile("^-?\\d{1,4}(?:-(0[1-9]|1[0-2])(?:-(0[1-9]|[12]\\d|3[01]))?)?$");
 
-    public boolean isValid(String dateString, ConstraintValidatorContext constraintValidatorContext) {
+    public static boolean isValid(String dateString, ConstraintValidatorContext constraintValidatorContext) {
         if (dateString == null) {
             return true;
         }

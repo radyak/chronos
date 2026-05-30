@@ -1,11 +1,11 @@
 package net.fvogel.chronos.data.rest;
 
 import net.fvogel.chronos.commons.exception.InvalidParameterException;
-import net.fvogel.chronos.data.REFACTORING.reuse.ReflectionUtils;
 import net.fvogel.chronos.data.model.ConditionOperator;
 import net.fvogel.chronos.data.model.Filter;
 import net.fvogel.chronos.data.model.Pagination;
 import net.fvogel.chronos.data.model.Sorting;
+import net.fvogel.chronos.data.utils.ReflectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
