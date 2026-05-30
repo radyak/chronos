@@ -7,12 +7,20 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { AdminSchemaService } from '../../../services/admin-schema.service';
 import { EntryDTO } from 'src/app/common/model/data/data-element.dto';
 import { fas } from '@fortawesome/free-solid-svg-icons';
+import { DynamicInputComponent } from './dynamic-input/dynamic-input.component';
+import { EntryAttributeFormService } from './entry-attribute-form.service';
+import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
+import { AttributeAO } from 'src/app/common/model/schema/admin/attribute.ao';
+import { AdminDataService } from '../../../services/admin-data.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'chronos-edit-entry',
   imports: [
     FontAwesomeModule,
     ReactiveFormsModule,
+    DynamicInputComponent,
+    NgbTooltip
   ],
   templateUrl: './edit-entry.component.html',
   styleUrl: './edit-entry.component.scss',
@@ -30,6 +38,7 @@ export class EditEntryComponent {
   protected cancelIcon = IconConstants.ICON_CANCEL;
   protected saveIcon = IconConstants.ICON_SAVE;
   protected deleteIcon = IconConstants.ICON_DELETE;
+  protected questionIcon = IconConstants.ICON_QUESTION;
 
   // Dependencies
   private route: ActivatedRoute = inject(ActivatedRoute);
@@ -37,6 +46,8 @@ export class EditEntryComponent {
   private adminConfirmService: AdminConfirmService = inject(AdminConfirmService);
   private fb: FormBuilder = inject(FormBuilder);
   private faLib = inject(FaIconLibrary);
+  private entryAttributeFormService = inject(EntryAttributeFormService);
+  private adminDataService = inject(AdminDataService);
 
   // Derived Data Fields
   protected isNew = computed(() => true);
@@ -54,29 +65,44 @@ export class EditEntryComponent {
 
   // Form & controls
   protected typeForm?: FormGroup;
-
-
+  protected form: Signal<FormGroup>;
 
   // Init
   constructor() {
     this.faLib.addIconPacks(fas);
 
-    effect(() => {
-      this.typeForm = this.fb.group(
-        {
-          type: [null,
-            [
-              Validators.required,
-            ],
+    this.typeForm = this.fb.group(
+      {
+        type: [null,
+          [
+            Validators.required,
           ],
-        }
-      )
+        ],
+      }
+    );
+    this.form = computed(() => {
+      const type = this.selectedType();
+      return this.entryAttributeFormService.generateFormGroup(type);
+    });
+
+    effect(() => {
+      const entry = this.entry();
+      this.form().patchValue(entry.properties);
     });
   }
 
   // Methods
   protected save() {
-    // TODO
+    this.updateType();
+    console.log('Saving entry', this.entry());
+    firstValueFrom(this.adminDataService.save(this.entry())).then(
+      () => {
+        this.back();
+      },
+      (err) => {
+        // Nothing todo
+      }
+    );
   }
 
   protected cancel() {
@@ -102,7 +128,17 @@ export class EditEntryComponent {
   }
 
   protected updateType(): void {
+    const properties = this.form().getRawValue();
     this.entry.update(e => ({ ...e, labels: [this.typeForm?.getRawValue().type] }));
+    this.entry.update(e => ({ ...e, properties: { ...e.properties, ...properties } }));
   }
+
+  protected toggleTooltip(tooltip: NgbTooltip, attr: AttributeAO) {
+		if (tooltip.isOpen()) {
+			tooltip.close();
+		} else {
+			tooltip.open({attr});
+		}
+	}
 
 }

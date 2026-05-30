@@ -23,7 +23,7 @@
   </button>
   <button class="btn btn-outline-success"
           (click)="save()"
-          [disabled]="!typeForm?.valid">
+          [disabled]="!form().valid">
     <fa-icon [icon]="saveIcon"></fa-icon>
     Save
   </button>
@@ -71,9 +71,24 @@
 
             </div>
         </div>
+      </form>
 
 
-        @if(selectedType(); as type) {
+      <!-- Tooltip Content -->
+      <ng-template #tipContent let-attr="attr">
+        @if(attr.explanation) {
+          <div>{{ attr.explanation }}</div>
+        }
+        @if(attr.examples) {
+          <div>
+            Examples: {{ attr.examples }}
+          </div>
+        }
+      </ng-template>
+      
+
+      @if(selectedType(); as type) {
+        <form [formGroup]="form()">
           <h2 id="entry-attributes">Attributes</h2>
 
           <!-- DEFAULT ATTRIBUTES -->
@@ -82,20 +97,25 @@
             The default attributes are independent of the entry type.
           </p>
 
-          @for(attr of type.defaultAttributes; track attr.key) {
+          
+          @for(attr of type.defaultAttributes; track $index) {
             <div class="form-group">
               <div class="row mt-2">
                   <label class="col-sm-4 col-form-label capitalize" [attr.for]="attr.key">
-                      {{ attr.key }}:
+                      {{ attr.key }}{{ attr.isMandatory ? ' *' : '' }}:
+                      @if(attr.explanation || attr.examples) {
+                        <fa-icon [icon]="questionIcon"
+		                             [ngbTooltip]="tipContent"
+                                 class="pointer"
+                                 triggers="manual"
+		                             #tooltip="ngbTooltip"
+                                 (click)="toggleTooltip(tooltip, attr)"></fa-icon>
+                      }
                   </label>
                   <div class="col-sm-8">
-                      <input [attr.aria-label]="'Specify ' + attr.key"
-                              class="form-control"
-                              [attr.formControlName]="attr.key"
-                              [attr.id]="attr.key"
-                              [attr.name]="attr.key"
-                              type="text"
-                              >
+                      <chronos-dynamic-input [attribute]="attr"
+                                             [form]="form()">
+                      </chronos-dynamic-input>
                   </div>
               </div>
             </div>
@@ -112,20 +132,24 @@
             <div class="form-group">
               <div class="row mt-2">
                   <label class="col-sm-4 col-form-label capitalize" [attr.for]="attr.key">
-                      {{ attr.key }}:
+                      {{ attr.key }}{{ attr.isMandatory ? ' *' : '' }}:
+                      @if(attr.explanation || attr.examples) {
+                        <fa-icon [icon]="questionIcon"
+		                             [ngbTooltip]="tipContent"
+                                 class="pointer"
+                                 triggers="manual"
+		                             #tooltip="ngbTooltip"
+                                 (click)="toggleTooltip(tooltip, attr)"></fa-icon>
+                      }
                   </label>
                   <div class="col-sm-8">
-                      <input [attr.aria-label]="'Specify ' + attr.key"
-                              class="form-control"
-                              [attr.formControlName]="attr.key"
-                              [attr.id]="attr.key"
-                              [attr.name]="attr.key"
-                              type="text"
-                              >
+                      <chronos-dynamic-input [attribute]="attr"
+                                             [form]="form()">
+                      </chronos-dynamic-input>
                   </div>
               </div>
             </div>
           }
-        }
-    </form>
+        </form>
+      }
 }

@@ -1,7 +1,7 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, forwardRef, Input, Output, signal} from '@angular/core';
 
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
-import {FormsModule} from "@angular/forms";
+import {ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR} from "@angular/forms";
 import { paddedString } from 'src/app/common/util/padded-string.function';
 
 const months = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
@@ -18,12 +18,25 @@ interface EditDate {
     templateUrl: './date-input.component.html',
     styleUrls: ['./date-input.component.scss'],
     imports: [
-    NgbModule,
-    FormsModule
-]
+      NgbModule,
+      FormsModule
+    ],
+    providers: [
+      {
+        provide: NG_VALUE_ACCESSOR,
+        useExisting: forwardRef(() => DateInputComponent),
+        multi: true
+      }
+    ]
 })
-export class DateInputComponent {
+export class DateInputComponent implements ControlValueAccessor {
 
+  // Properties
+  protected disabled = signal(false);
+  private formControlOnChange: Function = () => {};
+  private formControlOnTouched: Function = () => {};
+
+  // Smart Properties
   private _editDate: EditDate = {
     year: 0,
     month: 1,
@@ -36,6 +49,7 @@ export class DateInputComponent {
     this._editDate = editDate;
     this.update();
   }
+  
 
   @Input()
   set date(date: string | undefined) {
@@ -45,8 +59,32 @@ export class DateInputComponent {
   @Output()
   dateChange: EventEmitter<string> = new EventEmitter<string>();
 
-  update() {
-    this.dateChange.emit(this.toDateString(this._editDate))
+  // Methods
+  writeValue(obj: any): void {
+    this.date = obj;
+  }
+
+  registerOnChange(fn: Function): void {
+    this.formControlOnChange = fn;
+  }
+
+  registerOnTouched(fn: Function): void {
+    this.formControlOnTouched = fn;
+  }
+
+  setDisabledState?(isDisabled: boolean): void {
+    this.disabled.set(isDisabled);
+  }
+
+  protected update() {
+    const value = this.toDateString(this._editDate);
+    this.dateChange.emit(value);
+    this.formControlOnChange(value);
+    this.formControlOnTouched(value);
+  }
+
+  protected monthName(monthNumber?: number): string {
+    return monthNumber ? months[monthNumber] : '';
   }
 
   private toDateString(editDate?: EditDate): string | undefined {
@@ -72,10 +110,6 @@ export class DateInputComponent {
       month: parseInt(dateComponents[1]) || 0,
       day: parseInt(dateComponents[2]) || 0,
     }
-  }
-
-  monthName(monthNumber?: number): string {
-    return monthNumber ? months[monthNumber] : '';
   }
 
 }

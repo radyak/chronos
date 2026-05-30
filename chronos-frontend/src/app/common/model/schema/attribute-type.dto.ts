@@ -1,3 +1,7 @@
 export enum AttributeTypeDTO {
-    STRING, NUMBER, ENUM, DATENOTATION
+    STRING = "STRING",
+    NUMBER = "NUMBER",
+    ENUM = "ENUM",
+    DATENOTATION = "DATENOTATION",
+    WIKIQID = "WIKIQID"
 }

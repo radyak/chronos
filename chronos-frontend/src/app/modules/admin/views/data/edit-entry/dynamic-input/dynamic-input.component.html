@@ -1,0 +1,52 @@
+<div [formGroup]="form()">
+    @switch (attribute().type) {
+        @case (STRING) {
+            <input [attr.aria-label]="'Specify ' + attribute().key"
+                class="form-control"
+                [formControlName]="attribute().key!"
+                [id]="attribute().key"
+                [name]="attribute().key"
+                type="text"
+                [class.is-invalid]="isInvalid()"
+                >
+        }
+        @case (NUMBER) {
+            <input [attr.aria-label]="'Specify ' + attribute().key"
+                class="form-control"
+                [formControlName]="attribute().key!"
+                [id]="attribute().key"
+                [name]="attribute().key"
+                type="number"
+                [class.is-invalid]="isInvalid()"
+                >
+        }
+        @case (ENUM) {
+            <select [attr.aria-label]="'Select ' + attribute().key"
+                    class="form-select"
+                    [formControlName]="attribute().key!"
+                    [id]="attribute().key"
+                    [name]="attribute().key"
+                    [class.is-invalid]="isInvalid()"
+                    [multiple]="attribute().isArray"
+                    >
+                @for(option of attribute().allowedValues; track option) {
+                    <option [value]="option">
+                        {{ option }}
+                    </option>
+                }
+            </select>
+        }
+        @case (DATENOTATION) {
+            <chronos-date-input 
+                [formControlName]="attribute().key!"
+                [id]="attribute().key">
+            </chronos-date-input>
+        }
+    }
+
+    <div class="invalid-feedback">
+        @for (error of errors(); track error) {
+            {{ error }}
+        }
+    </div>
+</div>

@@ -1,5 +1,6 @@
 package net.fvogel.chronos.data.service;
 
+import net.fvogel.chronos.commons.exception.InvalidDataException;
 import net.fvogel.chronos.commons.exception.NotFoundException;
 import net.fvogel.chronos.data.model.CountResult;
 import net.fvogel.chronos.data.model.DataQuery;
@@ -30,6 +31,7 @@ public class DataService {
 
     @Autowired
     private CypherClient client;
+
     @Autowired
     private ResultMapper resultMapper;
 
@@ -78,6 +80,18 @@ public class DataService {
                 .build();
 
         return client.runStatement(statement, result -> result.list(resultMapper::toCountResult));
+    }
+
+    public void create(Entry entry) {
+        // TODO: Schema validation
+        var nodeName = "n";
+        var label = entry.getLabels().stream().findFirst().orElseThrow(InvalidDataException::new);
+        // TODO: Map values to Cypher.parameter
+        var n = Cypher.node(label).named(nodeName).withProperties(entry.getProperties());
+
+        var statement = Cypher.create(n).returning(n).build();
+
+        client.runStatement(statement);
     }
 
 }

@@ -1,6 +1,6 @@
 [
   {
-    "key": "name",
+    "key": "key",
     "explanation": "",
     "examples": "",
     "type": "STRING",
@@ -21,6 +21,14 @@
     "explanation": "",
     "examples": "",
     "type": "DATENOTATION",
+    "isArray": false,
+    "isMandatory": false
+  },
+  {
+    "key": "wikiqid",
+    "explanation": "Wikipedia page",
+    "examples": "",
+    "type": "WIKIQID",
     "isArray": false,
     "isMandatory": false
   }

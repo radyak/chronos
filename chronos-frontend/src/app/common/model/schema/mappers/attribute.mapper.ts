@@ -11,7 +11,7 @@ export class AttributeMapper {
             explanation: dto.explanation,
             allowedValues: dto.allowedValues,
             isArray: dto.isArray,
-            isMandatory: dto.isArray,
+            isMandatory: dto.isMandatory,
             type: dto.type,
             valuePattern: dto.valuePattern,
             valueRange: dto.valueRange,

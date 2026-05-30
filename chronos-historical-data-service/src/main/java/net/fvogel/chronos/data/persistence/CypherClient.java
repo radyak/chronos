@@ -32,4 +32,14 @@ public class CypherClient {
             return resultExtractor.extract(result);
         }
     }
+
+    public void runStatement(Statement statement) {
+        var renderedStatement = Renderer.getDefaultRenderer().render(statement);
+
+        logger.debug("Executing statement: {}", renderedStatement);
+
+        try (Session session = driver.session()) {
+            Result result = session.run(renderedStatement);
+        }
+    }
 }

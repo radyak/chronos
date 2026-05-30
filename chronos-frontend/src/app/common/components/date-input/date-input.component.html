@@ -4,6 +4,7 @@
     name="editDate.day"
     min="1"
     max="31"
+    [disabled]="disabled()"
     (change)="update()"
     [(ngModel)]="editDate.day">
 
@@ -13,6 +14,7 @@
       name="editDate.month"
       min="1"
       max="12"
+      [disabled]="disabled()"
       (change)="update()"
       [(ngModel)]="editDate.month">
     <div class="name">
@@ -29,6 +31,7 @@
     class="borderless year"
     name="editDate.year"
     max="2999"
+    [disabled]="disabled()"
     (change)="update()"
     [(ngModel)]="editDate.year">
 

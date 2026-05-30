@@ -22,10 +22,11 @@ public class DataController {
 
     @Autowired
     private DataService dataService;
+
     @Autowired
     private FilterExtractor filterExtractor;
 
-    public static String getFullURL(HttpServletRequest request) {
+    private static String getFullURL(HttpServletRequest request) {
         StringBuilder requestURL = new StringBuilder(request.getRequestURL().toString());
         String queryString = request.getQueryString();
 
@@ -68,6 +69,5 @@ public class DataController {
     ) {
         return this.dataService.findById(id);
     }
-
 
 }
