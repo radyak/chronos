@@ -8,9 +8,7 @@ import org.springframework.http.MediaType;
 import org.testcontainers.containers.Neo4jContainer;
 import org.testcontainers.junit.jupiter.Container;
 
-import java.util.Map;
-import java.util.Set;
-
+import static net.fvogel.chronos.data.testutils.DefaultTestEntries.minimalPerson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -22,16 +20,9 @@ public class AdminDataApiSecurityIntegrationTest extends BaseIntegrationTest {
     @ServiceConnection
     public static final Neo4jContainer<?> neo4j = new Neo4jContainer<>("neo4j:5");
 
-    private Entry testEntry() {
-        Entry entry = new Entry();
-        entry.setLabels(Set.of("Person"));
-        entry.setProperties(Map.of("key", "test-person"));
-        return entry;
-    }
-
     @Test
     void unauthenticatedUserCannotCreateEntry() throws Exception {
-        Entry entry = testEntry();
+        Entry entry = minimalPerson();
         assertThat(dataService.findByKey("test-person").isEmpty());
         mvc.perform(post("/api/data/admin")
                 .content(objectMapper.writeValueAsString(entry))
@@ -42,7 +33,7 @@ public class AdminDataApiSecurityIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void unauthorizedUserCannotDeleteType() throws Exception {
-        Entry entry = testEntry();
+        Entry entry = minimalPerson();
         assertThat(dataService.findByKey("test-person").isEmpty());
         mvc.perform(post("/api/data/admin")
                 .content(objectMapper.writeValueAsString(entry))
@@ -54,7 +45,7 @@ public class AdminDataApiSecurityIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void adminRoleAuthorizedUserCanDeleteType() throws Exception {
-        Entry entry = testEntry();
+        Entry entry = minimalPerson();
         assertThat(dataService.findByKey("test-person").isEmpty());
         mvc.perform(post("/api/data/admin")
                 .content(objectMapper.writeValueAsString(entry))

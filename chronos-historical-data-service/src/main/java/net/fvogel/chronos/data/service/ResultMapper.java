@@ -3,6 +3,8 @@ package net.fvogel.chronos.data.service;
 import net.fvogel.chronos.data.model.CountResult;
 import net.fvogel.chronos.data.model.Entry;
 import org.neo4j.driver.Record;
+import org.neo4j.driver.Value;
+import org.neo4j.driver.internal.types.InternalTypeSystem;
 import org.neo4j.driver.types.Node;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +22,7 @@ public class ResultMapper {
         Entry entry = new Entry();
         entry.setElementId(node.elementId());
         node.labels().forEach(label -> entry.getLabels().add(label));
-        node.keys().forEach(key -> entry.getProperties().put(key, nullEscaped(node.get(key).asString())));
+        node.keys().forEach(key -> entry.getProperties().put(key, value(node.get(key))));
         return entry;
     }
 
@@ -33,8 +35,27 @@ public class ResultMapper {
         return countResult;
     }
 
-    private String nullEscaped(String string) {
-        return "null".equals(string) ? null : string;
+    private Object value(Value value) {
+        if (value.isNull()) {
+            return null;
+        }
+        switch (value.type().name()) {
+            case "STRING":
+                return value.asString();
+            case "BOOLEAN":
+                return value.asBoolean();
+            case "INTEGER":
+                return value.asInt();
+            case "FLOAT":
+                return value.asFloat();
+            case "NUMBER":
+                return value.asNumber();
+        }
+        if (value.hasType(InternalTypeSystem.TYPE_SYSTEM.LIST())) {
+            return value.asList();
+        }
+
+        return null;
     }
 
 }
