@@ -2,6 +2,7 @@ package net.fvogel.chronos.data.rest;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import net.fvogel.chronos.commons.exception.NotFoundException;
 import net.fvogel.chronos.data.model.*;
 import net.fvogel.chronos.data.model.dto.DataResponseDTO;
 import net.fvogel.chronos.data.service.DataService;
@@ -22,10 +23,11 @@ public class DataController {
 
     @Autowired
     private DataService dataService;
+
     @Autowired
     private FilterExtractor filterExtractor;
 
-    public static String getFullURL(HttpServletRequest request) {
+    private static String getFullURL(HttpServletRequest request) {
         StringBuilder requestURL = new StringBuilder(request.getRequestURL().toString());
         String queryString = request.getQueryString();
 
@@ -62,12 +64,12 @@ public class DataController {
         return this.dataService.statistics();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{key}")
     public Entry findOne(
-            @PathVariable("id") String id
+            @PathVariable("key") String key
     ) {
-        return this.dataService.findById(id);
+        return this.dataService.findByKey(key)
+                .orElseThrow(NotFoundException::new);
     }
-
 
 }

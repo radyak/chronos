@@ -1,4 +1,4 @@
-package net.fvogel.chronos.data.it.byid;
+package net.fvogel.chronos.data.it.bykey;
 
 import net.fvogel.chronos.data.testutils.BaseIntegrationTest;
 import org.junit.jupiter.api.Test;
@@ -10,21 +10,21 @@ import org.testcontainers.junit.jupiter.Container;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class DataApiGetByIdIntegrationTest extends BaseIntegrationTest {
+public class DataApiGetByKeyIntegrationTest extends BaseIntegrationTest {
 
     @Container
     @ServiceConnection
     public static final Neo4jContainer<?> neo4j = new Neo4jContainer<>("neo4j:5");
 
     @Test
-    void getDataByIdReturnsMatchingEntry() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/api/data/vspsn"))
+    void getDataByKeyReturnsMatchingEntry() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/api/data/vespasian"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.properties.name").value("Titus Flavius Vespasianus"));
     }
 
     @Test
-    void getDataThrowsNotFoundForUnknownId() throws Exception {
+    void getDataThrowsNotFoundForUnknownKey() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/api/data/unknown"))
                 .andExpect(status().isNotFound());
     }

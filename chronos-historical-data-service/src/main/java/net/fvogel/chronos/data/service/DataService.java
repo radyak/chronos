@@ -1,6 +1,6 @@
 package net.fvogel.chronos.data.service;
 
-import net.fvogel.chronos.commons.exception.NotFoundException;
+import net.fvogel.chronos.commons.exception.InvalidDataException;
 import net.fvogel.chronos.data.model.CountResult;
 import net.fvogel.chronos.data.model.DataQuery;
 import net.fvogel.chronos.data.model.Entry;
@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -30,6 +31,7 @@ public class DataService {
 
     @Autowired
     private CypherClient client;
+
     @Autowired
     private ResultMapper resultMapper;
 
@@ -56,9 +58,9 @@ public class DataService {
         );
     }
 
-    public Entry findById(String id) {
+    public Optional<Entry> findByKey(String key) {
         var nodeName = "n";
-        var n = Cypher.anyNode().named(nodeName).withProperties("id", Cypher.literalOf(id));
+        var n = Cypher.anyNode().named(nodeName).withProperties("key", Cypher.literalOf(key));
         var statement = Cypher.match(n)
                 .returning(n)
                 .build();
@@ -66,7 +68,6 @@ public class DataService {
         return client.runStatement(statement, result -> result
                 .list(record -> record.get(nodeName).asNode())
                 .stream().map(resultMapper::toEntry).findFirst()
-                .orElseThrow(NotFoundException::new)
         );
     }
 
@@ -78,6 +79,18 @@ public class DataService {
                 .build();
 
         return client.runStatement(statement, result -> result.list(resultMapper::toCountResult));
+    }
+
+    public void create(Entry entry) {
+        // TODO: Schema validation
+        var nodeName = "n";
+        var label = entry.getLabels().stream().findFirst().orElseThrow(InvalidDataException::new);
+        // TODO: Map values to Cypher.parameter
+        var n = Cypher.node(label).named(nodeName).withProperties(entry.getProperties());
+
+        var statement = Cypher.create(n).returning(n).build();
+
+        client.runStatement(statement);
     }
 
 }

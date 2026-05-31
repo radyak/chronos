@@ -33,7 +33,7 @@ public class SecurityConfig {
         // Protect
         http.authorizeHttpRequests(
                 httpRequests -> httpRequests
-                        .requestMatchers("/api/admin/**").hasRole(adminRole)
+                        .requestMatchers("/api/data/admin/**").hasRole(adminRole)
                         .anyRequest().anonymous()
         );
 

@@ -19,7 +19,7 @@ public class DataApiFilteringIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void getDataWithFilterParamReturnsMatchingEntry() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/api/data?qid=Q1416"))
+        mvc.perform(MockMvcRequestBuilders.get("/api/data?wikiqid=Q1416"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.entries.length()").value(1))
                 .andExpect(toExactlyMatchKeys("otho"));
@@ -27,7 +27,7 @@ public class DataApiFilteringIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void getDataWithNonmatchingFilterParamReturnsNoEntry() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/api/data?qid=DOESNOTEXIST"))
+        mvc.perform(MockMvcRequestBuilders.get("/api/data?wikiqid=DOESNOTEXIST"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.entries.length()").value(0));
     }
@@ -85,7 +85,7 @@ public class DataApiFilteringIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void getDataWithNotNullFilterParamReturnsMatchingEntries() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/api/data?sortBy=key&pageSize=5&qid:not=null"))
+        mvc.perform(MockMvcRequestBuilders.get("/api/data?sortBy=key&pageSize=5&wikiqid:not=null"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.entries.length()").value(4))
                 .andExpect(toExactlyMatchKeys(
@@ -98,7 +98,7 @@ public class DataApiFilteringIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void getDataWithNullFilterParamReturnsMatchingEntries() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/api/data?sortBy=key&pageSize=5&qid=null"))
+        mvc.perform(MockMvcRequestBuilders.get("/api/data?sortBy=key&pageSize=5&wikiqid=null"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.entries.length()").value(5))
                 .andExpect(toExactlyMatchKeys(
@@ -119,13 +119,13 @@ public class DataApiFilteringIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void getDataThrowsBadRequestForInvalidFilterOperator() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/api/data?sortBy=key&pageSize=5&qid:invalidOperator=null"))
+        mvc.perform(MockMvcRequestBuilders.get("/api/data?sortBy=key&pageSize=5&wikiqid:invalidOperator=null"))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     void getDataThrowsBadRequestForMissingFilterValue() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/api/data?sortBy=key&pageSize=5&qid="))
+        mvc.perform(MockMvcRequestBuilders.get("/api/data?sortBy=key&pageSize=5&wikiqid="))
                 .andExpect(status().isBadRequest());
     }
 

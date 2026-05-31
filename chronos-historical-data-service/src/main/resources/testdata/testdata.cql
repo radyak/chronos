@@ -1,20 +1,20 @@
 // Early Rome
 CREATE (RomanEmpire:Territory {id: 'rmnmpr', key: 'roman-empire'})
-CREATE (Otho:Person {id:   'th',
-                     key:  'otho',
-                     from: '0032-04-28',
-                     to:   '0069-04-16',
-                     qid:  'Q1416',
-                     name: 'Marcus Salvius Otho'})
-CREATE (Vitellius:Person {id:   'vtlls',
-                          key:  'vitellius',
-                          from: '0015-09-27',
-                          to:   '0069-12-20',
-                          qid:  'Q1417',
-                          name: 'Aulus Vitellius'})
-CREATE (Vespasian:Person {id:   'vspsn', key: 'vespasian', from: '0009-09-17', to: '0079-07-23', qid: 'Q1419',
+CREATE (Otho:Person {id:      'th',
+                     key:     'otho',
+                     from:    '0032-04-28',
+                     to:      '0069-04-16',
+                     wikiqid: 'Q1416',
+                     name:    'Marcus Salvius Otho'})
+CREATE (Vitellius:Person {id:      'vtlls',
+                          key:     'vitellius',
+                          from:    '0015-09-27',
+                          to:      '0069-12-20',
+                          wikiqid: 'Q1417',
+                          name:    'Aulus Vitellius'})
+CREATE (Vespasian:Person {id:   'vspsn', key: 'vespasian', from: '0009-09-17', to: '0079-07-23', wikiqid: 'Q1419',
                           name: 'Titus Flavius Vespasianus'})
-CREATE(Titus:Person {id:   'tts', key: 'titus', from: '0039-12-30', to: '0081-09-13', qid: 'Q1421',
+CREATE(Titus:Person {id:   'tts', key: 'titus', from: '0039-12-30', to: '0081-09-13', wikiqid: 'Q1421',
                      name: 'Titus Flavius Vespasianus'})
 CREATE (Domitian:Person {id:   'dmtn', key: 'domitian', from: '0051-10-24', to: '0096-09-18',
                          name: 'Titus Flavius Domitianus'})

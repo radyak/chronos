@@ -24,11 +24,11 @@ export class WikiArticleService {
           sortBy: 'random',
           pageSize: 1,
         }, {
-          "qid:not": "null"
+          "wikiqid:not": "null"
         }).pipe(
             switchMap(response => {
               const entity = response.entries[0];
-              return this.wikiArticlesClient.getArticleByQid(entity.properties["qid"]!)
+              return this.wikiArticlesClient.getArticleByQid(entity.properties["wikiqid"]!)
             })
         );
       },

@@ -1,0 +1,155 @@
+<h1>
+  Administration:
+  {{ "Create New Entry" }}
+</h1>
+<p class="text-secondary-emphasis small">
+  Edit an existing data entry and its attributes and relations to other entries.
+</p>
+
+<div class="admin-controls">
+  <!-- <a href="#base-data">Base Data</a>
+  <a href="#attributes">Attributes</a>
+  <a href="#relations">Relations</a> -->
+
+  @if (!isNew()) {
+    <button class="btn btn-danger" (click)="delete()">
+      <fa-icon [icon]="deleteIcon"></fa-icon>
+      Delete
+    </button>
+  }
+  <button class="btn btn-outline-danger" (click)="cancel()">
+    <fa-icon [icon]="cancelIcon"></fa-icon>
+    Cancel
+  </button>
+  <button class="btn btn-outline-success"
+          (click)="save()"
+          [disabled]="!form().valid">
+    <fa-icon [icon]="saveIcon"></fa-icon>
+    Save
+  </button>
+</div>
+
+@if (schema.isLoading()) {
+  <p>Loading...</p>
+}
+
+@if (schema.error()) {
+  <p>Error loading schema</p>
+}
+
+@if (typeForm && schema.value(); as allTypes) {
+    <form [formGroup]="typeForm">
+        <h2 id="entry-type">Type</h2>
+        <p class="text-secondary-emphasis small">
+          The type of an entry determines which attributes it has and how it can relate to other entries.
+        </p>
+
+        <div class="form-group row">
+            <label class="col-sm-4 col-form-label" for="type">
+                Type:
+            </label>
+            <div class="col-sm-8">
+                <select aria-label="Select type"
+                        class="form-select"
+                        formControlName="type"
+                        id="type"
+                        name="type"
+                        type="type"
+                        (change)="updateType()"
+                        >
+                    @for(type of allTypes; track type) {
+                      <option [selected]="currentEntryTypeKey() === type"
+                              [value]="type.key">
+                              @if (type.icon) {
+                                <fa-icon [icon]="type.icon"></fa-icon>
+                              }
+                              {{ type.key }}
+                      </option>
+                    }
+                </select>
+
+
+            </div>
+        </div>
+      </form>
+
+
+      <!-- Tooltip Content -->
+      <ng-template #tipContent let-attr="attr">
+        @if(attr.explanation) {
+          <div>{{ attr.explanation }}</div>
+        }
+        @if(attr.examples) {
+          <div>
+            Examples: {{ attr.examples }}
+          </div>
+        }
+      </ng-template>
+      
+
+      @if(selectedType(); as type) {
+        <form [formGroup]="form()">
+          <h2 id="entry-attributes">Attributes</h2>
+
+          <!-- DEFAULT ATTRIBUTES -->
+          <h4 id="entry-attributes-default" class="mt-4 text-secondary">Default Attributes</h4>
+          <p class="text-secondary-emphasis small">
+            The default attributes are independent of the entry type.
+          </p>
+
+          
+          @for(attr of type.defaultAttributes; track $index) {
+            <div class="form-group">
+              <div class="row mt-2">
+                  <label class="col-sm-4 col-form-label capitalize" [attr.for]="attr.key">
+                      {{ attr.key }}{{ attr.isMandatory ? ' *' : '' }}:
+                      @if(attr.explanation || attr.examples) {
+                        <fa-icon [icon]="questionIcon"
+		                             [ngbTooltip]="tipContent"
+                                 class="pointer"
+                                 triggers="manual"
+		                             #tooltip="ngbTooltip"
+                                 (click)="toggleTooltip(tooltip, attr)"></fa-icon>
+                      }
+                  </label>
+                  <div class="col-sm-8">
+                      <chronos-dynamic-input [attribute]="attr"
+                                             [form]="form()">
+                      </chronos-dynamic-input>
+                  </div>
+              </div>
+            </div>
+          }
+
+
+          <!-- SPECIFIC ATTRIBUTES -->
+          <h4 id="entry-attributes-specific" class="mt-4 text-secondary">Specific Attributes</h4>
+          <p class="text-secondary-emphasis small">
+            Specific attributes are defined by the entry type.
+          </p>
+
+          @for(attr of type.attributes; track attr.key) {
+            <div class="form-group">
+              <div class="row mt-2">
+                  <label class="col-sm-4 col-form-label capitalize" [attr.for]="attr.key">
+                      {{ attr.key }}{{ attr.isMandatory ? ' *' : '' }}:
+                      @if(attr.explanation || attr.examples) {
+                        <fa-icon [icon]="questionIcon"
+		                             [ngbTooltip]="tipContent"
+                                 class="pointer"
+                                 triggers="manual"
+		                             #tooltip="ngbTooltip"
+                                 (click)="toggleTooltip(tooltip, attr)"></fa-icon>
+                      }
+                  </label>
+                  <div class="col-sm-8">
+                      <chronos-dynamic-input [attribute]="attr"
+                                             [form]="form()">
+                      </chronos-dynamic-input>
+                  </div>
+              </div>
+            </div>
+          }
+        </form>
+      }
+}
