@@ -27,7 +27,7 @@ public class CypherDslUtils {
     }
 
     private static Condition mapFilterToCondition(Filter filter, Node node) {
-        Property property = node.property(filter.getAttribute());
+        Property property = node.property(Cypher.literalOf(filter.getAttribute()));
         // specific null value handling
         if (null == filter.getValue()) {
             switch (filter.getOperator()) {
@@ -75,7 +75,7 @@ public class CypherDslUtils {
         if (sorting != null && sorting.getSortBy() != null) {
             var direction = sorting.getSortOrder() == SortOrder.ASC ? SortItem.Direction.ASC : SortItem.Direction.DESC;
             var property = sorting.getSortBy();
-            var sort = "random".equals(property) ? Cypher.sort(Cypher.rand()) : Cypher.sort(n.property(property), direction);
+            var sort = "random".equals(property) ? Cypher.sort(Cypher.rand()) : Cypher.sort(n.property(Cypher.literalOf(property)), direction);
             sortList.add(sort);
         }
         return sortList;

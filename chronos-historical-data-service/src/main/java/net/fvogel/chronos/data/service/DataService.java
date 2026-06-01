@@ -85,7 +85,6 @@ public class DataService {
         // TODO: Schema validation
         var nodeName = "n";
         var label = entry.getLabels().stream().findFirst().orElseThrow(InvalidDataException::new);
-        // TODO: Map values to Cypher.parameter
         var n = Cypher.node(label).named(nodeName).withProperties(entry.getProperties());
 
         var statement = Cypher.create(n).returning(n).build();
