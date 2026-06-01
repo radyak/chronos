@@ -74,19 +74,6 @@
       </form>
 
 
-      <!-- Tooltip Content -->
-      <ng-template #tipContent let-attr="attr">
-        @if(attr.explanation) {
-          <div>{{ attr.explanation }}</div>
-        }
-        @if(attr.examples) {
-          <div>
-            Examples: {{ attr.examples }}
-          </div>
-        }
-      </ng-template>
-      
-
       @if(selectedType(); as type) {
         <form [formGroup]="form()">
           <h2 id="entry-attributes">Attributes</h2>
@@ -103,14 +90,8 @@
               <div class="row mt-2">
                   <label class="col-sm-4 col-form-label capitalize" [attr.for]="attr.key">
                       {{ attr.key }}{{ attr.isMandatory ? ' *' : '' }}:
-                      @if(attr.explanation || attr.examples) {
-                        <fa-icon [icon]="questionIcon"
-		                             [ngbTooltip]="tipContent"
-                                 class="pointer"
-                                 triggers="manual"
-		                             #tooltip="ngbTooltip"
-                                 (click)="toggleTooltip(tooltip, attr)"></fa-icon>
-                      }
+                      <chronos-tooltip [text]="[attr.explanation, attr.examples]">
+                      </chronos-tooltip>
                   </label>
                   <div class="col-sm-8">
                       <chronos-dynamic-input [attribute]="attr"
@@ -133,14 +114,8 @@
               <div class="row mt-2">
                   <label class="col-sm-4 col-form-label capitalize" [attr.for]="attr.key">
                       {{ attr.key }}{{ attr.isMandatory ? ' *' : '' }}:
-                      @if(attr.explanation || attr.examples) {
-                        <fa-icon [icon]="questionIcon"
-		                             [ngbTooltip]="tipContent"
-                                 class="pointer"
-                                 triggers="manual"
-		                             #tooltip="ngbTooltip"
-                                 (click)="toggleTooltip(tooltip, attr)"></fa-icon>
-                      }
+                      <chronos-tooltip [text]="[attr.explanation, attr.examples]">
+                      </chronos-tooltip>
                   </label>
                   <div class="col-sm-8">
                       <chronos-dynamic-input [attribute]="attr"
