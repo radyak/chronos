@@ -185,12 +185,14 @@ export class EditTypeComponent {
   }
 
   // Methods
-  protected save(): void {
+  protected save(returnAfterSave: boolean = false): void {
     this.submitted = true;
     const type = EditTypeFormMapper.toAO(this.form?.getRawValue(), this.typeResource.value());
     firstValueFrom(this.schemaService.saveType(type)).then(
       () => {
-        this.back();
+        if (returnAfterSave) {
+          this.back();
+        }
       },
       (err) => {
         // Nothing todo

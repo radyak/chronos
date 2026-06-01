@@ -21,12 +21,20 @@
     <fa-icon [icon]="cancelIcon"></fa-icon>
     Cancel
   </button>
-  <button class="btn btn-outline-success"
-          (click)="save()"
-          [disabled]="!form().valid">
-    <fa-icon [icon]="saveIcon"></fa-icon>
-    Save
-  </button>
+  <div class="btn-group" role="group">
+    <button class="btn btn-outline-success"
+            (click)="save(false)"
+            [disabled]="!form().valid">
+      <fa-icon [icon]="saveIcon"></fa-icon>
+      Save
+    </button>
+    <button class="btn btn-success"
+            (click)="save(true)"
+            [disabled]="!form().valid">
+      <fa-icon [icon]="saveIcon"></fa-icon>
+      Save & return
+    </button>
+  </div>
 </div>
 
 @if (schema.isLoading()) {

@@ -91,12 +91,14 @@ export class EditEntryComponent {
   }
 
   // Methods
-  protected save() {
+  protected save(returnAfterSave: boolean = false) {
     this.updateType();
     console.log('Saving entry', this.entry());
     firstValueFrom(this.adminDataService.save(this.entry())).then(
       () => {
-        this.back();
+        if (returnAfterSave) {
+          this.back();
+        }
       },
       (err) => {
         // Nothing todo
