@@ -78,14 +78,14 @@ public class CachingIntegrationTest extends BaseIntegrationTest {
         mvc.perform(get("/api/schema"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.meta.base").value("*"))
-                .andExpect(jsonPath("$.types.elements.length()").value(2));
+                .andExpect(jsonPath("$.types.elements.length()").value(3));
 
         verify(typePORepository, times(1)).findAll();
 
         mvc.perform(get("/api/schema"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.meta.base").value("*"))
-                .andExpect(jsonPath("$.types.elements.length()").value(2));
+                .andExpect(jsonPath("$.types.elements.length()").value(3));
 
         verifyNoMoreInteractions(typePORepository);
     }
@@ -121,7 +121,7 @@ public class CachingIntegrationTest extends BaseIntegrationTest {
         mvc.perform(get("/api/schema"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.meta.base").value("*"))
-                .andExpect(jsonPath("$.types.elements.length()").value(2));
+                .andExpect(jsonPath("$.types.elements.length()").value(3));
 
         verify(typePORepository, times(1)).findAll();
     }
@@ -143,7 +143,7 @@ public class CachingIntegrationTest extends BaseIntegrationTest {
         verify(typePORepository, times(1)).findByKey("Person");
 
         mvc.perform(get("/api/schema")).andExpect(status().isOk())
-                .andExpect(jsonPath("$.types.elements.length()").value(1));
+                .andExpect(jsonPath("$.types.elements.length()").value(2));
         verify(typePORepository, times(1)).findAll();
     }
 

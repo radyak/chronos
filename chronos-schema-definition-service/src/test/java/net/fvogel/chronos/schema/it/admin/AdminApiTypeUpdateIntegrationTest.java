@@ -29,8 +29,8 @@ public class AdminApiTypeUpdateIntegrationTest {
         @Test
         void canUpdateSimpleFieldInExistingType() throws Exception {
             TypePO type = loadType("Person");
-            assertThat(type.getAttributes().size(), is(1));
-            assertThat(type.getRelations().size(), is(2));
+            assertThat(type.getAttributes().size(), is(2));
+            assertThat(type.getRelations().size(), is(3));
 
             type.setExplanation("An individual human");
 
@@ -43,15 +43,15 @@ public class AdminApiTypeUpdateIntegrationTest {
             // After: Exists, with changed attribute and old relations
             getType("Person").andExpect(status().isOk())
                     .andExpect(jsonPath("$.types.elements[?(@.key == 'Person')].explanation").value("An individual human"))
-                    .andExpect(jsonPath("$.types.elements[?(@.key == 'Person')].attributes.length()").value(1))
+                    .andExpect(jsonPath("$.types.elements[?(@.key == 'Person')].attributes.length()").value(2))
                     .andExpect(jsonPath("$.relations.length()").value(2));
         }
 
         @Test
         void cannotManipulateIdInExistingType() throws Exception {
             TypePO type = loadType("Person");
-            assertThat(type.getAttributes().size(), is(1));
-            assertThat(type.getRelations().size(), is(2));
+            assertThat(type.getAttributes().size(), is(2));
+            assertThat(type.getRelations().size(), is(3));
 
             type.setId(15L);
 
@@ -83,8 +83,8 @@ public class AdminApiTypeUpdateIntegrationTest {
         @Test
         void canUpdateSimpleFieldInAttributeOfExistingType() throws Exception {
             TypePO type = loadType("Person");
-            assertThat(type.getAttributes().size(), is(1));
-            assertThat(type.getRelations().size(), is(2));
+            assertThat(type.getAttributes().size(), is(2));
+            assertThat(type.getRelations().size(), is(3));
 
             type.getAttributes().stream().filter(attr -> attr.getKey().equals("gender")).findFirst().get()
                     .setExplanation("The biological sex of the individual human");
@@ -97,7 +97,7 @@ public class AdminApiTypeUpdateIntegrationTest {
 
             // After: Exists, with changed attribute and old relations
             getType("Person").andExpect(status().isOk())
-                    .andExpect(jsonPath("$.types.elements[?(@.key == 'Person')].attributes.length()").value(1))
+                    .andExpect(jsonPath("$.types.elements[?(@.key == 'Person')].attributes.length()").value(2))
                     .andExpect(jsonPath("$.types.elements[?(@.key == 'Person')].attributes[?(@.key == 'gender')].explanation").value("The biological sex of the individual human"))
                     .andExpect(jsonPath("$.relations.length()").value(2));
         }
@@ -105,8 +105,8 @@ public class AdminApiTypeUpdateIntegrationTest {
         @Test
         void canAddAttributeToExistingType() throws Exception {
             TypePO type = loadType("Person");
-            assertThat(type.getAttributes().size(), is(1));
-            assertThat(type.getRelations().size(), is(2));
+            assertThat(type.getAttributes().size(), is(2));
+            assertThat(type.getRelations().size(), is(3));
 
             type.getAttributes().add(
                     attribute()
@@ -124,7 +124,7 @@ public class AdminApiTypeUpdateIntegrationTest {
 
             // After: Exists, with new attribute and old relations
             getType("Person").andExpect(status().isOk())
-                    .andExpect(jsonPath("$.types.elements[?(@.key == 'Person')].attributes.length()").value(2))
+                    .andExpect(jsonPath("$.types.elements[?(@.key == 'Person')].attributes.length()").value(3))
                     .andExpect(jsonPath("$.types.elements[?(@.key == 'Person')].attributes[?(@.key == 'isFictional')].type").value("ENUM"))
                     .andExpect(jsonPath("$.types.elements[?(@.key == 'Person')].attributes[?(@.key == 'isFictional')].allowedValues.length()").value(3))
                     .andExpect(jsonPath("$.relations.length()").value(2));
@@ -133,8 +133,8 @@ public class AdminApiTypeUpdateIntegrationTest {
         @Test
         void cannotAddAttributeWithAlreadyExistingToToExistingType() throws Exception {
             TypePO type = loadType("Person");
-            assertThat(type.getAttributes().size(), is(1));
-            assertThat(type.getRelations().size(), is(2));
+            assertThat(type.getAttributes().size(), is(2));
+            assertThat(type.getRelations().size(), is(3));
 
             type.getAttributes().add(
                     attribute()
@@ -155,14 +155,14 @@ public class AdminApiTypeUpdateIntegrationTest {
                     .andExpect(jsonPath("$.errors[0].field").value("attributes[0].key"))
                     .andExpect(jsonPath("$.errors[0].constraint").value("Unique"))
                     .andExpect(jsonPath("$.errors[0].message").value("org.chronos.schema.error.duplicate-key"))
-                    .andExpect(jsonPath("$.errors[1].field").value("attributes[1].key"))
+                    .andExpect(jsonPath("$.errors[1].field").value("attributes[2].key"))
                     .andExpect(jsonPath("$.errors[1].constraint").value("Unique"))
                     .andExpect(jsonPath("$.errors[1].message").value("org.chronos.schema.error.duplicate-key"))
                     .andExpect(jsonPath("$.errors[0].arguments").doesNotExist());
 
             // After: Exists, with old attributes and old relations
             getType("Person").andExpect(status().isOk())
-                    .andExpect(jsonPath("$.types.elements[?(@.key == 'Person')].attributes.length()").value(1))
+                    .andExpect(jsonPath("$.types.elements[?(@.key == 'Person')].attributes.length()").value(2))
                     .andExpect(jsonPath("$.relations.length()").value(2));
         }
 
@@ -170,8 +170,8 @@ public class AdminApiTypeUpdateIntegrationTest {
         @Test
         void canRemoveAttributeFromExistingType() throws Exception {
             TypePO type = loadType("Person");
-            assertThat(type.getAttributes().size(), is(1));
-            assertThat(type.getRelations().size(), is(2));
+            assertThat(type.getAttributes().size(), is(2));
+            assertThat(type.getRelations().size(), is(3));
 
             type.getAttributes().remove(0);
 
@@ -181,9 +181,9 @@ public class AdminApiTypeUpdateIntegrationTest {
                     .contentType(MediaType.APPLICATION_JSON)
             ).andExpect(status().isOk());
 
-            // After: Exists, without attributes and old relations
+            // After: Exists, with last attribute and old relations
             getType("Person").andExpect(status().isOk())
-                    .andExpect(jsonPath("$.types.elements[?(@.key == 'Person')].attributes.length()").doesNotHaveJsonPath())
+                    .andExpect(jsonPath("$.types.elements[?(@.key == 'Person')].attributes.length()").value(1))
                     .andExpect(jsonPath("$.relations.length()").value(2));
         }
     }
@@ -197,7 +197,7 @@ public class AdminApiTypeUpdateIntegrationTest {
         @Test
         void canUpdateSimpleFieldInExistingRelation() throws Exception {
             TypePO type = loadType("Person");
-            assertThat(type.getRelations().size(), is(2));
+            assertThat(type.getRelations().size(), is(3));
 
             RelationPO relation =
                     type.getRelations().stream()
@@ -222,7 +222,7 @@ public class AdminApiTypeUpdateIntegrationTest {
         @Test
         void canRemoveRelation() throws Exception {
             TypePO type = loadType("Person");
-            assertThat(type.getRelations().size(), is(2));
+            assertThat(type.getRelations().size(), is(3));
 
             RelationPO relation =
                     type.getRelations().stream()
@@ -237,18 +237,18 @@ public class AdminApiTypeUpdateIntegrationTest {
 
             // After: Exists, without removed relation
             getType("Person").andExpect(status().isOk())
-                    .andExpect(jsonPath("$.relations.elements.length()").value(1))
+                    .andExpect(jsonPath("$.relations.elements.length()").value(2))
                     .andExpect(jsonPath("$.relations.elements[?(@.key == 'RELATIONSHIP_WITH')]").doesNotExist());
         }
 
         @Test
         void canAddRelation() throws Exception {
             TypePO type = loadType("Person");
-            assertThat(type.getRelations().size(), is(2));
+            assertThat(type.getRelations().size(), is(3));
 
             RelationPO relation =
                     relation()
-                            .withKey("CHILD_OF")
+                            .withKey("PARENT_OF")
                             .withTarget(type)
                             .withAttribute(relationAttribute()
                                     .withKey("type")
@@ -267,16 +267,16 @@ public class AdminApiTypeUpdateIntegrationTest {
 
             // After: Exists, with new relation
             getType("Person").andExpect(status().isOk())
-                    .andExpect(jsonPath("$.relations.elements.length()").value(3))
-                    .andExpect(jsonPath("$.relations.elements[?(@.key == 'CHILD_OF')].attributes.length()").value(1))
-                    .andExpect(jsonPath("$.relations.elements[?(@.key == 'CHILD_OF')].attributes[0].key").value("type"))
-                    .andExpect(jsonPath("$.relations.elements[?(@.key == 'CHILD_OF')].attributes[0].allowedValues[?(@ == 'adopted')]").exists());
+                    .andExpect(jsonPath("$.relations.elements.length()").value(4))
+                    .andExpect(jsonPath("$.relations.elements[?(@.key == 'PARENT_OF')].attributes.length()").value(1))
+                    .andExpect(jsonPath("$.relations.elements[?(@.key == 'PARENT_OF')].attributes[0].key").value("type"))
+                    .andExpect(jsonPath("$.relations.elements[?(@.key == 'PARENT_OF')].attributes[0].allowedValues[?(@ == 'adopted')]").exists());
         }
 
         @Test
         void canAddRelationAttribute() throws Exception {
             TypePO type = loadType("Person");
-            assertThat(type.getRelations().size(), is(2));
+            assertThat(type.getRelations().size(), is(3));
 
             RelationPO relation = type.getRelations().stream().filter(rel -> rel.getKey().equals("RULED")).findFirst().get();
             relation.getAttributes().add(
@@ -294,7 +294,7 @@ public class AdminApiTypeUpdateIntegrationTest {
 
             // After: Exists, with new relation
             getType("Person").andExpect(status().isOk())
-                    .andExpect(jsonPath("$.relations.elements.length()").value(2))
+                    .andExpect(jsonPath("$.relations.elements.length()").value(3))
                     .andExpect(jsonPath("$.relations.elements[?(@.key == 'RULED')].attributes.length()").value(2))
                     .andExpect(jsonPath("$.relations.elements[?(@.key == 'RULED')].attributes[?(@.key == 'legitimacy')].type").value("STRING"));
         }
@@ -302,7 +302,7 @@ public class AdminApiTypeUpdateIntegrationTest {
         @Test
         void canRemoveRelationAttribute() throws Exception {
             TypePO type = loadType("Person");
-            assertThat(type.getRelations().size(), is(2));
+            assertThat(type.getRelations().size(), is(3));
 
             RelationPO relation = type.getRelations().stream().filter(rel -> rel.getKey().equals("RULED")).findFirst().get();
             relation.getAttributes().removeIf(attr -> attr.getKey().equals("status"));
@@ -315,14 +315,14 @@ public class AdminApiTypeUpdateIntegrationTest {
 
             // After: Exists, with new relation
             getType("Person").andExpect(status().isOk())
-                    .andExpect(jsonPath("$.relations.elements.length()").value(2))
+                    .andExpect(jsonPath("$.relations.elements.length()").value(3))
                     .andExpect(jsonPath("$.relations.elements[?(@.key == 'RULED')].attributes.length()").value(0));
         }
 
         @Test
         void cannotAddRelationWithDuplicateKey() throws Exception {
             TypePO type = loadType("Person");
-            assertThat(type.getRelations().size(), is(2));
+            assertThat(type.getRelations().size(), is(3));
 
             RelationPO relation =
                     relation()
@@ -351,7 +351,7 @@ public class AdminApiTypeUpdateIntegrationTest {
 
             // After: Exists, with new relation
             getType("Person").andExpect(status().isOk())
-                    .andExpect(jsonPath("$.relations.elements.length()").value(2))
+                    .andExpect(jsonPath("$.relations.elements.length()").value(3))
                     .andExpect(jsonPath("$.relations.elements[?(@.key == 'RELATIONSHIP_WITH')].attributes.length()").value(1))
                     .andExpect(jsonPath("$.relations.elements[?(@.key == 'RELATIONSHIP_WITH')].attributes[0].key").value("status"))
                     .andExpect(jsonPath("$.relations.elements[?(@.key == 'RELATIONSHIP_WITH')].attributes[0].allowedValues[?(@ == 'cohabitation')]").exists());
@@ -360,7 +360,7 @@ public class AdminApiTypeUpdateIntegrationTest {
         @Test
         void cannotAddRelationAttributeWithDuplicateKey() throws Exception {
             TypePO type = loadType("Person");
-            assertThat(type.getRelations().size(), is(2));
+            assertThat(type.getRelations().size(), is(3));
 
             RelationPO relation = type.getRelations().stream().filter(rel -> rel.getKey().equals("RELATIONSHIP_WITH")).findFirst().get();
             relation.getAttributes().add(
@@ -388,7 +388,7 @@ public class AdminApiTypeUpdateIntegrationTest {
 
             // After: Exists, with new relation
             getType("Person").andExpect(status().isOk())
-                    .andExpect(jsonPath("$.relations.elements.length()").value(2))
+                    .andExpect(jsonPath("$.relations.elements.length()").value(3))
                     .andExpect(jsonPath("$.relations.elements[?(@.key == 'RELATIONSHIP_WITH')].attributes.length()").value(1))
                     .andExpect(jsonPath("$.relations.elements[?(@.key == 'RELATIONSHIP_WITH')].attributes[0].key").value("status"))
                     .andExpect(jsonPath("$.relations.elements[?(@.key == 'RELATIONSHIP_WITH')].attributes[0].allowedValues[?(@ == 'cohabitation')]").exists());

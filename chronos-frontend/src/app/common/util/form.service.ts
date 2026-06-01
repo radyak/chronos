@@ -10,6 +10,8 @@ export class FormService {
     required: (key: string) => `"${key}" is required`,
     minlength: (key: string, params: any) => `"${key}" must have at least ${params.requiredLength} characters`,
     maxlength: (key: string, params: any) => `"${key}" may have at most ${params.requiredLength} characters`,
+    min: (key: string, params: any) => `"${key}" must be at least ${params.min}`,
+    max: (key: string, params: any) => `"${key}" may be at most ${params.max}`,
     notUnique: (key: string) => `"${key}" must be unique`,
     pattern: (key: string, params: any) => `"${key}" has an invalid format`,
   }

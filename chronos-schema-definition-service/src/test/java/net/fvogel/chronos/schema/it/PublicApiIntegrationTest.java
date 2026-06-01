@@ -16,11 +16,11 @@ public class PublicApiIntegrationTest extends BaseIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.meta.base").value("*"))
 
-                .andExpect(jsonPath("$.types.elements.length()").value(2))
+                .andExpect(jsonPath("$.types.elements.length()").value(3))
                 .andExpect(jsonPath("$.types.defaultAttributes.length()").value(4))
 
-                .andExpect(jsonPath("$.relations.elements.length()").value(2))
-                .andExpect(jsonPath("$.relations.defaultAttributes.length()").value(3));
+                .andExpect(jsonPath("$.relations.elements.length()").value(4))
+                .andExpect(jsonPath("$.relations.defaultAttributes.length()").value(2));
     }
 
     @Test
@@ -32,8 +32,8 @@ public class PublicApiIntegrationTest extends BaseIntegrationTest {
                 .andExpect(jsonPath("$.types.elements.length()").value(2))
                 .andExpect(jsonPath("$.types.defaultAttributes.length()").value(4))
 
-                .andExpect(jsonPath("$.relations.elements.length()").value(1))
-                .andExpect(jsonPath("$.relations.defaultAttributes.length()").value(3));
+                .andExpect(jsonPath("$.relations.elements.length()").value(2))
+                .andExpect(jsonPath("$.relations.defaultAttributes.length()").value(2));
     }
 
     @Test
