@@ -38,8 +38,16 @@ export class EditAttributeDialogComponent {
   protected submitted = false;
   protected types: AttributeTypeDTO[] = Object.values(AttributeTypeDTO)
       .filter(t => typeof t !== "number")
-      .map(t => t as unknown as AttributeTypeDTO);
+      .map(t => t as unknown as AttributeTypeDTO)
+      .filter(t => t !== AttributeTypeDTO.WIKIQID);
   protected newAllowedValue: WritableSignal<string> = signal("");
+
+  // Constants
+  protected readonly STRING = AttributeTypeDTO.STRING;
+  protected readonly NUMBER = AttributeTypeDTO.NUMBER;
+  protected readonly ENUM = AttributeTypeDTO.ENUM;
+  protected readonly DATENOTATION = AttributeTypeDTO.DATENOTATION;
+  protected readonly WIKIQID = AttributeTypeDTO.WIKIQID;
 
   // Init
   constructor() {
@@ -130,10 +138,6 @@ export class EditAttributeDialogComponent {
     this.attribute()?.allowedValues?.splice(index, 1);
   }
 
-  // protected createAllowedValue(): void {
-  //   this.newAllowedValue.set("");
-  // }
-
   protected addAllowedValue(): void {
     const newAllowedValue = this.newAllowedValue();
     const attribute = this.attribute();
@@ -143,5 +147,9 @@ export class EditAttributeDialogComponent {
     attribute!.allowedValues = this.attribute()!.allowedValues ?? [];
     attribute!.allowedValues?.push(newAllowedValue!);
     this.newAllowedValue.set("");
+  }
+
+  isType(type: AttributeTypeDTO): boolean {
+    return this.form.get("type")?.value === type;
   }
 }
