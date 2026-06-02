@@ -17,6 +17,8 @@ import { FormService } from 'src/app/common/util/form.service';
 import { RelationAO } from 'src/app/common/model/schema/admin/relation.ao';
 import { EditRelationOffcanvasComponent } from './edit-relation-offcanvas/edit-relation-offcanvas.component';
 import { IconSelectComponent } from "./icon-select/icon-select.component";
+import { ApiErrorDTO, ErrorResponseDTO } from 'src/app/common/model/error-response.dto';
+import { BackendErrorService } from 'src/app/common/util/backend-error.service';
 
 @Component({
   selector: 'chronos-edit-type',
@@ -40,6 +42,7 @@ export class EditTypeComponent {
   private fb = inject(FormBuilder);
   private modalService = inject(NgbModal);
   private formService = inject(FormService);
+  private backendErrorService = inject(BackendErrorService);
 	private offcanvasService = inject(NgbOffcanvas);
 
   // Icons
@@ -67,6 +70,7 @@ export class EditTypeComponent {
            ?? []
   });
   protected isNew = computed(() => !this.typeResource.value()?.id);
+  protected backendErrors: WritableSignal<ApiErrorDTO[]> = signal([]);
 
   // Form & controls
   protected form?: FormGroup;
@@ -196,8 +200,8 @@ export class EditTypeComponent {
           this.back();
         }
       },
-      (err) => {
-        // Nothing todo
+      (err: ErrorResponseDTO) => {
+        this.backendErrors.set(err.error.errors ?? []);
       }
     );
   }
@@ -275,11 +279,18 @@ export class EditTypeComponent {
 
   protected isInvalid(field: string): boolean {
     const ctrl = this.form?.get(field);
-    return !!(ctrl?.invalid && (this.submitted || ctrl?.touched || this.forceDisplayErrors));
+    return !!(ctrl?.invalid && (this.submitted || ctrl?.touched || this.forceDisplayErrors)) || this.hasBackendError(field);
   }
 
   protected errors(field: string, label: string): string[] {
-    return this.formService.extractErrors(field, label, this.form);
+    return [
+      ...this.formService.extractErrors(field, label, this.form),
+      ...this.backendErrorService.extractErrors(field, label, this.backendErrors())
+    ];
+  }
+
+  protected hasBackendError(field: string): boolean {
+    return this.backendErrors().some(e => e.field === field);
   }
 
   protected toggleForceDisplayErrors(): void {
