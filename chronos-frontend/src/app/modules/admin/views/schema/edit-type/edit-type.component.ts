@@ -47,6 +47,7 @@ export class EditTypeComponent {
   protected cancelIcon = IconConstants.ICON_CANCEL;
   protected editIcon = IconConstants.ICON_EDIT;
   protected deleteIcon = IconConstants.ICON_DELETE;
+  protected helpIcon = IconConstants.ICON_QUESTION;
 
   // Derived Data Fields
   protected typeId = toSignal(
@@ -71,6 +72,7 @@ export class EditTypeComponent {
   protected form?: FormGroup;
   protected currentAttribute: WritableSignal<AttributeAO | undefined> = signal(undefined);
   protected submitted = false;
+  protected forceDisplayErrors = false;
 
   // Init
   constructor() {
@@ -273,11 +275,15 @@ export class EditTypeComponent {
 
   protected isInvalid(field: string): boolean {
     const ctrl = this.form?.get(field);
-    return !!(ctrl?.invalid && (this.submitted || ctrl?.touched));
+    return !!(ctrl?.invalid && (this.submitted || ctrl?.touched || this.forceDisplayErrors));
   }
 
   protected errors(field: string, label: string): string[] {
     return this.formService.extractErrors(field, label, this.form);
+  }
+
+  protected toggleForceDisplayErrors(): void {
+    this.forceDisplayErrors = !this.forceDisplayErrors;
   }
 
 }

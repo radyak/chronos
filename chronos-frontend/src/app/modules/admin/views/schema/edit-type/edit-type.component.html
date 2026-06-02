@@ -37,7 +37,14 @@
       <fa-icon [icon]="saveIcon"></fa-icon>
       Save & return
     </button>
+    @if (!form?.valid) {
+      <button class="btn btn-outline-warning"
+              (click)="toggleForceDisplayErrors()">
+        <fa-icon [icon]="helpIcon"></fa-icon>
+      </button>
+    }
   </div>
+
 </div>
 
 @if (typeResource.isLoading()) {
