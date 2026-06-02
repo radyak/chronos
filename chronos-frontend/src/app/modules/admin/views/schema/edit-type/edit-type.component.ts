@@ -51,6 +51,7 @@ export class EditTypeComponent {
   protected editIcon = IconConstants.ICON_EDIT;
   protected deleteIcon = IconConstants.ICON_DELETE;
   protected helpIcon = IconConstants.ICON_QUESTION;
+  protected warnIcon = IconConstants.ICON_WARNING;
 
   // Derived Data Fields
   protected typeId = toSignal(
@@ -291,6 +292,10 @@ export class EditTypeComponent {
 
   protected hasBackendError(field: string): boolean {
     return this.backendErrors().some(e => e.field === field);
+  }
+
+  protected hasBackendErrorMatching(path: string): boolean {
+    return this.backendErrors().some(e => e.field.startsWith(path));
   }
 
   protected toggleForceDisplayErrors(): void {
