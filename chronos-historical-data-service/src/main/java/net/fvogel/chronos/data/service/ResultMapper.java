@@ -22,7 +22,7 @@ public class ResultMapper {
         Entry entry = new Entry();
         entry.setElementId(node.elementId());
         node.labels().forEach(label -> entry.getLabels().add(label));
-        node.keys().forEach(key -> entry.getProperties().put(key, value(node.get(key))));
+        node.keys().forEach(key -> entry.getAttributes().put(key, value(node.get(key))));
         return entry;
     }
 

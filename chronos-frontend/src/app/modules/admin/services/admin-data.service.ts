@@ -3,7 +3,7 @@ import { AdminConfirmService } from './admin-confirm.service';
 import { catchError, firstValueFrom, from, Observable, tap } from 'rxjs';
 import { NotificationService } from 'src/app/common/components/notifications/notification.service';
 import { AdminDataClient } from '../clients/admin-data.client';
-import { EntryDTO } from 'src/app/common/model/data/data-element.dto';
+import { EntryDTO } from 'src/app/common/model/data/entry.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -16,7 +16,7 @@ export class AdminDataService {
   private notificationService = inject(NotificationService);
 
   public save(entry: EntryDTO): Observable<void> {
-    const entryKey = entry.properties['key'];
+    const entryKey = entry.attributes['key'];
     return this.adminDataClient.saveEntry(entry).pipe(
       catchError((err: any, caught: Observable<void>) => {
         this.notificationService.error(`Error while saving entry "${entryKey}"`);
@@ -29,7 +29,7 @@ export class AdminDataService {
   }
 
   public delete(entry: EntryDTO): Observable<void> {
-    const entryKey = entry.properties['key'];
+    const entryKey = entry.attributes['key'];
     return from(
       this.confirmService.confirm(
         `Confirm Delete ${entryKey}`,

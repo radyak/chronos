@@ -1,5 +1,5 @@
-import { EntryDTO } from "./data-element.dto";
-import { DataResponseMetaInfoDTO } from "./data-response.dto copy";
+import { EntryDTO } from "./entry.dto";
+import { DataResponseMetaInfoDTO } from "./data-response-meta-info.dto";
 
 export interface DataResponseDTO {
     meta: DataResponseMetaInfoDTO;

@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CountResultDTO } from 'src/app/common/model/data/count-result.dto';
-import { EntryDTO } from 'src/app/common/model/data/data-element.dto';
+import { EntryDTO } from 'src/app/common/model/data/entry.dto';
 import { DataResponseDTO } from 'src/app/common/model/data/data-response.dto';
 import { QueryDTO } from 'src/app/common/model/data/query.model.dto';
 

@@ -59,11 +59,11 @@ public class AdminDataApiCreateEntryIntegrationTest extends BaseIntegrationTest 
         assertTrue(dataService.findByKey("test-key").isPresent());
         Entry saveEntry = dataService.findByKey("test-key").get();
         assertThat(saveEntry.getLabels(), is(Set.of("Person")));
-        assertThat(saveEntry.getProperties().get("key"), is("test-key"));
-        assertThat(saveEntry.getProperties().get("string-property"), is("StringStringString"));
-        assertThat(saveEntry.getProperties().get("number-property"), is(13));
-        assertThat(saveEntry.getProperties().get("array-property"), is(List.of(arrayProp)));
-        assertThat(saveEntry.getProperties().get("null-property"), nullValue());
+        assertThat(saveEntry.getAttributes().get("key"), is("test-key"));
+        assertThat(saveEntry.getAttributes().get("string-property"), is("StringStringString"));
+        assertThat(saveEntry.getAttributes().get("number-property"), is(13));
+        assertThat(saveEntry.getAttributes().get("array-property"), is(List.of(arrayProp)));
+        assertThat(saveEntry.getAttributes().get("null-property"), nullValue());
     }
 
 }

@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { EntryDTO } from '../model/data/data-element.dto';
+import { EntryDTO } from '../model/data/entry.dto';
 
 @Pipe({
   name: 'attribute',
@@ -7,7 +7,7 @@ import { EntryDTO } from '../model/data/data-element.dto';
 export class ElementAttributePipe implements PipeTransform {
 
   transform(value: EntryDTO, ...args: unknown[]): unknown {
-    return value.properties[args[0] as string];
+    return value.attributes[args[0] as string];
   }
 
 }

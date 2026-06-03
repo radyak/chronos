@@ -11,5 +11,5 @@ import java.util.Set;
 public class Entry {
     String elementId;
     Set<String> labels = new HashSet<>();
-    Map<String, Object> properties = new HashMap<>();
+    Map<String, Object> attributes = new HashMap<>();
 }

@@ -10,23 +10,23 @@ export interface DataResponseMetaInfoDTO {
 }
 
 
-export interface SortingDTO {
+interface SortingDTO {
     sortOrder: SortOrder;
     sortBy: string;
 }
 
-export interface PaginationDTO {
+interface PaginationDTO {
     page: number;
     pageSize: number;
 }
 
-export interface FilterDTO {
+interface FilterDTO {
     attribute: string;
     operator: FilterOperator;
     value: string;
 }
 
-export enum FilterOperator {
+enum FilterOperator {
     EQUAL = "EQUAL",
     NOT = "NOT",
     GREATER_THAN = "GREATER_THAN",

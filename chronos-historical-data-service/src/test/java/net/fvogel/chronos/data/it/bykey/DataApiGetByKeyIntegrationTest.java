@@ -20,7 +20,7 @@ public class DataApiGetByKeyIntegrationTest extends BaseIntegrationTest {
     void getDataByKeyReturnsMatchingEntry() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/api/data/vespasian"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.properties.name").value("Titus Flavius Vespasianus"));
+                .andExpect(jsonPath("$.attributes.name").value("Titus Flavius Vespasianus"));
     }
 
     @Test

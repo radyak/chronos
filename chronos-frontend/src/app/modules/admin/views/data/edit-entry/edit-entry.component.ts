@@ -5,7 +5,7 @@ import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontaweso
 import { IconConstants } from 'src/app/common/constants/icon.constants';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AdminSchemaService } from '../../../services/admin-schema.service';
-import { EntryDTO } from 'src/app/common/model/data/data-element.dto';
+import { EntryDTO } from 'src/app/common/model/data/entry.dto';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { DynamicInputComponent } from './dynamic-input/dynamic-input.component';
 import { EntryAttributeFormService } from './entry-attribute-form.service';
@@ -30,7 +30,7 @@ export class EditEntryComponent {
   protected entry: WritableSignal<EntryDTO> = signal({
     elementId: '',
     labels: [],
-    properties: {}
+    attributes: {}
   });
 
   // Icons
@@ -86,7 +86,7 @@ export class EditEntryComponent {
 
     effect(() => {
       const entry = this.entry();
-      this.form().patchValue(entry.properties);
+      this.form().patchValue(entry.attributes);
     });
   }
 
@@ -129,9 +129,9 @@ export class EditEntryComponent {
   }
 
   protected updateType(): void {
-    const properties = this.form().getRawValue();
+    const attributes = this.form().getRawValue();
     this.entry.update(e => ({ ...e, labels: [this.typeForm?.getRawValue().type] }));
-    this.entry.update(e => ({ ...e, properties: { ...e.properties, ...properties } }));
+    this.entry.update(e => ({ ...e, attributes: { ...e.attributes, ...attributes } }));
   }
 
 }

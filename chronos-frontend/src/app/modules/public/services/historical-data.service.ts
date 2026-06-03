@@ -1,6 +1,6 @@
 import { inject, Injectable, ResourceRef, Signal } from '@angular/core';
 import { QueryDTO } from 'src/app/common/model/data/query.model.dto';
-import { EntryDTO } from 'src/app/common/model/data/data-element.dto';
+import { EntryDTO } from 'src/app/common/model/data/entry.dto';
 import { CountResultDTO } from 'src/app/common/model/data/count-result.dto';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { HistoricalDataClient } from '../clients/historical-data.client';
