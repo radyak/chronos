@@ -125,6 +125,14 @@ export class EditTypeComponent {
     modalRef.componentInstance.attribute.set(attr);
     const takenAttributeNames = this.typeResource.value()?.attributes?.filter(a => a !== attr).map(a => a.key);
     modalRef.componentInstance.takenAttributeNames.set(takenAttributeNames);
+    const errorPrefix = `attributes[${this.typeResource.value()?.attributes?.indexOf(attr)}]`;
+    const backendErrors = this.backendErrors()
+      .filter(e => e.field.startsWith(errorPrefix))
+      .map(e => ({
+        ...e,
+        field: e.field.replace(`${errorPrefix}.`, '')
+      }));
+    modalRef.componentInstance.backendErrors.set(backendErrors);
 
     modalRef.result.then(resultAttribute => {
       if (!resultAttribute) {
@@ -202,7 +210,7 @@ export class EditTypeComponent {
         }
       },
       (err: ErrorResponseDTO) => {
-        this.backendErrors.set(err.error.errors ?? []);
+        this.backendErrors.set(err.error?.errors ?? []);
       }
     );
   }
