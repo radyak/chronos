@@ -120,15 +120,6 @@ export class EditTypeComponent {
     });
   }
 
-  private getBackendErrorsSection(fieldPathPrefix: string): ApiErrorDTO[] {
-    return this.backendErrors()
-      .filter(e => e.field.startsWith(fieldPathPrefix))
-      .map(e => ({
-        ...e,
-        field: e.field.replace(`${fieldPathPrefix}.`, '')
-      }));
-  }
-
   protected editAttribute(attr: AttributeAO): void {
     const modalRef = this.modalService.open(EditAttributeDialogComponent);
     modalRef.componentInstance.attribute.set(attr);
@@ -313,6 +304,15 @@ export class EditTypeComponent {
 
   protected toggleForceDisplayErrors(): void {
     this.forceDisplayErrors = !this.forceDisplayErrors;
+  }
+
+  private getBackendErrorsSection(fieldPathPrefix: string): ApiErrorDTO[] {
+    return this.backendErrors()
+      .filter(e => e.field.startsWith(fieldPathPrefix))
+      .map(e => ({
+        ...e,
+        field: e.field.replace(`${fieldPathPrefix}.`, '')
+      }));
   }
 
 }

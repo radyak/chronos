@@ -42,6 +42,7 @@ export class EditRelationOffcanvasComponent {
   protected cancelIcon = IconsConfig.ICON_CANCEL;
   protected editIcon = IconsConfig.ICON_EDIT;
   protected deleteIcon = IconsConfig.ICON_DELETE;
+  protected warnIcon = IconsConfig.ICON_WARNING;
 
   // Form & controls
   protected submitted = false;
@@ -117,6 +118,8 @@ export class EditRelationOffcanvasComponent {
     modalRef.componentInstance.attribute.set(attr);
     const takenAttributeNames = this.relation()?.attributes?.filter(a => a !== attr).map(a => a.key);
     modalRef.componentInstance.takenAttributeNames.set(takenAttributeNames);
+    const backendErrors = this.getBackendErrorsSection(`attributes[${this.relation()?.attributes?.indexOf(attr)}]`);
+    modalRef.componentInstance.backendErrors.set(backendErrors);
 
     modalRef.result.then(resultAttribute => {
       if (!resultAttribute) {
@@ -156,6 +159,19 @@ export class EditRelationOffcanvasComponent {
 
   protected hasBackendError(field: string): boolean {
     return this.backendErrors()?.some(e => e.field === field);
+  }
+
+  protected hasBackendErrorMatching(path: string): boolean {
+    return this.backendErrors().some(e => e.field.startsWith(path));
+  }
+
+  private getBackendErrorsSection(fieldPathPrefix: string): ApiErrorDTO[] {
+    return this.backendErrors()
+      .filter(e => e.field.startsWith(fieldPathPrefix))
+      .map(e => ({
+        ...e,
+        field: e.field.replace(`${fieldPathPrefix}.`, '')
+      }));
   }
 
 }
