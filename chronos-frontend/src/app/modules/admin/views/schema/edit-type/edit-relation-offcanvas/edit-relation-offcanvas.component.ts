@@ -10,6 +10,8 @@ import { IconConstants as IconsConfig } from 'src/app/common/constants/icon.cons
 import { EditAttributeDialogComponent } from '../edit-attribute-dialog/edit-attribute-dialog.component';
 import { AdminConfirmService } from 'src/app/modules/admin/services/admin-confirm.service';
 import { TypeSelectComponent } from '../type-select/type-select.component';
+import { BackendErrorService } from 'src/app/common/util/backend-error.service';
+import { ApiErrorDTO } from 'src/app/common/model/error-response.dto';
 
 @Component({
   selector: 'chronos-edit-relation-offcanvas',
@@ -26,12 +28,14 @@ export class EditRelationOffcanvasComponent {
 	protected offcanvas = inject(NgbActiveOffcanvas);
   private fb = inject(FormBuilder);
   private formService = inject(FormService);
+  private backendErrorService = inject(BackendErrorService);
   private modalService = inject(NgbModal);
   private adminConfirmService = inject(AdminConfirmService);
 
   // Inputs
   protected relation: ModelSignal<RelationAO> = model({});
   protected takenKeys: ModelSignal<string[]> = model([] as string[]);
+  protected backendErrors: ModelSignal<ApiErrorDTO[]> = model<ApiErrorDTO[]>([]);
 
   // Icons
   protected saveIcon = IconsConfig.ICON_SAVE;
@@ -81,11 +85,14 @@ export class EditRelationOffcanvasComponent {
   // Methods
   protected isInvalid(field: string): boolean {
     const ctrl = this.form?.get(field);
-    return !!(ctrl?.invalid && (this.submitted || ctrl?.touched));
+    return !!(ctrl?.invalid && (this.submitted || ctrl?.touched)) || this.hasBackendError(field);
   }
 
   protected errors(field: string, label: string): string[] {
-    return this.formService.extractErrors(field, label, this.form);
+    return [
+      ...this.formService.extractErrors(field, label, this.form),
+      ...this.backendErrorService.extractErrors(field, label, this.backendErrors())
+    ];
   }
 
   protected confirm(): void {
@@ -145,6 +152,10 @@ export class EditRelationOffcanvasComponent {
         // Nothing todo
       }
     )
+  }
+
+  protected hasBackendError(field: string): boolean {
+    return this.backendErrors()?.some(e => e.field === field);
   }
 
 }

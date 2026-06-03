@@ -120,18 +120,21 @@ export class EditTypeComponent {
     });
   }
 
+  private getBackendErrorsSection(fieldPathPrefix: string): ApiErrorDTO[] {
+    return this.backendErrors()
+      .filter(e => e.field.startsWith(fieldPathPrefix))
+      .map(e => ({
+        ...e,
+        field: e.field.replace(`${fieldPathPrefix}.`, '')
+      }));
+  }
+
   protected editAttribute(attr: AttributeAO): void {
     const modalRef = this.modalService.open(EditAttributeDialogComponent);
     modalRef.componentInstance.attribute.set(attr);
     const takenAttributeNames = this.typeResource.value()?.attributes?.filter(a => a !== attr).map(a => a.key);
     modalRef.componentInstance.takenAttributeNames.set(takenAttributeNames);
-    const errorPrefix = `attributes[${this.typeResource.value()?.attributes?.indexOf(attr)}]`;
-    const backendErrors = this.backendErrors()
-      .filter(e => e.field.startsWith(errorPrefix))
-      .map(e => ({
-        ...e,
-        field: e.field.replace(`${errorPrefix}.`, '')
-      }));
+    const backendErrors = this.getBackendErrorsSection(`attributes[${this.typeResource.value()?.attributes?.indexOf(attr)}]`);
     modalRef.componentInstance.backendErrors.set(backendErrors);
 
     modalRef.result.then(resultAttribute => {
@@ -172,6 +175,8 @@ export class EditTypeComponent {
     const takenKeys = this.typeResource.value()?.relations?.filter(a => a !== rel).map(a => a.key);
 		offcanvasRef.componentInstance.relation.set(rel);
 		offcanvasRef.componentInstance.takenKeys.set(takenKeys);
+    const backendErrors = this.getBackendErrorsSection(`relations[${this.typeResource.value()?.relations?.indexOf(rel)}]`);
+    offcanvasRef.componentInstance.backendErrors.set(backendErrors);
 
     offcanvasRef.result.then(resultRelation => {
       if (!resultRelation) {
