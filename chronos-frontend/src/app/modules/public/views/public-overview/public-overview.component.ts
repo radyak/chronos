@@ -5,8 +5,6 @@ import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
 import { WikipediaSummaryComponent } from 'src/app/common/components/wikipedia-summary/wikipedia-summary.component';
-import { Observable, of } from 'rxjs';
-import { WikipediaSummary } from 'src/app/common/model/wikipedia/wikipedia-summary.model';
 import { WikiArticleService } from '../../services/wiki-article.service';
 import { LoadingComponent } from 'src/app/common/components/loading/loading.component';
 

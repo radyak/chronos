@@ -1,14 +1,23 @@
+<ng-template #articleInfoTemplate let-article="result">
+	<chronos-wikipedia-article-info [article]="article">
+    </chronos-wikipedia-article-info>
+</ng-template>
+
 <div class="form-control">
+
     <input
         type="text"
         class="borderless"
         placeholder="Type to search for Wiki articles ..."
         name="search"
         [disabled]="disabled()"
-        (ngModelChange)="searchChange($event)"
-        [(ngModel)]="_search">
+        [(ngModel)]="_selectedArticle"
+        (ngModelChange)="onSelect($event)"
+        [ngbTypeahead]="onSearch"
+        [resultTemplate]="articleInfoTemplate"
+        [inputFormatter]="articleTypeaheadResultFormatter">
 
-    @if (wikiArticlesResource.isLoading()) {
+    @if (isLoading()) {
         <fa-icon [icon]="waitingIcon"
                  class="input-status"
                  animation="spin"></fa-icon>
@@ -17,14 +26,11 @@
                  class="input-status"></fa-icon>
     }
 
-    @if (articles().length > 0) {
-        <div class="article-list">
-            @for (article of articles(); track article.title) {
-                <chronos-wikipedia-article-info
-                    [article]="article"
-                    (click)="onSelect(article)">
-                </chronos-wikipedia-article-info>
-            }
+    @if (loadedArticle.value()) {
+        <div class="preview">
+            <chronos-wikipedia-summary-core [wikiSummary]="loadedArticle.value()!">
+            </chronos-wikipedia-summary-core>
         </div>
     }
+
 </div>

@@ -5,7 +5,7 @@ import { CountResultDTO } from 'src/app/common/model/data/count-result.dto';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { HistoricalDataClient } from '../clients/historical-data.client';
 import { WikiArticlesClient } from '../clients/wiki-article.client';
-import { switchMap } from 'rxjs';
+import { of, switchMap } from 'rxjs';
 import { WikipediaSummary } from 'src/app/common/model/wikipedia/wikipedia-summary.model';
 
 @Injectable({
@@ -32,6 +32,13 @@ export class WikiArticleService {
             })
         );
       },
+    });
+  }
+
+  public getArticle(qid: Signal<string | undefined>): ResourceRef<WikipediaSummary | undefined> {
+    return rxResource({
+      params: () => qid(),
+      stream: ({ params }) => params ? this.wikiArticlesClient.getArticleByQid(params) : of(undefined),
     });
   }
   
