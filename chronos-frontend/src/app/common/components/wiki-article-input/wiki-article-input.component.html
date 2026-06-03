@@ -1,0 +1,30 @@
+<div class="form-control">
+    <input
+        type="text"
+        class="borderless"
+        placeholder="Type to search for Wiki articles ..."
+        name="search"
+        [disabled]="disabled()"
+        (ngModelChange)="searchChange($event)"
+        [(ngModel)]="_search">
+
+    @if (wikiArticlesResource.isLoading()) {
+        <fa-icon [icon]="waitingIcon"
+                 class="input-status"
+                 animation="spin"></fa-icon>
+    } @else {
+        <fa-icon [icon]="searchIcon"
+                 class="input-status"></fa-icon>
+    }
+
+    @if (articles().length > 0) {
+        <div class="article-list">
+            @for (article of articles(); track article.title) {
+                <chronos-wikipedia-article-info
+                    [article]="article"
+                    (click)="onSelect(article)">
+                </chronos-wikipedia-article-info>
+            }
+        </div>
+    }
+</div>

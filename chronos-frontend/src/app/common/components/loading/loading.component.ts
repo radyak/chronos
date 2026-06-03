@@ -1,6 +1,7 @@
 import { Component, HostBinding, input } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCircleNotch } from '@fortawesome/free-solid-svg-icons';
+import { IconConstants } from '../../constants/icon.constants';
 
 @Component({
   selector: '[loading]',
@@ -16,7 +17,7 @@ export class LoadingComponent {
   loading = input.required<boolean>();
 
   // Icons
-  loadingIcon = faCircleNotch;
+  loadingIcon = IconConstants.ICON_WAITING;
 
   @HostBinding('style.backdrop-filter')
   get backdropFilter() {
