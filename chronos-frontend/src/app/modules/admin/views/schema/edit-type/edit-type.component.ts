@@ -50,7 +50,7 @@ export class EditTypeComponent {
   protected cancelIcon = IconConstants.ICON_CANCEL;
   protected editIcon = IconConstants.ICON_EDIT;
   protected deleteIcon = IconConstants.ICON_DELETE;
-  protected helpIcon = IconConstants.ICON_QUESTION;
+  protected helpIcon = IconConstants.ICON_HELP;
   protected warnIcon = IconConstants.ICON_WARNING;
 
   // Derived Data Fields

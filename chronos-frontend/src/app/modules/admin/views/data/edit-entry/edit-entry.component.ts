@@ -37,7 +37,7 @@ export class EditEntryComponent {
   protected cancelIcon = IconConstants.ICON_CANCEL;
   protected saveIcon = IconConstants.ICON_SAVE;
   protected deleteIcon = IconConstants.ICON_DELETE;
-  protected questionIcon = IconConstants.ICON_QUESTION;
+  protected questionIcon = IconConstants.ICON_HELP;
 
   // Dependencies
   private route: ActivatedRoute = inject(ActivatedRoute);

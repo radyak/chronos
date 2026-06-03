@@ -13,7 +13,7 @@ export class IconConstants {
   public static readonly ICON_CANCEL = faXmark;
   public static readonly ICON_EDIT = faPen;
   public static readonly ICON_DELETE = faTrash;
-  public static readonly ICON_QUESTION = faCircleQuestion;
+  public static readonly ICON_HELP = faCircleQuestion;
   public static readonly ICON_WARNING = faTriangleExclamation;
   
 }
