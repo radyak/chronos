@@ -41,3 +41,16 @@ tr.default-attr > td {
   color: variables.$gray-600;
 }
 
+
+tr.invalid > * {
+  color: variables.$red;
+  background-color: variables.$warn-background;
+
+  .if-invalid {
+    display: inline !important;
+  }
+}
+
+.if-invalid {
+  display: none;
+}

@@ -108,7 +108,7 @@ public class DataApiSortingIntegrationTest extends BaseIntegrationTest {
         return objectMapper.readValue(json, DataResponseDTO.class)
                 .getEntries()
                 .stream()
-                .map(entry -> entry.getProperties().get("key").toString())
+                .map(entry -> entry.getAttributes().get("key").toString())
                 .toList();
     }
 

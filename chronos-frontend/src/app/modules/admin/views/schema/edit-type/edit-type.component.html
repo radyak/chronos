@@ -23,12 +23,28 @@
     <fa-icon [icon]="cancelIcon"></fa-icon>
     Cancel
   </button>
-  <button class="btn btn-outline-success"
-          (click)="save()"
-          [disabled]="!form?.valid">
-    <fa-icon [icon]="saveIcon"></fa-icon>
-    Save
-  </button>
+
+  <div class="btn-group" role="group">
+    <button class="btn btn-outline-success"
+            (click)="save(false)"
+            [disabled]="!form?.valid">
+      <fa-icon [icon]="saveIcon"></fa-icon>
+      Save
+    </button>
+    <button class="btn btn-success"
+            (click)="save(true)"
+            [disabled]="!form?.valid">
+      <fa-icon [icon]="saveIcon"></fa-icon>
+      Save & return
+    </button>
+    @if (!form?.valid) {
+      <button class="btn btn-outline-warning"
+              (click)="toggleForceDisplayErrors()">
+        <fa-icon [icon]="helpIcon"></fa-icon>
+      </button>
+    }
+  </div>
+
 </div>
 
 @if (typeResource.isLoading()) {
@@ -139,9 +155,12 @@
         </tr>
       </thead>
       <tbody>
-        @for (attribute of type.attributes; track attribute.key) {
-          <tr class="pointer">
+        @for (attribute of type.attributes; track attribute.key; let i = $index) {
+          <tr class="pointer"
+              [class.invalid]="hasBackendErrorMatching(`attributes[${i}]`)">
             <td (click)="editAttribute(attribute)">
+              <fa-icon [icon]="warnIcon"
+                       class="if-invalid"></fa-icon>
               {{ attribute.key }}
             </td>
             <td (click)="editAttribute(attribute)">
@@ -201,9 +220,12 @@
         </tr>
       </thead>
       <tbody>
-        @for (relation of type.relations; track relation.key) {
-          <tr class="pointer">
+        @for (relation of type.relations; track relation.key; let i = $index) {
+          <tr class="pointer"
+              [class.invalid]="hasBackendErrorMatching(`relations[${i}]`)">
             <td (click)="editRelation(relation)">
+              <fa-icon [icon]="warnIcon"
+                       class="if-invalid"></fa-icon>
               {{ relation.key }}
             </td>
             <td (click)="editRelation(relation)">

@@ -1,17 +1,26 @@
-<fa-icon [icon]="helpIcon"
-         [ngbTooltip]="template"
-         [ngClass]="{'active': active}"
-         triggers="manual:blur"
-         #t1="ngbTooltip"
-         (click)="toggle(t1)">
-</fa-icon>
+@if (hasContent()) {
+  <fa-icon [icon]="helpIcon"
+          [ngbTooltip]="template"
+          triggers="manual:blur"
+          #t1="ngbTooltip"
+          (click)="toggle(t1)">
+  </fa-icon>
+}
 
-@if (inline && active) {
+@if (inline() && active) {
   <div class="text-secondary-emphasis small">
     <ng-container [ngTemplateOutlet]="template"></ng-container>
   </div>
 }
 
 <ng-template #template>
-  <ng-content></ng-content>
+  @if (text(); as lines) {
+    @for (line of lines; track line) {
+      @if (!!line) {
+        <div>{{ line }}</div>
+      }
+    }
+  } @else {
+    <ng-content></ng-content>
+  }
 </ng-template>

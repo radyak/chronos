@@ -6,6 +6,23 @@
         "key": "area",
         "type": "NUMBER",
         "isArray": false
+      },
+      {
+        "key": "name",
+        "type": "STRING",
+        "isArray": false
+      }
+    ],
+    "relations": [
+      {
+        "key": "SECESSIONAL_TO",
+        "attributes": [],
+        "source": {
+          "key": "Territory"
+        },
+        "target": {
+          "key": "Territory"
+        }
       }
     ]
   },
@@ -20,6 +37,11 @@
           "male",
           "female"
         ]
+      },
+      {
+        "key": "name",
+        "type": "STRING",
+        "isArray": false
       }
     ],
     "relations": [
@@ -34,6 +56,26 @@
               "married",
               "affair",
               "cohabitation"
+            ]
+          }
+        ],
+        "source": {
+          "key": "Person"
+        },
+        "target": {
+          "key": "Person"
+        }
+      },
+      {
+        "key": "CHILD_OF",
+        "attributes": [
+          {
+            "key": "status",
+            "type": "ENUM",
+            "isArray": false,
+            "allowedValues": [
+              "biological",
+              "adopted"
             ]
           }
         ],
@@ -66,5 +108,41 @@
         }
       }
     ]
+  },
+  {
+    "key": "TestType",
+    "attributes": [
+      {
+        "key": "enum-scalar-attr",
+        "type": "ENUM",
+        "isArray": false,
+        "allowedValues": [
+          "val1",
+          "val2",
+          "val3"
+        ]
+      },
+      {
+        "key": "enum-array-attr",
+        "type": "ENUM",
+        "isArray": true,
+        "allowedValues": [
+          "arrayVal1",
+          "arrayVal2",
+          "arrayVal3"
+        ]
+      },
+      {
+        "key": "number-attr",
+        "type": "NUMBER",
+        "valueRange": "3-10"
+      },
+      {
+        "key": "string-attr",
+        "type": "STRING",
+        "valuePattern": "[a-zA-Z\\s]{3,10}"
+      }
+    ],
+    "relations": []
   }
 ]

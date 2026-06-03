@@ -5,14 +5,13 @@ import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontaweso
 import { IconConstants } from 'src/app/common/constants/icon.constants';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AdminSchemaService } from '../../../services/admin-schema.service';
-import { EntryDTO } from 'src/app/common/model/data/data-element.dto';
+import { EntryDTO } from 'src/app/common/model/data/entry.dto';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { DynamicInputComponent } from './dynamic-input/dynamic-input.component';
 import { EntryAttributeFormService } from './entry-attribute-form.service';
-import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
-import { AttributeAO } from 'src/app/common/model/schema/admin/attribute.ao';
 import { AdminDataService } from '../../../services/admin-data.service';
 import { firstValueFrom } from 'rxjs';
+import { TooltipComponent } from 'src/app/common/components/tooltip/tooltip.component';
 
 @Component({
   selector: 'chronos-edit-entry',
@@ -20,7 +19,7 @@ import { firstValueFrom } from 'rxjs';
     FontAwesomeModule,
     ReactiveFormsModule,
     DynamicInputComponent,
-    NgbTooltip
+    TooltipComponent
   ],
   templateUrl: './edit-entry.component.html',
   styleUrl: './edit-entry.component.scss',
@@ -31,14 +30,14 @@ export class EditEntryComponent {
   protected entry: WritableSignal<EntryDTO> = signal({
     elementId: '',
     labels: [],
-    properties: {}
+    attributes: {}
   });
 
   // Icons
   protected cancelIcon = IconConstants.ICON_CANCEL;
   protected saveIcon = IconConstants.ICON_SAVE;
   protected deleteIcon = IconConstants.ICON_DELETE;
-  protected questionIcon = IconConstants.ICON_QUESTION;
+  protected questionIcon = IconConstants.ICON_HELP;
 
   // Dependencies
   private route: ActivatedRoute = inject(ActivatedRoute);
@@ -87,17 +86,19 @@ export class EditEntryComponent {
 
     effect(() => {
       const entry = this.entry();
-      this.form().patchValue(entry.properties);
+      this.form().patchValue(entry.attributes);
     });
   }
 
   // Methods
-  protected save() {
+  protected save(returnAfterSave: boolean = false) {
     this.updateType();
     console.log('Saving entry', this.entry());
     firstValueFrom(this.adminDataService.save(this.entry())).then(
       () => {
-        this.back();
+        if (returnAfterSave) {
+          this.back();
+        }
       },
       (err) => {
         // Nothing todo
@@ -128,17 +129,9 @@ export class EditEntryComponent {
   }
 
   protected updateType(): void {
-    const properties = this.form().getRawValue();
+    const attributes = this.form().getRawValue();
     this.entry.update(e => ({ ...e, labels: [this.typeForm?.getRawValue().type] }));
-    this.entry.update(e => ({ ...e, properties: { ...e.properties, ...properties } }));
+    this.entry.update(e => ({ ...e, attributes: { ...e.attributes, ...attributes } }));
   }
-
-  protected toggleTooltip(tooltip: NgbTooltip, attr: AttributeAO) {
-		if (tooltip.isOpen()) {
-			tooltip.close();
-		} else {
-			tooltip.open({attr});
-		}
-	}
 
 }

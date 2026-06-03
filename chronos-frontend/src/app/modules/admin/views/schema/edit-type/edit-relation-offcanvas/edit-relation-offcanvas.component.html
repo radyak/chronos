@@ -116,9 +116,12 @@
           </tr>
         </thead>
         <tbody>
-          @for (attribute of relation().attributes; track attribute.key) {
-            <tr class="pointer">
+          @for (attribute of relation().attributes; track attribute.key; let i = $index) {
+            <tr class="pointer"
+                [class.invalid]="hasBackendErrorMatching(`attributes[${i}]`)">
               <td (click)="editAttribute(attribute)">
+                <fa-icon [icon]="warnIcon"
+                        class="if-invalid"></fa-icon>
                 {{ attribute.key }}
               </td>
               <td (click)="editAttribute(attribute)">

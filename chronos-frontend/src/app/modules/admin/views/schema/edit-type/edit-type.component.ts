@@ -17,6 +17,8 @@ import { FormService } from 'src/app/common/util/form.service';
 import { RelationAO } from 'src/app/common/model/schema/admin/relation.ao';
 import { EditRelationOffcanvasComponent } from './edit-relation-offcanvas/edit-relation-offcanvas.component';
 import { IconSelectComponent } from "./icon-select/icon-select.component";
+import { ApiErrorDTO, ErrorResponseDTO } from 'src/app/common/model/error-response.dto';
+import { BackendErrorService } from 'src/app/common/util/backend-error.service';
 
 @Component({
   selector: 'chronos-edit-type',
@@ -40,6 +42,7 @@ export class EditTypeComponent {
   private fb = inject(FormBuilder);
   private modalService = inject(NgbModal);
   private formService = inject(FormService);
+  private backendErrorService = inject(BackendErrorService);
 	private offcanvasService = inject(NgbOffcanvas);
 
   // Icons
@@ -47,6 +50,8 @@ export class EditTypeComponent {
   protected cancelIcon = IconConstants.ICON_CANCEL;
   protected editIcon = IconConstants.ICON_EDIT;
   protected deleteIcon = IconConstants.ICON_DELETE;
+  protected helpIcon = IconConstants.ICON_HELP;
+  protected warnIcon = IconConstants.ICON_WARNING;
 
   // Derived Data Fields
   protected typeId = toSignal(
@@ -66,11 +71,13 @@ export class EditTypeComponent {
            ?? []
   });
   protected isNew = computed(() => !this.typeResource.value()?.id);
+  protected backendErrors: WritableSignal<ApiErrorDTO[]> = signal([]);
 
   // Form & controls
   protected form?: FormGroup;
   protected currentAttribute: WritableSignal<AttributeAO | undefined> = signal(undefined);
   protected submitted = false;
+  protected forceDisplayErrors = false;
 
   // Init
   constructor() {
@@ -118,6 +125,8 @@ export class EditTypeComponent {
     modalRef.componentInstance.attribute.set(attr);
     const takenAttributeNames = this.typeResource.value()?.attributes?.filter(a => a !== attr).map(a => a.key);
     modalRef.componentInstance.takenAttributeNames.set(takenAttributeNames);
+    const backendErrors = this.getBackendErrorsSection(`attributes[${this.typeResource.value()?.attributes?.indexOf(attr)}]`);
+    modalRef.componentInstance.backendErrors.set(backendErrors);
 
     modalRef.result.then(resultAttribute => {
       if (!resultAttribute) {
@@ -157,6 +166,8 @@ export class EditTypeComponent {
     const takenKeys = this.typeResource.value()?.relations?.filter(a => a !== rel).map(a => a.key);
 		offcanvasRef.componentInstance.relation.set(rel);
 		offcanvasRef.componentInstance.takenKeys.set(takenKeys);
+    const backendErrors = this.getBackendErrorsSection(`relations[${this.typeResource.value()?.relations?.indexOf(rel)}]`);
+    offcanvasRef.componentInstance.backendErrors.set(backendErrors);
 
     offcanvasRef.result.then(resultRelation => {
       if (!resultRelation) {
@@ -185,15 +196,17 @@ export class EditTypeComponent {
   }
 
   // Methods
-  protected save(): void {
+  protected save(returnAfterSave: boolean = false): void {
     this.submitted = true;
     const type = EditTypeFormMapper.toAO(this.form?.getRawValue(), this.typeResource.value());
     firstValueFrom(this.schemaService.saveType(type)).then(
       () => {
-        this.back();
+        if (returnAfterSave) {
+          this.back();
+        }
       },
-      (err) => {
-        // Nothing todo
+      (err: ErrorResponseDTO) => {
+        this.backendErrors.set(err.error?.errors ?? []);
       }
     );
   }
@@ -271,11 +284,35 @@ export class EditTypeComponent {
 
   protected isInvalid(field: string): boolean {
     const ctrl = this.form?.get(field);
-    return !!(ctrl?.invalid && (this.submitted || ctrl?.touched));
+    return !!(ctrl?.invalid && (this.submitted || ctrl?.touched || this.forceDisplayErrors)) || this.hasBackendError(field);
   }
 
   protected errors(field: string, label: string): string[] {
-    return this.formService.extractErrors(field, label, this.form);
+    return [
+      ...this.formService.extractErrors(field, label, this.form),
+      ...this.backendErrorService.extractErrors(field, label, this.backendErrors())
+    ];
+  }
+
+  protected hasBackendError(field: string): boolean {
+    return this.backendErrors().some(e => e.field === field);
+  }
+
+  protected hasBackendErrorMatching(path: string): boolean {
+    return this.backendErrors().some(e => e.field.startsWith(path));
+  }
+
+  protected toggleForceDisplayErrors(): void {
+    this.forceDisplayErrors = !this.forceDisplayErrors;
+  }
+
+  private getBackendErrorsSection(fieldPathPrefix: string): ApiErrorDTO[] {
+    return this.backendErrors()
+      .filter(e => e.field.startsWith(fieldPathPrefix))
+      .map(e => ({
+        ...e,
+        field: e.field.replace(`${fieldPathPrefix}.`, '')
+      }));
   }
 
 }

@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, input, Input} from '@angular/core';
 import {CommonModule} from "@angular/common";
 import {NgbModule, NgbTooltip} from "@ng-bootstrap/ng-bootstrap";
 import {faQuestionCircle} from "@fortawesome/free-solid-svg-icons";
@@ -18,15 +18,20 @@ import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 })
 export class TooltipComponent {
 
+  // Icons
   helpIcon = faQuestionCircle;
+
+  // Properties
   active = false;
+  
+  // Inputs
+  text = input<(string | undefined | null)[]>();
+  inline = input(false);
 
-  @Input()
-  inline: boolean = false;
-
+  // Methods
   protected toggle(tooltip: NgbTooltip): void {
     this.active = !this.active;
-    if (this.inline) {
+    if (this.inline()) {
       return;
     }
     if (this.active && tooltip.isOpen()) {
@@ -35,4 +40,12 @@ export class TooltipComponent {
       tooltip.open();
     }
   }
+
+  protected hasContent(): boolean {
+    if (!this.text()) {
+      return true;
+    }
+    return this.text()!.filter(line => !!line).length > 0;
+  }
+
 }

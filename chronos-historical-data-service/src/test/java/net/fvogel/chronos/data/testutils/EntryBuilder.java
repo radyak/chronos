@@ -19,7 +19,7 @@ public class EntryBuilder {
     }
 
     public EntryBuilder withProperty(String key, Object value) {
-        this.entry.getProperties().put(key, value);
+        this.entry.getAttributes().put(key, value);
         return this;
     }
 

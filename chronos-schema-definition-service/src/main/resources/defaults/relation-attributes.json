@@ -1,14 +1,5 @@
 [
   {
-    "key": "key",
-    "explanation": "",
-    "examples": "",
-    "type": "STRING",
-    "isArray": false,
-    "isMandatory": true,
-    "valuePattern": null
-  },
-  {
     "key": "start",
     "explanation": "",
     "examples": "",

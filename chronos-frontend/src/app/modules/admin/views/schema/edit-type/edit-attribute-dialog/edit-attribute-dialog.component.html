@@ -94,30 +94,32 @@
         </div>
       </div>
 
-      <div class="row">
-        <div class="form-group col-6">
-          <div class="form-check">
-            <input type="checkbox"
-                   class="form-check-input"
-                   formControlName="isArray"
-                   id="isArray"
-                   name="isArray">
-            <label class="form-check-label" for="isArray">Is Array?</label>
-          </div>
 
-          <div class="form-check">
-            <input type="checkbox"
-                   class="form-check-input"
-                   formControlName="isMandatory"
-                   id="isMandatory"
-                   name="isMandatory">
-            <label class="form-check-label" for="isMandatory">Is Mandatory?</label>
-          </div>
-        </div>
+      <!-- isMandatory -->
+      <div class="form-check col-12">
+        <input type="checkbox"
+                class="form-check-input"
+                formControlName="isMandatory"
+                id="isMandatory"
+                name="isMandatory">
+        <label class="form-check-label" for="isMandatory">Is Mandatory?</label>
       </div>
 
-      <div class="row">
-        <div class="form-group col-6">
+      <!-- isArray - ENUM only -->
+      @if (isType(ENUM)) {
+        <div class="form-check col-12">
+          <input type="checkbox"
+                class="form-check-input"
+                formControlName="isArray"
+                id="isArray"
+                name="isArray">
+          <label class="form-check-label" for="isArray">Is Array?</label>
+        </div>
+      }
+
+      <!-- valuePattern - STRING only -->
+      @if (isType(STRING)) {
+        <div class="form-group col-12">
           <label class="form-label mt-4" for="valuePattern">Value Pattern:</label>
           <input
             class="form-control"
@@ -133,7 +135,11 @@
             }
           </div>
         </div>
-        <div class="form-group col-6">
+      }
+
+      <!-- valueRange - NUMBER only -->
+      @if (isType(NUMBER)) {
+        <div class="form-group col-12">
           <label class="form-label mt-4" for="valueRange">Value Range:</label>
           <input
             class="form-control"
@@ -149,11 +155,12 @@
             }
           </div>
         </div>
-      </div>
+      }
 
-      <div class="row">
+      <!-- allowedValues - ENUM only -->
+      @if (isType(ENUM)) {
         <div class="form-group col-12">
-          <label class="form-label mt-4" for="valueRange">Allowed Values:</label>
+          <label class="form-label mt-4">Allowed Values:</label>
           @for (allowedValue of attribute()?.allowedValues; track allowedValue) {
             <div class="attribute-allowed-value">
               <button type="button"
@@ -178,7 +185,7 @@
                     (keyup.enter)="addAllowedValue(); false;">
           </div>
         </div>
-      </div>
+      }
 
     </div>
   </form>

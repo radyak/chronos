@@ -9,6 +9,7 @@ import { AttributeMapper } from 'src/app/common/model/schema/mappers/attribute.m
 import { SchemaResponseDTO } from 'src/app/common/model/schema/schema-response.dto';
 import { SchemaClient } from '../../public/clients/schema.client';
 import { AdminSchemaClient } from '../clients/admin-schema.client';
+import { ErrorResponseDTO } from 'src/app/common/model/error-response.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -56,7 +57,7 @@ export class AdminSchemaService {
     return this.adminSchemaClient.saveType(type).pipe(
       catchError((err: any, caught: Observable<void>) => {
         this.notificationService.error(`Error while saving type "${type.key}"`);
-        throw new Error("Type not saved");
+        throw err as ErrorResponseDTO;
       }),
       tap(() => {
         this.notificationService.success(`Type "${type.key}" saved successfully`);
