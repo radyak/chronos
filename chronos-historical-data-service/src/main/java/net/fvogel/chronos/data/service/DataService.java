@@ -1,6 +1,5 @@
 package net.fvogel.chronos.data.service;
 
-import net.fvogel.chronos.commons.exception.InvalidDataException;
 import net.fvogel.chronos.data.model.CountResult;
 import net.fvogel.chronos.data.model.DataQuery;
 import net.fvogel.chronos.data.model.Entry;
@@ -33,7 +32,10 @@ public class DataService {
     private CypherClient client;
 
     @Autowired
-    private ResultMapper resultMapper;
+    private SecurityService securityService;
+
+    @Autowired
+    private EntryMapper entryMapper;
 
     public List<Entry> findAll(DataQuery query) {
         var nodeName = "n";
@@ -53,7 +55,7 @@ public class DataService {
 
         return client.runStatement(statement, result ->
                 result.list(record -> record.get(nodeName).asNode())
-                        .stream().map(resultMapper::toEntry)
+                        .stream().map(entryMapper::toEntry)
                         .collect(Collectors.toList())
         );
     }
@@ -67,7 +69,7 @@ public class DataService {
 
         return client.runStatement(statement, result -> result
                 .list(record -> record.get(nodeName).asNode())
-                .stream().map(resultMapper::toEntry).findFirst()
+                .stream().map(entryMapper::toEntry).findFirst()
         );
     }
 
@@ -78,15 +80,14 @@ public class DataService {
                 .returning(Cypher.count(n).as("count"), Cypher.labels(n).as("labels"))
                 .build();
 
-        return client.runStatement(statement, result -> result.list(resultMapper::toCountResult));
+        return client.runStatement(statement, result -> result.list(entryMapper::toCountResult));
     }
 
     public void create(Entry entry) {
         // TODO: Schema validation
-        var nodeName = "n";
-        var label = entry.getLabels().stream().findFirst().orElseThrow(InvalidDataException::new);
-        var n = Cypher.node(label).named(nodeName).withProperties(entry.getAttributes());
+        entry.get_meta().setCreateAuthor(securityService.getUsername());
 
+        var n = entryMapper.toNode(entry, "n");
         var statement = Cypher.create(n).returning(n).build();
 
         client.runStatement(statement);
