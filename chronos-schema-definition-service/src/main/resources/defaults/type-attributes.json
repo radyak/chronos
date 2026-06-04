@@ -6,7 +6,10 @@
     "type": "STRING",
     "isArray": false,
     "isMandatory": true,
-    "valuePattern": null
+    "valuePattern": null,
+    "isUnique": true,
+    "isChangeable": false,
+    "order": 0
   },
   {
     "key": "start",
@@ -14,7 +17,8 @@
     "examples": "",
     "type": "DATENOTATION",
     "isArray": false,
-    "isMandatory": false
+    "isMandatory": false,
+    "order": 1
   },
   {
     "key": "end",
@@ -22,7 +26,8 @@
     "examples": "",
     "type": "DATENOTATION",
     "isArray": false,
-    "isMandatory": false
+    "isMandatory": false,
+    "order": 2
   },
   {
     "key": "wikiqid",
@@ -30,6 +35,7 @@
     "examples": "",
     "type": "WIKIQID",
     "isArray": false,
-    "isMandatory": false
+    "isMandatory": false,
+    "order": 3
   }
 ]

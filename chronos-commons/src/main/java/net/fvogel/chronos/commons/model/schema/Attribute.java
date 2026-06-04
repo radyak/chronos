@@ -13,8 +13,11 @@ public class Attribute {
     String explanation;
     String examples;
     AttributeType type;
-    Boolean isArray = false;
     Boolean isMandatory = false;
+    Boolean isUnique = false;
+    Boolean isChangeable = true;
+    Boolean isArray = false;
+    Integer order;
     String valuePattern;
     String valueRange;
     Set<String> allowedValues;

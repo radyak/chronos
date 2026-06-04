@@ -37,8 +37,13 @@ public class ModelMapper {
         dto.setKey(attribute.getKey());
         dto.setExamples(attribute.getExamples());
         dto.setExplanation(attribute.getExplanation());
-        dto.setIsArray(attribute.getIsArray());
+
         dto.setIsMandatory(attribute.getIsMandatory());
+        dto.setIsUnique(attribute.getIsUnique());
+        dto.setIsChangeable(attribute.getIsChangeable());
+        dto.setIsArray(attribute.getIsArray());
+        dto.setOrder(attribute.getOrder());
+
         dto.setType(attribute.getType());
         dto.setAllowedValues(attribute.getAllowedValues());
         dto.setValuePattern(attribute.getValuePattern());
@@ -68,8 +73,13 @@ public class ModelMapper {
         dto.setKey(attribute.getKey());
         dto.setExamples(attribute.getExamples());
         dto.setExplanation(attribute.getExplanation());
-        dto.setIsArray(attribute.getIsArray());
+
         dto.setIsMandatory(attribute.getIsMandatory());
+        dto.setIsUnique(attribute.getIsUnique());
+        dto.setIsChangeable(attribute.getIsChangeable());
+        dto.setIsArray(attribute.getIsArray());
+        dto.setOrder(attribute.getOrder());
+
         dto.setType(attribute.getType());
         dto.setAllowedValues(attribute.getAllowedValues());
         dto.setValuePattern(attribute.getValuePattern());

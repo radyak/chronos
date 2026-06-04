@@ -1,0 +1,21 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet author="birdman (generated)" id="1780606528901-1">
+        <addColumn tableName="type_attributepo">
+            <column name="is_unique" type="BOOLEAN"/>
+            <column name="is_changeable" type="BOOLEAN"/>
+            <column name="attr_order" type="INT"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="birdman (generated)" id="1780606528901-2">
+        <addColumn tableName="relation_attributepo">
+            <column name="is_unique" type="BOOLEAN"/>
+            <column name="is_changeable" type="BOOLEAN"/>
+            <column name="attr_order" type="INT"/>
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>

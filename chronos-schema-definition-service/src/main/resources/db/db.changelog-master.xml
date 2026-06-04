@@ -7,4 +7,5 @@
 
     <include file="db/changelogs/db.changelog-v1-init.xml"/>
     <include file="db/changelogs/db.changelog-v1.0.1-add-type-icon.xml"/>
+    <include file="db/changelogs/db.changelog-v1.0.2-add-attribute-flags-and-order.xml"/>
 </databaseChangeLog>
