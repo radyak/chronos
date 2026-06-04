@@ -64,6 +64,8 @@ public class AdminDataApiCreateEntryIntegrationTest extends BaseIntegrationTest 
         assertThat(saveEntry.getAttributes().get("number-property"), is(13));
         assertThat(saveEntry.getAttributes().get("array-property"), is(List.of(arrayProp)));
         assertThat(saveEntry.getAttributes().get("null-property"), nullValue());
+
+        assertThat(saveEntry.get_meta().getCreateAuthor(), is("admin"));
     }
 
 }

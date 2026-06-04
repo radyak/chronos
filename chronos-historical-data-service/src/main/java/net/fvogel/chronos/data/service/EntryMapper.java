@@ -1,7 +1,9 @@
 package net.fvogel.chronos.data.service;
 
+import net.fvogel.chronos.commons.exception.InvalidDataException;
 import net.fvogel.chronos.data.model.CountResult;
 import net.fvogel.chronos.data.model.Entry;
+import org.neo4j.cypherdsl.core.Cypher;
 import org.neo4j.driver.Record;
 import org.neo4j.driver.Value;
 import org.neo4j.driver.internal.types.InternalTypeSystem;
@@ -10,20 +12,46 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-public class ResultMapper {
+public class EntryMapper {
 
-    private static final Logger logger = LoggerFactory.getLogger(ResultMapper.class);
+    private static final Logger logger = LoggerFactory.getLogger(EntryMapper.class);
 
     public Entry toEntry(Node node) {
         Entry entry = new Entry();
         entry.setElementId(node.elementId());
         node.labels().forEach(label -> entry.getLabels().add(label));
-        node.keys().forEach(key -> entry.getAttributes().put(key, value(node.get(key))));
+        node.keys().forEach(key -> {
+            // Meta info fields start with underscore "_"
+            if (key.startsWith("_")) {
+                return;
+            }
+            entry.getAttributes().put(key, value(node.get(key)));
+        });
+        entry.get_meta().setVersion(node.get("_version").asInt(1));
+        entry.get_meta().setCreateAuthor(node.get("_createAuthor").asString(null));
+        entry.get_meta().setCreateDate(node.get("_createDate").asString(null));
+        entry.get_meta().setLastUpdateAuthor(node.get("_lastUpdateAuthor").asString(null));
+        entry.get_meta().setLastUpdateDate(node.get("_lastUpdateDate").asString(null));
         return entry;
+    }
+
+    public org.neo4j.cypherdsl.core.Node toNode(Entry entry, String name) {
+        var label = entry.getLabels().stream().findFirst().orElseThrow(InvalidDataException::new);
+        Map<String, Object> properties = new HashMap<>(entry.getAttributes());
+
+        properties.put("_version", entry.get_meta().getVersion());
+        properties.put("_createAuthor", entry.get_meta().getCreateAuthor());
+        properties.put("_createDate", entry.get_meta().getCreateDate());
+        properties.put("_lastUpdateAuthor", entry.get_meta().getLastUpdateAuthor());
+        properties.put("_lastUpdateDate", entry.get_meta().getLastUpdateDate());
+
+        return Cypher.node(label).named(name).withProperties(properties);
     }
 
     public CountResult toCountResult(Record record) {

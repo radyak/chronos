@@ -12,4 +12,5 @@ public class Entry {
     String elementId;
     Set<String> labels = new HashSet<>();
     Map<String, Object> attributes = new HashMap<>();
+    MetaInfo _meta = new MetaInfo();
 }
