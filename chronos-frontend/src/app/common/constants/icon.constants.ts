@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { faCircleQuestion, faPen, faPlus, faSave, faTrash, faTriangleExclamation, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faCircleNotch, faCircleQuestion, faMagnifyingGlass, faPen, faPlus, faSave, faSpinner, faTrash, faTriangleExclamation, faXmark } from '@fortawesome/free-solid-svg-icons';
 
 @Injectable({
   providedIn: 'root',
@@ -15,5 +15,6 @@ export class IconConstants {
   public static readonly ICON_DELETE = faTrash;
   public static readonly ICON_HELP = faCircleQuestion;
   public static readonly ICON_WARNING = faTriangleExclamation;
-  
+  public static readonly ICON_SEARCH = faMagnifyingGlass;
+  public static readonly ICON_WAITING = faCircleNotch;
 }

@@ -42,6 +42,12 @@
                 [id]="attribute().key">
             </chronos-date-input>
         }
+        @case (WIKIQID) {
+            <chronos-wiki-article-input
+                [formControlName]="attribute().key!"
+                [id]="attribute().key">
+            </chronos-wiki-article-input>
+        }
     }
 
     <div class="invalid-feedback">

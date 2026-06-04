@@ -1,31 +1,12 @@
 @if (wikiSummary) {
-  <div
-    class="card border-light mb-3">
+  <div class="card border-light mb-3">
     <div class="card-header">
       <fa-icon [icon]="infoIcon"
       class="info-icon"></fa-icon>
       Wiki Info
     </div>
     <div class="card-body">
-      <h4 class="card-title">
-        {{ wikiSummary!.title }}
-      </h4>
-      @if (wikiSummary!.image?.url) {
-        <img class="summary-image"
-          [src]="wikiSummary!.image?.url">
-      }
-      @if (wikiSummary!.extract) {
-        <p
-          class="card-text">
-          {{ wikiSummary!.extract }}
-          <br>
-            <a [href]="wikiSummary!.pageUrl" target="_blank">
-              &rarr; Read on Wikipedia
-            </a>
-          </p>
-        } @else {
-          No extract available
-        }
-      </div>
+      <chronos-wikipedia-summary-core [wikiSummary]="wikiSummary"></chronos-wikipedia-summary-core>
     </div>
-  }
+  </div>
+}

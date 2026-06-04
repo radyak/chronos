@@ -1,6 +1,7 @@
 import { Component, inject, input } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { DateInputComponent } from 'src/app/common/components/date-input/date-input.component';
+import { WikiArticleInputComponent } from 'src/app/common/components/wiki-article-input/wiki-article-input.component';
 import { AttributeAO } from 'src/app/common/model/schema/admin/attribute.ao';
 import { AttributeTypeDTO } from 'src/app/common/model/schema/attribute-type.dto';
 import { FormService } from 'src/app/common/util/form.service';
@@ -9,7 +10,8 @@ import { FormService } from 'src/app/common/util/form.service';
   selector: 'chronos-dynamic-input',
   imports: [
     DateInputComponent,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    WikiArticleInputComponent,
   ],
   templateUrl: './dynamic-input.component.html',
   styleUrl: './dynamic-input.component.scss',
