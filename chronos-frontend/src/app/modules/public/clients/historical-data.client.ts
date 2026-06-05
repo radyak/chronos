@@ -22,4 +22,8 @@ export class HistoricalDataClient {
     return this.http.get<CountResultDTO[]>(`${this.apiUrl}/statistics`);
   }
 
+  public getEntry(key: string): Observable<EntryDTO> {
+    return this.http.get<EntryDTO>(`${this.apiUrl}/${key}`);
+  }
+
 }
