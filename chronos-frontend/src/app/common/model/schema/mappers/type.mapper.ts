@@ -3,6 +3,7 @@ import { TypeDTO } from "../type.dto";
 import { SchemaResponseDTO } from "../schema-response.dto";
 import { AttributeMapper } from "./attribute.mapper";
 import { RelationMapper } from "./relation.mapper";
+import { sortByOrder } from "src/app/common/util/array-utils";
 
 export class TypeMapper {
 
@@ -24,8 +25,8 @@ export class TypeMapper {
             examples: dto.examples,
             explanation: dto.explanation,
             icon: dto.icon,
-            attributes: dto.attributes?.map(AttributeMapper.dtoToAo),
-            defaultAttributes: schemaPartial.types.defaultAttributes?.map(AttributeMapper.dtoToAo),
+            attributes: dto.attributes?.map(AttributeMapper.dtoToAo).sort(sortByOrder),
+            defaultAttributes: schemaPartial.types.defaultAttributes?.map(AttributeMapper.dtoToAo).sort(sortByOrder),
             relations: schemaPartial.relations.elements.map(rel => RelationMapper.dtoToAo(rel, schemaPartial))
         };
         return ao;
@@ -33,7 +34,7 @@ export class TypeMapper {
 
     public static onlyDefaults(schemaPartial: SchemaResponseDTO): TypeAO {
         const ao: TypeAO = {
-            defaultAttributes: schemaPartial.types.defaultAttributes?.map(AttributeMapper.dtoToAo),
+            defaultAttributes: schemaPartial.types.defaultAttributes?.map(AttributeMapper.dtoToAo).sort(sortByOrder),
         };
         return ao;
     }

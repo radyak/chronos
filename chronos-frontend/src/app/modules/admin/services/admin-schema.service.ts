@@ -10,6 +10,8 @@ import { SchemaResponseDTO } from 'src/app/common/model/schema/schema-response.d
 import { SchemaClient } from '../../public/clients/schema.client';
 import { AdminSchemaClient } from '../clients/admin-schema.client';
 import { ErrorResponseDTO } from 'src/app/common/model/error-response.dto';
+import { sortByOrder } from 'src/app/common/util/array-utils';
+
 
 @Injectable({
   providedIn: 'root',
@@ -43,7 +45,7 @@ export class AdminSchemaService {
       stream: () => {
         if (!typeIdentifier) {
           return of({
-            defaultAttributes: this.defaultTypeAttributes(),
+            defaultAttributes: this.defaultTypeAttributes().sort(sortByOrder),
           } as TypeAO);
         }
         return this.schemaClient.getType(typeIdentifier).pipe(
