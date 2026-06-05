@@ -6,8 +6,11 @@ export interface AttributeDTO {
     explanation: string;
     examples: string;
     type: AttributeTypeDTO;
-    isArray: boolean;
     isMandatory: boolean;
+    isUnique: boolean;
+    isChangeable: boolean;
+    isArray: boolean;
+    order: number;
     valuePattern: string;
     valueRange: string;
     allowedValues: Array<string>;

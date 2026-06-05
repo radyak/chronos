@@ -84,8 +84,11 @@ export class EditAttributeDialogComponent {
           Validators.required
         ]
       ],
-      isArray: [null],
       isMandatory: [null],
+      isUnique: [null],
+      isChangeable: [null],
+      isArray: [null],
+      order: [null],
       valuePattern: [
         null, 
         [

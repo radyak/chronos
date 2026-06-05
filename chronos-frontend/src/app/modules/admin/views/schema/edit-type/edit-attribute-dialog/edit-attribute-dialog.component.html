@@ -102,7 +102,27 @@
                 formControlName="isMandatory"
                 id="isMandatory"
                 name="isMandatory">
-        <label class="form-check-label" for="isMandatory">Is Mandatory?</label>
+        <label class="form-check-label" for="isMandatory">Mandatory</label>
+      </div>
+
+      <!-- isUnique -->
+      <div class="form-check col-12">
+        <input type="checkbox"
+                class="form-check-input"
+                formControlName="isUnique"
+                id="isUnique"
+                name="isUnique">
+        <label class="form-check-label" for="isUnique">Unique</label>
+      </div>
+
+      <!-- isChangeable -->
+      <div class="form-check col-12">
+        <input type="checkbox"
+                class="form-check-input"
+                formControlName="isChangeable"
+                id="isChangeable"
+                name="isChangeable">
+        <label class="form-check-label" for="isChangeable">Can be changed after creation</label>
       </div>
 
       <!-- isArray - ENUM only -->
@@ -116,6 +136,21 @@
           <label class="form-check-label" for="isArray">Is Array?</label>
         </div>
       }
+
+      <!-- order -->
+      <div class="form-group col-12">
+        <label class="form-label mt-4" for="order">Order:</label>
+        <input type="number"
+              class="form-control"
+              formControlName="order"
+              id="order"
+              name="order">
+        <div class="invalid-feedback">
+          @for (error of errors('order', 'Order'); track error) {
+            {{ error }}
+          }
+        </div>
+      </div>
 
       <!-- valuePattern - STRING only -->
       @if (isType(STRING)) {

@@ -40,9 +40,13 @@ public class RelationAttributePO {
     @NotNull(message = I18nConstants.Errors.NOT_SPECIFIED)
     AttributeType type;
 
+    Boolean isMandatory = false;
+    Boolean isUnique = false;
+    Boolean isChangeable = true;
     Boolean isArray = false;
 
-    Boolean isMandatory = false;
+    @Column(name = "attr_order")
+    Integer order;
 
     /**
      * Optional restriction for type=STRING

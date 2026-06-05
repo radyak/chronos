@@ -24,6 +24,9 @@ export class EntryAttributeFormService {
       if (attr.isMandatory) {
         validators.push(Validators.required);
       }
+      if (attr.isUnique) {
+        // TODO: add unique validation with backend
+      }
       if (attr.valuePattern) {
         validators.push(Validators.pattern(attr.valuePattern));
       }
