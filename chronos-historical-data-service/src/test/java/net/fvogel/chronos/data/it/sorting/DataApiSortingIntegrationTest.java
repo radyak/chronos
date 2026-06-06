@@ -26,7 +26,7 @@ public class DataApiSortingIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void getDataWithDateSortByParamReturnsSortedPage() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/api/data?sortBy=from"))
+        mvc.perform(MockMvcRequestBuilders.get("/api/data?sortBy=start"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.entries.length()").value(10))
                 .andExpect(toExactlyMatchKeys(
