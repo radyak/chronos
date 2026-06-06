@@ -11,7 +11,7 @@ export class EntryAttributeFormService {
   private fb: FormBuilder = inject(FormBuilder);
 
   // Methods
-  public generateFormGroup(type: TypeAO | null): FormGroup {
+  public generateFormGroup(type: TypeAO | null, isNewEntry: boolean): FormGroup {
     const group: { [key: string]: any } = {};
 
     const attributes = [
@@ -39,7 +39,7 @@ export class EntryAttributeFormService {
           validators.push(Validators.max(Number(max)));
         }
       }
-      group[attr.key!] = [null, validators];
+      group[attr.key!] = [{value: null, disabled: !isNewEntry && !attr.isChangeable}, validators];
     });
 
     return this.fb.group(group);

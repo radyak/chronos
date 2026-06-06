@@ -15,10 +15,10 @@ export class AdminDataService {
   private confirmService = inject(AdminConfirmService);
   private notificationService = inject(NotificationService);
 
-  public save(entry: EntryDTO): Observable<void> {
+  public save(entry: EntryDTO): Observable<EntryDTO> {
     const entryKey = entry.attributes['key'];
     return this.adminDataClient.saveEntry(entry).pipe(
-      catchError((err: any, caught: Observable<void>) => {
+      catchError((err: any, caught: Observable<EntryDTO>) => {
         this.notificationService.error(`Error while saving entry "${entryKey}"`);
         throw new Error("Entry not saved");
       }),

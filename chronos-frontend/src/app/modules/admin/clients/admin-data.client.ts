@@ -10,11 +10,11 @@ export class AdminDataClient {
   private http = inject(HttpClient);
   private adminApiUrl = '/api/data/admin';
   
-  public saveEntry(entry: EntryDTO): Observable<void> {
+  public saveEntry(entry: EntryDTO): Observable<EntryDTO> {
     if (entry.elementId) {
-      return this.http.put<void>(`${this.adminApiUrl}/${entry.attributes['key']}`, entry).pipe(take(1));
+      return this.http.put<EntryDTO>(`${this.adminApiUrl}/${entry.attributes['key']}`, entry).pipe(take(1));
     } else {
-      return this.http.post<void>(`${this.adminApiUrl}`, entry).pipe(take(1));
+      return this.http.post<EntryDTO>(`${this.adminApiUrl}`, entry).pipe(take(1));
     }
   }
 

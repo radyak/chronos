@@ -43,7 +43,7 @@ export class WikiArticleInputComponent implements ControlValueAccessor {
   protected loadedArticle = inject(WikiArticleService).getArticle(this.qid);
 
   // Form Control
-  protected disabled = signal(false);
+  public disabled = signal(false);
   private formControlOnChange: Function = () => {};
   private formControlOnTouched: Function = () => {};
 
@@ -84,7 +84,7 @@ export class WikiArticleInputComponent implements ControlValueAccessor {
   }
 
   public setDisabledState?(isDisabled: boolean): void {
-    this.disabled.set(isDisabled);
+    // this.disabled.set(isDisabled);
   }
 
   protected onSelect(article: WikipediaArticleInfo) {

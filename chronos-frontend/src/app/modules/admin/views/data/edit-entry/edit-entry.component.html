@@ -112,7 +112,8 @@
                   </label>
                   <div class="col-sm-8">
                       <chronos-dynamic-input [attribute]="attr"
-                                             [form]="form()">
+                                             [form]="form()"
+                                             [disabled]="!isNew() && !attr.isChangeable">
                       </chronos-dynamic-input>
                   </div>
               </div>

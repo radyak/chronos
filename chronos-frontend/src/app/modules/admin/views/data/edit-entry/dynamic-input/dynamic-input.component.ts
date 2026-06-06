@@ -23,6 +23,7 @@ export class DynamicInputComponent {
   // Inputs
   public attribute = input.required<AttributeAO>();
   public form = input.required<FormGroup>();
+  public disabled = input<boolean>(false);
 
   // Constants for template
   protected readonly STRING = AttributeTypeDTO.STRING;

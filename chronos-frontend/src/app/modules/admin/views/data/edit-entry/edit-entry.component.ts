@@ -95,7 +95,7 @@ export class EditEntryComponent {
     );
     this.form = computed(() => {
       const type = this.selectedType();
-      return this.entryAttributeFormService.generateFormGroup(type);
+      return this.entryAttributeFormService.generateFormGroup(type, this.isNew());
     });
 
     effect(() => {
@@ -116,7 +116,8 @@ export class EditEntryComponent {
     this.updateType();
     console.log('Saving entry', this.entry());
     firstValueFrom(this.adminDataService.save(this.entry())).then(
-      () => {
+      (entry) => {
+        this.entry.set(entry);
         if (returnAfterSave) {
           this.back();
         }
@@ -151,7 +152,10 @@ export class EditEntryComponent {
 
   protected updateType(): void {
     const attributes = this.form().getRawValue();
-    this.entry.update(e => ({ ...e, labels: [this.typeForm?.getRawValue().type] }));
+    const type = this.typeForm?.getRawValue().type;
+    if (type) {
+      this.entry.update(e => ({ ...e, labels: [this.typeForm?.getRawValue().type] }));
+    }
     this.entry.update(e => ({ ...e, attributes: { ...e.attributes, ...attributes } }));
   }
 

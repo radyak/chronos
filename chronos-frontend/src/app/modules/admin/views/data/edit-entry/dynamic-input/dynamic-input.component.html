@@ -29,6 +29,7 @@
                     [class.is-invalid]="isInvalid()"
                     [multiple]="attribute().isArray"
                     >
+                <option [value]="null"></option>
                 @for(option of attribute().allowedValues; track option) {
                     <option [value]="option">
                         {{ option }}
