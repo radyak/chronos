@@ -21,15 +21,13 @@ public class AdminDataController {
 
     @PostMapping()
     public Entry createEntry(@RequestBody Entry entry) {
-        dataService.create(entry);
-        return entry;
+        return dataService.create(entry);
     }
 
     @PutMapping("/{key}")
     public Entry updateEntry(@RequestBody Entry entry,
                              @PathVariable String key) {
-        // TODO: Implement update
-        return entry;
+        return dataService.update(key, entry);
     }
 
 }

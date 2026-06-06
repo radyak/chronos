@@ -21,13 +21,13 @@
                 >
         }
         @case (ENUM) {
+            <!-- TODO: Use ng bootstrap select to support multiple ([mutliple]="..." or [attr.mutliple]="..." is not working) -->
             <select [attr.aria-label]="'Select ' + attribute().key"
                     class="form-select"
                     [formControlName]="attribute().key!"
                     [id]="attribute().key"
                     [name]="attribute().key"
                     [class.is-invalid]="isInvalid()"
-                    [multiple]="attribute().isArray"
                     >
                 <option [value]="null"></option>
                 @for(option of attribute().allowedValues; track option) {

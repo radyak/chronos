@@ -152,6 +152,7 @@ export class EditEntryComponent {
 
   protected updateType(): void {
     const attributes = this.form().getRawValue();
+    console.log("Extracted form:", attributes)
     const type = this.typeForm?.getRawValue().type;
     if (type) {
       this.entry.update(e => ({ ...e, labels: [this.typeForm?.getRawValue().type] }));
