@@ -137,4 +137,17 @@ public class DataService {
         return resultOptional.orElseThrow(NotFoundException::new);
     }
 
+    public void deleteByKey(String key) {
+        Entry existing = findByKey(key).orElseThrow(NotFoundException::new);
+        String label = existing.getLabels().stream().findFirst().orElseThrow(NotFoundException::new);
+        Node node = Cypher.node(label).named("node")
+                .withProperties("key", Cypher.literalOf(key));
+
+        var statement = Cypher
+                .match(node)
+                .detachDelete(node)
+                .build();
+
+        client.runStatement(statement);
+    }
 }

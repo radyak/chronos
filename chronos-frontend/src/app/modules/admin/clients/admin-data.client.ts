@@ -18,9 +18,9 @@ export class AdminDataClient {
     }
   }
 
-  public deleteEntry(entry: EntryDTO): Observable<void> {
-    if (entry.attributes['key']) {
-      return this.http.delete<void>(`${this.adminApiUrl}/${entry.attributes['key']}`).pipe(take(1));
+  public deleteEntry(entryKey: string): Observable<void> {
+    if (entryKey) {
+      return this.http.delete<void>(`${this.adminApiUrl}/${entryKey}`).pipe(take(1));
     }
     return of()
   }

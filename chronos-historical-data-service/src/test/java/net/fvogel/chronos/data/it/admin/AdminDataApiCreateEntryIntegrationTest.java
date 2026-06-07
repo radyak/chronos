@@ -2,6 +2,8 @@ package net.fvogel.chronos.data.it.admin;
 
 import net.fvogel.chronos.data.model.Entry;
 import net.fvogel.chronos.data.testutils.BaseIntegrationTest;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.http.MediaType;
@@ -66,6 +68,34 @@ public class AdminDataApiCreateEntryIntegrationTest extends BaseIntegrationTest 
         assertThat(saveEntry.getAttributes().get("null-property"), nullValue());
 
         assertThat(saveEntry.get_meta().getCreateAuthor(), is("admin"));
+    }
+
+    @Nested
+    public class SecurityTest {
+
+        @Test
+        void unauthenticatedUserCannotCreateEntry() throws Exception {
+            Entry entry = minimalPerson();
+            Assertions.assertThat(dataService.findByKey("test-person").isEmpty());
+            mvc.perform(post("/api/data/admin")
+                    .content(objectMapper.writeValueAsString(entry))
+                    .contentType(MediaType.APPLICATION_JSON)
+            ).andExpect(status().isUnauthorized());
+            Assertions.assertThat(dataService.findByKey("test-person").isEmpty());
+        }
+
+        @Test
+        void unauthorizedUserCannotCreateEntry() throws Exception {
+            Entry entry = minimalPerson();
+            Assertions.assertThat(dataService.findByKey("test-person").isEmpty());
+            mvc.perform(post("/api/data/admin")
+                    .content(objectMapper.writeValueAsString(entry))
+                    .header("Authorization", authHeader("user"))
+                    .contentType(MediaType.APPLICATION_JSON)
+            ).andExpect(status().isForbidden());
+            Assertions.assertThat(dataService.findByKey("test-person").isEmpty());
+        }
+
     }
 
 }

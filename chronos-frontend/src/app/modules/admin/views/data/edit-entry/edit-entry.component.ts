@@ -149,7 +149,12 @@ export class EditEntryComponent {
   }
 
   protected delete() {
-    // TODO
+    const entry = this.entry();
+    firstValueFrom(this.adminDataService.delete(entry)).then(
+      () => {
+        this.back();
+      }
+    );
   }
 
   protected updateType(): void {

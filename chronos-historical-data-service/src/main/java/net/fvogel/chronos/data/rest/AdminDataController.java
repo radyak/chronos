@@ -30,4 +30,9 @@ public class AdminDataController {
         return dataService.update(key, entry);
     }
 
+    @DeleteMapping("/{key}")
+    public void delete(@PathVariable String key) {
+        dataService.deleteByKey(key);
+    }
+
 }
