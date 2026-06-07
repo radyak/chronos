@@ -10,8 +10,13 @@ import { fas } from '@fortawesome/free-solid-svg-icons';
 import { DynamicInputComponent } from './dynamic-input/dynamic-input.component';
 import { EntryAttributeFormService } from './entry-attribute-form.service';
 import { AdminDataService } from '../../../services/admin-data.service';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, map } from 'rxjs';
 import { TooltipComponent } from 'src/app/common/components/tooltip/tooltip.component';
+import { HistoricalDataService } from 'src/app/modules/public/services/historical-data.service';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { CREATE_ROUTE_KEYWORD } from '../../../admin.routes';
+import { ElementAttributePipe } from 'src/app/common/util/element-attribute.pipe';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'chronos-edit-entry',
@@ -19,7 +24,9 @@ import { TooltipComponent } from 'src/app/common/components/tooltip/tooltip.comp
     FontAwesomeModule,
     ReactiveFormsModule,
     DynamicInputComponent,
-    TooltipComponent
+    TooltipComponent,
+    ElementAttributePipe,
+    DatePipe
   ],
   templateUrl: './edit-entry.component.html',
   styleUrl: './edit-entry.component.scss',
@@ -47,9 +54,18 @@ export class EditEntryComponent {
   private faLib = inject(FaIconLibrary);
   private entryAttributeFormService = inject(EntryAttributeFormService);
   private adminDataService = inject(AdminDataService);
+  private historicalDataService = inject(HistoricalDataService);
 
   // Derived Data Fields
-  protected isNew = computed(() => true);
+  protected entryId = toSignal(
+    this.route.params.pipe(
+      map(params => params['id']),
+      map(id => id === CREATE_ROUTE_KEYWORD ? null : id)
+    ),
+    { initialValue: null }
+  );
+  protected entryResource = this.historicalDataService.entry(this.entryId);
+  protected isNew = computed(() => !this.entryResource.hasValue());
   protected schema = inject(AdminSchemaService).allTypes();
 
   // Derived Signals
@@ -81,7 +97,14 @@ export class EditEntryComponent {
     );
     this.form = computed(() => {
       const type = this.selectedType();
-      return this.entryAttributeFormService.generateFormGroup(type);
+      return this.entryAttributeFormService.generateFormGroup(type, this.isNew());
+    });
+
+    effect(() => {
+      const entry = this.entryResource.value();
+      if (!!entry) {
+        this.entry.set(entry);
+      }
     });
 
     effect(() => {
@@ -95,7 +118,8 @@ export class EditEntryComponent {
     this.updateType();
     console.log('Saving entry', this.entry());
     firstValueFrom(this.adminDataService.save(this.entry())).then(
-      () => {
+      (entry) => {
+        this.entry.set(entry);
         if (returnAfterSave) {
           this.back();
         }
@@ -130,7 +154,11 @@ export class EditEntryComponent {
 
   protected updateType(): void {
     const attributes = this.form().getRawValue();
-    this.entry.update(e => ({ ...e, labels: [this.typeForm?.getRawValue().type] }));
+    console.log("Extracted form:", attributes)
+    const type = this.typeForm?.getRawValue().type;
+    if (type) {
+      this.entry.update(e => ({ ...e, labels: [this.typeForm?.getRawValue().type] }));
+    }
     this.entry.update(e => ({ ...e, attributes: { ...e.attributes, ...attributes } }));
   }
 

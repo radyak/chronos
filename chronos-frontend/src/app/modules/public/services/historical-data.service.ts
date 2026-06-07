@@ -4,7 +4,7 @@ import { EntryDTO } from 'src/app/common/model/data/entry.dto';
 import { CountResultDTO } from 'src/app/common/model/data/count-result.dto';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { HistoricalDataClient } from '../clients/historical-data.client';
-import { map } from 'rxjs';
+import { map, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -32,6 +32,15 @@ export class HistoricalDataService {
     return rxResource({
       stream: () => {
         return this.historicalDataClient.getStatistics();
+      },
+    });
+  }
+  
+  public entry(key: Signal<string>): ResourceRef<EntryDTO | undefined> {
+    return rxResource({
+      params: () => key(),
+      stream: ({ params }) => {
+        return !!params ? this.historicalDataClient.getEntry(params) : of(undefined);
       },
     });
   }

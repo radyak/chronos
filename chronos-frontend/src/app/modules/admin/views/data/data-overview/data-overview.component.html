@@ -61,7 +61,7 @@
   <p>Error loading data</p>
 }
 
-@if (data.value(); as elements) {
+@if (data.value(); as entries) {
   <table class="table table-hover" 
          [loading]="data.isLoading()">
     <thead>
@@ -95,25 +95,36 @@
             (onSortBy)="sortBy($event)">
           To
         </th>
+        <th scope="col"></th>
       </tr>
     </thead>
     <tbody>
-      @for (element of elements; track element.elementId) {
+      @for (entry of entries; track entry.elementId) {
         <tr class="pointer">
-          <td>
-            {{ element | attribute: 'key' }}
+          <td (click)="editEntry(entry)">
+            {{ entry | attribute: 'key' }}
           </td>
-          <td>
-            {{ element.labels[0] }}
+          <td (click)="editEntry(entry)">
+            {{ entry.labels[0] }}
           </td>
-          <td>
-            {{ element | attribute: 'name' }}
+          <td (click)="editEntry(entry)">
+            {{ entry | attribute: 'name' }}
           </td>
-          <td>
-            {{ element | attribute: 'from' }}
+          <td (click)="editEntry(entry)">
+            {{ entry | attribute: 'start' }}
           </td>
-          <td>
-            {{ element | attribute: 'to' }}
+          <td (click)="editEntry(entry)">
+            {{ entry | attribute: 'end' }}
+          </td>
+          <td class="actions">
+            <button class="btn btn-sm btn-link btn-outline-success"
+                    (click)="editEntry(entry)">
+              <fa-icon [icon]="editIcon"></fa-icon>
+            </button>
+            <!-- <button class="btn btn-sm btn-link btn-outline-danger"
+                    (click)="deleteType(type)">
+              <fa-icon [icon]="deleteIcon"></fa-icon>
+            </button> -->
           </td>
         </tr>
       }

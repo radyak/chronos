@@ -12,6 +12,7 @@ import { LoadingComponent } from 'src/app/common/components/loading/loading.comp
 import { IconConstants } from 'src/app/common/constants/icon.constants';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CREATE_ROUTE_KEYWORD } from '../../../admin.routes';
+import { EntryDTO } from 'src/app/common/model/data/entry.dto';
 
 function cleanParams(obj: Record<string, any>) {
   return Object.fromEntries(
@@ -34,6 +35,7 @@ function cleanParams(obj: Record<string, any>) {
 export class DataOverviewComponent {
 
   protected newIcon = IconConstants.ICON_ADD;
+  protected editIcon = IconConstants.ICON_EDIT;
 
   // Injected Dependencies
   protected historicalDataService = inject(HistoricalDataService);
@@ -128,6 +130,11 @@ export class DataOverviewComponent {
 
   protected newEntry(): void {
       this.router.navigate([CREATE_ROUTE_KEYWORD], { relativeTo: this.route });
+  }
+
+  protected editEntry(entry: EntryDTO): void {
+    const key = entry.attributes['key'];
+    this.router.navigate([key], { relativeTo: this.route });
   }
 
 }

@@ -5,37 +5,37 @@ CREATE (RomanEmpire:Territory {
 })
 CREATE (Otho:Person {
   key:     'otho',
-  from:    '0032-04-28',
-  to:      '0069-04-16',
+  start:   '0032-04-28',
+  end:     '0069-04-16',
   wikiqid: 'Q1416',
   name:    'Marcus Salvius Otho'
 })
 CREATE (Vitellius:Person {
   key:     'vitellius',
-  from:    '0015-09-27',
-  to:      '0069-12-20',
+  start:   '0015-09-27',
+  end:     '0069-12-20',
   wikiqid: 'Q1417',
   name:    'Aulus Vitellius'
 })
 CREATE (Vespasian:Person {
   key:     'vespasian',
-  from:    '0009-09-17',
-  to:      '0079-07-23',
+  start:   '0009-09-17',
+  end:     '0079-07-23',
   wikiqid: 'Q1419',
   name:    'Titus Flavius Vespasianus'
 })
 CREATE(Titus:Person {
   key:     'titus',
-  from:    '0039-12-30',
-  to:      '0081-09-13',
+  start:   '0039-12-30',
+  end:     '0081-09-13',
   wikiqid: 'Q1421',
   name:    'Titus Flavius Vespasianus'
 })
 CREATE (Domitian:Person {
-  key:  'domitian',
-  from: '0051-10-24',
-  to:   '0096-09-18',
-  name: 'Titus Flavius Domitianus'
+  key:   'domitian',
+  start: '0051-10-24',
+  end:   '0096-09-18',
+  name:  'Titus Flavius Domitianus'
 })
 CREATE (Domitilla:Person {
   key:  'domitilla-the-elder',
@@ -43,20 +43,20 @@ CREATE (Domitilla:Person {
 })
 CREATE (Caenis:Person {
   key:  'caenis',
-  to:   '0074',
+  end:  '0074',
   name: 'Antonia Caenis'
 })
 
 // Relations: RULED
 CREATE (Otho)-[:RULED {
   titles: ['emperor'],
-  from:   '0069-01-15',
-  to:     '0069-04-16'
+  start:  '0069-01-15',
+  end:    '0069-04-16'
 }]->(RomanEmpire)
 CREATE (Vitellius)-[:RULED {
   titles: ['emperor'],
-  from:   '0069-04-19',
-  to:     '0069-12-20'
+  start:  '0069-04-19',
+  end:    '0069-12-20'
 }]->(RomanEmpire)
 CREATE (Vespasian)-[:RULED {
   titles: ['emperor']
@@ -96,72 +96,72 @@ CREATE (Domitian)-[:CHILD_OF {
 //// CRISIS OF 3RD CENTURY
 // Nodes
 CREATE (ValerianI:Person {
-  key:  'valerian-i',
-  from: '019*',
-  to:   '0260',
-  name: 'Publius Licinius Valerianus'
+  key:   'valerian-i',
+  start: '019*',
+  end:   '0260',
+  name:  'Publius Licinius Valerianus'
 })
 CREATE (Gallienus:Person {
-  key:  'gallienus',
-  from: '0218',
-  to:   '0268',
-  name: 'Publius Licinius Egnatius Gallienus'
+  key:   'gallienus',
+  start: '0218',
+  end:   '0268',
+  name:  'Publius Licinius Egnatius Gallienus'
 })
 CREATE (ClaudiusGothicus:Person {
-  key:  'claudius-gothicus',
-  from: '0214',
-  to:   '0270',
-  name: 'Marcus Aurelius Claudius'
+  key:   'claudius-gothicus',
+  start: '0214',
+  end:   '0270',
+  name:  'Marcus Aurelius Claudius'
 })
 CREATE (Quintillus:Person {
-  key:  'quintillus',
-  from: '022*',
-  to:   '0270',
-  name: 'Marcus Aurelius Claudius Quintillus'
+  key:   'quintillus',
+  start: '022*',
+  end:   '0270',
+  name:  'Marcus Aurelius Claudius Quintillus'
 })
 CREATE (Aurelian:Person {
-  key:  'aurelian',
-  from: '0214',
-  to:   '0275',
-  name: 'Lucius Domitius Aurelianus'
+  key:   'aurelian',
+  start: '0214',
+  end:   '0275',
+  name:  'Lucius Domitius Aurelianus'
 })
 CREATE (Tacitus:Person {
-  key:  'tacitus',
-  from: '0200',
-  to:   '0276',
-  name: 'Marcus Claudius Tacitus'
+  key:   'tacitus',
+  start: '0200',
+  end:   '0276',
+  name:  'Marcus Claudius Tacitus'
 })
 
 // Relations: RULED
 CREATE (ValerianI)-[:RULED {
   titles: ['emperor'],
-  from:   '0253',
-  to:     '0260'
+  start:  '0253',
+  end:    '0260'
 }]->(RomanEmpire)
 CREATE (Gallienus)-[:RULED {
   titles: ['emperor'],
-  from:   '0253', to:
+  start:  '0253', to:
           '0268'
 }]->(RomanEmpire)
 CREATE (ClaudiusGothicus)-[:RULED {
   titles: ['emperor'],
-  from:   '0268',
-  to:     '0270'
+  start:  '0268',
+  end:    '0270'
 }]->(RomanEmpire)
 CREATE (Quintillus)-[:RULED {
   titles: ['emperor'],
-  from:   '0270',
-  to:     '0270'
+  start:  '0270',
+  end:    '0270'
 }]->(RomanEmpire)
 CREATE (Aurelian)-[:RULED {
   titles: ['emperor'],
-  from:   '0270',
-  to:     '0275'
+  start:  '0270',
+  end:    '0275'
 }]->(RomanEmpire)
 CREATE (Tacitus)-[:RULED {
   titles: ['emperor'],
-  from:   '0275',
-  to:     '0276'
+  start:  '0275',
+  end:    '0276'
 }]->(RomanEmpire)
 
 
@@ -169,52 +169,52 @@ CREATE (Tacitus)-[:RULED {
 //// Gallic Empire
 // Nodes
 CREATE (GallicEmpire:Territory {
-  key:  'gallic-empire',
-  from: '0267',
-  to:   '0273'
+  key:   'gallic-empire',
+  start: '0267',
+  end:   '0273'
 })
 CREATE (Postumus:Person {
   key:  'postumus',
-  to:   '0269',
+  end:  '0269',
   name: 'Marcus Cassianius Latinius Postumus'
 })
 CREATE (Marius:Person {
   key:  'marius',
-  to:   '0269',
+  end:  '0269',
   name: 'Marcus Aurelius Marius'
 })
 CREATE (Victorinus:Person {
-  key:  'victorinus',
-  from: '02**',
-  to:   '0270|0271',
-  name: 'Marcus Piavonius Victorinus'
+  key:   'victorinus',
+  start: '02**',
+  end:   '0270|0271',
+  name:  'Marcus Piavonius Victorinus'
 })
 CREATE (Tetricus:Person {
   key:  'tetricus',
-  to:   '0274',
+  end:  '0274',
   name: 'Gaius Pius Esuvius Tetricus'
 })
 
 // Relations: RULED
 CREATE (Postumus)-[:RULED {
   titles: ['emperor'],
-  from:   '0260',
-  to:     '0269'
+  start:  '0260',
+  end:    '0269'
 }]->(GallicEmpire)
 CREATE (Marius)-[:RULED {
   titles: ['emperor'],
-  from:   '0269',
-  to:     '0269'
+  start:  '0269',
+  end:    '0269'
 }]->(GallicEmpire)
 CREATE (Victorinus)-[:RULED {
   titles: ['emperor'],
-  from:   '0269',
-  to:     '0270'
+  start:  '0269',
+  end:    '0270'
 }]->(GallicEmpire)
 CREATE (Tetricus)-[:RULED {
   titles: ['emperor'],
-  from:   '0270',
-  to:     '0274'
+  start:  '0270',
+  end:    '0274'
 }]->(GallicEmpire)
 
 
@@ -222,42 +222,42 @@ CREATE (Tetricus)-[:RULED {
 // Palmyrene Empire
 // Nodes
 CREATE (PalmyreneEmpire:Territory {
-  key:  'palmyrene-empire',
-  from: '0260',
-  to:   '0274'
+  key:   'palmyrene-empire',
+  start: '0260',
+  end:   '0274'
 })
 CREATE (Vaballathus:Person {
-  key:  'vaballathus',
-  from: '0259',
-  to:   '0274',
-  name: 'Septimius Vaballathus'
+  key:   'vaballathus',
+  start: '0259',
+  end:   '0274',
+  name:  'Septimius Vaballathus'
 })
 CREATE (Zenobia:Person {
-  key:  'zenobia',
-  from: '0240',
-  to:   '0274',
-  name: 'Septimia Zenobia'
+  key:   'zenobia',
+  start: '0240',
+  end:   '0274',
+  name:  'Septimia Zenobia'
 })
 CREATE (Antiochus:Person {
   key:  'antiochus',
-  to:   '0273',
+  end:  '0273',
   name: 'Septimius Antiochus'
 })
 
 // Relations: RULED
 CREATE (Vaballathus)-[:RULED {
   titles: ['emperor', 'king'],
-  from:   '0267',
-  to:     '0272'
+  start:  '0267',
+  end:    '0272'
 }]->(PalmyreneEmpire)
 CREATE (Zenobia)-[:RULED {
   titles: ['emperor', 'king'],
-  from:   '0272',
-  to:     '0273'}]->(PalmyreneEmpire)
+  start:  '0272',
+  end:    '0273'}]->(PalmyreneEmpire)
 CREATE (Antiochus)-[:RULED {
   titles: ['emperor', 'king'],
-  from:   '0273',
-  to:     '0273'
+  start:  '0273',
+  end:    '0273'
 }]->(PalmyreneEmpire)
 
 // Relations: SECESSIONAL_TO

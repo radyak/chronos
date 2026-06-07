@@ -1,9 +1,14 @@
 <h1>
   Administration:
-  {{ "Create New Entry" }}
+  @if (isNew()) {
+    Create New Entry
+  } @else {
+    Edit Entry '{{ entryResource.value()! | attribute: 'key' }}'
+  }
+  
 </h1>
 <p class="text-secondary-emphasis small">
-  Edit an existing data entry and its attributes and relations to other entries.
+  Create or edit a data entry and its attributes and relations to other entries.
 </p>
 
 <div class="admin-controls">
@@ -45,6 +50,21 @@
   <p>Error loading schema</p>
 }
 
+<!-- Meta information -->
+@if (entryResource.value()?._meta; as meta) {
+  <b>Version {{ meta.version }}</b>
+  @if (meta.createDate && meta.createAuthor) {
+    <small>
+      | Created <b>{{ meta.createDate | date: 'medium' }}</b> by <b>{{ meta.createAuthor }}</b>
+    </small>
+  }
+  @if (meta.lastUpdateDate && meta.lastUpdateAuthor) {
+    <small>
+      | Last updated <b>{{ meta.lastUpdateDate | date: 'medium' }}</b> by <b>{{ meta.lastUpdateAuthor }}</b>
+    </small>
+  }
+}
+
 @if (typeForm && schema.value(); as allTypes) {
     <form [formGroup]="typeForm">
         <h2 id="entry-type">Type</h2>
@@ -56,7 +76,8 @@
             <label class="col-sm-4 col-form-label" for="type">
                 Type:
             </label>
-            <div class="col-sm-8">
+            @if(isNew()) {
+              <div class="col-sm-8">
                 <select aria-label="Select type"
                         class="form-select"
                         formControlName="type"
@@ -75,9 +96,12 @@
                       </option>
                     }
                 </select>
-
-
-            </div>
+              </div>
+            } @else {
+              <div class="col-sm-8 p-2">
+                {{ entryResource.value()?.labels }}
+              </div>
+            }
         </div>
       </form>
 
@@ -103,7 +127,8 @@
                   </label>
                   <div class="col-sm-8">
                       <chronos-dynamic-input [attribute]="attr"
-                                             [form]="form()">
+                                             [form]="form()"
+                                             [disabled]="!isNew() && !attr.isChangeable">
                       </chronos-dynamic-input>
                   </div>
               </div>

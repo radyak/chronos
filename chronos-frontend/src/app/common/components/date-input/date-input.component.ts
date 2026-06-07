@@ -1,4 +1,4 @@
-import {Component, EventEmitter, forwardRef, Input, Output, signal} from '@angular/core';
+import {Component, EventEmitter, forwardRef, input, Input, Output, signal} from '@angular/core';
 
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import {ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR} from "@angular/forms";
@@ -32,7 +32,7 @@ interface EditDate {
 export class DateInputComponent implements ControlValueAccessor {
 
   // Properties
-  protected disabled = signal(false);
+  public disabled = input(false);
   private formControlOnChange: Function = () => {};
   private formControlOnTouched: Function = () => {};
 
@@ -73,7 +73,7 @@ export class DateInputComponent implements ControlValueAccessor {
   }
 
   setDisabledState?(isDisabled: boolean): void {
-    this.disabled.set(isDisabled);
+    // this.disabled.set(isDisabled);
   }
 
   protected update() {
