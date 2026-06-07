@@ -96,6 +96,10 @@ public class DataService {
     }
 
     public Entry update(String key, Entry entry) {
+        Entry existing = this.findByKey(key).orElseThrow(NotFoundException::new);
+        entry.set_meta(existing.get_meta());
+        entry.setLabels(existing.getLabels());
+
         // TODO: Schema validation (GH-23)
         entry.get_meta().update(securityService.getUsername());
 
