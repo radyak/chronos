@@ -2,6 +2,7 @@ package net.fvogel.chronos.data.it.admin;
 
 import net.fvogel.chronos.data.model.Entry;
 import net.fvogel.chronos.data.testutils.BaseIntegrationTest;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.http.MediaType;
@@ -144,6 +145,30 @@ public class AdminDataApiUpdateEntryIntegrationTest extends BaseIntegrationTest 
         ).andExpect(status().isOk());
 
         assertTrue(dataService.findByKey("vespasian-changed").isPresent());
+    }
+
+    @Nested
+    public class SecurityTest {
+
+        @Test
+        void unauthenticatedUserCannotUpdateEntry() throws Exception {
+            Entry entry = dataService.findByKey("vespasian").get();
+            mvc.perform(put("/api/data/admin/{key}", "vespasian")
+                    .content(objectMapper.writeValueAsString(entry))
+                    .contentType(MediaType.APPLICATION_JSON)
+            ).andExpect(status().isUnauthorized());
+        }
+
+        @Test
+        void unauthorizedUserCannotUpdateEntry() throws Exception {
+            Entry entry = dataService.findByKey("vespasian").get();
+            mvc.perform(put("/api/data/admin/{key}", "vespasian")
+                    .content(objectMapper.writeValueAsString(entry))
+                    .header("Authorization", authHeader("user"))
+                    .contentType(MediaType.APPLICATION_JSON)
+            ).andExpect(status().isForbidden());
+        }
+
     }
 
 }
