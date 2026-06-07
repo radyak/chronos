@@ -1,9 +1,9 @@
 import { inject, Injectable } from '@angular/core';
-import { AdminConfirmService } from './admin-confirm.service';
 import { catchError, firstValueFrom, from, Observable, tap } from 'rxjs';
 import { NotificationService } from 'src/app/common/components/notifications/notification.service';
-import { AdminDataClient } from '../clients/admin-data.client';
 import { EntryDTO } from 'src/app/common/model/data/entry.dto';
+import { AdminDataClient } from '../clients/admin-data.client';
+import { AdminConfirmService } from './admin-confirm.service';
 
 @Injectable({
   providedIn: 'root',
@@ -33,7 +33,7 @@ export class AdminDataService {
     return from(
       this.confirmService.confirm(
         `Confirm Delete ${entryKey}`,
-        `Do you want to delete data entry ${entryKey}?`
+        `Do you want to delete data entry ${entryKey}, including its relations?`
       ).then(
         () =>
           firstValueFrom(this.adminDataClient.deleteEntry(entryKey)).then(

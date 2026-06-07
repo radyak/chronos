@@ -5,7 +5,7 @@ import { ElementAttributePipe } from 'src/app/common/util/element-attribute.pipe
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { map } from 'rxjs';
+import { firstValueFrom, map } from 'rxjs';
 import { SortByComponent } from 'src/app/common/components/sort-by/sort-by.component';
 import { SortOrder } from 'src/app/common/model/data/sort-order.dto';
 import { LoadingComponent } from 'src/app/common/components/loading/loading.component';
@@ -13,6 +13,8 @@ import { IconConstants } from 'src/app/common/constants/icon.constants';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CREATE_ROUTE_KEYWORD } from '../../../admin.routes';
 import { EntryDTO } from 'src/app/common/model/data/entry.dto';
+import { AdminDataClient } from '../../../clients/admin-data.client';
+import { AdminDataService } from '../../../services/admin-data.service';
 
 function cleanParams(obj: Record<string, any>) {
   return Object.fromEntries(
@@ -36,9 +38,11 @@ export class DataOverviewComponent {
 
   protected newIcon = IconConstants.ICON_ADD;
   protected editIcon = IconConstants.ICON_EDIT;
+  protected deleteIcon = IconConstants.ICON_DELETE;
 
   // Injected Dependencies
   protected historicalDataService = inject(HistoricalDataService);
+  protected adminDataService = inject(AdminDataService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
 
@@ -135,6 +139,14 @@ export class DataOverviewComponent {
   protected editEntry(entry: EntryDTO): void {
     const key = entry.attributes['key'];
     this.router.navigate([key], { relativeTo: this.route });
+  }
+
+  protected deleteEntry(entry: EntryDTO): void {
+      firstValueFrom(this.adminDataService.delete(entry)).then(
+        () => {
+          this.updateQuery({})
+        }
+      );
   }
 
 }

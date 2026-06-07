@@ -1,0 +1,8 @@
+
+table th:first-child,
+table td:first-child,
+table th:last-child,
+table td:last-child {
+  white-space: nowrap;
+  width: 1%;
+}
