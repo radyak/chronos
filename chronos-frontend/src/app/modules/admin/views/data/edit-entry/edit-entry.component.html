@@ -50,6 +50,21 @@
   <p>Error loading schema</p>
 }
 
+<!-- Meta information -->
+@if (entryResource.value()?._meta; as meta) {
+  <b>Version {{ meta.version }}</b>
+  @if (meta.createDate && meta.createAuthor) {
+    <small>
+      | Created <b>{{ meta.createDate | date: 'medium' }}</b> by <b>{{ meta.createAuthor }}</b>
+    </small>
+  }
+  @if (meta.lastUpdateDate && meta.lastUpdateAuthor) {
+    <small>
+      | Last updated <b>{{ meta.lastUpdateDate | date: 'medium' }}</b> by <b>{{ meta.lastUpdateAuthor }}</b>
+    </small>
+  }
+}
+
 @if (typeForm && schema.value(); as allTypes) {
     <form [formGroup]="typeForm">
         <h2 id="entry-type">Type</h2>

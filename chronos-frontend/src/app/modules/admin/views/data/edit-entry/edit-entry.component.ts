@@ -16,6 +16,7 @@ import { HistoricalDataService } from 'src/app/modules/public/services/historica
 import { toSignal } from '@angular/core/rxjs-interop';
 import { CREATE_ROUTE_KEYWORD } from '../../../admin.routes';
 import { ElementAttributePipe } from 'src/app/common/util/element-attribute.pipe';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'chronos-edit-entry',
@@ -24,7 +25,8 @@ import { ElementAttributePipe } from 'src/app/common/util/element-attribute.pipe
     ReactiveFormsModule,
     DynamicInputComponent,
     TooltipComponent,
-    ElementAttributePipe
+    ElementAttributePipe,
+    DatePipe
   ],
   templateUrl: './edit-entry.component.html',
   styleUrl: './edit-entry.component.scss',

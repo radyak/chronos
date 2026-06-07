@@ -107,7 +107,10 @@ public class DataService {
         var updateBuilder = Cypher.match(node);
 
         StatementBuilder.BuildableMatchAndUpdate propertyUpdateBuilder = null;
-        for (Map.Entry<String, Object> attributeEntry : entry.getAttributes().entrySet()) {
+        Map<String, Object> properties = entry.getAttributes();
+        entryMapper.mapMetaUpdates(properties, entry);
+
+        for (Map.Entry<String, Object> attributeEntry : properties.entrySet()) {
             // TODO: Filter non-isChangeable attributes (GH-23)
             var value = attributeEntry.getValue() == null ?
                     Cypher.literalNull() : Cypher.literalOf(attributeEntry.getValue());

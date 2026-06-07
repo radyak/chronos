@@ -45,13 +45,17 @@ public class EntryMapper {
         var label = entry.getLabels().stream().findFirst().orElseThrow(InvalidDataException::new);
         Map<String, Object> properties = new HashMap<>(entry.getAttributes());
 
+        mapMetaUpdates(properties, entry);
+
+        return Cypher.node(label).named(name).withProperties(properties);
+    }
+
+    public void mapMetaUpdates(Map<String, Object> properties, Entry entry) {
         properties.put("_version", entry.get_meta().getVersion());
         properties.put("_createAuthor", entry.get_meta().getCreateAuthor());
         properties.put("_createDate", entry.get_meta().getCreateDate());
         properties.put("_lastUpdateAuthor", entry.get_meta().getLastUpdateAuthor());
         properties.put("_lastUpdateDate", entry.get_meta().getLastUpdateDate());
-
-        return Cypher.node(label).named(name).withProperties(properties);
     }
 
     public CountResult toCountResult(Record record) {
