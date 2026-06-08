@@ -7,6 +7,7 @@ import net.fvogel.chronos.data.model.DataQuery;
 import net.fvogel.chronos.data.model.Entry;
 import net.fvogel.chronos.data.model.Pagination;
 import net.fvogel.chronos.data.persistence.CypherClient;
+import net.fvogel.chronos.data.service.validation.ValidationService;
 import org.neo4j.cypherdsl.core.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +39,9 @@ public class DataService {
 
     @Autowired
     private EntryMapper entryMapper;
+
+    @Autowired
+    private ValidationService validationService;
 
     public List<Entry> findAll(DataQuery query) {
         var nodeName = "n";
@@ -86,7 +90,8 @@ public class DataService {
     }
 
     public Entry create(Entry entry) {
-        // TODO: Schema validation (GH-23)
+        validationService.validate(entry);
+
         entry.get_meta().setCreateAuthor(securityService.getUsername());
 
         var n = entryMapper.toNode(entry, "n");
@@ -100,7 +105,8 @@ public class DataService {
         entry.set_meta(existing.get_meta());
         entry.setLabels(existing.getLabels());
 
-        // TODO: Schema validation (GH-23)
+        validationService.validate(entry);
+
         entry.get_meta().update(securityService.getUsername());
 
         var label = entry.getLabels().stream().findFirst().orElseThrow(InvalidDataException::new);
@@ -127,16 +133,6 @@ public class DataService {
         return runAndReturn(statement);
     }
 
-    private Entry runAndReturn(Statement statement) {
-        var resultOptional = client.runStatement(statement, result -> result
-                .list(record -> record.get("n").asNode())
-                .stream()
-                .map(entryMapper::toEntry)
-                .findFirst()
-        );
-        return resultOptional.orElseThrow(NotFoundException::new);
-    }
-
     public void deleteByKey(String key) {
         Entry existing = findByKey(key).orElseThrow(NotFoundException::new);
         String label = existing.getLabels().stream().findFirst().orElseThrow(NotFoundException::new);
@@ -150,4 +146,15 @@ public class DataService {
 
         client.runStatement(statement);
     }
+
+    private Entry runAndReturn(Statement statement) {
+        var resultOptional = client.runStatement(statement, result -> result
+                .list(record -> record.get("n").asNode())
+                .stream()
+                .map(entryMapper::toEntry)
+                .findFirst()
+        );
+        return resultOptional.orElseThrow(NotFoundException::new);
+    }
+
 }

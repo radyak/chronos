@@ -1,11 +1,13 @@
 package net.fvogel.chronos.data.it.admin;
 
 import net.fvogel.chronos.data.model.Entry;
+import net.fvogel.chronos.data.service.validation.ValidationService;
 import net.fvogel.chronos.data.testutils.BaseIntegrationTest;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.testcontainers.containers.Neo4jContainer;
 import org.testcontainers.junit.jupiter.Container;
 
@@ -26,6 +28,9 @@ public class AdminDataApiUpdateEntryIntegrationTest extends BaseIntegrationTest 
     @Container
     @ServiceConnection
     public static final Neo4jContainer<?> neo4j = new Neo4jContainer<>("neo4j:5");
+
+    @MockitoBean
+    ValidationService validationServiceMock;
 
     @Test
     void canUpdateStringAttribute() throws Exception {
