@@ -8,10 +8,11 @@ import net.fvogel.chronos.data.model.validation.ValidationError;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import static net.fvogel.chronos.data.testutils.DefaultTestEntries.maximalPerson;
 import static net.fvogel.chronos.data.testutils.DefaultTestEntries.minimalPerson;
@@ -21,12 +22,13 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 
 
+@SpringBootTest
 @ExtendWith(MockitoExtension.class)
 public class ValidationServiceTest {
 
-    @Mock
+    @MockitoBean
     SchemaClient schemaClient;
-    @InjectMocks
+    @Autowired
     ValidationService validationService;
 
     @Test

@@ -6,15 +6,14 @@ import net.fvogel.chronos.data.client.SchemaClient;
 import net.fvogel.chronos.data.exception.SchemaValidationException;
 import net.fvogel.chronos.data.model.Entry;
 import net.fvogel.chronos.data.model.validation.ValidationError;
-import net.fvogel.chronos.data.service.validation.rules.IsAllowedValuesValidationRule;
-import net.fvogel.chronos.data.service.validation.rules.IsDefinedAttributeValidationRule;
-import net.fvogel.chronos.data.service.validation.rules.IsMandatoryValidationRule;
+import net.fvogel.chronos.data.service.validation.rules.ValidationRule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static net.fvogel.chronos.data.model.validation.ValidationConstraint.NO_UNKNOWN_TYPE;
@@ -27,6 +26,9 @@ public class ValidationService {
 
     @Autowired
     SchemaClient schemaClient;
+
+    @Autowired
+    List<ValidationRule> validationRules;
 
     public void validate(Entry entry) {
         String entryType = getEntryType(entry);
@@ -41,18 +43,8 @@ public class ValidationService {
                 entry.getAttributes().size(),
                 effectiveType.getAttributes().size());
 
-
         Set<ValidationError> errors = new HashSet<>();
-
-        // MANDATORY
-        errors.addAll(new IsMandatoryValidationRule().validate(entry, effectiveType));
-
-        // UNDEFINED ATTRIBUTES
-        errors.addAll(new IsDefinedAttributeValidationRule().validate(entry, effectiveType));
-
-        // ALLOWED VALUES
-        errors.addAll(new IsAllowedValuesValidationRule().validate(entry, effectiveType));
-
+        validationRules.forEach(validationRule -> errors.addAll(validationRule.validate(entry, effectiveType)));
 
         // TYPE
         // IS UNIQUE

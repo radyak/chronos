@@ -5,6 +5,7 @@ import net.fvogel.chronos.commons.model.schema.Type;
 import net.fvogel.chronos.data.model.Entry;
 import net.fvogel.chronos.data.model.validation.ValidationError;
 import org.apache.commons.lang3.ObjectUtils;
+import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -13,6 +14,7 @@ import java.util.Set;
 
 import static net.fvogel.chronos.data.model.validation.ValidationConstraint.ALLOWED_VALUES;
 
+@Component
 public class IsAllowedValuesValidationRule implements ValidationRule {
 
     public Collection<ValidationError> validate(Entry entry, Type type) {
