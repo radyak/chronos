@@ -55,6 +55,15 @@
             "isUnique": false,
             "isChangeable": true,
             "isArray": false
+          },
+          {
+            "id": 5,
+            "key": "height",
+            "type": "NUMBER",
+            "isMandatory": false,
+            "isUnique": false,
+            "isChangeable": true,
+            "isArray": false
           }
         ]
       }

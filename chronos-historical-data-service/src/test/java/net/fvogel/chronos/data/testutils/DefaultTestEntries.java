@@ -17,6 +17,7 @@ public class DefaultTestEntries {
                 .withProperty("name", "Test Person Name")
                 .withProperty("start", "1745-07-26")
                 .withProperty("end", "1789-07-25")
+                .withProperty("height", 1.78)
                 .withProperty("wikiqid", "Q1234")
                 .build();
     }

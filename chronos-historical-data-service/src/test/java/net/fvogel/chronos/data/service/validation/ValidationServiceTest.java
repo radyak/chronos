@@ -6,6 +6,8 @@ import net.fvogel.chronos.data.model.Entry;
 import net.fvogel.chronos.data.model.validation.ValidationConstraint;
 import net.fvogel.chronos.data.model.validation.ValidationError;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -31,20 +33,20 @@ public class ValidationServiceTest {
     @Autowired
     ValidationService validationService;
 
-    @Test
-    public void canValidateMinimalEntry() {
+    @BeforeEach
+    public void setUp() {
         Mockito.when(schemaClient.getType(Mockito.anyString()))
                 .thenReturn(loadMockSchemaResponse("Person.json"));
+    }
 
+    @Test
+    public void canValidateMinimalEntry() {
         Entry entry = minimalPerson();
         validationService.validate(entry);
     }
 
     @Test
     public void canValidateMaximalEntry() {
-        Mockito.when(schemaClient.getType(Mockito.anyString()))
-                .thenReturn(loadMockSchemaResponse("Person.json"));
-
         Entry entry = maximalPerson();
         validationService.validate(entry);
     }
@@ -52,9 +54,6 @@ public class ValidationServiceTest {
     // Mandatory
     @Test
     public void throwsValidationExceptionOnMissingMandatoryAttribute() {
-        Mockito.when(schemaClient.getType(Mockito.anyString()))
-                .thenReturn(loadMockSchemaResponse("Person.json"));
-
         Entry entry = maximalPerson();
         entry.getAttributes().remove("key");
         try {
@@ -73,10 +72,7 @@ public class ValidationServiceTest {
     // Defined Attributes
     @Test
     public void throwsValidationExceptionOnUnDefinedAttribute() {
-        Mockito.when(schemaClient.getType(Mockito.anyString()))
-                .thenReturn(loadMockSchemaResponse("Person.json"));
-
-        Entry entry = minimalPerson();
+        Entry entry = maximalPerson();
         entry.getAttributes().put("undefined-attribute", "abc");
         try {
             validationService.validate(entry);
@@ -94,10 +90,7 @@ public class ValidationServiceTest {
     // Allowed Values
     @Test
     public void throwsValidationExceptionOnUnAllowedValue() {
-        Mockito.when(schemaClient.getType(Mockito.anyString()))
-                .thenReturn(loadMockSchemaResponse("Person.json"));
-
-        Entry entry = minimalPerson();
+        Entry entry = maximalPerson();
         entry.getAttributes().put("gender", "FEMALE");
         try {
             validationService.validate(entry);
@@ -112,4 +105,91 @@ public class ValidationServiceTest {
         }
     }
 
+    // Correct Types
+    @Nested
+    public class CorrectTypes {
+        // Type: String
+        @Test
+        public void throwsValidationExceptionOnStringValueInconsistency() {
+            Mockito.when(schemaClient.getType(Mockito.anyString()))
+                    .thenReturn(loadMockSchemaResponse("Person.json"));
+
+            Entry entry = maximalPerson();
+            entry.getAttributes().put("name", 17);
+            try {
+                validationService.validate(entry);
+                Assertions.fail();
+            } catch (SchemaValidationException sve) {
+                assertThat(sve.getValidationErrors().size(), is(1));
+
+                ValidationError validationError = sve.getValidationErrors().stream().findFirst().get();
+                assertThat(validationError.getConstraint(), is(ValidationConstraint.CORRECT_TYPE));
+                assertThat(validationError.getPath(), is("attributes[name]"));
+                assertThat(validationError.getValue(), is(17));
+            }
+        }
+
+        // Type: Date notation
+        @Test
+        public void throwsValidationExceptionOnDateValueInconsistency() {
+            Mockito.when(schemaClient.getType(Mockito.anyString()))
+                    .thenReturn(loadMockSchemaResponse("Person.json"));
+
+            Entry entry = maximalPerson();
+            entry.getAttributes().put("start", "1745, July");
+            try {
+                validationService.validate(entry);
+                Assertions.fail();
+            } catch (SchemaValidationException sve) {
+                assertThat(sve.getValidationErrors().size(), is(1));
+
+                ValidationError validationError = sve.getValidationErrors().stream().findFirst().get();
+                assertThat(validationError.getConstraint(), is(ValidationConstraint.CORRECT_TYPE));
+                assertThat(validationError.getPath(), is("attributes[start]"));
+                assertThat(validationError.getValue(), is("1745, July"));
+            }
+        }
+
+        // Type: Date enum
+        @Test
+        public void throwsValidationExceptionOnWikiqidValueInconsistency() {
+            Mockito.when(schemaClient.getType(Mockito.anyString()))
+                    .thenReturn(loadMockSchemaResponse("Person.json"));
+
+            Entry entry = maximalPerson();
+            entry.getAttributes().put("wikiqid", "P1234");
+            try {
+                validationService.validate(entry);
+                Assertions.fail();
+            } catch (SchemaValidationException sve) {
+                assertThat(sve.getValidationErrors().size(), is(1));
+
+                ValidationError validationError = sve.getValidationErrors().stream().findFirst().get();
+                assertThat(validationError.getConstraint(), is(ValidationConstraint.CORRECT_TYPE));
+                assertThat(validationError.getPath(), is("attributes[wikiqid]"));
+                assertThat(validationError.getValue(), is("P1234"));
+            }
+        }
+
+        // Type: Date enum
+        @Test
+        public void throwsValidationExceptionOnNumberValueInconsistency() {
+            Mockito.when(schemaClient.getType(Mockito.anyString()))
+                    .thenReturn(loadMockSchemaResponse("Person.json"));
+
+            Entry entry = maximalPerson();
+            entry.getAttributes().put("height", "1.78");
+            try {
+                validationService.validate(entry);
+                Assertions.fail();
+            } catch (SchemaValidationException sve) {
+                assertThat(sve.getValidationErrors().size(), is(1));
+
+                ValidationError validationError = sve.getValidationErrors().stream().findFirst().get();
+                assertThat(validationError.getConstraint(), is(ValidationConstraint.CORRECT_TYPE));
+                assertThat(validationError.getPath(), is("attributes[height]"));
+                assertThat(validationError.getValue(), is("1.78"));
+            }
+        }
+    }
 }
