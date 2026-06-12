@@ -33,6 +33,10 @@ public class IsCorrectTypeValidationRule implements ValidationRule {
     public Collection<ValidationError> validate(Entry entry, Type type) {
         Collection<ValidationError> validationErrors = new HashSet<>();
         entry.getAttributes().forEach((key, value) -> {
+            if (value == null) {
+                // null-handling not responsibility of this rule
+                return;
+            }
             Optional<Attribute> maybeAttributeDefinition = type.getAttributes()
                     .stream()
                     .filter(attributeDefinition -> key.equals(attributeDefinition.getKey()))

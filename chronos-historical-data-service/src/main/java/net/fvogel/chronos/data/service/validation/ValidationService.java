@@ -55,6 +55,10 @@ public class ValidationService {
         // TODO: Check Array values
 
         if (!errors.isEmpty()) {
+            logger.warn("Found {} validation errors:", errors.size());
+            errors.forEach(err -> {
+                logger.warn("{}={} <- violates: {}", err.getPath(), err.getValue(), err.getConstraint());
+            });
             throw new SchemaValidationException(errors);
         }
     }

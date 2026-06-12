@@ -5,6 +5,7 @@ import net.fvogel.chronos.data.exception.SchemaValidationException;
 import net.fvogel.chronos.data.model.Entry;
 import net.fvogel.chronos.data.model.validation.ValidationConstraint;
 import net.fvogel.chronos.data.model.validation.ValidationError;
+import net.fvogel.chronos.data.service.validation.rules.IsUniqueValidationRule;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -30,6 +31,11 @@ public class ValidationServiceTest {
 
     @MockitoBean
     SchemaClient schemaClient;
+
+    // Mock for IsUniqueValidationRule - it is tested integratively
+    @MockitoBean
+    IsUniqueValidationRule uniqueValidationRule;
+
     @Autowired
     ValidationService validationService;
 
@@ -178,7 +184,7 @@ public class ValidationServiceTest {
                     .thenReturn(loadMockSchemaResponse("Person.json"));
 
             Entry entry = maximalPerson();
-            entry.getAttributes().put("height", "1.78");
+            entry.getAttributes().put("height", "178");
             try {
                 validationService.validate(entry);
                 Assertions.fail();
@@ -188,8 +194,10 @@ public class ValidationServiceTest {
                 ValidationError validationError = sve.getValidationErrors().stream().findFirst().get();
                 assertThat(validationError.getConstraint(), is(ValidationConstraint.CORRECT_TYPE));
                 assertThat(validationError.getPath(), is("attributes[height]"));
-                assertThat(validationError.getValue(), is("1.78"));
+                assertThat(validationError.getValue(), is("178"));
             }
         }
     }
+
+    // NOTE: UNIQUE rule is tested integratively
 }
