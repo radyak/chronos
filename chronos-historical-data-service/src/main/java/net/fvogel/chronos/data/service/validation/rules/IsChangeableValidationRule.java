@@ -1,12 +1,12 @@
 package net.fvogel.chronos.data.service.validation.rules;
 
 import net.fvogel.chronos.commons.exception.InvalidDataException;
-import net.fvogel.chronos.commons.exception.NotFoundException;
 import net.fvogel.chronos.commons.model.schema.Type;
 import net.fvogel.chronos.data.model.Entry;
 import net.fvogel.chronos.data.model.validation.ValidationError;
 import net.fvogel.chronos.data.service.CypherService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -14,8 +14,7 @@ import java.util.Objects;
 
 import static net.fvogel.chronos.data.model.validation.ValidationConstraint.UNMODIFIABLE;
 
-// TODO: Implement
-//@Component
+@Component
 public class IsChangeableValidationRule implements ValidationRule {
 
     @Autowired
@@ -31,11 +30,19 @@ public class IsChangeableValidationRule implements ValidationRule {
         if (key == null) {
             throw new InvalidDataException("No key specified");
         }
-        var originalEntry = cypherService.findByKey((String) key).orElseThrow(NotFoundException::new);
+        var originalEntry = cypherService.findByKeyAndElementId((String) key, entry.getElementId());
+        if (originalEntry.isEmpty()) {
+            // Key itself was changed
+            validationErrors.add(new ValidationError(
+                    "attributes[key]",
+                    UNMODIFIABLE,
+                    key));
+            return validationErrors;
+        }
 
         type.getAttributes().stream().filter(attr -> !attr.getIsChangeable()).forEach(unmodifiableAttr -> {
             Object newValue = entry.getAttributes().get(unmodifiableAttr.getKey());
-            Object oldValue = originalEntry.getAttributes().get(unmodifiableAttr.getKey());
+            Object oldValue = originalEntry.get().getAttributes().get(unmodifiableAttr.getKey());
             if (!Objects.equals(newValue, oldValue)) {
                 validationErrors.add(new ValidationError(
                         "attributes[" + unmodifiableAttr.getKey() + "]",

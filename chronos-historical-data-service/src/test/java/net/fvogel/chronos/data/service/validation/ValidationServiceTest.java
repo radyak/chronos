@@ -17,7 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
+import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 
 import static net.fvogel.chronos.data.testutils.DefaultTestEntries.*;
 import static net.fvogel.chronos.data.testutils.MockResponseLoader.loadMockSchemaResponse;
@@ -184,6 +186,29 @@ public class ValidationServiceTest {
             assertThat(validationError.getConstraint(), is(ValidationConstraint.IS_ARRAY));
             assertThat(validationError.getPath(), is("attributes[enum-array-attr]"));
             assertThat(validationError.getValue(), is("arrayVal2"));
+        }
+    }
+
+    // Is changeable
+    @Test
+    public void throwsValidationExceptionOnModifiedKey() {
+        Entry entry = maximalPerson();
+        entry.setElementId(UUID.randomUUID().toString());
+
+        // Simulate that a key doesn't match after being modified with elementId
+        Mockito.when(cypherService.findByKeyAndElementId(Mockito.anyString(), Mockito.anyString()))
+                .thenReturn(Optional.empty());
+
+        try {
+            validationService.validate(entry);
+            Assertions.fail();
+        } catch (SchemaValidationException sve) {
+            assertThat(sve.getValidationErrors().size(), is(1));
+
+            ValidationError validationError = sve.getValidationErrors().stream().findFirst().get();
+            assertThat(validationError.getConstraint(), is(ValidationConstraint.UNMODIFIABLE));
+            assertThat(validationError.getPath(), is("attributes[key]"));
+            assertThat(validationError.getValue(), is("test-person"));
         }
     }
 

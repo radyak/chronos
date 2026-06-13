@@ -122,22 +122,23 @@ public class AdminDataApiUpdateEntryIntegrationTest extends BaseIntegrationTest 
         assertThat(updatedEntry.getLabels(), is(Set.of("Person")));
     }
 
-    // TODO: This should be prevented with GH-23 -> ValidationTest
-    @Test
-    void canUpdateKey() throws Exception {
-        Entry entry = dataService.findByKey("vespasian").get();
-        entry.getAttributes().put("key", "vespasian-changed");
-        mvc.perform(put("/api/data/admin/{key}", "vespasian")
-                .content(objectMapper.writeValueAsString(entry))
-                .header("Authorization", adminAuthHeader())
-                .contentType(MediaType.APPLICATION_JSON)
-        ).andExpect(status().isOk());
-
-        assertTrue(dataService.findByKey("vespasian-changed").isPresent());
-    }
-
     @Nested
     public class ValidationTest {
+
+        // TODO: This should be prevented with GH-23 -> ValidationTest
+        @Test
+        void throwsBadRequestOnUpdateKey() throws Exception {
+            Entry entry = dataService.findByKey("vespasian").get();
+            entry.getAttributes().put("key", "vespasian-changed");
+
+            mvc.perform(put("/api/data/admin/{key}", "vespasian")
+                    .content(objectMapper.writeValueAsString(entry))
+                    .header("Authorization", adminAuthHeader())
+                    .contentType(MediaType.APPLICATION_JSON)
+            ).andExpect(status().isBadRequest());
+
+            assertTrue(dataService.findByKey("vespasian-changed").isEmpty());
+        }
 
         @Test
         void throwsBadRequestOnSeveralValidationErrors() throws Exception {
