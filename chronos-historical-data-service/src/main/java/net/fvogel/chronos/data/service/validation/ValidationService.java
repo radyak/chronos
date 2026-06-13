@@ -46,7 +46,6 @@ public class ValidationService {
         Set<ValidationError> errors = new HashSet<>();
         validationRules.forEach(validationRule -> errors.addAll(validationRule.validate(entry, effectiveType)));
 
-        // IS UNIQUE
         // IS CHANGEABLE
         // IS ARRAY
         // VALUE PATTERN

@@ -5,7 +5,7 @@ import net.fvogel.chronos.data.exception.SchemaValidationException;
 import net.fvogel.chronos.data.model.Entry;
 import net.fvogel.chronos.data.model.validation.ValidationConstraint;
 import net.fvogel.chronos.data.model.validation.ValidationError;
-import net.fvogel.chronos.data.service.validation.rules.IsUniqueValidationRule;
+import net.fvogel.chronos.data.service.CypherService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -32,9 +32,8 @@ public class ValidationServiceTest {
     @MockitoBean
     SchemaClient schemaClient;
 
-    // Mock for IsUniqueValidationRule - it is tested integratively
     @MockitoBean
-    IsUniqueValidationRule uniqueValidationRule;
+    CypherService cypherService;
 
     @Autowired
     ValidationService validationService;
@@ -43,6 +42,8 @@ public class ValidationServiceTest {
     public void setUp() {
         Mockito.when(schemaClient.getType(Mockito.anyString()))
                 .thenReturn(loadMockSchemaResponse("Person.json"));
+        Mockito.when(cypherService.isAttributeUnique(Mockito.any(Entry.class), Mockito.anyString()))
+                .thenReturn(true);
     }
 
     @Test
@@ -108,6 +109,28 @@ public class ValidationServiceTest {
             assertThat(validationError.getConstraint(), is(ValidationConstraint.ALLOWED_VALUES));
             assertThat(validationError.getPath(), is("attributes[gender]"));
             assertThat(validationError.getValue(), is("FEMALE"));
+        }
+    }
+
+    // Uniqueness
+    @Test
+    public void throwsValidationExceptionOnNonUniqueValue() {
+        Entry entry = maximalPerson();
+
+        // NOTE: UNIQUE rule is tested integratively
+        Mockito.when(cypherService.isAttributeUnique(Mockito.any(Entry.class), Mockito.eq("key")))
+                .thenReturn(false);
+
+        try {
+            validationService.validate(entry);
+            Assertions.fail();
+        } catch (SchemaValidationException sve) {
+            assertThat(sve.getValidationErrors().size(), is(1));
+
+            ValidationError validationError = sve.getValidationErrors().stream().findFirst().get();
+            assertThat(validationError.getConstraint(), is(ValidationConstraint.UNIQUE));
+            assertThat(validationError.getPath(), is("attributes[key]"));
+            assertThat(validationError.getValue(), is("test-person"));
         }
     }
 
@@ -198,6 +221,4 @@ public class ValidationServiceTest {
             }
         }
     }
-
-    // NOTE: UNIQUE rule is tested integratively
 }
