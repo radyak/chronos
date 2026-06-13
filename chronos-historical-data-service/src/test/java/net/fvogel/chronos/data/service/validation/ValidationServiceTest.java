@@ -17,8 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
-import static net.fvogel.chronos.data.testutils.DefaultTestEntries.maximalPerson;
-import static net.fvogel.chronos.data.testutils.DefaultTestEntries.minimalPerson;
+import java.util.Set;
+
+import static net.fvogel.chronos.data.testutils.DefaultTestEntries.*;
 import static net.fvogel.chronos.data.testutils.MockResponseLoader.loadMockSchemaResponse;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -58,6 +59,14 @@ public class ValidationServiceTest {
         validationService.validate(entry);
     }
 
+    @Test
+    public void canValidateTestType() {
+        Entry entry = maximalTestType();
+        Mockito.when(schemaClient.getType(Mockito.anyString()))
+                .thenReturn(loadMockSchemaResponse("TestType.json"));
+        validationService.validate(entry);
+    }
+
     // Mandatory
     @Test
     public void throwsValidationExceptionOnMissingMandatoryAttribute() {
@@ -94,7 +103,7 @@ public class ValidationServiceTest {
         }
     }
 
-    // Allowed Values
+    // Allowed Values: Scalar values
     @Test
     public void throwsValidationExceptionOnUnAllowedValue() {
         Entry entry = maximalPerson();
@@ -109,6 +118,28 @@ public class ValidationServiceTest {
             assertThat(validationError.getConstraint(), is(ValidationConstraint.ALLOWED_VALUES));
             assertThat(validationError.getPath(), is("attributes[gender]"));
             assertThat(validationError.getValue(), is("FEMALE"));
+        }
+    }
+
+    // Allowed Values: Array value
+    @Test
+    public void throwsValidationExceptionOnUnAllowedValueInArrayAttribute() {
+        Entry entry = maximalTestType();
+        entry.getAttributes().put("enum-array-attr", Set.of("arrayVal2", "not-allowed-value"));
+
+        Mockito.when(schemaClient.getType(Mockito.anyString()))
+                .thenReturn(loadMockSchemaResponse("TestType.json"));
+
+        try {
+            validationService.validate(entry);
+            Assertions.fail();
+        } catch (SchemaValidationException sve) {
+            assertThat(sve.getValidationErrors().size(), is(1));
+
+            ValidationError validationError = sve.getValidationErrors().stream().findFirst().get();
+            assertThat(validationError.getConstraint(), is(ValidationConstraint.ALLOWED_VALUES));
+            assertThat(validationError.getPath(), is("attributes[enum-array-attr]"));
+            assertThat(validationError.getValue(), is("not-allowed-value"));
         }
     }
 
@@ -131,6 +162,28 @@ public class ValidationServiceTest {
             assertThat(validationError.getConstraint(), is(ValidationConstraint.UNIQUE));
             assertThat(validationError.getPath(), is("attributes[key]"));
             assertThat(validationError.getValue(), is("test-person"));
+        }
+    }
+
+    // Is Array
+    @Test
+    public void throwsValidationExceptionOnNonArrayValue() {
+        Entry entry = maximalTestType();
+        entry.getAttributes().put("enum-array-attr", "arrayVal2");
+
+        Mockito.when(schemaClient.getType(Mockito.anyString()))
+                .thenReturn(loadMockSchemaResponse("TestType.json"));
+
+        try {
+            validationService.validate(entry);
+            Assertions.fail();
+        } catch (SchemaValidationException sve) {
+            assertThat(sve.getValidationErrors().size(), is(1));
+
+            ValidationError validationError = sve.getValidationErrors().stream().findFirst().get();
+            assertThat(validationError.getConstraint(), is(ValidationConstraint.IS_ARRAY));
+            assertThat(validationError.getPath(), is("attributes[enum-array-attr]"));
+            assertThat(validationError.getValue(), is("arrayVal2"));
         }
     }
 
@@ -221,4 +274,5 @@ public class ValidationServiceTest {
             }
         }
     }
+
 }

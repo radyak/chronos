@@ -34,6 +34,19 @@ public class IsAllowedValuesValidationRule implements ValidationRule {
                 return;
             }
             Set<String> allowedValues = maybeAttributeDefinitionWithAllowedValues.get().getAllowedValues();
+
+            if (value instanceof Collection<?>) {
+                for (Object singleValue : (Collection<?>) value) {
+                    if (!allowedValues.contains(singleValue)) {
+                        validationErrors.add(new ValidationError(
+                                "attributes[" + key + "]",
+                                ALLOWED_VALUES,
+                                singleValue));
+                    }
+                }
+                return;
+            }
+
             if (!allowedValues.contains(value)) {
                 validationErrors.add(new ValidationError(
                         "attributes[" + key + "]",

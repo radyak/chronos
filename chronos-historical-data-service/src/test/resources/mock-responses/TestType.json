@@ -1,0 +1,136 @@
+{
+  "meta": {
+    "depth": 1,
+    "query": null,
+    "base": "TestType"
+  },
+  "types": {
+    "elements": [
+      {
+        "id": 3,
+        "key": "TestType",
+        "attributes": [
+          {
+            "id": 5,
+            "key": "enum-scalar-attr",
+            "type": "ENUM",
+            "isMandatory": false,
+            "isUnique": false,
+            "isChangeable": true,
+            "isArray": false,
+            "allowedValues": [
+              "val3",
+              "val2",
+              "val1"
+            ]
+          },
+          {
+            "id": 6,
+            "key": "enum-array-attr",
+            "type": "ENUM",
+            "isMandatory": false,
+            "isUnique": false,
+            "isChangeable": true,
+            "isArray": true,
+            "allowedValues": [
+              "arrayVal2",
+              "arrayVal3",
+              "arrayVal1"
+            ]
+          },
+          {
+            "id": 7,
+            "key": "number-attr",
+            "type": "NUMBER",
+            "isMandatory": false,
+            "isUnique": false,
+            "isChangeable": true,
+            "isArray": false,
+            "valueRange": "3-10"
+          },
+          {
+            "id": 8,
+            "key": "string-attr",
+            "type": "STRING",
+            "isMandatory": false,
+            "isUnique": false,
+            "isChangeable": true,
+            "isArray": false,
+            "valuePattern": "[a-zA-Z\\s]{3,10}"
+          }
+        ]
+      }
+    ],
+    "defaultAttributes": [
+      {
+        "key": "end",
+        "explanation": "",
+        "examples": "",
+        "type": "DATENOTATION",
+        "isMandatory": false,
+        "isUnique": false,
+        "isChangeable": true,
+        "isArray": false,
+        "order": 2
+      },
+      {
+        "key": "start",
+        "explanation": "",
+        "examples": "",
+        "type": "DATENOTATION",
+        "isMandatory": false,
+        "isUnique": false,
+        "isChangeable": true,
+        "isArray": false,
+        "order": 1
+      },
+      {
+        "key": "key",
+        "explanation": "",
+        "examples": "",
+        "type": "STRING",
+        "isMandatory": true,
+        "isUnique": true,
+        "isChangeable": false,
+        "isArray": false,
+        "order": 0
+      },
+      {
+        "key": "wikiqid",
+        "explanation": "Wikipedia page",
+        "examples": "",
+        "type": "WIKIQID",
+        "isMandatory": false,
+        "isUnique": false,
+        "isChangeable": true,
+        "isArray": false,
+        "order": 3
+      }
+    ]
+  },
+  "relations": {
+    "elements": [],
+    "defaultAttributes": [
+      {
+        "key": "start",
+        "explanation": "",
+        "examples": "",
+        "type": "DATENOTATION",
+        "isMandatory": false,
+        "isUnique": false,
+        "isChangeable": true,
+        "isArray": false
+      },
+      {
+        "key": "end",
+        "explanation": "",
+        "examples": "",
+        "type": "DATENOTATION",
+        "isMandatory": false,
+        "isUnique": false,
+        "isChangeable": true,
+        "isArray": false
+      }
+    ]
+  }
+}

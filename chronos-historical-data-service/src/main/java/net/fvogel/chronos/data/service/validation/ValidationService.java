@@ -19,6 +19,7 @@ import java.util.Set;
 import static net.fvogel.chronos.data.model.validation.ValidationConstraint.NO_UNKNOWN_TYPE;
 import static net.fvogel.chronos.data.model.validation.ValidationConstraint.TYPE_REQUIRED;
 
+
 @Service
 public class ValidationService {
 
@@ -27,6 +28,12 @@ public class ValidationService {
     @Autowired
     SchemaClient schemaClient;
 
+    /**
+     * TODO: Add ValidationRules for
+     * - isChangeable
+     * - valuePattern
+     * - valueRange
+     */
     @Autowired
     List<ValidationRule> validationRules;
 
@@ -45,13 +52,6 @@ public class ValidationService {
 
         Set<ValidationError> errors = new HashSet<>();
         validationRules.forEach(validationRule -> errors.addAll(validationRule.validate(entry, effectiveType)));
-
-        // IS CHANGEABLE
-        // IS ARRAY
-        // VALUE PATTERN
-        // VALUE RANGE
-
-        // TODO: Check Array values
 
         if (!errors.isEmpty()) {
             logger.warn("Found {} validation errors:", errors.size());
