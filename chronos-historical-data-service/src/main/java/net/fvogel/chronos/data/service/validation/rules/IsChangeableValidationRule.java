@@ -5,6 +5,7 @@ import net.fvogel.chronos.commons.model.schema.Type;
 import net.fvogel.chronos.data.model.Entry;
 import net.fvogel.chronos.data.model.validation.ValidationError;
 import net.fvogel.chronos.data.service.CypherService;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,7 +23,7 @@ public class IsChangeableValidationRule implements ValidationRule {
 
     public Collection<ValidationError> validate(Entry entry, Type type) {
         Collection<ValidationError> validationErrors = new HashSet<>();
-        if (entry.getElementId() == null) {
+        if (ObjectUtils.isEmpty(entry.getElementId())) {
             // New element, nothing to check
             return validationErrors;
         }

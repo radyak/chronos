@@ -25,6 +25,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -125,17 +126,21 @@ public class AdminDataApiUpdateEntryIntegrationTest extends BaseIntegrationTest 
     @Nested
     public class ValidationTest {
 
-        // TODO: This should be prevented with GH-23 -> ValidationTest
         @Test
         void throwsBadRequestOnUpdateKey() throws Exception {
             Entry entry = dataService.findByKey("vespasian").get();
             entry.getAttributes().put("key", "vespasian-changed");
 
             mvc.perform(put("/api/data/admin/{key}", "vespasian")
-                    .content(objectMapper.writeValueAsString(entry))
-                    .header("Authorization", adminAuthHeader())
-                    .contentType(MediaType.APPLICATION_JSON)
-            ).andExpect(status().isBadRequest());
+                            .content(objectMapper.writeValueAsString(entry))
+                            .header("Authorization", adminAuthHeader())
+                            .contentType(MediaType.APPLICATION_JSON)
+                    )
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.errors.length()").value(1))
+                    .andExpect(jsonPath("$.errors.[0].field").value("attributes[key]"))
+                    .andExpect(jsonPath("$.errors.[0].constraint").value("UNMODIFIABLE"))
+                    .andExpect(jsonPath("$.errors.[0].arguments.value").value("vespasian-changed"));
 
             assertTrue(dataService.findByKey("vespasian-changed").isEmpty());
         }
@@ -150,14 +155,28 @@ public class AdminDataApiUpdateEntryIntegrationTest extends BaseIntegrationTest 
             entry.getAttributes().put("name", 178);
             // CORRECT_TYPE: Date <-> String
             entry.getAttributes().put("start", "UNKNOWN");
-            // NO_UNKNOWN_TYPE
+            // DEFINED_ATTRIBUTES
             entry.getAttributes().put("random-attr", "random-value");
 
             mvc.perform(put("/api/data/admin/{key}", "vespasian")
-                    .content(objectMapper.writeValueAsString(entry))
-                    .header("Authorization", adminAuthHeader())
-                    .contentType(MediaType.APPLICATION_JSON)
-            ).andExpect(status().isBadRequest());
+                            .content(objectMapper.writeValueAsString(entry))
+                            .header("Authorization", adminAuthHeader())
+                            .contentType(MediaType.APPLICATION_JSON)
+                    )
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.errors.length()").value(4))
+                    // gender: violated ALLOWED_VALUES
+                    .andExpect(jsonPath("$.errors[?(@.field == 'attributes[gender]')].constraint").value("ALLOWED_VALUES"))
+                    .andExpect(jsonPath("$.errors[?(@.field == 'attributes[gender]')].arguments.value").value("UNKNOWN"))
+                    // name: violated CORRECT_TYPE
+                    .andExpect(jsonPath("$.errors[?(@.field == 'attributes[name]')].constraint").value("CORRECT_TYPE"))
+                    .andExpect(jsonPath("$.errors[?(@.field == 'attributes[name]')].arguments.value").value(178))
+                    // start: violated CORRECT_TYPE
+                    .andExpect(jsonPath("$.errors[?(@.field == 'attributes[start]')].constraint").value("CORRECT_TYPE"))
+                    .andExpect(jsonPath("$.errors[?(@.field == 'attributes[start]')].arguments.value").value("UNKNOWN"))
+                    // random-attr: violated DEFINED_ATTRIBUTES
+                    .andExpect(jsonPath("$.errors[?(@.field == 'attributes[random-attr]')].constraint").value("DEFINED_ATTRIBUTES"))
+                    .andExpect(jsonPath("$.errors[?(@.field == 'attributes[random-attr]')].arguments.value").value("random-value"));
 
             Entry updatedEntry = dataService.findByKey("vespasian").get();
             assertThat(updatedEntry.getAttributes().get("gender"), nullValue());

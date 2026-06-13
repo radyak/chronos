@@ -27,6 +27,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -96,10 +97,15 @@ public class AdminDataApiCreateEntryIntegrationTest extends BaseIntegrationTest 
             Entry entry = maximalPerson();
             entry.getAttributes().put("key", "vespasian");
             mvc.perform(post("/api/data/admin")
-                    .content(objectMapper.writeValueAsString(entry))
-                    .header("Authorization", adminAuthHeader())
-                    .contentType(MediaType.APPLICATION_JSON)
-            ).andExpect(status().isBadRequest());
+                            .content(objectMapper.writeValueAsString(entry))
+                            .header("Authorization", adminAuthHeader())
+                            .contentType(MediaType.APPLICATION_JSON)
+                    )
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.errors.length()").value(1))
+                    .andExpect(jsonPath("$.errors.[0].field").value("attributes[key]"))
+                    .andExpect(jsonPath("$.errors.[0].constraint").value("UNIQUE"))
+                    .andExpect(jsonPath("$.errors.[0].arguments.value").value("vespasian"));
         }
 
         @Test
@@ -110,14 +116,25 @@ public class AdminDataApiCreateEntryIntegrationTest extends BaseIntegrationTest 
             entry.getAttributes().put("gender", "UNKNOWN");
             // CORRECT_TYPE
             entry.getAttributes().put("height", "178");
-            // NO_UNKNOWN_TYPE
+            // DEFINED_ATTRIBUTES
             entry.getAttributes().put("random-attr", "random-value");
 
             mvc.perform(put("/api/data/admin/{key}", "vespasian")
-                    .content(objectMapper.writeValueAsString(entry))
-                    .header("Authorization", adminAuthHeader())
-                    .contentType(MediaType.APPLICATION_JSON)
-            ).andExpect(status().isBadRequest());
+                            .content(objectMapper.writeValueAsString(entry))
+                            .header("Authorization", adminAuthHeader())
+                            .contentType(MediaType.APPLICATION_JSON)
+                    )
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.errors.length()").value(3))
+                    // gender: violated ALLOWED_VALUES
+                    .andExpect(jsonPath("$.errors[?(@.field == 'attributes[gender]')].constraint").value("ALLOWED_VALUES"))
+                    .andExpect(jsonPath("$.errors[?(@.field == 'attributes[gender]')].arguments.value").value("UNKNOWN"))
+                    // height: violated CORRECT_TYPE
+                    .andExpect(jsonPath("$.errors[?(@.field == 'attributes[height]')].constraint").value("CORRECT_TYPE"))
+                    .andExpect(jsonPath("$.errors[?(@.field == 'attributes[height]')].arguments.value").value("178"))
+                    // random-attr: violated DEFINED_ATTRIBUTES
+                    .andExpect(jsonPath("$.errors[?(@.field == 'attributes[random-attr]')].constraint").value("DEFINED_ATTRIBUTES"))
+                    .andExpect(jsonPath("$.errors[?(@.field == 'attributes[random-attr]')].arguments.value").value("random-value"));
         }
 
     }
