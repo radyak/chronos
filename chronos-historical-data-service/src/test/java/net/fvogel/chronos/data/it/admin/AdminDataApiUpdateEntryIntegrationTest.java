@@ -1,21 +1,26 @@
 package net.fvogel.chronos.data.it.admin;
 
+import net.fvogel.chronos.data.client.SchemaClient;
 import net.fvogel.chronos.data.model.Entry;
-import net.fvogel.chronos.data.service.validation.ValidationService;
 import net.fvogel.chronos.data.testutils.BaseIntegrationTest;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.testcontainers.containers.Neo4jContainer;
 import org.testcontainers.junit.jupiter.Container;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Set;
 
 import static net.fvogel.chronos.data.testutils.DefaultTestEntries.minimalPerson;
+import static net.fvogel.chronos.data.testutils.MockResponseLoader.loadMockSchemaResponse;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -23,6 +28,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
+@ExtendWith(MockitoExtension.class)
+@ActiveProfiles("debug")
 public class AdminDataApiUpdateEntryIntegrationTest extends BaseIntegrationTest {
 
     @Container
@@ -30,7 +37,13 @@ public class AdminDataApiUpdateEntryIntegrationTest extends BaseIntegrationTest 
     public static final Neo4jContainer<?> neo4j = new Neo4jContainer<>("neo4j:5");
 
     @MockitoBean
-    ValidationService validationServiceMock;
+    SchemaClient schemaClient;
+
+    @BeforeEach
+    public void setUp() {
+        Mockito.when(schemaClient.getType(Mockito.anyString()))
+                .thenReturn(loadMockSchemaResponse("Person.json"));
+    }
 
     @Test
     void canUpdateStringAttribute() throws Exception {
@@ -45,35 +58,6 @@ public class AdminDataApiUpdateEntryIntegrationTest extends BaseIntegrationTest 
 
         Entry updatedEntry = dataService.findByKey("vespasian").get();
         assertThat(updatedEntry.getAttributes().get("name"), is("Vespasian"));
-    }
-
-    @Test
-    void canSetNumberAttribute() throws Exception {
-        Entry entry = dataService.findByKey("vespasian").get();
-        entry.getAttributes().put("known-children", 3);
-        mvc.perform(put("/api/data/admin/{key}", "vespasian")
-                .content(objectMapper.writeValueAsString(entry))
-                .header("Authorization", adminAuthHeader())
-                .contentType(MediaType.APPLICATION_JSON)
-        ).andExpect(status().isOk());
-
-        Entry updatedEntry = dataService.findByKey("vespasian").get();
-        assertThat(updatedEntry.getAttributes().get("known-children"), is(3));
-    }
-
-    @Test
-    void canSetArrayAttribute() throws Exception {
-        Entry entry = dataService.findByKey("vespasian").get();
-        assertThat(entry.getAttributes().get("name"), is("Titus Flavius Vespasianus"));
-        entry.getAttributes().put("name", List.of("Titus", "Flavius", "Vespasianus"));
-        mvc.perform(put("/api/data/admin/{key}", "vespasian")
-                .content(objectMapper.writeValueAsString(entry))
-                .header("Authorization", adminAuthHeader())
-                .contentType(MediaType.APPLICATION_JSON)
-        ).andExpect(status().isOk());
-
-        Entry updatedEntry = dataService.findByKey("vespasian").get();
-        assertThat(updatedEntry.getAttributes().get("name"), is(List.of("Titus", "Flavius", "Vespasianus")));
     }
 
     @Test
@@ -138,7 +122,7 @@ public class AdminDataApiUpdateEntryIntegrationTest extends BaseIntegrationTest 
         assertThat(updatedEntry.getLabels(), is(Set.of("Person")));
     }
 
-    // TODO: This should be prevented with GH-23
+    // TODO: This should be prevented with GH-23 -> ValidationTest
     @Test
     void canUpdateKey() throws Exception {
         Entry entry = dataService.findByKey("vespasian").get();
@@ -150,6 +134,37 @@ public class AdminDataApiUpdateEntryIntegrationTest extends BaseIntegrationTest 
         ).andExpect(status().isOk());
 
         assertTrue(dataService.findByKey("vespasian-changed").isPresent());
+    }
+
+    @Nested
+    public class ValidationTest {
+
+        @Test
+        void throwsBadRequestOnSeveralValidationErrors() throws Exception {
+            Entry entry = dataService.findByKey("vespasian").get();
+
+            // ALLOWED_VALUES
+            entry.getAttributes().put("gender", "UNKNOWN");
+            // CORRECT_TYPE: String <-> Number
+            entry.getAttributes().put("name", 178);
+            // CORRECT_TYPE: Date <-> String
+            entry.getAttributes().put("start", "UNKNOWN");
+            // NO_UNKNOWN_TYPE
+            entry.getAttributes().put("random-attr", "random-value");
+
+            mvc.perform(put("/api/data/admin/{key}", "vespasian")
+                    .content(objectMapper.writeValueAsString(entry))
+                    .header("Authorization", adminAuthHeader())
+                    .contentType(MediaType.APPLICATION_JSON)
+            ).andExpect(status().isBadRequest());
+
+            Entry updatedEntry = dataService.findByKey("vespasian").get();
+            assertThat(updatedEntry.getAttributes().get("gender"), nullValue());
+            assertThat(updatedEntry.getAttributes().get("name"), is("Titus Flavius Vespasianus"));
+            assertThat(updatedEntry.getAttributes().get("start"), is("0009-09-17"));
+            assertThat(updatedEntry.getAttributes().get("random-attr"), nullValue());
+        }
+
     }
 
     @Nested

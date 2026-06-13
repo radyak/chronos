@@ -40,6 +40,10 @@ public class DataService {
         return cypherService.findByKey(key);
     }
 
+    public Optional<Entry> findByKeyAndElementId(String key, String elementId) {
+        return cypherService.findByKeyAndElementId(key, elementId);
+    }
+
     public List<CountResult> statistics() {
         return cypherService.statistics();
     }
@@ -53,7 +57,7 @@ public class DataService {
     }
 
     public Entry update(String key, Entry entry) {
-        Entry existing = this.findByKey(key).orElseThrow(NotFoundException::new);
+        Entry existing = this.findByKeyAndElementId(key, entry.getElementId()).orElseThrow(NotFoundException::new);
         entry.set_meta(existing.get_meta());
         entry.get_meta().update(securityService.getUsername());
         entry.setLabels(existing.getLabels());

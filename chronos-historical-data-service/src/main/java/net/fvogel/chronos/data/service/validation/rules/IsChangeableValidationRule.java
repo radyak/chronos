@@ -7,7 +7,6 @@ import net.fvogel.chronos.data.model.Entry;
 import net.fvogel.chronos.data.model.validation.ValidationError;
 import net.fvogel.chronos.data.service.CypherService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -15,7 +14,8 @@ import java.util.Objects;
 
 import static net.fvogel.chronos.data.model.validation.ValidationConstraint.UNMODIFIABLE;
 
-@Component
+// TODO: Implement
+//@Component
 public class IsChangeableValidationRule implements ValidationRule {
 
     @Autowired

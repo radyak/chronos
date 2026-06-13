@@ -26,6 +26,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -92,7 +93,7 @@ public class AdminDataApiCreateEntryIntegrationTest extends BaseIntegrationTest 
         void throwsBadRequestOnDuplicateKey() throws Exception {
             assertTrue(dataService.findByKey("vespasian").isPresent());
 
-            Entry entry = minimalPerson();
+            Entry entry = maximalPerson();
             entry.getAttributes().put("key", "vespasian");
             mvc.perform(post("/api/data/admin")
                     .content(objectMapper.writeValueAsString(entry))
@@ -100,7 +101,25 @@ public class AdminDataApiCreateEntryIntegrationTest extends BaseIntegrationTest 
                     .contentType(MediaType.APPLICATION_JSON)
             ).andExpect(status().isBadRequest());
         }
-        
+
+        @Test
+        void throwsBadRequestOnSeveralValidationErrors() throws Exception {
+            Entry entry = dataService.findByKey("vespasian").get();
+
+            // ALLOWED_VALUES
+            entry.getAttributes().put("gender", "UNKNOWN");
+            // CORRECT_TYPE
+            entry.getAttributes().put("height", "178");
+            // NO_UNKNOWN_TYPE
+            entry.getAttributes().put("random-attr", "random-value");
+
+            mvc.perform(put("/api/data/admin/{key}", "vespasian")
+                    .content(objectMapper.writeValueAsString(entry))
+                    .header("Authorization", adminAuthHeader())
+                    .contentType(MediaType.APPLICATION_JSON)
+            ).andExpect(status().isBadRequest());
+        }
+
     }
 
     @Nested

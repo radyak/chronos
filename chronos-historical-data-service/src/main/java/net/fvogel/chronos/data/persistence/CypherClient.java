@@ -1,6 +1,8 @@
 package net.fvogel.chronos.data.persistence;
 
 import org.neo4j.cypherdsl.core.Statement;
+import org.neo4j.cypherdsl.core.renderer.Configuration;
+import org.neo4j.cypherdsl.core.renderer.Dialect;
 import org.neo4j.cypherdsl.core.renderer.Renderer;
 import org.neo4j.driver.Driver;
 import org.neo4j.driver.Result;
@@ -23,7 +25,11 @@ public class CypherClient {
     private Driver driver;
 
     public <T> T runStatement(Statement statement, ResultExtractor<T> resultExtractor) {
-        var renderedStatement = Renderer.getDefaultRenderer().render(statement);
+        var renderedStatement = Renderer.getRenderer(
+                Configuration.newConfig()
+                        .withDialect(Dialect.NEO4J_5)
+                        .build()
+        ).render(statement);
 
         logger.debug("Executing statement: {}", renderedStatement);
 

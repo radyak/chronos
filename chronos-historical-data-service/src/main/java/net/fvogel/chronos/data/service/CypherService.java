@@ -71,6 +71,20 @@ public class CypherService {
         );
     }
 
+    public Optional<Entry> findByKeyAndElementId(String key, String elementId) {
+        var nodeName = "n";
+        var n = Cypher.anyNode().named(nodeName).withProperties("key", Cypher.literalOf(key));
+        var statement = Cypher.match(n)
+                .where(n.elementId().isEqualTo(Cypher.literalOf(elementId)))
+                .returning(n)
+                .build();
+
+        return client.runStatement(statement, result -> result
+                .list(record -> record.get(nodeName).asNode())
+                .stream().map(entryMapper::toEntry).findFirst()
+        );
+    }
+
     public List<CountResult> statistics() {
         var nodeName = "n";
         var n = Cypher.anyNode().named(nodeName);
@@ -142,7 +156,7 @@ public class CypherService {
 
         // 2. Self-exclusion: ignore the node we're checking
         var compareElementId = entry.getElementId() == null ? "" : entry.getElementId();
-        Condition notSelf = n.elementId().isNotEqualTo(Cypher.literalOf(compareElementId));
+        Condition notSelf = Cypher.elementId(n).isNotEqualTo(Cypher.literalOf(compareElementId));
 
         // 3. Value equality: some other node has the same attribute value
         Condition sameValue = n.property(attrKey)
