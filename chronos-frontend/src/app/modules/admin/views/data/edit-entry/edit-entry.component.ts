@@ -97,7 +97,7 @@ export class EditEntryComponent {
     );
     this.form = computed(() => {
       const type = this.selectedType();
-      return this.entryAttributeFormService.generateFormGroup(type, this.isNew());
+      return this.entryAttributeFormService.generateFormGroup(type, this.isNew(), this.entry().elementId);
     });
 
     effect(() => {

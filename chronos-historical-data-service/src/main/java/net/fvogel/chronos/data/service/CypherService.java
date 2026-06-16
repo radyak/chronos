@@ -150,17 +150,22 @@ public class CypherService {
     }
 
     public boolean isAttributeUnique(Entry entry, String attrKey) {
+        Object attrValue = entry.getAttributes().get(attrKey);
+        var elementId = entry.getElementId() == null ? "" : entry.getElementId();
+        return this.isAttributeUnique(attrKey, attrValue, elementId);
+    }
+
+    public boolean isAttributeUnique(String attrKey, Object attrValue, String elementId) {
 
         // 1. An unbounded node pattern for the "other" nodes
         Node n = Cypher.anyNode("n");
 
         // 2. Self-exclusion: ignore the node we're checking
-        var compareElementId = entry.getElementId() == null ? "" : entry.getElementId();
-        Condition notSelf = Cypher.elementId(n).isNotEqualTo(Cypher.literalOf(compareElementId));
+        Condition notSelf = Cypher.elementId(n).isNotEqualTo(Cypher.literalOf(elementId));
 
         // 3. Value equality: some other node has the same attribute value
         Condition sameValue = n.property(attrKey)
-                .isEqualTo(Cypher.literalOf(entry.getAttributes().get(attrKey)));
+                .isEqualTo(Cypher.literalOf(attrValue));
 
         // 4. Combined WHERE condition
         Condition duplicateExists = notSelf.and(sameValue);

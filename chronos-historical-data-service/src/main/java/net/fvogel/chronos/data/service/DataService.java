@@ -74,4 +74,8 @@ public class DataService {
         cypherService.delete(label, key);
     }
 
+    public boolean isAttributeUnique(String key, Object value, String elementId) {
+        return cypherService.isAttributeUnique(key, value, elementId);
+    }
+
 }
