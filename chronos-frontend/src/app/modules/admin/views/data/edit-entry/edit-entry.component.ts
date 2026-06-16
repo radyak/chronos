@@ -164,7 +164,15 @@ export class EditEntryComponent {
     if (type) {
       this.entry.update(e => ({ ...e, labels: [this.typeForm?.getRawValue().type] }));
     }
-    this.entry.update(e => ({ ...e, attributes: { ...e.attributes, ...attributes } }));
+    const typeDefinition = this.selectedType();
+    const reusableAttributes = (typeDefinition?.defaultAttributes ?? []).map(typeAttr => typeAttr.key);
+    const filteredAttributes = Object.keys(attributes)
+      .filter(key => reusableAttributes.includes(key))
+      .reduce((obj: Record<string, any>, key) => {
+        obj[key] = attributes[key];
+        return obj;
+      }, {});
+    this.entry.update(e => ({ ...e, attributes: { ...e.attributes, ...filteredAttributes } }));
   }
 
 }

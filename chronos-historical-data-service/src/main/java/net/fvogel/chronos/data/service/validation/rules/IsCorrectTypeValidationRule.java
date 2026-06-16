@@ -27,7 +27,7 @@ public class IsCorrectTypeValidationRule implements ValidationRule {
      * - If month is present, the optional day part -(0[1-9]|[12]\d|3[01]) may follow (i.e. day 01–31)
      * $ — end of string
      */
-    private static final Pattern DATENOTATION_PATTERN = Pattern.compile("^-?\\d{1,4}(?:-(0[1-9]|1[0-2])(?:-(0[1-9]|[12]\\d|3[01]))?)?$");
+    private static final Pattern DATENOTATION_PATTERN = Pattern.compile("^-?\\d{1,6}(?:-(0[1-9]|1[0-2])(?:-(0[1-9]|[12]\\d|3[01]))?)?$");
 
 
     public Collection<ValidationError> validate(Entry entry, Type type) {
