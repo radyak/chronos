@@ -108,7 +108,7 @@ public class AdminDataApiUniqueCheckIntegrationTest extends BaseIntegrationTest 
         // Variant: key='' submitted
         mvc.perform(
                         get("/api/data/admin/unique?key={key}&value={value}&elementId={elementId}",
-                                "docke",
+                                "",
                                 "trajan",
                                 null
                         ).header("Authorization", adminAuthHeader())

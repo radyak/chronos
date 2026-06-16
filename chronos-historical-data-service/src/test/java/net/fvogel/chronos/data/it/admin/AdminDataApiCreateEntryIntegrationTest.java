@@ -103,7 +103,7 @@ public class AdminDataApiCreateEntryIntegrationTest extends BaseIntegrationTest 
                     )
                     .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.errors.length()").value(1))
-                    .andExpect(jsonPath("$.errors.[0].field").value("attributes[key]"))
+                    .andExpect(jsonPath("$.errors.[0].field").value("key"))
                     .andExpect(jsonPath("$.errors.[0].constraint").value("UNIQUE"))
                     .andExpect(jsonPath("$.errors.[0].arguments.value").value("vespasian"));
         }
@@ -127,14 +127,14 @@ public class AdminDataApiCreateEntryIntegrationTest extends BaseIntegrationTest 
                     .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.errors.length()").value(3))
                     // gender: violated ALLOWED_VALUES
-                    .andExpect(jsonPath("$.errors[?(@.field == 'attributes[gender]')].constraint").value("ALLOWED_VALUES"))
-                    .andExpect(jsonPath("$.errors[?(@.field == 'attributes[gender]')].arguments.value").value("UNKNOWN"))
+                    .andExpect(jsonPath("$.errors[?(@.field == 'gender')].constraint").value("ALLOWED_VALUES"))
+                    .andExpect(jsonPath("$.errors[?(@.field == 'gender')].arguments.value").value("UNKNOWN"))
                     // height: violated CORRECT_TYPE
-                    .andExpect(jsonPath("$.errors[?(@.field == 'attributes[height]')].constraint").value("CORRECT_TYPE"))
-                    .andExpect(jsonPath("$.errors[?(@.field == 'attributes[height]')].arguments.value").value("178"))
+                    .andExpect(jsonPath("$.errors[?(@.field == 'height')].constraint").value("CORRECT_TYPE"))
+                    .andExpect(jsonPath("$.errors[?(@.field == 'height')].arguments.value").value("178"))
                     // random-attr: violated DEFINED_ATTRIBUTES
-                    .andExpect(jsonPath("$.errors[?(@.field == 'attributes[random-attr]')].constraint").value("DEFINED_ATTRIBUTES"))
-                    .andExpect(jsonPath("$.errors[?(@.field == 'attributes[random-attr]')].arguments.value").value("random-value"));
+                    .andExpect(jsonPath("$.errors[?(@.field == 'random-attr')].constraint").value("DEFINED_ATTRIBUTES"))
+                    .andExpect(jsonPath("$.errors[?(@.field == 'random-attr')].arguments.value").value("random-value"));
         }
 
     }

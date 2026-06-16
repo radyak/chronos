@@ -24,7 +24,7 @@ public class IsDefinedAttributeValidationRule implements ValidationRule {
                     .findFirst();
             if (maybeAttributeDefinition.isEmpty()) {
                 validationErrors.add(new ValidationError(
-                        "attributes[" + key + "]",
+                        key,
                         DEFINED_ATTRIBUTES,
                         value));
             }

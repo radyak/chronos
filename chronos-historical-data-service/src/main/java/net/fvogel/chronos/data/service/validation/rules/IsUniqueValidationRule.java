@@ -34,7 +34,7 @@ public class IsUniqueValidationRule implements ValidationRule {
             if (!cypherService.isAttributeUnique(entry, uniqueAttr.getKey())) {
                 logger.info("Attribute {}.{}={} is not unique; adding validation error", type.getKey(), uniqueAttr.getKey(), value);
                 validationErrors.add(new ValidationError(
-                        "attributes[" + uniqueAttr.getKey() + "]",
+                        uniqueAttr.getKey(),
                         UNIQUE,
                         value));
             }

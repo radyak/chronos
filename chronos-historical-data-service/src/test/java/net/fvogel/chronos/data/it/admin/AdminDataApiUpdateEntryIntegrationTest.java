@@ -138,7 +138,7 @@ public class AdminDataApiUpdateEntryIntegrationTest extends BaseIntegrationTest 
                     )
                     .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.errors.length()").value(1))
-                    .andExpect(jsonPath("$.errors.[0].field").value("attributes[key]"))
+                    .andExpect(jsonPath("$.errors.[0].field").value("key"))
                     .andExpect(jsonPath("$.errors.[0].constraint").value("UNMODIFIABLE"))
                     .andExpect(jsonPath("$.errors.[0].arguments.value").value("vespasian-changed"));
 
@@ -166,17 +166,17 @@ public class AdminDataApiUpdateEntryIntegrationTest extends BaseIntegrationTest 
                     .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.errors.length()").value(4))
                     // gender: violated ALLOWED_VALUES
-                    .andExpect(jsonPath("$.errors[?(@.field == 'attributes[gender]')].constraint").value("ALLOWED_VALUES"))
-                    .andExpect(jsonPath("$.errors[?(@.field == 'attributes[gender]')].arguments.value").value("UNKNOWN"))
+                    .andExpect(jsonPath("$.errors[?(@.field == 'gender')].constraint").value("ALLOWED_VALUES"))
+                    .andExpect(jsonPath("$.errors[?(@.field == 'gender')].arguments.value").value("UNKNOWN"))
                     // name: violated CORRECT_TYPE
-                    .andExpect(jsonPath("$.errors[?(@.field == 'attributes[name]')].constraint").value("CORRECT_TYPE"))
-                    .andExpect(jsonPath("$.errors[?(@.field == 'attributes[name]')].arguments.value").value(178))
+                    .andExpect(jsonPath("$.errors[?(@.field == 'name')].constraint").value("CORRECT_TYPE"))
+                    .andExpect(jsonPath("$.errors[?(@.field == 'name')].arguments.value").value(178))
                     // start: violated CORRECT_TYPE
-                    .andExpect(jsonPath("$.errors[?(@.field == 'attributes[start]')].constraint").value("CORRECT_TYPE"))
-                    .andExpect(jsonPath("$.errors[?(@.field == 'attributes[start]')].arguments.value").value("UNKNOWN"))
+                    .andExpect(jsonPath("$.errors[?(@.field == 'start')].constraint").value("CORRECT_TYPE"))
+                    .andExpect(jsonPath("$.errors[?(@.field == 'start')].arguments.value").value("UNKNOWN"))
                     // random-attr: violated DEFINED_ATTRIBUTES
-                    .andExpect(jsonPath("$.errors[?(@.field == 'attributes[random-attr]')].constraint").value("DEFINED_ATTRIBUTES"))
-                    .andExpect(jsonPath("$.errors[?(@.field == 'attributes[random-attr]')].arguments.value").value("random-value"));
+                    .andExpect(jsonPath("$.errors[?(@.field == 'random-attr')].constraint").value("DEFINED_ATTRIBUTES"))
+                    .andExpect(jsonPath("$.errors[?(@.field == 'random-attr')].arguments.value").value("random-value"));
 
             Entry updatedEntry = dataService.findByKey("vespasian").get();
             assertThat(updatedEntry.getAttributes().get("gender"), nullValue());

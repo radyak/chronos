@@ -4,6 +4,7 @@ import { NotificationService } from 'src/app/common/components/notifications/not
 import { EntryDTO } from 'src/app/common/model/data/entry.dto';
 import { AdminDataClient } from '../clients/admin-data.client';
 import { AdminConfirmService } from './admin-confirm.service';
+import { ErrorResponseDTO } from 'src/app/common/model/error-response.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -20,7 +21,7 @@ export class AdminDataService {
     return this.adminDataClient.saveEntry(entry).pipe(
       catchError((err: any, caught: Observable<EntryDTO>) => {
         this.notificationService.error(`Error while saving entry "${entryKey}"`);
-        throw new Error("Entry not saved");
+        throw err as ErrorResponseDTO;
       }),
       tap(() => {
         this.notificationService.success(`Entry "${entryKey}" saved successfully`);

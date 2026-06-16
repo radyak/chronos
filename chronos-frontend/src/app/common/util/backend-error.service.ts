@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { FormGroup } from '@angular/forms';
 import { ApiErrorDTO } from '../model/error-response.dto';
 
 @Injectable({
@@ -11,6 +10,8 @@ export class BackendErrorService {
     'org.chronos.schema.error.invalid-length': (key: string, params: any) => `"${key}" may have between ${params.min} and ${params.max} characters`,
     'org.chronos.schema.error.not-specified': (key: string, params: any) => `"${key}" is not specified`,
     'org.chronos.schema.error.duplicate-key': (key: string, params: any) => `"${key}" already exists on another element`,
+    'org.chronos.data.error.unique': (key: string, params: any) => `The ${key} "${params.value}" already exists on another element`,
+    // To be continued ...
   }
 
   public extractErrors(field: string, label: string, apiErrors: ApiErrorDTO[]): string[] {

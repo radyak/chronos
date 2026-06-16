@@ -39,7 +39,7 @@ public class IsAllowedValuesValidationRule implements ValidationRule {
                 for (Object singleValue : (Collection<?>) value) {
                     if (!allowedValues.contains(singleValue)) {
                         validationErrors.add(new ValidationError(
-                                "attributes[" + key + "]",
+                                key,
                                 ALLOWED_VALUES,
                                 singleValue));
                     }
@@ -49,7 +49,7 @@ public class IsAllowedValuesValidationRule implements ValidationRule {
 
             if (!allowedValues.contains(value)) {
                 validationErrors.add(new ValidationError(
-                        "attributes[" + key + "]",
+                        key,
                         ALLOWED_VALUES,
                         value));
             }

@@ -17,6 +17,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { CREATE_ROUTE_KEYWORD } from '../../../admin.routes';
 import { ElementAttributePipe } from 'src/app/common/util/element-attribute.pipe';
 import { DatePipe } from '@angular/common';
+import { ApiErrorDTO } from 'src/app/common/model/error-response.dto';
 
 @Component({
   selector: 'chronos-edit-entry',
@@ -67,6 +68,7 @@ export class EditEntryComponent {
   protected entryResource = this.historicalDataService.entry(this.entryId);
   protected isNew = computed(() => !this.entryResource.hasValue());
   protected schema = inject(AdminSchemaService).allTypes();
+  protected backendErrors: WritableSignal<ApiErrorDTO[]> = signal([]);
 
   // Derived Signals
   protected currentEntryTypeKey = computed(() => {
@@ -124,7 +126,7 @@ export class EditEntryComponent {
         }
       },
       (err) => {
-        // Nothing todo
+        this.backendErrors.set(err.error?.errors ?? []);
       }
     );
   }

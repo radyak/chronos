@@ -33,7 +33,7 @@ public class IsArrayValidationRule implements ValidationRule {
             Attribute attributeDefinition = maybeAttributeDefinition.get();
             if (hasArrayTypeInconsistency(attributeDefinition, value)) {
                 validationErrors.add(new ValidationError(
-                        "attributes[" + key + "]",
+                        key,
                         IS_ARRAY,
                         value));
             }

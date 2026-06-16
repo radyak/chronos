@@ -20,7 +20,7 @@ public class IsMandatoryValidationRule implements ValidationRule {
             Object value = entry.getAttributes().get(mandatoryAttr.getKey());
             if ("".equals(value) || null == value) {
                 validationErrors.add(new ValidationError(
-                        "attributes[" + mandatoryAttr.getKey() + "]",
+                        mandatoryAttr.getKey(),
                         MANDATORY,
                         value));
             }

@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { AsyncValidatorFn, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AsyncValidatorFn, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { TypeAO } from 'src/app/common/model/schema/admin/type.ao';
 import { UniquenessValidatorService } from 'src/app/common/validators/api-unique-validator';
 
@@ -22,8 +22,8 @@ export class EntryAttributeFormService {
     ]
 
     attributes.forEach(attr => {
-      const validators = [];
-      const asyncValidators = [];
+      const validators: ValidatorFn[] = [];
+      const asyncValidators: AsyncValidatorFn[] = [];
       if (attr.isMandatory) {
         validators.push(Validators.required);
       }

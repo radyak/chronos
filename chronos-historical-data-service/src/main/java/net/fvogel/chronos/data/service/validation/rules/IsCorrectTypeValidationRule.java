@@ -53,7 +53,7 @@ public class IsCorrectTypeValidationRule implements ValidationRule {
                             || hasDatenotationTypeInconsistency(attributeDefinition, value)
             ) {
                 validationErrors.add(new ValidationError(
-                        "attributes[" + key + "]",
+                        key,
                         CORRECT_TYPE,
                         value));
             }

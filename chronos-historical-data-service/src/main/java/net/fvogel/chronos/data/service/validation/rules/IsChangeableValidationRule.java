@@ -35,7 +35,7 @@ public class IsChangeableValidationRule implements ValidationRule {
         if (originalEntry.isEmpty()) {
             // Key itself was changed
             validationErrors.add(new ValidationError(
-                    "attributes[key]",
+                    "key",
                     UNMODIFIABLE,
                     key));
             return validationErrors;
@@ -46,7 +46,7 @@ public class IsChangeableValidationRule implements ValidationRule {
             Object oldValue = originalEntry.get().getAttributes().get(unmodifiableAttr.getKey());
             if (!Objects.equals(newValue, oldValue)) {
                 validationErrors.add(new ValidationError(
-                        "attributes[" + unmodifiableAttr.getKey() + "]",
+                        unmodifiableAttr.getKey(),
                         UNMODIFIABLE,
                         newValue));
             }

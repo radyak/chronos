@@ -45,7 +45,7 @@ public class ChronosHistoricalDataServiceExceptionHandler extends RestExceptionH
         return new ErrorResponseErrorDetail(
                 error.getPath(),
                 error.getConstraint().toString(),
-                "",
+                error.getConstraint().i18n(),
                 Map.of("value", error.getValue())
         );
     }
