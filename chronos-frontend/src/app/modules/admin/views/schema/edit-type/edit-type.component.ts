@@ -12,7 +12,7 @@ import { AttributeAO } from 'src/app/common/model/schema/admin/attribute.ao';
 import { EditAttributeDialogComponent } from './edit-attribute-dialog/edit-attribute-dialog.component';
 import { AdminSchemaService } from 'src/app/modules/admin/services/admin-schema.service';
 import { IconConstants } from 'src/app/common/constants/icon.constants';
-import { uniqueValidator } from 'src/app/common/util/unique-validator';
+import { uniqueValidator } from 'src/app/common/validators/unique-validator';
 import { FormService } from 'src/app/common/util/form.service';
 import { RelationAO } from 'src/app/common/model/schema/admin/relation.ao';
 import { EditRelationOffcanvasComponent } from './edit-relation-offcanvas/edit-relation-offcanvas.component';

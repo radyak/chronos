@@ -128,7 +128,8 @@
                   <div class="col-sm-8">
                       <chronos-dynamic-input [attribute]="attr"
                                              [form]="form()"
-                                             [disabled]="!isNew() && !attr.isChangeable">
+                                             [disabled]="!isNew() && !attr.isChangeable"
+                                             [backendErrors]="backendErrors()">
                       </chronos-dynamic-input>
                   </div>
               </div>

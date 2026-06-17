@@ -5,7 +5,7 @@ import { NgbActiveOffcanvas, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AttributeAO } from 'src/app/common/model/schema/admin/attribute.ao';
 import { RelationAO } from 'src/app/common/model/schema/admin/relation.ao';
 import { FormService } from 'src/app/common/util/form.service';
-import { uniqueValidator } from 'src/app/common/util/unique-validator';
+import { uniqueValidator } from 'src/app/common/validators/unique-validator';
 import { IconConstants as IconsConfig } from 'src/app/common/constants/icon.constants';
 import { EditAttributeDialogComponent } from '../edit-attribute-dialog/edit-attribute-dialog.component';
 import { AdminConfirmService } from 'src/app/modules/admin/services/admin-confirm.service';

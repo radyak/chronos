@@ -8,7 +8,7 @@ import { AttributeAO } from 'src/app/common/model/schema/admin/attribute.ao';
 import { AttributeTypeDTO } from 'src/app/common/model/schema/attribute-type.dto';
 import { BackendErrorService } from 'src/app/common/util/backend-error.service';
 import { FormService } from 'src/app/common/util/form.service';
-import { uniqueValidator } from 'src/app/common/util/unique-validator';
+import { uniqueValidator } from 'src/app/common/validators/unique-validator';
 
 @Component({
   selector: 'chronos-edit-attribute-dialog',

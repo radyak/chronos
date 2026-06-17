@@ -14,6 +14,7 @@ export type ApiErrorDTO = {
     constraint: string;
     message: string;
     arguments: {
+        value?: any;
         min: number;
         max: number;
         // TO BE CONTINUED

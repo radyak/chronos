@@ -1,0 +1,209 @@
+{
+  "meta": {
+    "depth": 1,
+    "query": null,
+    "base": "Person"
+  },
+  "types": {
+    "elements": [
+      {
+        "id": 1,
+        "key": "Territory",
+        "attributes": [
+          {
+            "id": 1,
+            "key": "area",
+            "type": "NUMBER",
+            "isMandatory": false,
+            "isUnique": false,
+            "isChangeable": true,
+            "isArray": false
+          },
+          {
+            "id": 2,
+            "key": "name",
+            "type": "STRING",
+            "isMandatory": false,
+            "isUnique": false,
+            "isChangeable": true,
+            "isArray": false
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "key": "Person",
+        "attributes": [
+          {
+            "id": 3,
+            "key": "gender",
+            "type": "ENUM",
+            "isMandatory": false,
+            "isUnique": false,
+            "isChangeable": true,
+            "isArray": false,
+            "allowedValues": [
+              "female",
+              "male"
+            ]
+          },
+          {
+            "id": 4,
+            "key": "name",
+            "type": "STRING",
+            "isMandatory": false,
+            "isUnique": false,
+            "isChangeable": true,
+            "isArray": false
+          },
+          {
+            "id": 5,
+            "key": "height",
+            "type": "NUMBER",
+            "isMandatory": false,
+            "isUnique": false,
+            "isChangeable": true,
+            "isArray": false
+          }
+        ]
+      }
+    ],
+    "defaultAttributes": [
+      {
+        "key": "start",
+        "explanation": "",
+        "examples": "",
+        "type": "DATENOTATION",
+        "isMandatory": false,
+        "isUnique": false,
+        "isChangeable": true,
+        "isArray": false,
+        "order": 1
+      },
+      {
+        "key": "wikiqid",
+        "explanation": "Wikipedia page",
+        "examples": "",
+        "type": "WIKIQID",
+        "isMandatory": false,
+        "isUnique": false,
+        "isChangeable": true,
+        "isArray": false,
+        "order": 3
+      },
+      {
+        "key": "end",
+        "explanation": "",
+        "examples": "",
+        "type": "DATENOTATION",
+        "isMandatory": false,
+        "isUnique": false,
+        "isChangeable": true,
+        "isArray": false,
+        "order": 2
+      },
+      {
+        "key": "key",
+        "explanation": "",
+        "examples": "",
+        "type": "STRING",
+        "isMandatory": true,
+        "isUnique": true,
+        "isChangeable": false,
+        "isArray": false,
+        "order": 0
+      }
+    ]
+  },
+  "relations": {
+    "elements": [
+      {
+        "id": 2,
+        "key": "RELATIONSHIP_WITH",
+        "attributes": [
+          {
+            "id": 1,
+            "key": "status",
+            "type": "ENUM",
+            "isMandatory": false,
+            "isUnique": false,
+            "isChangeable": true,
+            "isArray": false,
+            "allowedValues": [
+              "affair",
+              "cohabitation",
+              "married"
+            ]
+          }
+        ],
+        "sourceTypeId": 2,
+        "targetTypeId": 2
+      },
+      {
+        "id": 4,
+        "key": "RULED",
+        "attributes": [
+          {
+            "id": 3,
+            "key": "status",
+            "type": "ENUM",
+            "isMandatory": false,
+            "isUnique": false,
+            "isChangeable": true,
+            "isArray": true,
+            "allowedValues": [
+              "king",
+              "emperor",
+              "governor"
+            ]
+          }
+        ],
+        "sourceTypeId": 2,
+        "targetTypeId": 1
+      },
+      {
+        "id": 3,
+        "key": "CHILD_OF",
+        "attributes": [
+          {
+            "id": 2,
+            "key": "status",
+            "type": "ENUM",
+            "isMandatory": false,
+            "isUnique": false,
+            "isChangeable": true,
+            "isArray": false,
+            "allowedValues": [
+              "biological",
+              "adopted"
+            ]
+          }
+        ],
+        "sourceTypeId": 2,
+        "targetTypeId": 2
+      }
+    ],
+    "defaultAttributes": [
+      {
+        "key": "start",
+        "explanation": "",
+        "examples": "",
+        "type": "DATENOTATION",
+        "isMandatory": false,
+        "isUnique": false,
+        "isChangeable": true,
+        "isArray": false
+      },
+      {
+        "key": "end",
+        "explanation": "",
+        "examples": "",
+        "type": "DATENOTATION",
+        "isMandatory": false,
+        "isUnique": false,
+        "isChangeable": true,
+        "isArray": false
+      }
+    ]
+  }
+}

@@ -17,6 +17,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { CREATE_ROUTE_KEYWORD } from '../../../admin.routes';
 import { ElementAttributePipe } from 'src/app/common/util/element-attribute.pipe';
 import { DatePipe } from '@angular/common';
+import { ApiErrorDTO } from 'src/app/common/model/error-response.dto';
 
 @Component({
   selector: 'chronos-edit-entry',
@@ -67,6 +68,7 @@ export class EditEntryComponent {
   protected entryResource = this.historicalDataService.entry(this.entryId);
   protected isNew = computed(() => !this.entryResource.hasValue());
   protected schema = inject(AdminSchemaService).allTypes();
+  protected backendErrors: WritableSignal<ApiErrorDTO[]> = signal([]);
 
   // Derived Signals
   protected currentEntryTypeKey = computed(() => {
@@ -97,7 +99,7 @@ export class EditEntryComponent {
     );
     this.form = computed(() => {
       const type = this.selectedType();
-      return this.entryAttributeFormService.generateFormGroup(type, this.isNew());
+      return this.entryAttributeFormService.generateFormGroup(type, this.isNew(), this.entry().elementId);
     });
 
     effect(() => {
@@ -116,7 +118,6 @@ export class EditEntryComponent {
   // Methods
   protected save(returnAfterSave: boolean = false) {
     this.updateType();
-    console.log('Saving entry', this.entry());
     firstValueFrom(this.adminDataService.save(this.entry())).then(
       (entry) => {
         this.entry.set(entry);
@@ -125,7 +126,7 @@ export class EditEntryComponent {
         }
       },
       (err) => {
-        // Nothing todo
+        this.backendErrors.set(err.error?.errors ?? []);
       }
     );
   }
@@ -159,12 +160,19 @@ export class EditEntryComponent {
 
   protected updateType(): void {
     const attributes = this.form().getRawValue();
-    console.log("Extracted form:", attributes)
     const type = this.typeForm?.getRawValue().type;
     if (type) {
       this.entry.update(e => ({ ...e, labels: [this.typeForm?.getRawValue().type] }));
     }
-    this.entry.update(e => ({ ...e, attributes: { ...e.attributes, ...attributes } }));
+    const typeDefinition = this.selectedType();
+    const reusableAttributes = (typeDefinition?.defaultAttributes ?? []).map(typeAttr => typeAttr.key);
+    const filteredAttributes = Object.keys(attributes)
+      .filter(key => reusableAttributes.includes(key))
+      .reduce((obj: Record<string, any>, key) => {
+        obj[key] = attributes[key];
+        return obj;
+      }, {});
+    this.entry.update(e => ({ ...e, attributes: { ...e.attributes, ...filteredAttributes } }));
   }
 
 }

@@ -1,6 +1,7 @@
 import { inject, Injectable } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AsyncValidatorFn, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { TypeAO } from 'src/app/common/model/schema/admin/type.ao';
+import { UniquenessValidatorService } from 'src/app/common/validators/api-unique-validator';
 
 @Injectable({
   providedIn: 'root'
@@ -9,9 +10,10 @@ export class EntryAttributeFormService {
 
   // Injected Dependencies
   private fb: FormBuilder = inject(FormBuilder);
+  private uniquenessValidatorService: UniquenessValidatorService = inject(UniquenessValidatorService);
 
   // Methods
-  public generateFormGroup(type: TypeAO | null, isNewEntry: boolean): FormGroup {
+  public generateFormGroup(type: TypeAO | null, isNewEntry: boolean, elementId?: string): FormGroup {
     const group: { [key: string]: any } = {};
 
     const attributes = [
@@ -20,12 +22,13 @@ export class EntryAttributeFormService {
     ]
 
     attributes.forEach(attr => {
-      const validators = [];
+      const validators: ValidatorFn[] = [];
+      const asyncValidators: AsyncValidatorFn[] = [];
       if (attr.isMandatory) {
         validators.push(Validators.required);
       }
       if (attr.isUnique) {
-        // TODO: add unique validation with backend
+        asyncValidators.push(this.uniquenessValidatorService.apiUniqueValidator(attr.key!, elementId))
       }
       if (attr.valuePattern) {
         validators.push(Validators.pattern(attr.valuePattern));
@@ -39,7 +42,7 @@ export class EntryAttributeFormService {
           validators.push(Validators.max(Number(max)));
         }
       }
-      group[attr.key!] = [{value: null, disabled: !isNewEntry && !attr.isChangeable}, validators];
+      group[attr.key!] = [{value: null, disabled: !isNewEntry && !attr.isChangeable}, validators, asyncValidators];
     });
 
     return this.fb.group(group);
