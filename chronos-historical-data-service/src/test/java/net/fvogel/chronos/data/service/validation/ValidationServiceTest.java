@@ -82,7 +82,7 @@ public class ValidationServiceTest {
 
             ValidationError validationError = sve.getValidationErrors().stream().findFirst().get();
             assertThat(validationError.getConstraint(), is(ValidationConstraint.MANDATORY));
-            assertThat(validationError.getPath(), is("attributes[key]"));
+            assertThat(validationError.getPath(), is("key"));
             assertThat(validationError.getValue(), nullValue());
         }
     }
@@ -100,7 +100,7 @@ public class ValidationServiceTest {
 
             ValidationError validationError = sve.getValidationErrors().stream().findFirst().get();
             assertThat(validationError.getConstraint(), is(ValidationConstraint.DEFINED_ATTRIBUTES));
-            assertThat(validationError.getPath(), is("attributes[undefined-attribute]"));
+            assertThat(validationError.getPath(), is("undefined-attribute"));
             assertThat(validationError.getValue(), is("abc"));
         }
     }
@@ -118,7 +118,7 @@ public class ValidationServiceTest {
 
             ValidationError validationError = sve.getValidationErrors().stream().findFirst().get();
             assertThat(validationError.getConstraint(), is(ValidationConstraint.ALLOWED_VALUES));
-            assertThat(validationError.getPath(), is("attributes[gender]"));
+            assertThat(validationError.getPath(), is("gender"));
             assertThat(validationError.getValue(), is("FEMALE"));
         }
     }
@@ -140,7 +140,7 @@ public class ValidationServiceTest {
 
             ValidationError validationError = sve.getValidationErrors().stream().findFirst().get();
             assertThat(validationError.getConstraint(), is(ValidationConstraint.ALLOWED_VALUES));
-            assertThat(validationError.getPath(), is("attributes[enum-array-attr]"));
+            assertThat(validationError.getPath(), is("enum-array-attr"));
             assertThat(validationError.getValue(), is("not-allowed-value"));
         }
     }
@@ -162,7 +162,7 @@ public class ValidationServiceTest {
 
             ValidationError validationError = sve.getValidationErrors().stream().findFirst().get();
             assertThat(validationError.getConstraint(), is(ValidationConstraint.UNIQUE));
-            assertThat(validationError.getPath(), is("attributes[key]"));
+            assertThat(validationError.getPath(), is("key"));
             assertThat(validationError.getValue(), is("test-person"));
         }
     }
@@ -184,7 +184,7 @@ public class ValidationServiceTest {
 
             ValidationError validationError = sve.getValidationErrors().stream().findFirst().get();
             assertThat(validationError.getConstraint(), is(ValidationConstraint.IS_ARRAY));
-            assertThat(validationError.getPath(), is("attributes[enum-array-attr]"));
+            assertThat(validationError.getPath(), is("enum-array-attr"));
             assertThat(validationError.getValue(), is("arrayVal2"));
         }
     }
@@ -207,7 +207,7 @@ public class ValidationServiceTest {
 
             ValidationError validationError = sve.getValidationErrors().stream().findFirst().get();
             assertThat(validationError.getConstraint(), is(ValidationConstraint.UNMODIFIABLE));
-            assertThat(validationError.getPath(), is("attributes[key]"));
+            assertThat(validationError.getPath(), is("key"));
             assertThat(validationError.getValue(), is("test-person"));
         }
     }
@@ -231,7 +231,7 @@ public class ValidationServiceTest {
 
                 ValidationError validationError = sve.getValidationErrors().stream().findFirst().get();
                 assertThat(validationError.getConstraint(), is(ValidationConstraint.CORRECT_TYPE));
-                assertThat(validationError.getPath(), is("attributes[name]"));
+                assertThat(validationError.getPath(), is("name"));
                 assertThat(validationError.getValue(), is(17));
             }
         }
@@ -252,7 +252,7 @@ public class ValidationServiceTest {
 
                 ValidationError validationError = sve.getValidationErrors().stream().findFirst().get();
                 assertThat(validationError.getConstraint(), is(ValidationConstraint.CORRECT_TYPE));
-                assertThat(validationError.getPath(), is("attributes[start]"));
+                assertThat(validationError.getPath(), is("start"));
                 assertThat(validationError.getValue(), is("1745, July"));
             }
         }
@@ -273,7 +273,7 @@ public class ValidationServiceTest {
 
                 ValidationError validationError = sve.getValidationErrors().stream().findFirst().get();
                 assertThat(validationError.getConstraint(), is(ValidationConstraint.CORRECT_TYPE));
-                assertThat(validationError.getPath(), is("attributes[wikiqid]"));
+                assertThat(validationError.getPath(), is("wikiqid"));
                 assertThat(validationError.getValue(), is("P1234"));
             }
         }
@@ -294,7 +294,7 @@ public class ValidationServiceTest {
 
                 ValidationError validationError = sve.getValidationErrors().stream().findFirst().get();
                 assertThat(validationError.getConstraint(), is(ValidationConstraint.CORRECT_TYPE));
-                assertThat(validationError.getPath(), is("attributes[height]"));
+                assertThat(validationError.getPath(), is("height"));
                 assertThat(validationError.getValue(), is("178"));
             }
         }
