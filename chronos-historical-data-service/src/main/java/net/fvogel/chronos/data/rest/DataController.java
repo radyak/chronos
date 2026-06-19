@@ -54,7 +54,25 @@ public class DataController {
         DataResponseDTO response = new DataResponseDTO();
         response.getMeta().setQuery(query);
         response.getMeta().setRequest(getFullURL(request));
-        response.setEntries(entries);
+        response.getEntries().addAll(entries);
+
+        return response;
+    }
+
+    @GetMapping("/{key}/context")
+    public DataResponseDTO findOneWithRelations(
+            HttpServletRequest request,
+            @PathVariable("key") String key
+    ) {
+        DataResponseDTO response = new DataResponseDTO();
+//        response.getMeta().setQuery(query);
+        response.getMeta().setRequest(getFullURL(request));
+
+        List<RelationRecord> records = this.dataService.findByKeyWithRelations(key);
+        records.forEach(record -> {
+            response.getEntries().addAll(record.getEntries());
+            response.getRelations().addAll(record.getRelations());
+        });
 
         return response;
     }

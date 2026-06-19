@@ -20,7 +20,12 @@ GET http://localhost:8010/api/data/statistics
 ###
 
 # By ID
-GET http://localhost:8010/api/data/th
+GET http://localhost:8010/api/data/vespasian
+
+###
+
+# By ID, with relations/"context"
+GET http://localhost:8010/api/data/titus/context
 
 
 ### 

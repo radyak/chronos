@@ -4,6 +4,7 @@ import net.fvogel.chronos.commons.exception.NotFoundException;
 import net.fvogel.chronos.data.model.CountResult;
 import net.fvogel.chronos.data.model.DataQuery;
 import net.fvogel.chronos.data.model.Entry;
+import net.fvogel.chronos.data.model.RelationRecord;
 import net.fvogel.chronos.data.service.validation.ValidationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +35,10 @@ public class DataService {
 
     public List<Entry> findAll(DataQuery query) {
         return cypherService.findAll(query);
+    }
+
+    public List<RelationRecord> findByKeyWithRelations(String key) {
+        return cypherService.findWithRelations(key);
     }
 
     public Optional<Entry> findByKey(String key) {

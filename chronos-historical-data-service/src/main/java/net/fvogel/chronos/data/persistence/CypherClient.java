@@ -40,12 +40,16 @@ public class CypherClient {
     }
 
     public void runStatement(Statement statement) {
-        var renderedStatement = Renderer.getDefaultRenderer().render(statement);
+        var renderedStatement = Renderer.getRenderer(
+                Configuration.newConfig()
+                        .withDialect(Dialect.NEO4J_5)
+                        .build()
+        ).render(statement);
 
         logger.debug("Executing statement: {}", renderedStatement);
 
         try (Session session = driver.session()) {
-            Result result = session.run(renderedStatement);
+            session.run(renderedStatement);
         }
     }
 }

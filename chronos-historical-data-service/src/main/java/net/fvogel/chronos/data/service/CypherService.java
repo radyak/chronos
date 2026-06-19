@@ -2,10 +2,7 @@ package net.fvogel.chronos.data.service;
 
 import net.fvogel.chronos.commons.exception.InvalidDataException;
 import net.fvogel.chronos.commons.exception.NotFoundException;
-import net.fvogel.chronos.data.model.CountResult;
-import net.fvogel.chronos.data.model.DataQuery;
-import net.fvogel.chronos.data.model.Entry;
-import net.fvogel.chronos.data.model.Pagination;
+import net.fvogel.chronos.data.model.*;
 import net.fvogel.chronos.data.persistence.CypherClient;
 import org.neo4j.cypherdsl.core.*;
 import org.slf4j.Logger;
@@ -56,6 +53,44 @@ public class CypherService {
                         .stream().map(entryMapper::toEntry)
                         .collect(Collectors.toList())
         );
+    }
+
+    // TODO: Merge with findAll
+    public List<RelationRecord> findWithRelations(String key) {
+        var nodeName = "n";
+        var relName = "r";
+        var relNodeName = "m";
+        var n = Cypher.anyNode().named(nodeName).withProperties("key", Cypher.literalOf(key));
+        var m = Cypher.anyNode(relNodeName);
+        var rel = n.relationshipBetween(m).named(relName);
+        var statement = Cypher.match(rel)
+                .returning(n, rel, m)
+                .build();
+
+        return client.runStatement(statement, result -> result
+                        .list(record -> {
+                            var sourceEntry = entryMapper.toEntry(record.get(nodeName).asNode());
+                            var relationship = entryMapper.toRelation(record.get(relName).asRelationship());
+                            var targetEntry = entryMapper.toEntry(record.get(relNodeName).asNode());
+
+                            RelationRecord r = new RelationRecord();
+
+                            r.getRelations().add(relationship);
+                            r.getEntries().add(sourceEntry);
+                            r.getEntries().add(targetEntry);
+
+//                    logger.info(
+//                            "Record: ({})-[:{}]->({})",
+//                            r.getStart().getAttributes().get("key"),
+//                            r.getType(),
+//                            r.getEnd().getAttributes().get("key")
+//                    );
+
+                            return r;
+                        })
+
+        );
+
     }
 
     public Optional<Entry> findByKey(String key) {

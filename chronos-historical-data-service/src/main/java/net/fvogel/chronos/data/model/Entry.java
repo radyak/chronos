@@ -2,10 +2,7 @@ package net.fvogel.chronos.data.model;
 
 import lombok.Data;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Data
 public class Entry {
@@ -13,4 +10,16 @@ public class Entry {
     Set<String> labels = new HashSet<>();
     Map<String, Object> attributes = new HashMap<>();
     MetaInfo _meta = new MetaInfo();
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Entry entry = (Entry) o;
+        return Objects.equals(elementId, entry.elementId) && Objects.equals(attributes.get("key"), entry.attributes.get("key"));
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(elementId, attributes);
+    }
 }
