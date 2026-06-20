@@ -1,10 +1,10 @@
 package net.fvogel.chronos.data.model.dto;
 
 import lombok.Data;
-import net.fvogel.chronos.data.model.DataQuery;
+import net.fvogel.chronos.data.model.ListQuery;
 
 @Data
 public class DataResponseMetaInfoDTO {
     String request;
-    DataQuery query;
+    ListQuery query;
 }

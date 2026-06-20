@@ -1,8 +1,8 @@
 package net.fvogel.chronos.data.service;
 
 import net.fvogel.chronos.commons.exception.InvalidParameterException;
-import net.fvogel.chronos.data.model.DataQuery;
 import net.fvogel.chronos.data.model.Filter;
+import net.fvogel.chronos.data.model.ListQuery;
 import net.fvogel.chronos.data.model.SortOrder;
 import net.fvogel.chronos.data.model.Sorting;
 import org.neo4j.cypherdsl.core.*;
@@ -18,7 +18,7 @@ public class CypherDslUtils {
 
     private static final Logger logger = LoggerFactory.getLogger(CypherDslUtils.class);
 
-    public static List<Condition> extractConditions(DataQuery query, Node node) {
+    public static List<Condition> extractConditions(ListQuery query, Node node) {
         return query.getFilters() == null ?
                 Collections.emptyList() :
                 query.getFilters().stream()
@@ -69,7 +69,7 @@ public class CypherDslUtils {
     }
 
     // Aspect: Query domain -> CypherDSL
-    public static List<SortItem> extractSortItems(DataQuery query, Node n) {
+    public static List<SortItem> extractSortItems(ListQuery query, Node n) {
         var sortList = new ArrayList<SortItem>();
         Sorting sorting = query.getSorting().isEmpty() ? null : query.getSorting().get(0);
         if (sorting != null && sorting.getSortBy() != null) {

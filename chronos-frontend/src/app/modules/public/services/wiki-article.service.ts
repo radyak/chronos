@@ -20,7 +20,7 @@ export class WikiArticleService {
   public randomWikiArticle(): ResourceRef<WikipediaSummary | undefined> {
     return rxResource({
       stream: () => {
-        return this.historicalDataClient.search({
+        return this.historicalDataClient.list({
           sortBy: 'random',
           pageSize: 1,
         }, {

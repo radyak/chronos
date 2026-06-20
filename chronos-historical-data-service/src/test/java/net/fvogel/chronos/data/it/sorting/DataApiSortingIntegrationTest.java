@@ -26,7 +26,7 @@ public class DataApiSortingIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void getDataWithDateSortByParamReturnsSortedPage() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/api/data?sortBy=start"))
+        mvc.perform(MockMvcRequestBuilders.get("/api/data/list?sortBy=start"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.entries.length()").value(10))
                 .andExpect(toExactlyMatchKeys(
@@ -45,7 +45,7 @@ public class DataApiSortingIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void getDataWithAlphabeticalSortByParamAndPageSizeReturnsSortedPage() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/api/data?sortBy=key&pageSize=5"))
+        mvc.perform(MockMvcRequestBuilders.get("/api/data/list?sortBy=key&pageSize=5"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.entries.length()").value(5))
                 .andExpect(toExactlyMatchKeys(
@@ -59,7 +59,7 @@ public class DataApiSortingIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void getDataWithInvertedSortOrderParamReturnsSortedPage() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/api/data?sortBy=key&pageSize=5&sortOrder=desc"))
+        mvc.perform(MockMvcRequestBuilders.get("/api/data/list?sortBy=key&pageSize=5&sortOrder=desc"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.entries.length()").value(5))
                 .andExpect(toExactlyMatchKeys(
@@ -73,13 +73,13 @@ public class DataApiSortingIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void getDataWithSpecialRandomSortByParamReturnsSortedPage() throws Exception {
-        String resultString1 = mvc.perform(MockMvcRequestBuilders.get("/api/data?sortBy=random"))
+        String resultString1 = mvc.perform(MockMvcRequestBuilders.get("/api/data/list?sortBy=random"))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
 
-        String resultString2 = mvc.perform(MockMvcRequestBuilders.get("/api/data?sortBy=random"))
+        String resultString2 = mvc.perform(MockMvcRequestBuilders.get("/api/data/list?sortBy=random"))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse()
@@ -93,13 +93,13 @@ public class DataApiSortingIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void getDataThrowsBadRequestForInvalidSortOrderParam() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/api/data?sortBy=key&sortOrder=invalid"))
+        mvc.perform(MockMvcRequestBuilders.get("/api/data/list?sortBy=key&sortOrder=invalid"))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     void getDataIgnoresInvalidSortByParam() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/api/data?sortBy=invalid"))
+        mvc.perform(MockMvcRequestBuilders.get("/api/data/list?sortBy=invalid"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.entries.length()").value(10));
     }
@@ -114,13 +114,13 @@ public class DataApiSortingIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void getDataIncludesAppropriateMetadata() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/api/data?sortBy=key&sortOrder=desc"))
+        mvc.perform(MockMvcRequestBuilders.get("/api/data/list?sortBy=key&sortOrder=desc"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.meta.query.sorting.length()").value(1))
                 .andExpect(jsonPath("$.meta.query.sorting.[0].sortOrder").value("DESC"))
                 .andExpect(jsonPath("$.meta.query.sorting.[0].sortBy").value("key"));
 
-        mvc.perform(MockMvcRequestBuilders.get("/api/data"))
+        mvc.perform(MockMvcRequestBuilders.get("/api/data/list"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.meta.query.sorting.length()").value(1))
                 .andExpect(jsonPath("$.meta.query.sorting.[0].sortOrder").value("ASC"))

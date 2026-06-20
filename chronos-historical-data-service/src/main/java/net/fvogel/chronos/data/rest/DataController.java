@@ -38,18 +38,18 @@ public class DataController {
         }
     }
 
-    @GetMapping()
-    public DataResponseDTO findAll(
+    @GetMapping("/list")
+    public DataResponseDTO list(
             HttpServletRequest request,
             @ModelAttribute @Valid Pagination pagination,
             @ModelAttribute @Valid Sorting sorting,
             @RequestParam Map<String, String> queryParams) {
-        DataQuery query = new DataQuery();
+        ListQuery query = new ListQuery();
         query.setPagination(pagination);
         query.setSorting(Collections.singletonList(sorting));
         query.setFilters(filterExtractor.extractFilterParams(queryParams));
 
-        List<Entry> entries = this.dataService.findAll(query);
+        List<Entry> entries = this.dataService.list(query);
 
         DataResponseDTO response = new DataResponseDTO();
         response.getMeta().setQuery(query);
@@ -59,16 +59,18 @@ public class DataController {
         return response;
     }
 
-    @GetMapping("/{key}/context")
-    public DataResponseDTO findOneWithRelations(
+    @GetMapping("/mesh")
+    public DataResponseDTO mesh(
             HttpServletRequest request,
-            @PathVariable("key") String key
-    ) {
+            @RequestParam Map<String, String> queryParams) {
+        ListQuery query = new ListQuery();
+        query.setFilters(filterExtractor.extractFilterParams(queryParams));
+
         DataResponseDTO response = new DataResponseDTO();
-//        response.getMeta().setQuery(query);
+        response.getMeta().setQuery(query);
         response.getMeta().setRequest(getFullURL(request));
 
-        List<RelationRecord> records = this.dataService.findByKeyWithRelations(key);
+        List<RelationRecord> records = this.dataService.mesh(query);
         records.forEach(record -> {
             response.getEntries().addAll(record.getEntries());
             response.getRelations().addAll(record.getRelations());
@@ -77,6 +79,24 @@ public class DataController {
         return response;
     }
 
+//    @GetMapping("/{key}/context")
+//    public DataResponseDTO findOneWithRelations(
+//            HttpServletRequest request,
+//            @PathVariable("key") String key
+//    ) {
+//        DataResponseDTO response = new DataResponseDTO();
+
+    /// /        response.getMeta().setQuery(query);
+//        response.getMeta().setRequest(getFullURL(request));
+//
+//        List<RelationRecord> records = this.dataService.findByKeyWithRelations(key);
+//        records.forEach(record -> {
+//            response.getEntries().addAll(record.getEntries());
+//            response.getRelations().addAll(record.getRelations());
+//        });
+//
+//        return response;
+//    }
     @GetMapping("/statistics")
     public List<CountResult> statistics() {
         return this.dataService.statistics();

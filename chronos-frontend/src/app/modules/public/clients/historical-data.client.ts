@@ -14,8 +14,8 @@ export class HistoricalDataClient {
   private apiUrl = '/api/data';
   
 
-  public search(query?: QueryDTO, filters?: Record<string, string>): Observable<DataResponseDTO> {
-    return this.http.get<DataResponseDTO>(`${this.apiUrl}`, { params: {...query, ...filters} as any });
+  public list(query?: QueryDTO, filters?: Record<string, string>): Observable<DataResponseDTO> {
+    return this.http.get<DataResponseDTO>(`${this.apiUrl}/list`, { params: {...query, ...filters} as any });
   }
 
   public getStatistics(): Observable<CountResultDTO[]> {

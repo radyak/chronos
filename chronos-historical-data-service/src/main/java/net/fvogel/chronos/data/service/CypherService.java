@@ -32,7 +32,7 @@ public class CypherService {
     @Autowired
     private EntryMapper entryMapper;
 
-    public List<Entry> findAll(DataQuery query) {
+    public List<Entry> list(ListQuery query) {
         var nodeName = "n";
         var n = Cypher.anyNode().named(nodeName);
 
@@ -55,7 +55,30 @@ public class CypherService {
         );
     }
 
-    // TODO: Merge with findAll
+    public List<RelationRecord> mesh(ListQuery query) {
+        var nodeName = "n";
+        var n = Cypher.anyNode().named(nodeName);
+
+        Condition unionCondition = CypherDslUtils.all(CypherDslUtils.extractConditions(query, n));
+
+        var statement = Cypher.match(n)
+                .where(unionCondition)
+                .returning(n)
+                .build();
+
+        return client.runStatement(statement, result -> result
+                .list(record -> {
+                    var entry = entryMapper.toEntry(record.get(nodeName).asNode());
+
+                    RelationRecord r = new RelationRecord();
+                    r.getEntries().add(entry);
+
+                    return r;
+                })
+        );
+    }
+
+    // TODO: Merge into mesh()
     public List<RelationRecord> findWithRelations(String key) {
         var nodeName = "n";
         var relName = "r";
@@ -68,26 +91,19 @@ public class CypherService {
                 .build();
 
         return client.runStatement(statement, result -> result
-                        .list(record -> {
-                            var sourceEntry = entryMapper.toEntry(record.get(nodeName).asNode());
-                            var relationship = entryMapper.toRelation(record.get(relName).asRelationship());
-                            var targetEntry = entryMapper.toEntry(record.get(relNodeName).asNode());
+                .list(record -> {
+                    var sourceEntry = entryMapper.toEntry(record.get(nodeName).asNode());
+                    var relationship = entryMapper.toRelation(record.get(relName).asRelationship());
+                    var targetEntry = entryMapper.toEntry(record.get(relNodeName).asNode());
 
-                            RelationRecord r = new RelationRecord();
+                    RelationRecord r = new RelationRecord();
 
-                            r.getRelations().add(relationship);
-                            r.getEntries().add(sourceEntry);
-                            r.getEntries().add(targetEntry);
+                    r.getRelations().add(relationship);
+                    r.getEntries().add(sourceEntry);
+                    r.getEntries().add(targetEntry);
 
-//                    logger.info(
-//                            "Record: ({})-[:{}]->({})",
-//                            r.getStart().getAttributes().get("key"),
-//                            r.getType(),
-//                            r.getEnd().getAttributes().get("key")
-//                    );
-
-                            return r;
-                        })
+                    return r;
+                })
 
         );
 
