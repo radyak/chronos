@@ -56,15 +56,31 @@ public class CypherService {
     }
 
     public List<RelationRecord> mesh(ListQuery query) {
+        var loadRelations = true;
+
         var nodeName = "n";
         var n = Cypher.anyNode().named(nodeName);
 
+        // Only for relations:
+        var relName = "r";
+        var relNodeName = "m";
+        var m = Cypher.anyNode(relNodeName);
+        var rel = n.relationshipBetween(m).named(relName);
+
         Condition unionCondition = CypherDslUtils.all(CypherDslUtils.extractConditions(query, n));
 
-        var statement = Cypher.match(n)
-                .where(unionCondition)
-                .returning(n)
-                .build();
+        Statement statement;
+        if (loadRelations) {
+            statement = Cypher.match(rel)
+                    .where(unionCondition)
+                    .returning(n, rel, m)
+                    .build();
+        } else {
+            statement = Cypher.match(n)
+                    .where(unionCondition)
+                    .returning(n)
+                    .build();
+        }
 
         return client.runStatement(statement, result -> result
                 .list(record -> {
@@ -73,40 +89,16 @@ public class CypherService {
                     RelationRecord r = new RelationRecord();
                     r.getEntries().add(entry);
 
-                    return r;
-                })
-        );
-    }
-
-    // TODO: Merge into mesh()
-    public List<RelationRecord> findWithRelations(String key) {
-        var nodeName = "n";
-        var relName = "r";
-        var relNodeName = "m";
-        var n = Cypher.anyNode().named(nodeName).withProperties("key", Cypher.literalOf(key));
-        var m = Cypher.anyNode(relNodeName);
-        var rel = n.relationshipBetween(m).named(relName);
-        var statement = Cypher.match(rel)
-                .returning(n, rel, m)
-                .build();
-
-        return client.runStatement(statement, result -> result
-                .list(record -> {
-                    var sourceEntry = entryMapper.toEntry(record.get(nodeName).asNode());
-                    var relationship = entryMapper.toRelation(record.get(relName).asRelationship());
-                    var targetEntry = entryMapper.toEntry(record.get(relNodeName).asNode());
-
-                    RelationRecord r = new RelationRecord();
-
-                    r.getRelations().add(relationship);
-                    r.getEntries().add(sourceEntry);
-                    r.getEntries().add(targetEntry);
+                    if (loadRelations) {
+                        var relationship = entryMapper.toRelation(record.get(relName).asRelationship());
+                        r.getRelations().add(relationship);
+                        var targetEntry = entryMapper.toEntry(record.get(relNodeName).asNode());
+                        r.getEntries().add(targetEntry);
+                    }
 
                     return r;
                 })
-
         );
-
     }
 
     public Optional<Entry> findByKey(String key) {

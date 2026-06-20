@@ -66,10 +66,6 @@ public class DataService {
         return cypherService.findByKey(key);
     }
 
-//    public List<RelationRecord> findByKeyWithRelations(String key) {
-//        return cypherService.findWithRelations(key);
-//    }
-
     public Optional<Entry> findByKeyAndElementId(String key, String elementId) {
         return cypherService.findByKeyAndElementId(key, elementId);
     }

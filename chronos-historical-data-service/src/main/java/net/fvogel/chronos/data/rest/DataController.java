@@ -11,9 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/data")
@@ -71,32 +69,20 @@ public class DataController {
         response.getMeta().setRequest(getFullURL(request));
 
         List<RelationRecord> records = this.dataService.mesh(query);
+
+        // Deduping entries and relations
+        Set<Entry> entries = new HashSet<>();
+        Set<Relation> relations = new HashSet<>();
         records.forEach(record -> {
-            response.getEntries().addAll(record.getEntries());
-            response.getRelations().addAll(record.getRelations());
+            entries.addAll(record.getEntries());
+            relations.addAll(record.getRelations());
         });
+        response.getEntries().addAll(entries);
+        response.getRelations().addAll(relations);
 
         return response;
     }
 
-//    @GetMapping("/{key}/context")
-//    public DataResponseDTO findOneWithRelations(
-//            HttpServletRequest request,
-//            @PathVariable("key") String key
-//    ) {
-//        DataResponseDTO response = new DataResponseDTO();
-
-    /// /        response.getMeta().setQuery(query);
-//        response.getMeta().setRequest(getFullURL(request));
-//
-//        List<RelationRecord> records = this.dataService.findByKeyWithRelations(key);
-//        records.forEach(record -> {
-//            response.getEntries().addAll(record.getEntries());
-//            response.getRelations().addAll(record.getRelations());
-//        });
-//
-//        return response;
-//    }
     @GetMapping("/statistics")
     public List<CountResult> statistics() {
         return this.dataService.statistics();
