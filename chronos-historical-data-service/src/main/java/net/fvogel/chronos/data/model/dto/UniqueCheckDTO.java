@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Builder
 @Data
-public class UniqueCheckDto {
+public class UniqueCheckDTO {
     @NotEmpty
     String key;
     String value;

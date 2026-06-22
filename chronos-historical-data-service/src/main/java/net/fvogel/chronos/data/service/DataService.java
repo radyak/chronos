@@ -1,10 +1,11 @@
 package net.fvogel.chronos.data.service;
 
 import net.fvogel.chronos.commons.exception.NotFoundException;
-import net.fvogel.chronos.data.model.CountResult;
-import net.fvogel.chronos.data.model.Entry;
-import net.fvogel.chronos.data.model.ListQuery;
-import net.fvogel.chronos.data.model.RelationRecord;
+import net.fvogel.chronos.data.model.dto.CountResultDTO;
+import net.fvogel.chronos.data.model.internal.Entry;
+import net.fvogel.chronos.data.model.internal.RelationRecord;
+import net.fvogel.chronos.data.model.query.list.ListQuery;
+import net.fvogel.chronos.data.model.query.mesh.MeshQuery;
 import net.fvogel.chronos.data.service.validation.ValidationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,10 +50,10 @@ public class DataService {
      * Returns a list of matching {@link RelationRecord}s, that can be assembled to a compact result with deduped
      * entries and relations.
      *
-     * @param query The list query that my contain entry filters, sorting and pagination params.
+     * @param query The mesh query that my contain entry filters, sorting and pagination params.
      * @return The resulting list or records.
      */
-    public List<RelationRecord> mesh(ListQuery query) {
+    public List<RelationRecord> mesh(MeshQuery query) {
         return cypherService.mesh(query);
     }
 
@@ -70,7 +71,7 @@ public class DataService {
         return cypherService.findByKeyAndElementId(key, elementId);
     }
 
-    public List<CountResult> statistics() {
+    public List<CountResultDTO> statistics() {
         return cypherService.statistics();
     }
 

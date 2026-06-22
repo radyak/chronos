@@ -1,7 +1,7 @@
 package net.fvogel.chronos.data.it.admin;
 
-import net.fvogel.chronos.data.model.Entry;
-import net.fvogel.chronos.data.model.dto.UniqueCheckDto;
+import net.fvogel.chronos.data.model.dto.UniqueCheckDTO;
+import net.fvogel.chronos.data.model.internal.Entry;
 import net.fvogel.chronos.data.testutils.BaseIntegrationTest;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -26,7 +26,7 @@ public class AdminDataApiUniqueCheckIntegrationTest extends BaseIntegrationTest 
     @Test
     void canCertifyUniquenessForAnExistingEntryKey() throws Exception {
         Entry entry = dataService.findByKey("vespasian").get();
-        uniqueCheck(UniqueCheckDto.builder()
+        uniqueCheck(UniqueCheckDTO.builder()
                         .key("key")
                         .value("vespasian")
                         .elementId(entry.getElementId())
@@ -37,7 +37,7 @@ public class AdminDataApiUniqueCheckIntegrationTest extends BaseIntegrationTest 
     @Test
     void canCertifyUniquenessForNewKeyForAnExistingEntryKey() throws Exception {
         Entry entry = dataService.findByKey("vespasian").get();
-        uniqueCheck(UniqueCheckDto.builder()
+        uniqueCheck(UniqueCheckDTO.builder()
                         .key("key")
                         .value("vespasian-changed")
                         .elementId(entry.getElementId())
@@ -48,7 +48,7 @@ public class AdminDataApiUniqueCheckIntegrationTest extends BaseIntegrationTest 
     @Test
     void canCertifyNonUniquenessForNewEntryWithAlreadyExistingKey() throws Exception {
         // Variant: elementId = null
-        uniqueCheck(UniqueCheckDto.builder()
+        uniqueCheck(UniqueCheckDTO.builder()
                         .key("key")
                         .value("vespasian")
                         .elementId(null)
@@ -56,7 +56,7 @@ public class AdminDataApiUniqueCheckIntegrationTest extends BaseIntegrationTest 
                 false);
 
         // Variant: elementId = ''
-        uniqueCheck(UniqueCheckDto.builder()
+        uniqueCheck(UniqueCheckDTO.builder()
                         .key("key")
                         .value("vespasian")
                         .elementId("")
@@ -66,7 +66,7 @@ public class AdminDataApiUniqueCheckIntegrationTest extends BaseIntegrationTest 
 
     @Test
     void canCertifyUniquenessForNewEntryWithNewKey() throws Exception {
-        uniqueCheck(UniqueCheckDto.builder()
+        uniqueCheck(UniqueCheckDTO.builder()
                         .key("key")
                         .value("trajan")
                         .elementId(null)
@@ -76,7 +76,7 @@ public class AdminDataApiUniqueCheckIntegrationTest extends BaseIntegrationTest 
 
     @Test
     void canCertifyUniquenessForNullValues() throws Exception {
-        uniqueCheck(UniqueCheckDto.builder()
+        uniqueCheck(UniqueCheckDTO.builder()
                         .key("key")
                         .value(null)
                         .elementId(null)
@@ -116,7 +116,7 @@ public class AdminDataApiUniqueCheckIntegrationTest extends BaseIntegrationTest 
                 .andExpect(status().isBadRequest());
     }
 
-    void uniqueCheck(UniqueCheckDto uniqueCheckDto, boolean isUnique) throws Exception {
+    void uniqueCheck(UniqueCheckDTO uniqueCheckDto, boolean isUnique) throws Exception {
         mvc.perform(
                         get("/api/data/admin/unique?key={key}&value={value}&elementId={elementId}",
                                 uniqueCheckDto.getKey(),

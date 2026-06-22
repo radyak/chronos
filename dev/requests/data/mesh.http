@@ -1,5 +1,18 @@
 # Mesh
 
 # By key
+
+# Only node
 GET http://localhost:8010/api/data/mesh?key=vespasian
+
+###
+
+# With relations of any type
+GET http://localhost:8010/api/data/mesh?key=vespasian&relations=*
+
+
+###
+
+# With relations of type 'RELATIONSHIP_WITH' or 'CHILD_OF'
+GET http://localhost:8010/api/data/mesh?key=vespasian&relations=RELATIONSHIP_WITH,CHILD_OF
 

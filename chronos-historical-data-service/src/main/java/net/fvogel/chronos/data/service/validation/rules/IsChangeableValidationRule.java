@@ -2,7 +2,7 @@ package net.fvogel.chronos.data.service.validation.rules;
 
 import net.fvogel.chronos.commons.exception.InvalidDataException;
 import net.fvogel.chronos.commons.model.schema.Type;
-import net.fvogel.chronos.data.model.Entry;
+import net.fvogel.chronos.data.model.internal.Entry;
 import net.fvogel.chronos.data.model.validation.ValidationError;
 import net.fvogel.chronos.data.service.CypherService;
 import org.apache.commons.lang3.ObjectUtils;

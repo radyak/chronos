@@ -1,4 +1,4 @@
-package net.fvogel.chronos.data.model;
+package net.fvogel.chronos.data.model.internal;
 
 import lombok.Data;
 

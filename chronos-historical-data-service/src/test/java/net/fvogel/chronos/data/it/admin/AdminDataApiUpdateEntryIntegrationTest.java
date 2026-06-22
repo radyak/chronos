@@ -1,7 +1,7 @@
 package net.fvogel.chronos.data.it.admin;
 
 import net.fvogel.chronos.data.client.SchemaClient;
-import net.fvogel.chronos.data.model.Entry;
+import net.fvogel.chronos.data.model.internal.Entry;
 import net.fvogel.chronos.data.testutils.BaseIntegrationTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;

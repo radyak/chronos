@@ -1,6 +1,6 @@
 package net.fvogel.chronos.data.testutils;
 
-import net.fvogel.chronos.data.model.Entry;
+import net.fvogel.chronos.data.model.internal.Entry;
 
 import java.util.Set;
 

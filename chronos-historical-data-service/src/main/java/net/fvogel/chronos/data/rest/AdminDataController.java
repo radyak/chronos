@@ -1,8 +1,8 @@
 package net.fvogel.chronos.data.rest;
 
 import jakarta.validation.Valid;
-import net.fvogel.chronos.data.model.Entry;
-import net.fvogel.chronos.data.model.dto.UniqueCheckDto;
+import net.fvogel.chronos.data.model.dto.UniqueCheckDTO;
+import net.fvogel.chronos.data.model.internal.Entry;
 import net.fvogel.chronos.data.service.DataService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +46,7 @@ public class AdminDataController {
      * @return true, if the attribute only exists on the node with specified elementId, otherwise false
      */
     @GetMapping("/unique")
-    public boolean exists(@ModelAttribute @Valid UniqueCheckDto uniqueCheckDto) {
+    public boolean exists(@ModelAttribute @Valid UniqueCheckDTO uniqueCheckDto) {
         return dataService.isAttributeUnique(
                 uniqueCheckDto.getKey(),
                 uniqueCheckDto.getValue(),

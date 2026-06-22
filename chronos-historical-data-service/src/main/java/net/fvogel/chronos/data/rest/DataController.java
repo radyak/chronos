@@ -3,15 +3,31 @@ package net.fvogel.chronos.data.rest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import net.fvogel.chronos.commons.exception.NotFoundException;
-import net.fvogel.chronos.data.model.*;
+import net.fvogel.chronos.data.model.dto.CountResultDTO;
 import net.fvogel.chronos.data.model.dto.DataResponseDTO;
+import net.fvogel.chronos.data.model.internal.Entry;
+import net.fvogel.chronos.data.model.internal.Relation;
+import net.fvogel.chronos.data.model.internal.RelationRecord;
+import net.fvogel.chronos.data.model.query.list.ListQuery;
+import net.fvogel.chronos.data.model.query.list.Pagination;
+import net.fvogel.chronos.data.model.query.list.Sorting;
+import net.fvogel.chronos.data.model.query.mesh.MeshQuery;
 import net.fvogel.chronos.data.service.DataService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/data")
@@ -60,9 +76,11 @@ public class DataController {
     @GetMapping("/mesh")
     public DataResponseDTO mesh(
             HttpServletRequest request,
+            @RequestParam(required = false) Set<String> relations,
             @RequestParam Map<String, String> queryParams) {
-        ListQuery query = new ListQuery();
+        MeshQuery query = new MeshQuery();
         query.setFilters(filterExtractor.extractFilterParams(queryParams));
+        query.setRelations(relations);
 
         DataResponseDTO response = new DataResponseDTO();
         response.getMeta().setQuery(query);
@@ -71,20 +89,20 @@ public class DataController {
         List<RelationRecord> records = this.dataService.mesh(query);
 
         // Deduping entries and relations
-        Set<Entry> entries = new HashSet<>();
-        Set<Relation> relations = new HashSet<>();
+        Set<Entry> resultEntries = new HashSet<>();
+        Set<Relation> resultRelations = new HashSet<>();
         records.forEach(record -> {
-            entries.addAll(record.getEntries());
-            relations.addAll(record.getRelations());
+            resultEntries.addAll(record.getEntries());
+            resultRelations.addAll(record.getRelations());
         });
-        response.getEntries().addAll(entries);
-        response.getRelations().addAll(relations);
+        response.getEntries().addAll(resultEntries);
+        response.getRelations().addAll(resultRelations);
 
         return response;
     }
 
     @GetMapping("/statistics")
-    public List<CountResult> statistics() {
+    public List<CountResultDTO> statistics() {
         return this.dataService.statistics();
     }
 

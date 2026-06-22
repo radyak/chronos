@@ -4,7 +4,7 @@ import net.fvogel.chronos.commons.model.schema.SchemaResponse;
 import net.fvogel.chronos.commons.model.schema.Type;
 import net.fvogel.chronos.data.client.SchemaClient;
 import net.fvogel.chronos.data.exception.SchemaValidationException;
-import net.fvogel.chronos.data.model.Entry;
+import net.fvogel.chronos.data.model.internal.Entry;
 import net.fvogel.chronos.data.model.validation.ValidationError;
 import net.fvogel.chronos.data.service.validation.rules.ValidationRule;
 import org.slf4j.Logger;

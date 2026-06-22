@@ -1,9 +1,9 @@
 package net.fvogel.chronos.data.service;
 
 import net.fvogel.chronos.commons.exception.InvalidDataException;
-import net.fvogel.chronos.data.model.CountResult;
-import net.fvogel.chronos.data.model.Entry;
-import net.fvogel.chronos.data.model.Relation;
+import net.fvogel.chronos.data.model.dto.CountResultDTO;
+import net.fvogel.chronos.data.model.internal.Entry;
+import net.fvogel.chronos.data.model.internal.Relation;
 import org.neo4j.cypherdsl.core.Cypher;
 import org.neo4j.driver.Record;
 import org.neo4j.driver.Value;
@@ -82,13 +82,13 @@ public class EntryMapper {
         properties.put("_lastUpdateDate", entry.get_meta().getLastUpdateDate());
     }
 
-    public CountResult toCountResult(Record record) {
+    public CountResultDTO toCountResult(Record record) {
         Set<String> labels = record.get("labels").asList().stream().map(Object::toString).collect(Collectors.toSet());
         Integer count = Integer.valueOf(record.get("count").asInt());
-        CountResult countResult = new CountResult();
-        countResult.setLabel(labels.stream().findFirst().orElse(""));
-        countResult.setCount(count);
-        return countResult;
+        CountResultDTO countResultDTO = new CountResultDTO();
+        countResultDTO.setLabel(labels.stream().findFirst().orElse(""));
+        countResultDTO.setCount(count);
+        return countResultDTO;
     }
 
     private Object value(Value value) {

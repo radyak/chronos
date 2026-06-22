@@ -1,10 +1,11 @@
 package net.fvogel.chronos.data.rest;
 
 import net.fvogel.chronos.commons.exception.InvalidParameterException;
-import net.fvogel.chronos.data.model.ConditionOperator;
-import net.fvogel.chronos.data.model.Filter;
-import net.fvogel.chronos.data.model.Pagination;
-import net.fvogel.chronos.data.model.Sorting;
+import net.fvogel.chronos.data.model.query.ConditionOperator;
+import net.fvogel.chronos.data.model.query.Filter;
+import net.fvogel.chronos.data.model.query.list.Pagination;
+import net.fvogel.chronos.data.model.query.list.Sorting;
+import net.fvogel.chronos.data.model.query.mesh.MeshQuery;
 import net.fvogel.chronos.data.utils.ReflectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +28,8 @@ public class FilterExtractor {
                 ReflectionUtils.getFieldNames(Pagination.class));
         this.coveredQueryParams.addAll(
                 ReflectionUtils.getFieldNames(Sorting.class));
+        this.coveredQueryParams.addAll(
+                ReflectionUtils.getFieldNames(MeshQuery.class));
     }
 
     public List<Filter> extractFilterParams(Map<String, String> queryParams) {

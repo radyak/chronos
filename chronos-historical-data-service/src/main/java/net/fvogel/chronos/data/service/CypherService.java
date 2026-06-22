@@ -2,9 +2,21 @@ package net.fvogel.chronos.data.service;
 
 import net.fvogel.chronos.commons.exception.InvalidDataException;
 import net.fvogel.chronos.commons.exception.NotFoundException;
-import net.fvogel.chronos.data.model.*;
+import net.fvogel.chronos.data.model.dto.CountResultDTO;
+import net.fvogel.chronos.data.model.internal.Entry;
+import net.fvogel.chronos.data.model.internal.RelationRecord;
+import net.fvogel.chronos.data.model.query.list.ListQuery;
+import net.fvogel.chronos.data.model.query.list.Pagination;
+import net.fvogel.chronos.data.model.query.mesh.MeshQuery;
 import net.fvogel.chronos.data.persistence.CypherClient;
-import org.neo4j.cypherdsl.core.*;
+import org.apache.commons.lang3.ObjectUtils;
+import org.neo4j.cypherdsl.core.Condition;
+import org.neo4j.cypherdsl.core.Cypher;
+import org.neo4j.cypherdsl.core.Node;
+import org.neo4j.cypherdsl.core.Relationship;
+import org.neo4j.cypherdsl.core.SortItem;
+import org.neo4j.cypherdsl.core.Statement;
+import org.neo4j.cypherdsl.core.StatementBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,9 +67,7 @@ public class CypherService {
         );
     }
 
-    public List<RelationRecord> mesh(ListQuery query) {
-        var loadRelations = true;
-
+    public List<RelationRecord> mesh(MeshQuery query) {
         var nodeName = "n";
         var n = Cypher.anyNode().named(nodeName);
 
@@ -65,12 +75,19 @@ public class CypherService {
         var relName = "r";
         var relNodeName = "m";
         var m = Cypher.anyNode(relNodeName);
-        var rel = n.relationshipBetween(m).named(relName);
+        Relationship rel;
 
         Condition unionCondition = CypherDslUtils.all(CypherDslUtils.extractConditions(query, n));
 
         Statement statement;
+        var loadRelations = !ObjectUtils.isEmpty(query.getRelations());
         if (loadRelations) {
+            var relationTypes = query.getRelations().stream()
+                    .map(String::trim)
+                    .filter(r -> !"*".equals(r))
+                    .toArray(String[]::new);
+            rel = n.relationshipBetween(m, relationTypes).named(relName);
+
             statement = Cypher.match(rel)
                     .where(unionCondition)
                     .returning(n, rel, m)
@@ -128,7 +145,7 @@ public class CypherService {
         );
     }
 
-    public List<CountResult> statistics() {
+    public List<CountResultDTO> statistics() {
         var nodeName = "n";
         var n = Cypher.anyNode().named(nodeName);
         var statement = Cypher.match(n)
