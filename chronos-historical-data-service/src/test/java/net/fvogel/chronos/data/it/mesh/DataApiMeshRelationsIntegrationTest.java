@@ -1,0 +1,80 @@
+package net.fvogel.chronos.data.it.mesh;
+
+import net.fvogel.chronos.data.testutils.BaseIntegrationTest;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.testcontainers.containers.Neo4jContainer;
+import org.testcontainers.junit.jupiter.Container;
+
+import static net.fvogel.chronos.data.testutils.DataApiRequestMatcher.toExactlyContainKeys;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+public class DataApiMeshRelationsIntegrationTest extends BaseIntegrationTest {
+
+    @Container
+    @ServiceConnection
+    public static final Neo4jContainer<?> neo4j = new Neo4jContainer<>("neo4j:5");
+
+    @Test
+    void getDataWithoutRelationsReturnsNoRelations() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/api/data/mesh?key=vespasian"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.entries.length()").value(1))
+                .andExpect(jsonPath("$.relations.length()").value(0))
+                .andExpect(toExactlyContainKeys("vespasian"));
+    }
+
+    @Test
+    void getDataWithRelationsWildcardReturnsAllRelationsOfAllTypesAndRelatedEntries() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/api/data/mesh?key=vespasian&relations=*"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.entries.length()").value(6))
+                .andExpect(jsonPath("$.relations.length()").value(5))
+                .andExpect(jsonPath("$.length($.relations[?(@.type == 'RULED')].length())").value(1))
+                .andExpect(jsonPath("$.length($.relations[?(@.type == 'CHILD_OF')].length())").value(2))
+                .andExpect(jsonPath("$.length($.relations[?(@.type == 'RELATIONSHIP_WITH')].length())").value(2))
+                .andExpect(toExactlyContainKeys("vespasian", "caenis", "titus", "domitian", "domitilla-the-elder", "roman-empire"));
+    }
+
+    @Test
+    void getDataWithSpecifiedRelationsTypesReturnsAllRelationsOfSpecifiedTypesAndRelatedEntries() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/api/data/mesh?key=vespasian&relations=RULED,RELATIONSHIP_WITH"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.entries.length()").value(4))
+                .andExpect(jsonPath("$.relations.length()").value(3))
+                .andExpect(jsonPath("$.length($.relations[?(@.type == 'RULED')].length())").value(1))
+                .andExpect(jsonPath("$.length($.relations[?(@.type == 'CHILD_OF')].length())").value(0))
+                .andExpect(jsonPath("$.length($.relations[?(@.type == 'RELATIONSHIP_WITH')].length())").value(2))
+                .andExpect(toExactlyContainKeys("vespasian", "caenis", "domitilla-the-elder", "roman-empire"));
+    }
+
+    @Test
+    void getDataWithUndefinedRelationsTypesReturnsNoEntry() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/api/data/mesh?key=vespasian&relations=UNKNOWN"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.entries.length()").value(0))
+                .andExpect(jsonPath("$.relations.length()").value(0))
+                .andExpect(toExactlyContainKeys());
+    }
+
+    @Test
+    void getDataWithoutAnyParamsReturnsAllEntries() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/api/data/mesh"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.entries.length()").value(23))
+                .andExpect(jsonPath("$.relations.length()").value(0))
+                .andExpect(toExactlyContainKeys());
+    }
+
+    @Test
+    void getDataWithSpecifiedRelationTypeReturnsAssociatedEntries() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/api/data/mesh?relations=SECESSIONAL_TO"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.entries.length()").value(3))
+                .andExpect(jsonPath("$.relations.length()").value(2))
+                .andExpect(toExactlyContainKeys("roman-empire", "gallic-empire", "palmyrene-empire"));
+    }
+
+}
