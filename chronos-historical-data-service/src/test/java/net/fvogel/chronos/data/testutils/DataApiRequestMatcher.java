@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 
 public class DataApiRequestMatcher {
@@ -44,6 +45,24 @@ public class DataApiRequestMatcher {
             Collection<String> presentKeys = extractKeys(mvcResult);
 
             if (!Arrays.asList(expectedKeys).equals(presentKeys)) {
+                throw new AssertionError(
+                        """
+                                Other keys present or in different order than expected.
+                                Expected: %s
+                                Actual: %s
+                                """.formatted(
+                                String.join(",", expectedKeys),
+                                String.join(",", presentKeys))
+                );
+            }
+        };
+    }
+
+    public static ResultMatcher toExactlyContainKeys(String... expectedKeys) {
+        return mvcResult -> {
+            Set<String> presentKeys = Set.copyOf(extractKeys(mvcResult));
+
+            if (!Set.of(expectedKeys).equals(presentKeys)) {
                 throw new AssertionError(
                         """
                                 Other keys present than expected.
