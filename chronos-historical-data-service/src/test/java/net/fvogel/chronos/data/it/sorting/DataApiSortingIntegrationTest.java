@@ -1,7 +1,6 @@
 package net.fvogel.chronos.data.it.sorting;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import net.fvogel.chronos.data.model.dto.DataResponseDTO;
+import com.jayway.jsonpath.JsonPath;
 import net.fvogel.chronos.data.testutils.BaseIntegrationTest;
 import org.hamcrest.core.IsNull;
 import org.junit.jupiter.api.Test;
@@ -14,7 +13,9 @@ import java.util.List;
 
 import static net.fvogel.chronos.data.testutils.DataApiRequestMatcher.toExactlyMatchKeys;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -104,12 +105,8 @@ public class DataApiSortingIntegrationTest extends BaseIntegrationTest {
                 .andExpect(jsonPath("$.entries.length()").value(10));
     }
 
-    private List<String> keyList(String json) throws JsonProcessingException {
-        return objectMapper.readValue(json, DataResponseDTO.class)
-                .getEntries()
-                .stream()
-                .map(entry -> entry.getAttributes().get("key").toString())
-                .toList();
+    private List<String> keyList(String json) {
+        return JsonPath.read(json, "$.entries[*].attributes.key");
     }
 
     @Test
