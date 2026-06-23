@@ -1,4 +1,4 @@
-package net.fvogel.chronos.data.it.sorting;
+package net.fvogel.chronos.data.it.list;
 
 import com.jayway.jsonpath.JsonPath;
 import net.fvogel.chronos.data.testutils.BaseIntegrationTest;
@@ -19,7 +19,7 @@ import static org.hamcrest.Matchers.not;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class DataApiSortingIntegrationTest extends BaseIntegrationTest {
+public class DataApiListSortingIntegrationTest extends BaseIntegrationTest {
 
     @Container
     @ServiceConnection

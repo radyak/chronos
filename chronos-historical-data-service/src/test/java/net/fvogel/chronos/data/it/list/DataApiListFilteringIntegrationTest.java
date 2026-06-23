@@ -1,4 +1,4 @@
-package net.fvogel.chronos.data.it.filtering;
+package net.fvogel.chronos.data.it.list;
 
 import net.fvogel.chronos.data.testutils.BaseIntegrationTest;
 import org.junit.jupiter.api.Test;
@@ -11,7 +11,7 @@ import static net.fvogel.chronos.data.testutils.DataApiRequestMatcher.toExactlyM
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class DataApiFilteringIntegrationTest extends BaseIntegrationTest {
+public class DataApiListFilteringIntegrationTest extends BaseIntegrationTest {
 
     @Container
     @ServiceConnection

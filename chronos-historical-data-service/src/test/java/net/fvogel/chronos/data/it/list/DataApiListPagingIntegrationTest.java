@@ -1,4 +1,4 @@
-package net.fvogel.chronos.data.it.paging;
+package net.fvogel.chronos.data.it.list;
 
 import net.fvogel.chronos.data.testutils.BaseIntegrationTest;
 import org.junit.jupiter.api.Test;
@@ -10,7 +10,7 @@ import org.testcontainers.junit.jupiter.Container;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class DataApiPagingIntegrationTest extends BaseIntegrationTest {
+public class DataApiListPagingIntegrationTest extends BaseIntegrationTest {
 
     @Container
     @ServiceConnection
