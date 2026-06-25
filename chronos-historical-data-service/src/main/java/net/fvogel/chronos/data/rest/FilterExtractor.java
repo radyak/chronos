@@ -47,6 +47,13 @@ public class FilterExtractor {
                     // Mapping
                     Filter filter = new Filter();
 
+
+                    // Mapping: Labels
+                    if ("labels".equalsIgnoreCase(filterParam.getKey())) {
+                        filter.setLabels(List.of(filterParam.getValue().split(",")));
+                        return filter;
+                    }
+                    
                     // Mapping: Field
                     filter.setAttribute(filterComponents[0]);
 

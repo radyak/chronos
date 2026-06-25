@@ -3,7 +3,7 @@
 # By key
 
 # Only node
-GET http://localhost:8010/api/data/mesh?key=vespasian
+GET http://localhost:8010/api/data/mesh?start:gt=0032-04-28&labels=Territory,Person
 
 ###
 

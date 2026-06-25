@@ -1,5 +1,5 @@
 # Get all (default: first 10 elements, no sorting)
-GET http://localhost:8010/api/data/list
+GET http://localhost:8010/api/data/list?labels=Territory,Person
 
 ###
 

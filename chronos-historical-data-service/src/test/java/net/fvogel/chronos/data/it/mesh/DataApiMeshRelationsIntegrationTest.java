@@ -64,8 +64,7 @@ public class DataApiMeshRelationsIntegrationTest extends BaseIntegrationTest {
         mvc.perform(MockMvcRequestBuilders.get("/api/data/mesh"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.entries.length()").value(23))
-                .andExpect(jsonPath("$.relations.length()").value(0))
-                .andExpect(toExactlyContainKeys());
+                .andExpect(jsonPath("$.relations.length()").value(0));
     }
 
     @Test

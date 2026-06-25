@@ -118,4 +118,29 @@ public class DataApiMeshFilteringIntegrationTest extends BaseIntegrationTest {
                 .andExpect(jsonPath("$.meta.query.filters.[0].value").value("0032-04-28"));
     }
 
+
+    @Test
+    void getDataWithSingleLabelsFilterParamReturnsMatchingEntries() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/api/data/mesh?labels=Territory"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.entries.length()").value(3))
+                .andExpect(toExactlyContainKeys("roman-empire", "palmyrene-empire", "gallic-empire"));
+    }
+
+    @Test
+    void getDataWithMultipleLabelsFilterParamReturnsMatchingEntries() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/api/data/mesh?labels=Territory,Person"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.entries.length()").value(23));
+    }
+
+    @Test
+    void getDataWithLabelsFilterParamWorksWithFilterAndSortParams() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/api/data/list?labels=Territory&start:gte=0200"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.entries.length()").value(2))
+                .andExpect(toExactlyContainKeys("palmyrene-empire", "gallic-empire"));
+    }
+
+
 }

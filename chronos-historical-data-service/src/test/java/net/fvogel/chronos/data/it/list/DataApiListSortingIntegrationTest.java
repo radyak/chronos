@@ -2,7 +2,6 @@ package net.fvogel.chronos.data.it.list;
 
 import com.jayway.jsonpath.JsonPath;
 import net.fvogel.chronos.data.testutils.BaseIntegrationTest;
-import org.hamcrest.core.IsNull;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -11,6 +10,7 @@ import org.testcontainers.junit.jupiter.Container;
 
 import java.util.List;
 
+import static net.fvogel.chronos.data.testutils.DataApiRequestMatcher.toExactlyContainKeys;
 import static net.fvogel.chronos.data.testutils.DataApiRequestMatcher.toExactlyMatchKeys;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -121,7 +121,30 @@ public class DataApiListSortingIntegrationTest extends BaseIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.meta.query.sorting.length()").value(1))
                 .andExpect(jsonPath("$.meta.query.sorting.[0].sortOrder").value("ASC"))
-                .andExpect(jsonPath("$.meta.query.sorting.[0].sortBy").value(IsNull.nullValue()));
+                .andExpect(jsonPath("$.meta.query.sorting.[0].sortBy").doesNotExist());
+    }
+
+    @Test
+    void getDataWithSingleLabelsFilterParamReturnsMatchingEntries() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/api/data/list?labels=Territory"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.entries.length()").value(3))
+                .andExpect(toExactlyContainKeys("roman-empire", "palmyrene-empire", "gallic-empire"));
+    }
+
+    @Test
+    void getDataWithMultipleLabelsFilterParamReturnsMatchingEntries() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/api/data/list?labels=Territory,Person"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.entries.length()").value(10));
+    }
+
+    @Test
+    void getDataWithLabelsFilterParamWorksWithFilterAndSortParams() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/api/data/list?labels=Territory&sortBy=key&sortOrder=DESC&start:gte=0200"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.entries.length()").value(2))
+                .andExpect(toExactlyMatchKeys("palmyrene-empire", "gallic-empire"));
     }
 
 }

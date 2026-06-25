@@ -6,7 +6,12 @@ import net.fvogel.chronos.data.model.query.Filter;
 import net.fvogel.chronos.data.model.query.list.ListQuery;
 import net.fvogel.chronos.data.model.query.list.SortOrder;
 import net.fvogel.chronos.data.model.query.list.Sorting;
-import org.neo4j.cypherdsl.core.*;
+import org.apache.commons.lang3.ObjectUtils;
+import org.neo4j.cypherdsl.core.Condition;
+import org.neo4j.cypherdsl.core.Cypher;
+import org.neo4j.cypherdsl.core.Node;
+import org.neo4j.cypherdsl.core.Property;
+import org.neo4j.cypherdsl.core.SortItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,6 +34,16 @@ public class CypherDslUtils {
 
     private static Condition mapFilterToCondition(Filter filter, Node node) {
         Property property = node.property(Cypher.literalOf(filter.getAttribute()));
+
+        // Label filter
+        if (ObjectUtils.isNotEmpty(filter.getLabels())) {
+            Condition condition = Cypher.noCondition();
+            for (String label : filter.getLabels()) {
+                condition = condition.or(node.hasLabels(label));
+            }
+            return condition;
+        }
+
         // specific null value handling
         if (null == filter.getValue()) {
             switch (filter.getOperator()) {
