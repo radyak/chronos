@@ -3,11 +3,10 @@ package net.fvogel.chronos.data.model.query;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Data
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class EntryFilter extends BaseAttributeFilter {
-    List<String> labels = new ArrayList<>();
+public abstract class BaseAttributeFilter {
+    String attribute;
+    ConditionOperator operator;
+    String value;
 }

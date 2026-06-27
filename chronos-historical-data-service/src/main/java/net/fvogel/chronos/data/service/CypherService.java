@@ -48,7 +48,7 @@ public class CypherService {
         var n = Cypher.anyNode().named(nodeName);
 
         List<SortItem> sortList = CypherDslUtils.extractSortItems(query, n);
-        Condition unionCondition = CypherDslUtils.all(CypherDslUtils.extractConditions(query, n));
+        Condition unionCondition = CypherDslUtils.all(CypherDslUtils.extractEntryConditions(query, n));
         Pagination pagination = query.getPagination();
 
         var statement = Cypher.match(n)
@@ -76,7 +76,7 @@ public class CypherService {
         var m = Cypher.anyNode(relNodeName);
         Relationship rel;
 
-        Condition unionCondition = CypherDslUtils.all(CypherDslUtils.extractConditions(query, n));
+        Condition unionCondition = CypherDslUtils.all(CypherDslUtils.extractEntryConditions(query, n));
 
         Statement statement;
 
@@ -94,8 +94,11 @@ public class CypherService {
                     .toArray(String[]::new);
             rel = n.relationshipBetween(m, relationTypes).named(relName);
 
+            Condition relationCondition = CypherDslUtils.all(CypherDslUtils.extractRelationConditions(query, rel));
+
             statement = Cypher.match(rel)
                     .where(unionCondition)
+                    .and(relationCondition)
                     .returning(n, rel, m)
                     .build();
         } else {

@@ -1,16 +1,21 @@
 package net.fvogel.chronos.data.service;
 
 import net.fvogel.chronos.commons.exception.InvalidParameterException;
+import net.fvogel.chronos.data.model.query.BaseAttributeFilter;
 import net.fvogel.chronos.data.model.query.BaseQuery;
 import net.fvogel.chronos.data.model.query.EntryFilter;
 import net.fvogel.chronos.data.model.query.list.ListQuery;
 import net.fvogel.chronos.data.model.query.list.SortOrder;
 import net.fvogel.chronos.data.model.query.list.Sorting;
+import net.fvogel.chronos.data.model.query.mesh.MeshQuery;
+import net.fvogel.chronos.data.model.query.mesh.RelationFilter;
 import org.apache.commons.lang3.ObjectUtils;
 import org.neo4j.cypherdsl.core.Condition;
 import org.neo4j.cypherdsl.core.Cypher;
 import org.neo4j.cypherdsl.core.Node;
 import org.neo4j.cypherdsl.core.Property;
+import org.neo4j.cypherdsl.core.PropertyContainer;
+import org.neo4j.cypherdsl.core.Relationship;
 import org.neo4j.cypherdsl.core.SortItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,15 +29,23 @@ public class CypherDslUtils {
 
     private static final Logger logger = LoggerFactory.getLogger(CypherDslUtils.class);
 
-    public static List<Condition> extractConditions(BaseQuery query, Node node) {
+    public static List<Condition> extractEntryConditions(BaseQuery query, Node node) {
         return query.getEntryFilters() == null ?
                 Collections.emptyList() :
                 query.getEntryFilters().stream()
-                        .map(entryFilter -> CypherDslUtils.mapFilterToCondition(entryFilter, node))
+                        .map(entryFilter -> CypherDslUtils.mapEntryFilterToCondition(entryFilter, node))
                         .toList();
     }
 
-    private static Condition mapFilterToCondition(EntryFilter entryFilter, Node node) {
+    public static List<Condition> extractRelationConditions(MeshQuery query, Relationship relationship) {
+        return query.getRelationFilters() == null ?
+                Collections.emptyList() :
+                query.getRelationFilters().stream()
+                        .map(relationFilter -> CypherDslUtils.mapRelationFilterToCondition(relationFilter, relationship))
+                        .toList();
+    }
+
+    private static Condition mapEntryFilterToCondition(EntryFilter entryFilter, Node node) {
         Property property = node.property(Cypher.literalOf(entryFilter.getAttribute()));
 
         // Label filter
@@ -44,9 +57,25 @@ public class CypherDslUtils {
             return condition;
         }
 
+        return getCondition(entryFilter, node);
+    }
+
+    private static Condition mapRelationFilterToCondition(RelationFilter relationFilter, Relationship relationship) {
+        return getCondition(relationFilter, relationship);
+    }
+
+    private static Condition getCondition(BaseAttributeFilter filter, PropertyContainer propertyContainer) {
+        Property property = propertyContainer.property(Cypher.literalOf(filter.getAttribute()));
+        var value = filter.getValue();
+        var operator = filter.getOperator();
+
+        if (operator == null) {
+            return Cypher.noCondition();
+        }
+
         // specific null value handling
-        if (null == entryFilter.getValue()) {
-            switch (entryFilter.getOperator()) {
+        if (null == filter.getValue()) {
+            switch (operator) {
                 case NOT -> {
                     return property.isNotNull();
                 }
@@ -54,14 +83,13 @@ public class CypherDslUtils {
                     return property.isNull();
                 }
                 default -> {
-                    logger.warn("Invalid filter: {}", entryFilter);
+                    logger.warn("Invalid filter: {}", filter);
                     throw new InvalidParameterException();
                 }
             }
         }
 
-        var value = entryFilter.getValue();
-        switch (entryFilter.getOperator()) {
+        switch (operator) {
             case NOT -> {
                 return property.isNotEqualTo(Cypher.literalOf(value));
             }

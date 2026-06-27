@@ -61,3 +61,29 @@ Content-Type: application/json
     ]
 }
 
+
+###
+
+# With relations of type 'RELATIONSHIP_WITH' and status 'married'
+# -> "Vespasian and his wifes"
+POST http://localhost:8010/api/data/mesh
+Content-Type: application/json
+
+{
+    "filters": [
+        {
+            "attribute": "key",
+            "operator": "EQUAL",
+            "value": "vespasian"
+        }
+    ],
+    "relationFilters": [
+        {
+            "types": ["RELATIONSHIP_WITH"],
+            "attribute": "status",
+            "operator": "EQUAL",
+            "value": "married"
+        }
+    ]
+}
+

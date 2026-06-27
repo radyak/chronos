@@ -1,6 +1,5 @@
 package net.fvogel.chronos.data.it.mesh;
 
-import net.fvogel.chronos.data.model.query.ConditionOperator;
 import net.fvogel.chronos.data.testutils.BaseIntegrationTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
@@ -8,6 +7,7 @@ import org.springframework.http.MediaType;
 import org.testcontainers.containers.Neo4jContainer;
 import org.testcontainers.junit.jupiter.Container;
 
+import static net.fvogel.chronos.data.model.query.ConditionOperator.EQUAL;
 import static net.fvogel.chronos.data.testutils.DataApiRequestMatcher.toExactlyContainKeys;
 import static net.fvogel.chronos.data.testutils.MeshQueryBuilder.query;
 import static net.fvogel.chronos.data.testutils.RelationFilterBuilder.relationFilter;
@@ -22,9 +22,9 @@ public class DataApiMeshRelationsIntegrationTest extends BaseIntegrationTest {
     public static final Neo4jContainer<?> neo4j = new Neo4jContainer<>("neo4j:5");
 
     @Test
-    void getDataWithoutRelationsReturnsNoRelations() throws Exception {
+    void searchMeshWithoutRelationsReturnsNoRelations() throws Exception {
         var query = query()
-                .withEntryFilter("key", ConditionOperator.EQUAL, "vespasian")
+                .withEntryFilter("key", EQUAL, "vespasian")
                 .build();
         mvc.perform(post("/api/data/mesh")
                         .content(objectMapper.writeValueAsString(query))
@@ -36,9 +36,9 @@ public class DataApiMeshRelationsIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    void getDataWithRelationsWildcardReturnsAllRelationsOfAllTypesAndRelatedEntries() throws Exception {
+    void searchMeshWithRelationsWildcardReturnsAllRelationsOfAllTypesAndRelatedEntries() throws Exception {
         var query = query()
-                .withEntryFilter("key", ConditionOperator.EQUAL, "vespasian")
+                .withEntryFilter("key", EQUAL, "vespasian")
                 .withRelationFilter(
                         relationFilter()
                                 .withTypes("*")
@@ -58,9 +58,9 @@ public class DataApiMeshRelationsIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    void getDataWithSpecifiedRelationsTypesReturnsAllRelationsOfSpecifiedTypesAndRelatedEntries() throws Exception {
+    void searchMeshWithSpecifiedRelationsTypesReturnsAllRelationsOfSpecifiedTypesAndRelatedEntries() throws Exception {
         var query = query()
-                .withEntryFilter("key", ConditionOperator.EQUAL, "vespasian")
+                .withEntryFilter("key", EQUAL, "vespasian")
                 .withRelationFilter(
                         relationFilter()
                                 .withTypes("RULED", "RELATIONSHIP_WITH")
@@ -80,9 +80,9 @@ public class DataApiMeshRelationsIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    void getDataWithUndefinedRelationsTypesReturnsNoEntry() throws Exception {
+    void searchMeshWithUndefinedRelationsTypesReturnsNoEntry() throws Exception {
         var query = query()
-                .withEntryFilter("key", ConditionOperator.EQUAL, "vespasian")
+                .withEntryFilter("key", EQUAL, "vespasian")
                 .withRelationFilter(
                         relationFilter()
                                 .withTypes("UNKNOWN")
@@ -99,7 +99,7 @@ public class DataApiMeshRelationsIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    void getDataWithoutAnyParamsReturnsAllEntries() throws Exception {
+    void searchMeshWithoutAnyParamsReturnsAllEntries() throws Exception {
         var query = query().build();
         mvc.perform(post("/api/data/mesh")
                         .content(objectMapper.writeValueAsString(query))
@@ -110,7 +110,7 @@ public class DataApiMeshRelationsIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    void getDataWithSpecifiedRelationTypeReturnsAssociatedEntries() throws Exception {
+    void searchMeshWithSpecifiedRelationTypeReturnsAssociatedEntries() throws Exception {
         var query = query()
                 .withRelationFilter(
                         relationFilter()
@@ -125,6 +125,26 @@ public class DataApiMeshRelationsIntegrationTest extends BaseIntegrationTest {
                 .andExpect(jsonPath("$.entries.length()").value(3))
                 .andExpect(jsonPath("$.relations.length()").value(2))
                 .andExpect(toExactlyContainKeys("roman-empire", "gallic-empire", "palmyrene-empire"));
+    }
+
+    @Test
+    void searchMeshWithSpecifiedRelationTypeAndAttributeReturnsAssociatedEntries() throws Exception {
+        var query = query()
+                .withEntryFilter("key", EQUAL, "vespasian")
+                .withRelationFilter(
+                        relationFilter()
+                                .withTypes("RELATIONSHIP_WITH")
+                                .withAttribute("status", EQUAL, "married")
+                                .build()
+                )
+                .build();
+        mvc.perform(post("/api/data/mesh")
+                        .content(objectMapper.writeValueAsString(query))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.entries.length()").value(2))
+                .andExpect(jsonPath("$.relations.length()").value(1))
+                .andExpect(toExactlyContainKeys("vespasian", "domitilla-the-elder"));
     }
 
 }
