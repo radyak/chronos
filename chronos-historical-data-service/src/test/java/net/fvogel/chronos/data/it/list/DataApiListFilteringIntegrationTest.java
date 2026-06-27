@@ -133,10 +133,10 @@ public class DataApiListFilteringIntegrationTest extends BaseIntegrationTest {
     void getDataIncludesAppropriateMetadata() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/api/data/list?sortBy=key&pageSize=5&start:gt=0032-04-28"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.meta.query.filters.length()").value(1))
-                .andExpect(jsonPath("$.meta.query.filters.[0].attribute").value("start"))
-                .andExpect(jsonPath("$.meta.query.filters.[0].operator").value("GREATER_THAN"))
-                .andExpect(jsonPath("$.meta.query.filters.[0].value").value("0032-04-28"));
+                .andExpect(jsonPath("$.meta.query.entryFilters.length()").value(1))
+                .andExpect(jsonPath("$.meta.query.entryFilters.[0].attribute").value("start"))
+                .andExpect(jsonPath("$.meta.query.entryFilters.[0].operator").value("GREATER_THAN"))
+                .andExpect(jsonPath("$.meta.query.entryFilters.[0].value").value("0032-04-28"));
     }
 
 }

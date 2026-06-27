@@ -8,7 +8,7 @@ import java.util.List;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class Filter {
+public class EntryFilter {
     List<String> labels = new ArrayList<>();
     String attribute;
     ConditionOperator operator;

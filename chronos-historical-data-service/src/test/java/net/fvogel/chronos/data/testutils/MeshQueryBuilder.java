@@ -1,7 +1,7 @@
 package net.fvogel.chronos.data.testutils;
 
 import net.fvogel.chronos.data.model.query.ConditionOperator;
-import net.fvogel.chronos.data.model.query.Filter;
+import net.fvogel.chronos.data.model.query.EntryFilter;
 import net.fvogel.chronos.data.model.query.mesh.MeshQuery;
 
 import java.util.List;
@@ -16,23 +16,23 @@ public class MeshQueryBuilder {
     }
 
     public MeshQueryBuilder withRelations(String... relationTypes) {
-        this.query.setRelations(Set.of(relationTypes));
+        this.query.setRelationFilters(Set.of(relationTypes));
         return this;
     }
 
     public MeshQueryBuilder withFilter(String... labels) {
-        Filter filter = new Filter();
-        filter.setLabels(List.of(labels));
-        this.query.getFilters().add(filter);
+        EntryFilter entryFilter = new EntryFilter();
+        entryFilter.setLabels(List.of(labels));
+        this.query.getEntryFilters().add(entryFilter);
         return this;
     }
 
     public MeshQueryBuilder withFilter(String attribute, ConditionOperator operator, String value) {
-        Filter filter = new Filter();
-        filter.setAttribute(attribute);
-        filter.setOperator(operator);
-        filter.setValue(value);
-        this.query.getFilters().add(filter);
+        EntryFilter entryFilter = new EntryFilter();
+        entryFilter.setAttribute(attribute);
+        entryFilter.setOperator(operator);
+        entryFilter.setValue(value);
+        this.query.getEntryFilters().add(entryFilter);
         return this;
     }
 

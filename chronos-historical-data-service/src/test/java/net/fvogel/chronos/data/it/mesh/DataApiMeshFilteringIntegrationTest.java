@@ -168,10 +168,10 @@ public class DataApiMeshFilteringIntegrationTest extends BaseIntegrationTest {
                         .content(objectMapper.writeValueAsString(query))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.meta.query.filters.length()").value(1))
-                .andExpect(jsonPath("$.meta.query.filters.[0].attribute").value("start"))
-                .andExpect(jsonPath("$.meta.query.filters.[0].operator").value("GREATER_THAN"))
-                .andExpect(jsonPath("$.meta.query.filters.[0].value").value("0032-04-28"));
+                .andExpect(jsonPath("$.meta.query.entryFilters.length()").value(1))
+                .andExpect(jsonPath("$.meta.query.entryFilters.[0].attribute").value("start"))
+                .andExpect(jsonPath("$.meta.query.entryFilters.[0].operator").value("GREATER_THAN"))
+                .andExpect(jsonPath("$.meta.query.entryFilters.[0].value").value("0032-04-28"));
     }
 
 
@@ -219,7 +219,7 @@ public class DataApiMeshFilteringIntegrationTest extends BaseIntegrationTest {
         var query = query()
                 .withFilter("key", ConditionOperator.EQUAL, "vespasian")
                 .build();
-        query.getFilters().get(0).setLabels(List.of("Territory"));
+        query.getEntryFilters().get(0).setLabels(List.of("Territory"));
         mvc.perform(post("/api/data/mesh")
                         .content(objectMapper.writeValueAsString(query))
                         .contentType(MediaType.APPLICATION_JSON))

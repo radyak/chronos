@@ -7,7 +7,7 @@ POST http://localhost:8010/api/data/mesh
 Content-Type: application/json
 
 {
-    "filters": [
+    "entryFilters": [
         {
             "attribute": "start",
             "operator": "GREATER_THAN",
@@ -26,14 +26,14 @@ POST http://localhost:8010/api/data/mesh
 Content-Type: application/json
 
 {
-    "filters": [
+    "entryFilters": [
         {
             "attribute": "key",
             "operator": "EQUAL",
             "value": "vespasian"
         }
     ],
-    "relations": ["*"]
+    "relationFilters": ["*"]
 }
 
 ###
@@ -50,6 +50,6 @@ Content-Type: application/json
             "value": "vespasian"
         }
     ],
-    "relations": ["RELATIONSHIP_WITH","CHILD_OF"]
+    "relationFilters": ["RELATIONSHIP_WITH","CHILD_OF"]
 }
 

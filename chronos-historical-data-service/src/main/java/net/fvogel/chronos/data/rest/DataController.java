@@ -41,7 +41,7 @@ public class DataController {
     private DataService dataService;
 
     @Autowired
-    private FilterExtractor filterExtractor;
+    private EntryFilterExtractor entryFilterExtractor;
 
     private static String getFullURL(HttpServletRequest request) {
         StringBuilder requestURL = new StringBuilder(request.getRequestURL().toString());
@@ -63,7 +63,7 @@ public class DataController {
         ListQuery query = new ListQuery();
         query.setPagination(pagination);
         query.setSorting(Collections.singletonList(sorting));
-        query.setFilters(filterExtractor.extractFilterParams(queryParams));
+        query.setEntryFilters(entryFilterExtractor.extractFilterParams(queryParams));
 
         List<Entry> entries = this.dataService.list(query);
 

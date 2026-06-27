@@ -80,9 +80,9 @@ public class CypherService {
         Condition unionCondition = CypherDslUtils.all(CypherDslUtils.extractConditions(query, n));
 
         Statement statement;
-        var loadRelations = !ObjectUtils.isEmpty(query.getRelations());
+        var loadRelations = !ObjectUtils.isEmpty(query.getRelationFilters());
         if (loadRelations) {
-            var relationTypes = query.getRelations().stream()
+            var relationTypes = query.getRelationFilters().stream()
                     .map(String::trim)
                     .filter(r -> !"*".equals(r))
                     .toArray(String[]::new);

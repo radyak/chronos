@@ -10,5 +10,5 @@ import java.util.Set;
 @Data
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class MeshQuery extends BaseQuery {
-    Set<String> relations = new HashSet<>();
+    Set<String> relationFilters = new HashSet<>();
 }

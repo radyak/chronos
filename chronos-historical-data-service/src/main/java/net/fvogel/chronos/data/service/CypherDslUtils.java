@@ -2,7 +2,7 @@ package net.fvogel.chronos.data.service;
 
 import net.fvogel.chronos.commons.exception.InvalidParameterException;
 import net.fvogel.chronos.data.model.query.BaseQuery;
-import net.fvogel.chronos.data.model.query.Filter;
+import net.fvogel.chronos.data.model.query.EntryFilter;
 import net.fvogel.chronos.data.model.query.list.ListQuery;
 import net.fvogel.chronos.data.model.query.list.SortOrder;
 import net.fvogel.chronos.data.model.query.list.Sorting;
@@ -25,28 +25,28 @@ public class CypherDslUtils {
     private static final Logger logger = LoggerFactory.getLogger(CypherDslUtils.class);
 
     public static List<Condition> extractConditions(BaseQuery query, Node node) {
-        return query.getFilters() == null ?
+        return query.getEntryFilters() == null ?
                 Collections.emptyList() :
-                query.getFilters().stream()
-                        .map(filter -> CypherDslUtils.mapFilterToCondition(filter, node))
+                query.getEntryFilters().stream()
+                        .map(entryFilter -> CypherDslUtils.mapFilterToCondition(entryFilter, node))
                         .toList();
     }
 
-    private static Condition mapFilterToCondition(Filter filter, Node node) {
-        Property property = node.property(Cypher.literalOf(filter.getAttribute()));
+    private static Condition mapFilterToCondition(EntryFilter entryFilter, Node node) {
+        Property property = node.property(Cypher.literalOf(entryFilter.getAttribute()));
 
         // Label filter
-        if (ObjectUtils.isNotEmpty(filter.getLabels())) {
+        if (ObjectUtils.isNotEmpty(entryFilter.getLabels())) {
             Condition condition = Cypher.noCondition();
-            for (String label : filter.getLabels()) {
+            for (String label : entryFilter.getLabels()) {
                 condition = condition.or(node.hasLabels(label));
             }
             return condition;
         }
 
         // specific null value handling
-        if (null == filter.getValue()) {
-            switch (filter.getOperator()) {
+        if (null == entryFilter.getValue()) {
+            switch (entryFilter.getOperator()) {
                 case NOT -> {
                     return property.isNotNull();
                 }
@@ -54,14 +54,14 @@ public class CypherDslUtils {
                     return property.isNull();
                 }
                 default -> {
-                    logger.warn("Invalid filter: {}", filter);
+                    logger.warn("Invalid filter: {}", entryFilter);
                     throw new InvalidParameterException();
                 }
             }
         }
 
-        var value = filter.getValue();
-        switch (filter.getOperator()) {
+        var value = entryFilter.getValue();
+        switch (entryFilter.getOperator()) {
             case NOT -> {
                 return property.isNotEqualTo(Cypher.literalOf(value));
             }
