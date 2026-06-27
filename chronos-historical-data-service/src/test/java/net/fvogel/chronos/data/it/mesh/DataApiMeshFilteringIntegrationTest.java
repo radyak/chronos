@@ -25,7 +25,7 @@ public class DataApiMeshFilteringIntegrationTest extends BaseIntegrationTest {
     @Test
     void searchMeshWithFilterParamReturnsMatchingEntry() throws Exception {
         var query = query()
-                .withFilter("wikiqid", ConditionOperator.EQUAL, "Q1416")
+                .withEntryFilter("wikiqid", ConditionOperator.EQUAL, "Q1416")
                 .build();
         mvc.perform(post("/api/data/mesh")
                         .content(objectMapper.writeValueAsString(query))
@@ -38,7 +38,7 @@ public class DataApiMeshFilteringIntegrationTest extends BaseIntegrationTest {
     @Test
     void searchMeshWithNonmatchingFilterParamReturnsNoEntry() throws Exception {
         var query = query()
-                .withFilter("wikiqid", ConditionOperator.EQUAL, "DOESNOTEXIST")
+                .withEntryFilter("wikiqid", ConditionOperator.EQUAL, "DOESNOTEXIST")
                 .build();
         mvc.perform(post("/api/data/mesh")
                         .content(objectMapper.writeValueAsString(query))
@@ -50,7 +50,7 @@ public class DataApiMeshFilteringIntegrationTest extends BaseIntegrationTest {
     @Test
     void searchMeshWithGreaterThanFilterParamReturnsMatchingEntries() throws Exception {
         var query = query()
-                .withFilter("start", ConditionOperator.GREATER_THAN, "0032-04-28")
+                .withEntryFilter("start", ConditionOperator.GREATER_THAN, "0032-04-28")
                 .build();
         mvc.perform(post("/api/data/mesh")
                         .content(objectMapper.writeValueAsString(query))
@@ -62,7 +62,7 @@ public class DataApiMeshFilteringIntegrationTest extends BaseIntegrationTest {
     @Test
     void searchMeshWithGreaterEqualsThanFilterParamReturnsMatchingEntries() throws Exception {
         var query = query()
-                .withFilter("start", ConditionOperator.GREATER_EQUAL_THAN, "0032-04-28")
+                .withEntryFilter("start", ConditionOperator.GREATER_EQUAL_THAN, "0032-04-28")
                 .build();
         mvc.perform(post("/api/data/mesh")
                         .content(objectMapper.writeValueAsString(query))
@@ -74,7 +74,7 @@ public class DataApiMeshFilteringIntegrationTest extends BaseIntegrationTest {
     @Test
     void searchMeshWithLessThanFilterParamReturnsMatchingEntries() throws Exception {
         var query = query()
-                .withFilter("start", ConditionOperator.LESS_THAN, "0032-04-28")
+                .withEntryFilter("start", ConditionOperator.LESS_THAN, "0032-04-28")
                 .build();
         mvc.perform(post("/api/data/mesh")
                         .content(objectMapper.writeValueAsString(query))
@@ -90,7 +90,7 @@ public class DataApiMeshFilteringIntegrationTest extends BaseIntegrationTest {
     @Test
     void searchMeshWithLessEqualsThanFilterParamReturnsMatchingEntries() throws Exception {
         var query = query()
-                .withFilter("start", ConditionOperator.LESS_EQUAL_THAN, "0032-04-28")
+                .withEntryFilter("start", ConditionOperator.LESS_EQUAL_THAN, "0032-04-28")
                 .build();
         mvc.perform(post("/api/data/mesh")
                         .content(objectMapper.writeValueAsString(query))
@@ -107,7 +107,7 @@ public class DataApiMeshFilteringIntegrationTest extends BaseIntegrationTest {
     @Test
     void searchMeshWithNotNullFilterParamReturnsMatchingEntries() throws Exception {
         var query = query()
-                .withFilter("wikiqid", ConditionOperator.NOT, null)
+                .withEntryFilter("wikiqid", ConditionOperator.NOT, null)
                 .build();
         mvc.perform(post("/api/data/mesh")
                         .content(objectMapper.writeValueAsString(query))
@@ -125,7 +125,7 @@ public class DataApiMeshFilteringIntegrationTest extends BaseIntegrationTest {
     @Test
     void searchMeshWithNullFilterParamReturnsMatchingEntries() throws Exception {
         var query = query()
-                .withFilter("wikiqid", ConditionOperator.EQUAL, null)
+                .withEntryFilter("wikiqid", ConditionOperator.EQUAL, null)
                 .build();
         mvc.perform(post("/api/data/mesh")
                         .content(objectMapper.writeValueAsString(query))
@@ -137,7 +137,7 @@ public class DataApiMeshFilteringIntegrationTest extends BaseIntegrationTest {
     @Test
     void searchMeshWithNonExistingFilterReturnsEmptyList() throws Exception {
         var query = query()
-                .withFilter("color", ConditionOperator.EQUAL, "blue")
+                .withEntryFilter("color", ConditionOperator.EQUAL, "blue")
                 .build();
         mvc.perform(post("/api/data/mesh")
                         .content(objectMapper.writeValueAsString(query))
@@ -149,7 +149,7 @@ public class DataApiMeshFilteringIntegrationTest extends BaseIntegrationTest {
     @Test
     void searchMeshThrowsBadRequestForInvalidFilterOperator() throws Exception {
         var query = query()
-                .withFilter("start", ConditionOperator.EQUAL, "0032-04-28")
+                .withEntryFilter("start", ConditionOperator.EQUAL, "0032-04-28")
                 .build();
         var queryString = objectMapper.writeValueAsString(query).replace("EQUAL", "invalidOperator");
         System.out.println("Sending: " + queryString);
@@ -162,7 +162,7 @@ public class DataApiMeshFilteringIntegrationTest extends BaseIntegrationTest {
     @Test
     void searchMeshIncludesAppropriateMetadata() throws Exception {
         var query = query()
-                .withFilter("start", ConditionOperator.GREATER_THAN, "0032-04-28")
+                .withEntryFilter("start", ConditionOperator.GREATER_THAN, "0032-04-28")
                 .build();
         mvc.perform(post("/api/data/mesh")
                         .content(objectMapper.writeValueAsString(query))
@@ -178,7 +178,7 @@ public class DataApiMeshFilteringIntegrationTest extends BaseIntegrationTest {
     @Test
     void searchMeshWithSingleLabelsFilterParamReturnsMatchingEntries() throws Exception {
         var query = query()
-                .withFilter("Territory")
+                .withEntryFilter("Territory")
                 .build();
         mvc.perform(post("/api/data/mesh")
                         .content(objectMapper.writeValueAsString(query))
@@ -191,7 +191,7 @@ public class DataApiMeshFilteringIntegrationTest extends BaseIntegrationTest {
     @Test
     void searchMeshWithMultipleLabelsFilterParamReturnsMatchingEntries() throws Exception {
         var query = query()
-                .withFilter("Territory", "Person")
+                .withEntryFilter("Territory", "Person")
                 .build();
         mvc.perform(post("/api/data/mesh")
                         .content(objectMapper.writeValueAsString(query))
@@ -203,8 +203,8 @@ public class DataApiMeshFilteringIntegrationTest extends BaseIntegrationTest {
     @Test
     void searchMeshWithLabelsFilterParamWorksWithFilterAndSortParams() throws Exception {
         var query = query()
-                .withFilter("Territory")
-                .withFilter("start", ConditionOperator.GREATER_EQUAL_THAN, "0200")
+                .withEntryFilter("Territory")
+                .withEntryFilter("start", ConditionOperator.GREATER_EQUAL_THAN, "0200")
                 .build();
         mvc.perform(post("/api/data/mesh")
                         .content(objectMapper.writeValueAsString(query))
@@ -217,7 +217,7 @@ public class DataApiMeshFilteringIntegrationTest extends BaseIntegrationTest {
     @Test
     void searchMeshLabelsInSameFilterHaveHigherPriorityThanOtherFilterCriteria() throws Exception {
         var query = query()
-                .withFilter("key", ConditionOperator.EQUAL, "vespasian")
+                .withEntryFilter("key", ConditionOperator.EQUAL, "vespasian")
                 .build();
         query.getEntryFilters().get(0).setLabels(List.of("Territory"));
         mvc.perform(post("/api/data/mesh")

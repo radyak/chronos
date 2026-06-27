@@ -33,7 +33,11 @@ Content-Type: application/json
             "value": "vespasian"
         }
     ],
-    "relationFilters": ["*"]
+    "relationFilters": [
+        {
+            "types": ["*"]
+        }
+    ]
 }
 
 ###
@@ -50,6 +54,10 @@ Content-Type: application/json
             "value": "vespasian"
         }
     ],
-    "relationFilters": ["RELATIONSHIP_WITH","CHILD_OF"]
+    "relationFilters": [
+        {
+            "types": ["RELATIONSHIP_WITH","CHILD_OF"]
+        }
+    ]
 }
 

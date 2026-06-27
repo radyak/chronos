@@ -9,7 +9,6 @@ import net.fvogel.chronos.data.model.query.list.ListQuery;
 import net.fvogel.chronos.data.model.query.list.Pagination;
 import net.fvogel.chronos.data.model.query.mesh.MeshQuery;
 import net.fvogel.chronos.data.persistence.CypherClient;
-import org.apache.commons.lang3.ObjectUtils;
 import org.neo4j.cypherdsl.core.Condition;
 import org.neo4j.cypherdsl.core.Cypher;
 import org.neo4j.cypherdsl.core.Node;
@@ -80,9 +79,16 @@ public class CypherService {
         Condition unionCondition = CypherDslUtils.all(CypherDslUtils.extractConditions(query, n));
 
         Statement statement;
-        var loadRelations = !ObjectUtils.isEmpty(query.getRelationFilters());
-        if (loadRelations) {
-            var relationTypes = query.getRelationFilters().stream()
+
+        // TODO: Consider not only the *first* relationFilter
+        var firstRelationFilter = query.getRelationFilters().stream()
+                .filter(Objects::nonNull)
+                .findFirst();
+//        var loadRelations = !ObjectUtils.isEmpty(query.getRelationFilters());
+        if (firstRelationFilter.isPresent()) {
+            var relationTypes = firstRelationFilter.get()
+                    .getTypes()
+                    .stream()
                     .map(String::trim)
                     .filter(r -> !"*".equals(r))
                     .toArray(String[]::new);
@@ -106,7 +112,7 @@ public class CypherService {
                     RelationRecord r = new RelationRecord();
                     r.getEntries().add(entry);
 
-                    if (loadRelations) {
+                    if (firstRelationFilter.isPresent()) {
                         var relationship = entryMapper.toRelation(record.get(relName).asRelationship());
                         r.getRelations().add(relationship);
                         var targetEntry = entryMapper.toEntry(record.get(relNodeName).asNode());
