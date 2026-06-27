@@ -1,13 +1,16 @@
 package net.fvogel.chronos.data.it.mesh;
 
+import net.fvogel.chronos.data.model.query.ConditionOperator;
 import net.fvogel.chronos.data.testutils.BaseIntegrationTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.http.MediaType;
 import org.testcontainers.containers.Neo4jContainer;
 import org.testcontainers.junit.jupiter.Container;
 
 import static net.fvogel.chronos.data.testutils.DataApiRequestMatcher.toExactlyContainKeys;
+import static net.fvogel.chronos.data.testutils.MeshQueryBuilder.query;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -19,7 +22,12 @@ public class DataApiMeshRelationsIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void getDataWithoutRelationsReturnsNoRelations() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/api/data/mesh?key=vespasian"))
+        var query = query()
+                .withFilter("key", ConditionOperator.EQUAL, "vespasian")
+                .build();
+        mvc.perform(post("/api/data/mesh")
+                        .content(objectMapper.writeValueAsString(query))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.entries.length()").value(1))
                 .andExpect(jsonPath("$.relations.length()").value(0))
@@ -28,7 +36,13 @@ public class DataApiMeshRelationsIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void getDataWithRelationsWildcardReturnsAllRelationsOfAllTypesAndRelatedEntries() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/api/data/mesh?key=vespasian&relations=*"))
+        var query = query()
+                .withFilter("key", ConditionOperator.EQUAL, "vespasian")
+                .withRelations("*")
+                .build();
+        mvc.perform(post("/api/data/mesh")
+                        .content(objectMapper.writeValueAsString(query))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.entries.length()").value(6))
                 .andExpect(jsonPath("$.relations.length()").value(5))
@@ -40,7 +54,13 @@ public class DataApiMeshRelationsIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void getDataWithSpecifiedRelationsTypesReturnsAllRelationsOfSpecifiedTypesAndRelatedEntries() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/api/data/mesh?key=vespasian&relations=RULED,RELATIONSHIP_WITH"))
+        var query = query()
+                .withFilter("key", ConditionOperator.EQUAL, "vespasian")
+                .withRelations("RULED", "RELATIONSHIP_WITH")
+                .build();
+        mvc.perform(post("/api/data/mesh")
+                        .content(objectMapper.writeValueAsString(query))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.entries.length()").value(4))
                 .andExpect(jsonPath("$.relations.length()").value(3))
@@ -52,7 +72,13 @@ public class DataApiMeshRelationsIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void getDataWithUndefinedRelationsTypesReturnsNoEntry() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/api/data/mesh?key=vespasian&relations=UNKNOWN"))
+        var query = query()
+                .withFilter("key", ConditionOperator.EQUAL, "vespasian")
+                .withRelations("UNKNOWN")
+                .build();
+        mvc.perform(post("/api/data/mesh")
+                        .content(objectMapper.writeValueAsString(query))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.entries.length()").value(0))
                 .andExpect(jsonPath("$.relations.length()").value(0))
@@ -61,7 +87,10 @@ public class DataApiMeshRelationsIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void getDataWithoutAnyParamsReturnsAllEntries() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/api/data/mesh"))
+        var query = query().build();
+        mvc.perform(post("/api/data/mesh")
+                        .content(objectMapper.writeValueAsString(query))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.entries.length()").value(23))
                 .andExpect(jsonPath("$.relations.length()").value(0));
@@ -69,7 +98,12 @@ public class DataApiMeshRelationsIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void getDataWithSpecifiedRelationTypeReturnsAssociatedEntries() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/api/data/mesh?relations=SECESSIONAL_TO"))
+        var query = query()
+                .withRelations("SECESSIONAL_TO")
+                .build();
+        mvc.perform(post("/api/data/mesh")
+                        .content(objectMapper.writeValueAsString(query))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.entries.length()").value(3))
                 .andExpect(jsonPath("$.relations.length()").value(2))

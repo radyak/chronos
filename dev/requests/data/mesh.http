@@ -3,16 +3,53 @@
 # By key
 
 # Only node
-GET http://localhost:8010/api/data/mesh?start:gt=0032-04-28&labels=Territory,Person
+POST http://localhost:8010/api/data/mesh
+Content-Type: application/json
+
+{
+    "filters": [
+        {
+            "attribute": "start",
+            "operator": "GREATER_THAN",
+            "value": "0032-04-28"
+        },
+        {
+            "labels": ["Territory","Person"]
+        }
+    ]
+}
 
 ###
 
 # With relations of any type
-GET http://localhost:8010/api/data/mesh?key=vespasian&relations=*
+POST http://localhost:8010/api/data/mesh
+Content-Type: application/json
 
+{
+    "filters": [
+        {
+            "attribute": "key",
+            "operator": "EQUAL",
+            "value": "vespasian"
+        }
+    ],
+    "relations": ["*"]
+}
 
 ###
 
 # With relations of type 'RELATIONSHIP_WITH' or 'CHILD_OF'
-GET http://localhost:8010/api/data/mesh?key=vespasian&relations=RELATIONSHIP_WITH,CHILD_OF
+POST http://localhost:8010/api/data/mesh
+Content-Type: application/json
+
+{
+    "filters": [
+        {
+            "attribute": "key",
+            "operator": "EQUAL",
+            "value": "vespasian"
+        }
+    ],
+    "relations": ["RELATIONSHIP_WITH","CHILD_OF"]
+}
 
