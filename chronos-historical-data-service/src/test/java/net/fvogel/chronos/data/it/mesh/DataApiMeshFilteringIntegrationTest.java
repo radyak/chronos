@@ -10,8 +10,10 @@ import org.testcontainers.junit.jupiter.Container;
 
 import java.util.List;
 
+import static net.fvogel.chronos.data.model.query.ConditionOperator.CONTAINS;
 import static net.fvogel.chronos.data.testutils.DataApiRequestMatcher.toExactlyContainKeys;
 import static net.fvogel.chronos.data.testutils.MeshQueryBuilder.query;
+import static net.fvogel.chronos.data.testutils.RelationFilterBuilder.relationFilter;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -135,6 +137,26 @@ public class DataApiMeshFilteringIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
+    void searchMeshWithContainsFilterParamReturnsMatchingEntries() throws Exception {
+        var query = query()
+                .withEntryFilter("Person")
+                .withRelationFilter(
+                        relationFilter()
+                                .withTypes("RULED")
+                                .withAttribute("titles", CONTAINS, "king")
+                                .build()
+                )
+                .build();
+        mvc.perform(post("/api/data/mesh")
+                        .content(objectMapper.writeValueAsString(query))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.entries.length()").value(4))
+                .andExpect(jsonPath("$.relations.length()").value(3))
+                .andExpect(toExactlyContainKeys("vaballathus", "zenobia", "palmyrene-empire", "antiochus"));
+    }
+
+    @Test
     void searchMeshWithNonExistingFilterReturnsEmptyList() throws Exception {
         var query = query()
                 .withEntryFilter("color", ConditionOperator.EQUAL, "blue")
@@ -173,7 +195,6 @@ public class DataApiMeshFilteringIntegrationTest extends BaseIntegrationTest {
                 .andExpect(jsonPath("$.meta.query.entryFilters.[0].operator").value("GREATER_THAN"))
                 .andExpect(jsonPath("$.meta.query.entryFilters.[0].value").value("0032-04-28"));
     }
-
 
     @Test
     void searchMeshWithSingleLabelsFilterParamReturnsMatchingEntries() throws Exception {

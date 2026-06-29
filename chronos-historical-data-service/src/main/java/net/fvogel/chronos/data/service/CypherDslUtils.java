@@ -105,6 +105,9 @@ public class CypherDslUtils {
             case LESS_EQUAL_THAN -> {
                 return property.lte(Cypher.literalOf(value));
             }
+            case CONTAINS -> {
+                return Cypher.literalOf(value).in(property);
+            }
             default -> {
                 // EQUAL
                 return property.eq(Cypher.literalOf(value));

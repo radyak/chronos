@@ -87,3 +87,26 @@ Content-Type: application/json
     ]
 }
 
+###
+
+# With relations of type 'RULED' and title = 'king'
+# -> "All kings / persons that ruled as 'king'"
+POST http://localhost:8010/api/data/mesh
+Content-Type: application/json
+
+{
+    "filters": [
+        {
+            "labels": ["Person"]
+        }
+    ],
+    "relationFilters": [
+        {
+            "types": ["RULED"],
+            "attribute": "titles",
+            "operator": "CONTAINS",
+            "value": "king"
+        }
+    ]
+}
+
