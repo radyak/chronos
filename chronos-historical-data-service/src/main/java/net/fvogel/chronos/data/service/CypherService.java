@@ -9,6 +9,7 @@ import net.fvogel.chronos.data.model.query.list.ListQuery;
 import net.fvogel.chronos.data.model.query.list.Pagination;
 import net.fvogel.chronos.data.model.query.mesh.MeshQuery;
 import net.fvogel.chronos.data.persistence.CypherClient;
+import org.apache.commons.lang3.ObjectUtils;
 import org.neo4j.cypherdsl.core.Condition;
 import org.neo4j.cypherdsl.core.Cypher;
 import org.neo4j.cypherdsl.core.Node;
@@ -48,7 +49,7 @@ public class CypherService {
         var n = Cypher.anyNode().named(nodeName);
 
         List<SortItem> sortList = CypherDslUtils.extractSortItems(query, n);
-        Condition unionCondition = CypherDslUtils.all(CypherDslUtils.extractEntryConditions(query, n));
+        Condition unionCondition = CypherDslUtils.all(CypherDslUtils.extractEntryConditions(query.getEntryFilters(), n));
         Pagination pagination = query.getPagination();
 
         var statement = Cypher.match(n)
@@ -76,7 +77,9 @@ public class CypherService {
         var m = Cypher.anyNode(relNodeName);
         Relationship rel;
 
-        Condition unionCondition = CypherDslUtils.all(CypherDslUtils.extractEntryConditions(query, n));
+        Condition nodeConditions = CypherDslUtils.all(CypherDslUtils.extractEntryConditions(query.getEntryFilters(), n));
+        Condition relationCondition = Cypher.noCondition();
+        Condition targetNodeUnionCondition = Cypher.noCondition();
 
         Statement statement;
 
@@ -84,26 +87,33 @@ public class CypherService {
         var firstRelationFilter = query.getRelationFilters().stream()
                 .filter(Objects::nonNull)
                 .findFirst();
-//        var loadRelations = !ObjectUtils.isEmpty(query.getRelationFilters());
         if (firstRelationFilter.isPresent()) {
-            var relationTypes = firstRelationFilter.get()
+            var relationFilter = firstRelationFilter.get();
+            var relationTypes = relationFilter
                     .getTypes()
                     .stream()
                     .map(String::trim)
                     .filter(r -> !"*".equals(r))
                     .toArray(String[]::new);
-            rel = n.relationshipBetween(m, relationTypes).named(relName);
 
-            Condition relationCondition = CypherDslUtils.all(CypherDslUtils.extractRelationConditions(query, rel));
+            // Relationships
+            rel = n.relationshipBetween(m, relationTypes).named(relName);
+            relationCondition = CypherDslUtils.all(CypherDslUtils.extractRelationConditions(query.getRelationFilters(), rel));
+
+            // Target Nodes
+            if (ObjectUtils.isNotEmpty(relationFilter.getTargetEntryFilters())) {
+                targetNodeUnionCondition = CypherDslUtils.all(CypherDslUtils.extractEntryConditions(relationFilter.getTargetEntryFilters(), m));
+            }
 
             statement = Cypher.match(rel)
-                    .where(unionCondition)
+                    .where(nodeConditions)
                     .and(relationCondition)
+                    .and(targetNodeUnionCondition)
                     .returning(n, rel, m)
                     .build();
         } else {
             statement = Cypher.match(n)
-                    .where(unionCondition)
+                    .where(nodeConditions)
                     .returning(n)
                     .build();
         }

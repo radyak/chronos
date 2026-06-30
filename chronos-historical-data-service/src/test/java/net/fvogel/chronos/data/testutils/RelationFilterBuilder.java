@@ -26,9 +26,7 @@ public class RelationFilterBuilder {
         return this;
     }
 
-    public RelationFilterBuilder withTargetLabels(String... labels) {
-        EntryFilter entryFilter = new EntryFilter();
-        entryFilter.setLabels(List.of(labels));
+    public RelationFilterBuilder withTargetEntryFilter(EntryFilter entryFilter) {
         this.filter.getTargetEntryFilters().add(entryFilter);
         return this;
     }

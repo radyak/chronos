@@ -43,11 +43,12 @@ Content-Type: application/json
 ###
 
 # With relations of type 'RELATIONSHIP_WITH' or 'CHILD_OF'
+# -> "Vespasian's family"
 POST http://localhost:8010/api/data/mesh
 Content-Type: application/json
 
 {
-    "filters": [
+    "entryFilters": [
         {
             "attribute": "key",
             "operator": "EQUAL",
@@ -70,7 +71,7 @@ POST http://localhost:8010/api/data/mesh
 Content-Type: application/json
 
 {
-    "filters": [
+    "entryFilters": [
         {
             "attribute": "key",
             "operator": "EQUAL",
@@ -95,7 +96,7 @@ POST http://localhost:8010/api/data/mesh
 Content-Type: application/json
 
 {
-    "filters": [
+    "entryFilters": [
         {
             "labels": ["Person"]
         }
@@ -106,6 +107,32 @@ Content-Type: application/json
             "attribute": "titles",
             "operator": "CONTAINS",
             "value": "king"
+        }
+    ]
+}
+
+###
+
+# With relations of type 'RULED' and title = 'king'
+# -> "To which Persons was Vespasian connected?"
+POST http://localhost:8010/api/data/mesh
+Content-Type: application/json
+
+{
+    "entryFilters": [
+        {
+            "attribute": "key",
+            "operator": "EQUAL",
+            "value": "vespasian"
+        }
+    ],
+    "relationFilters": [
+        {
+            "targetEntryFilters": [
+                {
+                    "labels": ["Person"]
+                }
+            ]
         }
     ]
 }

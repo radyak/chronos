@@ -2,12 +2,10 @@ package net.fvogel.chronos.data.service;
 
 import net.fvogel.chronos.commons.exception.InvalidParameterException;
 import net.fvogel.chronos.data.model.query.BaseAttributeFilter;
-import net.fvogel.chronos.data.model.query.BaseQuery;
 import net.fvogel.chronos.data.model.query.EntryFilter;
 import net.fvogel.chronos.data.model.query.list.ListQuery;
 import net.fvogel.chronos.data.model.query.list.SortOrder;
 import net.fvogel.chronos.data.model.query.list.Sorting;
-import net.fvogel.chronos.data.model.query.mesh.MeshQuery;
 import net.fvogel.chronos.data.model.query.mesh.RelationFilter;
 import org.apache.commons.lang3.ObjectUtils;
 import org.neo4j.cypherdsl.core.Condition;
@@ -29,18 +27,18 @@ public class CypherDslUtils {
 
     private static final Logger logger = LoggerFactory.getLogger(CypherDslUtils.class);
 
-    public static List<Condition> extractEntryConditions(BaseQuery query, Node node) {
-        return query.getEntryFilters() == null ?
+    public static List<Condition> extractEntryConditions(Collection<EntryFilter> entryFilters, Node node) {
+        return entryFilters == null ?
                 Collections.emptyList() :
-                query.getEntryFilters().stream()
+                entryFilters.stream()
                         .map(entryFilter -> CypherDslUtils.mapEntryFilterToCondition(entryFilter, node))
                         .toList();
     }
 
-    public static List<Condition> extractRelationConditions(MeshQuery query, Relationship relationship) {
-        return query.getRelationFilters() == null ?
+    public static List<Condition> extractRelationConditions(Collection<RelationFilter> relationFilters, Relationship relationship) {
+        return relationFilters == null ?
                 Collections.emptyList() :
-                query.getRelationFilters().stream()
+                relationFilters.stream()
                         .map(relationFilter -> CypherDslUtils.mapRelationFilterToCondition(relationFilter, relationship))
                         .toList();
     }

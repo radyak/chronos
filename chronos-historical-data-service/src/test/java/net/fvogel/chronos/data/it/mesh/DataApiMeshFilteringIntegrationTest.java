@@ -11,7 +11,9 @@ import org.testcontainers.junit.jupiter.Container;
 import java.util.List;
 
 import static net.fvogel.chronos.data.model.query.ConditionOperator.CONTAINS;
+import static net.fvogel.chronos.data.model.query.ConditionOperator.EQUAL;
 import static net.fvogel.chronos.data.testutils.DataApiRequestMatcher.toExactlyContainKeys;
+import static net.fvogel.chronos.data.testutils.EntryFilterBuilder.entryFilter;
 import static net.fvogel.chronos.data.testutils.MeshQueryBuilder.query;
 import static net.fvogel.chronos.data.testutils.RelationFilterBuilder.relationFilter;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -154,6 +156,25 @@ public class DataApiMeshFilteringIntegrationTest extends BaseIntegrationTest {
                 .andExpect(jsonPath("$.entries.length()").value(4))
                 .andExpect(jsonPath("$.relations.length()").value(3))
                 .andExpect(toExactlyContainKeys("vaballathus", "zenobia", "palmyrene-empire", "antiochus"));
+    }
+
+    @Test
+    void searchMeshWithTargetEntryFilterParamReturnsMatchingEntries() throws Exception {
+        var query = query()
+                .withEntryFilter("key", EQUAL, "vespasian")
+                .withRelationFilter(
+                        relationFilter()
+                                .withTargetEntryFilter(entryFilter().withLabels("Person").build())
+                                .build()
+                )
+                .build();
+        mvc.perform(post("/api/data/mesh")
+                        .content(objectMapper.writeValueAsString(query))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.entries.length()").value(5))
+                .andExpect(jsonPath("$.relations.length()").value(4))
+                .andExpect(toExactlyContainKeys("vespasian", "domitilla-the-elder", "titus", "domitian", "caenis"));
     }
 
     @Test

@@ -3,6 +3,8 @@ package net.fvogel.chronos.data.it.list;
 import net.fvogel.chronos.data.testutils.BaseIntegrationTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.springframework.context.annotation.Profile;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.testcontainers.containers.Neo4jContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -11,6 +13,8 @@ import static net.fvogel.chronos.data.testutils.DataApiRequestMatcher.toExactlyM
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@ActiveProfiles("debug")
+@Profile("debug")
 public class DataApiListFilteringIntegrationTest extends BaseIntegrationTest {
 
     @Container
@@ -109,6 +113,10 @@ public class DataApiListFilteringIntegrationTest extends BaseIntegrationTest {
                         "domitian"
                 ));
     }
+
+    /*
+     * TODO: Add test for has (CONTAINS) with array property on test data node(s)
+     */
 
     @Test
     void getDataWithNonExistingFilterReturnsEmptyList() throws Exception {
