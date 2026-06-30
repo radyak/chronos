@@ -1,4 +1,4 @@
-package net.fvogel.chronos.data.model;
+package net.fvogel.chronos.data.model.query;
 
 import java.util.Locale;
 import java.util.Objects;
@@ -9,7 +9,8 @@ public enum ConditionOperator {
     GREATER_THAN("gt"),
     GREATER_EQUAL_THAN("gte"),
     LESS_THAN("lt"),
-    LESS_EQUAL_THAN("lte");
+    LESS_EQUAL_THAN("lte"),
+    CONTAINS("has");
 
     private final String value;
 

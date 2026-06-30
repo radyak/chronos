@@ -1,13 +1,21 @@
 package net.fvogel.chronos.data.rest;
 
 import jakarta.validation.Valid;
-import net.fvogel.chronos.data.model.Entry;
-import net.fvogel.chronos.data.model.dto.UniqueCheckDto;
+import net.fvogel.chronos.data.model.dto.UniqueCheckDTO;
+import net.fvogel.chronos.data.model.internal.Entry;
 import net.fvogel.chronos.data.service.DataService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/data/admin")
@@ -19,7 +27,7 @@ public class AdminDataController {
     private DataService dataService;
 
     @Autowired
-    private FilterExtractor filterExtractor;
+    private EntryFilterExtractor entryFilterExtractor;
 
     @PostMapping()
     public Entry createEntry(@RequestBody Entry entry) {
@@ -46,7 +54,7 @@ public class AdminDataController {
      * @return true, if the attribute only exists on the node with specified elementId, otherwise false
      */
     @GetMapping("/unique")
-    public boolean exists(@ModelAttribute @Valid UniqueCheckDto uniqueCheckDto) {
+    public boolean exists(@ModelAttribute @Valid UniqueCheckDTO uniqueCheckDto) {
         return dataService.isAttributeUnique(
                 uniqueCheckDto.getKey(),
                 uniqueCheckDto.getValue(),

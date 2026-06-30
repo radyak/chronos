@@ -1,13 +1,15 @@
 package net.fvogel.chronos.data.service;
 
 import net.fvogel.chronos.commons.exception.InvalidDataException;
-import net.fvogel.chronos.data.model.CountResult;
-import net.fvogel.chronos.data.model.Entry;
+import net.fvogel.chronos.data.model.dto.CountResultDTO;
+import net.fvogel.chronos.data.model.internal.Entry;
+import net.fvogel.chronos.data.model.internal.Relation;
 import org.neo4j.cypherdsl.core.Cypher;
 import org.neo4j.driver.Record;
 import org.neo4j.driver.Value;
 import org.neo4j.driver.internal.types.InternalTypeSystem;
 import org.neo4j.driver.types.Node;
+import org.neo4j.driver.types.Relationship;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+// TODO: Split and clean up
 @Service
 public class EntryMapper {
 
@@ -41,6 +44,27 @@ public class EntryMapper {
         return entry;
     }
 
+    public Relation toRelation(Relationship relationship) {
+        Relation relation = new Relation();
+        relation.setElementId(relationship.elementId());
+        relation.setType(relationship.type());
+        relationship.keys().forEach(key -> {
+            // Meta info fields start with underscore "_"
+            if (key.startsWith("_")) {
+                return;
+            }
+            relation.getAttributes().put(key, value(relationship.get(key)));
+        });
+        relation.setStartElementId(relationship.startNodeElementId());
+        relation.setEndElementId(relationship.endNodeElementId());
+        relation.get_meta().setVersion(relationship.get("_version").asInt(1));
+        relation.get_meta().setCreateAuthor(relationship.get("_createAuthor").asString(null));
+        relation.get_meta().setCreateDate(relationship.get("_createDate").asString(null));
+        relation.get_meta().setLastUpdateAuthor(relationship.get("_lastUpdateAuthor").asString(null));
+        relation.get_meta().setLastUpdateDate(relationship.get("_lastUpdateDate").asString(null));
+        return relation;
+    }
+
     public org.neo4j.cypherdsl.core.Node toNode(Entry entry, String name) {
         var label = entry.getLabels().stream().findFirst().orElseThrow(InvalidDataException::new);
         Map<String, Object> properties = new HashMap<>(entry.getAttributes());
@@ -58,13 +82,13 @@ public class EntryMapper {
         properties.put("_lastUpdateDate", entry.get_meta().getLastUpdateDate());
     }
 
-    public CountResult toCountResult(Record record) {
+    public CountResultDTO toCountResult(Record record) {
         Set<String> labels = record.get("labels").asList().stream().map(Object::toString).collect(Collectors.toSet());
         Integer count = Integer.valueOf(record.get("count").asInt());
-        CountResult countResult = new CountResult();
-        countResult.setLabel(labels.stream().findFirst().orElse(""));
-        countResult.setCount(count);
-        return countResult;
+        CountResultDTO countResultDTO = new CountResultDTO();
+        countResultDTO.setLabel(labels.stream().findFirst().orElse(""));
+        countResultDTO.setCount(count);
+        return countResultDTO;
     }
 
     private Object value(Value value) {

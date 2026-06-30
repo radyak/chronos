@@ -2,17 +2,29 @@ package net.fvogel.chronos.data.service;
 
 import net.fvogel.chronos.commons.exception.InvalidDataException;
 import net.fvogel.chronos.commons.exception.NotFoundException;
-import net.fvogel.chronos.data.model.CountResult;
-import net.fvogel.chronos.data.model.DataQuery;
-import net.fvogel.chronos.data.model.Entry;
-import net.fvogel.chronos.data.model.Pagination;
+import net.fvogel.chronos.data.model.dto.CountResultDTO;
+import net.fvogel.chronos.data.model.internal.Entry;
+import net.fvogel.chronos.data.model.internal.RelationRecord;
+import net.fvogel.chronos.data.model.query.list.ListQuery;
+import net.fvogel.chronos.data.model.query.list.Pagination;
+import net.fvogel.chronos.data.model.query.mesh.MeshQuery;
 import net.fvogel.chronos.data.persistence.CypherClient;
-import org.neo4j.cypherdsl.core.*;
+import org.apache.commons.lang3.ObjectUtils;
+import org.neo4j.cypherdsl.core.Condition;
+import org.neo4j.cypherdsl.core.Cypher;
+import org.neo4j.cypherdsl.core.Named;
+import org.neo4j.cypherdsl.core.Node;
+import org.neo4j.cypherdsl.core.PatternElement;
+import org.neo4j.cypherdsl.core.Relationship;
+import org.neo4j.cypherdsl.core.SortItem;
+import org.neo4j.cypherdsl.core.Statement;
+import org.neo4j.cypherdsl.core.StatementBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -35,12 +47,12 @@ public class CypherService {
     @Autowired
     private EntryMapper entryMapper;
 
-    public List<Entry> findAll(DataQuery query) {
+    public List<Entry> list(ListQuery query) {
         var nodeName = "n";
         var n = Cypher.anyNode().named(nodeName);
 
         List<SortItem> sortList = CypherDslUtils.extractSortItems(query, n);
-        Condition unionCondition = CypherDslUtils.all(CypherDslUtils.extractConditions(query, n));
+        Condition unionCondition = CypherDslUtils.all(CypherDslUtils.extractEntryConditions(query.getEntryFilters(), n));
         Pagination pagination = query.getPagination();
 
         var statement = Cypher.match(n)
@@ -55,6 +67,79 @@ public class CypherService {
                 result.list(record -> record.get(nodeName).asNode())
                         .stream().map(entryMapper::toEntry)
                         .collect(Collectors.toList())
+        );
+    }
+
+    public List<RelationRecord> mesh(MeshQuery query) {
+        // Root node
+        var nodeName = "n";
+        var n = Cypher.anyNode().named(nodeName);
+        PatternElement match = n;
+
+        // Only for relations:
+        var relName = "r";
+        var relNodeName = "m";
+
+        List<Named> returnElements = new ArrayList<>();
+        returnElements.add(n);
+
+        Condition nodeConditions = CypherDslUtils.all(CypherDslUtils.extractEntryConditions(query.getEntryFilters(), n));
+        Condition relationCondition = Cypher.noCondition();
+        Condition targetNodeUnionCondition = Cypher.noCondition();
+
+        Statement statement;
+
+        // TODO: Consider not only the *first* relationFilter
+        var firstRelationFilter = query.getRelationFilters().stream()
+                .filter(Objects::nonNull)
+                .findFirst();
+        if (firstRelationFilter.isPresent()) {
+            var relationFilter = firstRelationFilter.get();
+            var relationTypes = relationFilter
+                    .getTypes()
+                    .stream()
+                    .map(String::trim)
+                    .filter(r -> !"*".equals(r))
+                    .toArray(String[]::new);
+
+            // Relationships
+            var m = Cypher.anyNode(relNodeName);
+            Relationship rel = n.relationshipBetween(m, relationTypes).named(relName);
+            match = rel;
+            relationCondition = CypherDslUtils.all(CypherDslUtils.extractRelationConditions(query.getRelationFilters(), rel));
+            returnElements.add(rel);
+            returnElements.add(m);
+
+            // Target Nodes
+            if (ObjectUtils.isNotEmpty(relationFilter.getTargetEntryFilters())) {
+                targetNodeUnionCondition = CypherDslUtils.all(CypherDslUtils.extractEntryConditions(relationFilter.getTargetEntryFilters(), m));
+            }
+
+        }
+
+        statement = Cypher.match(match)
+                .where(nodeConditions)
+                .and(relationCondition)
+                .and(targetNodeUnionCondition)
+                .returning(returnElements.toArray(Named[]::new))
+                .build();
+
+        return client.runStatement(statement, result -> result
+                .list(record -> {
+                    var entry = entryMapper.toEntry(record.get(nodeName).asNode());
+
+                    RelationRecord r = new RelationRecord();
+                    r.getEntries().add(entry);
+
+                    if (firstRelationFilter.isPresent()) {
+                        var relationship = entryMapper.toRelation(record.get(relName).asRelationship());
+                        r.getRelations().add(relationship);
+                        var targetEntry = entryMapper.toEntry(record.get(relNodeName).asNode());
+                        r.getEntries().add(targetEntry);
+                    }
+
+                    return r;
+                })
         );
     }
 
@@ -85,7 +170,7 @@ public class CypherService {
         );
     }
 
-    public List<CountResult> statistics() {
+    public List<CountResultDTO> statistics() {
         var nodeName = "n";
         var n = Cypher.anyNode().named(nodeName);
         var statement = Cypher.match(n)

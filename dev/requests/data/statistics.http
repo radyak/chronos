@@ -1,0 +1,4 @@
+###
+
+# Statistics
+GET http://localhost:8010/api/data/statistics

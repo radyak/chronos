@@ -14,11 +14,11 @@ export class HistoricalDataService {
   // Injected Dependencies
   private historicalDataClient = inject(HistoricalDataClient);
   
-  public search(query: Signal<QueryDTO>): ResourceRef<EntryDTO[] | undefined> {
+  public list(query: Signal<QueryDTO>): ResourceRef<EntryDTO[] | undefined> {
     return rxResource({
       params: () => query(),
       stream: ({ params }) => {
-        return this.historicalDataClient.search(params).pipe(
+        return this.historicalDataClient.list(params).pipe(
           // Map the DataResponseDTO to just the entries for easier consumption
           map(response => {
             return response.entries;

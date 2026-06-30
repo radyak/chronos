@@ -1,9 +1,11 @@
 package net.fvogel.chronos.data.service;
 
 import net.fvogel.chronos.commons.exception.NotFoundException;
-import net.fvogel.chronos.data.model.CountResult;
-import net.fvogel.chronos.data.model.DataQuery;
-import net.fvogel.chronos.data.model.Entry;
+import net.fvogel.chronos.data.model.dto.CountResultDTO;
+import net.fvogel.chronos.data.model.internal.Entry;
+import net.fvogel.chronos.data.model.internal.RelationRecord;
+import net.fvogel.chronos.data.model.query.list.ListQuery;
+import net.fvogel.chronos.data.model.query.mesh.MeshQuery;
 import net.fvogel.chronos.data.service.validation.ValidationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,10 +34,35 @@ public class DataService {
     @Autowired
     private ValidationService validationService;
 
-    public List<Entry> findAll(DataQuery query) {
-        return cypherService.findAll(query);
+    /**
+     * Returns a flat list of entries without relations or related entries.
+     * Can take criteria for filtering and sorting entries, plus pagination.
+     *
+     * @param query The list query that my contain entry filters, sorting and pagination params.
+     * @return The resulting list.
+     */
+    public List<Entry> list(ListQuery query) {
+        return cypherService.list(query);
     }
 
+    /**
+     * Queries for entries and relations between them, matching conditions given by the query.
+     * Returns a list of matching {@link RelationRecord}s, that can be assembled to a compact result with deduped
+     * entries and relations.
+     *
+     * @param query The mesh query that my contain entry filters, sorting and pagination params.
+     * @return The resulting list or records.
+     */
+    public List<RelationRecord> mesh(MeshQuery query) {
+        return cypherService.mesh(query);
+    }
+
+    /**
+     * Returns a single entry, identified by key, without relations or related entries.
+     *
+     * @param key The key of the targeted entry.
+     * @return An {@link Optional} of the targeted entry.
+     */
     public Optional<Entry> findByKey(String key) {
         return cypherService.findByKey(key);
     }
@@ -44,7 +71,7 @@ public class DataService {
         return cypherService.findByKeyAndElementId(key, elementId);
     }
 
-    public List<CountResult> statistics() {
+    public List<CountResultDTO> statistics() {
         return cypherService.statistics();
     }
 

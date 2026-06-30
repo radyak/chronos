@@ -1,0 +1,32 @@
+# Get all (default: first 10 elements, no sorting)
+GET http://localhost:8010/api/data/list?labels=Territory,Person
+
+###
+
+# Paging example)
+GET http://localhost:8010/api/data/list?pageSize=5&page=2
+
+### 
+
+# Sorting example
+GET http://localhost:8010/api/data/list?sortBy=from&sortOrder=ASC
+
+
+### 
+
+# Filter example: Entries before 200 AD with wikipedia QID
+GET http://localhost:8010/api/data/list?sortBy=from&pageSize=5&from:gt=0032-04-28
+
+
+### 
+
+# Filter example: First random Entry with wikipedia QID
+GET http://localhost:8010/api/data/list?wikiqid:not=null&sortBy=random
+
+
+
+### 
+
+# Filter example: First random Entry with wikipedia QID
+GET http://localhost:8010/api/data/list?key=otho
+

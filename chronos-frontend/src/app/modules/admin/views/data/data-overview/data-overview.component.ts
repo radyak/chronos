@@ -67,7 +67,7 @@ export class DataOverviewComponent {
       sortBy: undefined,
     } }
   );
-  protected data = this.historicalDataService.search(this.queryParams);
+  protected data = this.historicalDataService.list(this.queryParams);
   protected statistics = this.historicalDataService.statistics();
   protected total = computed(() => {
     const stats = this.statistics.value();

@@ -1,11 +1,20 @@
 package net.fvogel.chronos.data.service;
 
 import net.fvogel.chronos.commons.exception.InvalidParameterException;
-import net.fvogel.chronos.data.model.DataQuery;
-import net.fvogel.chronos.data.model.Filter;
-import net.fvogel.chronos.data.model.SortOrder;
-import net.fvogel.chronos.data.model.Sorting;
-import org.neo4j.cypherdsl.core.*;
+import net.fvogel.chronos.data.model.query.BaseAttributeFilter;
+import net.fvogel.chronos.data.model.query.EntryFilter;
+import net.fvogel.chronos.data.model.query.list.ListQuery;
+import net.fvogel.chronos.data.model.query.list.SortOrder;
+import net.fvogel.chronos.data.model.query.list.Sorting;
+import net.fvogel.chronos.data.model.query.mesh.RelationFilter;
+import org.apache.commons.lang3.ObjectUtils;
+import org.neo4j.cypherdsl.core.Condition;
+import org.neo4j.cypherdsl.core.Cypher;
+import org.neo4j.cypherdsl.core.Node;
+import org.neo4j.cypherdsl.core.Property;
+import org.neo4j.cypherdsl.core.PropertyContainer;
+import org.neo4j.cypherdsl.core.Relationship;
+import org.neo4j.cypherdsl.core.SortItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,19 +27,63 @@ public class CypherDslUtils {
 
     private static final Logger logger = LoggerFactory.getLogger(CypherDslUtils.class);
 
-    public static List<Condition> extractConditions(DataQuery query, Node node) {
-        return query.getFilters() == null ?
+    public static List<Condition> extractEntryConditions(Collection<EntryFilter> entryFilters, Node node) {
+        return entryFilters == null ?
                 Collections.emptyList() :
-                query.getFilters().stream()
-                        .map(filter -> CypherDslUtils.mapFilterToCondition(filter, node))
+                entryFilters.stream()
+                        .map(entryFilter -> CypherDslUtils.mapEntryFilterToCondition(entryFilter, node))
                         .toList();
     }
 
-    private static Condition mapFilterToCondition(Filter filter, Node node) {
-        Property property = node.property(Cypher.literalOf(filter.getAttribute()));
+    public static List<Condition> extractRelationConditions(Collection<RelationFilter> relationFilters, Relationship relationship) {
+        return relationFilters == null ?
+                Collections.emptyList() :
+                relationFilters.stream()
+                        .map(relationFilter -> CypherDslUtils.mapRelationFilterToCondition(relationFilter, relationship))
+                        .toList();
+    }
+
+    private static Condition mapEntryFilterToCondition(EntryFilter entryFilter, Node node) {
+
+        // Label filter
+        if (ObjectUtils.isNotEmpty(entryFilter.getLabels())) {
+            Condition condition = Cypher.noCondition();
+            for (String label : entryFilter.getLabels()) {
+                condition = condition.or(node.hasLabels(label));
+            }
+            return condition;
+        }
+
+        return getCondition(entryFilter, node);
+    }
+
+    private static Condition mapRelationFilterToCondition(RelationFilter relationFilter, Relationship relationship) {
+        return getCondition(relationFilter, relationship);
+    }
+
+    private static Condition getCondition(BaseAttributeFilter filter, PropertyContainer propertyContainer) {
+        var attribute = filter.getAttribute();
+        var value = filter.getValue();
+        var operator = filter.getOperator();
+
+        // All null: return; filter targets labels or types
+        if (ObjectUtils.allNull(attribute, value, operator)) {
+            return Cypher.noCondition();
+        }
+
+        // Not *all* null (except vor 'value') -> Invalid
+        if (attribute == null) {
+            throw new InvalidParameterException("No name specified for at least one attribute");
+        }
+        if (operator == null) {
+            throw new InvalidParameterException("No operator specified for attribute '" + attribute + "'");
+        }
+
+        Property property = propertyContainer.property(Cypher.literalOf(attribute));
+
         // specific null value handling
-        if (null == filter.getValue()) {
-            switch (filter.getOperator()) {
+        if (value == null) {
+            switch (operator) {
                 case NOT -> {
                     return property.isNotNull();
                 }
@@ -44,8 +97,7 @@ public class CypherDslUtils {
             }
         }
 
-        var value = filter.getValue();
-        switch (filter.getOperator()) {
+        switch (operator) {
             case NOT -> {
                 return property.isNotEqualTo(Cypher.literalOf(value));
             }
@@ -61,6 +113,9 @@ public class CypherDslUtils {
             case LESS_EQUAL_THAN -> {
                 return property.lte(Cypher.literalOf(value));
             }
+            case CONTAINS -> {
+                return Cypher.literalOf(value).in(property);
+            }
             default -> {
                 // EQUAL
                 return property.eq(Cypher.literalOf(value));
@@ -69,7 +124,7 @@ public class CypherDslUtils {
     }
 
     // Aspect: Query domain -> CypherDSL
-    public static List<SortItem> extractSortItems(DataQuery query, Node n) {
+    public static List<SortItem> extractSortItems(ListQuery query, Node n) {
         var sortList = new ArrayList<SortItem>();
         Sorting sorting = query.getSorting().isEmpty() ? null : query.getSorting().get(0);
         if (sorting != null && sorting.getSortBy() != null) {

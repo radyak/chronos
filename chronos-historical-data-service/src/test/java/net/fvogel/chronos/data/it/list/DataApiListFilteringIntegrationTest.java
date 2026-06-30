@@ -1,8 +1,10 @@
-package net.fvogel.chronos.data.it.filtering;
+package net.fvogel.chronos.data.it.list;
 
 import net.fvogel.chronos.data.testutils.BaseIntegrationTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.springframework.context.annotation.Profile;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.testcontainers.containers.Neo4jContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -11,7 +13,9 @@ import static net.fvogel.chronos.data.testutils.DataApiRequestMatcher.toExactlyM
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class DataApiFilteringIntegrationTest extends BaseIntegrationTest {
+@ActiveProfiles("debug")
+@Profile("debug")
+public class DataApiListFilteringIntegrationTest extends BaseIntegrationTest {
 
     @Container
     @ServiceConnection
@@ -19,7 +23,7 @@ public class DataApiFilteringIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void getDataWithFilterParamReturnsMatchingEntry() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/api/data?wikiqid=Q1416"))
+        mvc.perform(MockMvcRequestBuilders.get("/api/data/list?wikiqid=Q1416"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.entries.length()").value(1))
                 .andExpect(toExactlyMatchKeys("otho"));
@@ -27,14 +31,14 @@ public class DataApiFilteringIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void getDataWithNonmatchingFilterParamReturnsNoEntry() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/api/data?wikiqid=DOESNOTEXIST"))
+        mvc.perform(MockMvcRequestBuilders.get("/api/data/list?wikiqid=DOESNOTEXIST"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.entries.length()").value(0));
     }
 
     @Test
     void getDataWithGreaterThanFilterParamReturnsMatchingEntries() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/api/data?sortBy=start&pageSize=5&start:gt=0032-04-28"))
+        mvc.perform(MockMvcRequestBuilders.get("/api/data/list?sortBy=start&pageSize=5&start:gt=0032-04-28"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.entries.length()").value(5))
                 .andExpect(toExactlyMatchKeys(
@@ -48,7 +52,7 @@ public class DataApiFilteringIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void getDataWithGreaterEqualsThanFilterParamReturnsMatchingEntries() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/api/data?sortBy=start&pageSize=5&start:gte=0032-04-28"))
+        mvc.perform(MockMvcRequestBuilders.get("/api/data/list?sortBy=start&pageSize=5&start:gte=0032-04-28"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.entries.length()").value(5))
                 .andExpect(toExactlyMatchKeys(
@@ -62,7 +66,7 @@ public class DataApiFilteringIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void getDataWithLessThanFilterParamReturnsMatchingEntries() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/api/data?sortBy=start&pageSize=5&start:lt=0032-04-28"))
+        mvc.perform(MockMvcRequestBuilders.get("/api/data/list?sortBy=start&pageSize=5&start:lt=0032-04-28"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.entries.length()").value(2))
                 .andExpect(toExactlyMatchKeys(
@@ -73,7 +77,7 @@ public class DataApiFilteringIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void getDataWithLessEqualsThanFilterParamReturnsMatchingEntries() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/api/data?sortBy=start&pageSize=5&start:lte=0032-04-28"))
+        mvc.perform(MockMvcRequestBuilders.get("/api/data/list?sortBy=start&pageSize=5&start:lte=0032-04-28"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.entries.length()").value(3))
                 .andExpect(toExactlyMatchKeys(
@@ -85,7 +89,7 @@ public class DataApiFilteringIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void getDataWithNotNullFilterParamReturnsMatchingEntries() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/api/data?sortBy=key&pageSize=5&wikiqid:not=null"))
+        mvc.perform(MockMvcRequestBuilders.get("/api/data/list?sortBy=key&pageSize=5&wikiqid:not=null"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.entries.length()").value(4))
                 .andExpect(toExactlyMatchKeys(
@@ -98,7 +102,7 @@ public class DataApiFilteringIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void getDataWithNullFilterParamReturnsMatchingEntries() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/api/data?sortBy=key&pageSize=5&wikiqid=null"))
+        mvc.perform(MockMvcRequestBuilders.get("/api/data/list?sortBy=key&pageSize=5&wikiqid=null"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.entries.length()").value(5))
                 .andExpect(toExactlyMatchKeys(
@@ -110,33 +114,37 @@ public class DataApiFilteringIntegrationTest extends BaseIntegrationTest {
                 ));
     }
 
+    /*
+     * TODO: Add test for has (CONTAINS) with array property on test data node(s)
+     */
+
     @Test
     void getDataWithNonExistingFilterReturnsEmptyList() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/api/data?color=blue"))
+        mvc.perform(MockMvcRequestBuilders.get("/api/data/list?color=blue"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.entries.length()").value(0));
     }
 
     @Test
     void getDataThrowsBadRequestForInvalidFilterOperator() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/api/data?sortBy=key&pageSize=5&wikiqid:invalidOperator=null"))
+        mvc.perform(MockMvcRequestBuilders.get("/api/data/list?sortBy=key&pageSize=5&wikiqid:invalidOperator=null"))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     void getDataThrowsBadRequestForMissingFilterValue() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/api/data?sortBy=key&pageSize=5&wikiqid="))
+        mvc.perform(MockMvcRequestBuilders.get("/api/data/list?sortBy=key&pageSize=5&wikiqid="))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     void getDataIncludesAppropriateMetadata() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/api/data?sortBy=key&pageSize=5&start:gt=0032-04-28"))
+        mvc.perform(MockMvcRequestBuilders.get("/api/data/list?sortBy=key&pageSize=5&start:gt=0032-04-28"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.meta.query.filters.length()").value(1))
-                .andExpect(jsonPath("$.meta.query.filters.[0].attribute").value("start"))
-                .andExpect(jsonPath("$.meta.query.filters.[0].operator").value("GREATER_THAN"))
-                .andExpect(jsonPath("$.meta.query.filters.[0].value").value("0032-04-28"));
+                .andExpect(jsonPath("$.meta.query.entryFilters.length()").value(1))
+                .andExpect(jsonPath("$.meta.query.entryFilters.[0].attribute").value("start"))
+                .andExpect(jsonPath("$.meta.query.entryFilters.[0].operator").value("GREATER_THAN"))
+                .andExpect(jsonPath("$.meta.query.entryFilters.[0].value").value("0032-04-28"));
     }
 
 }
