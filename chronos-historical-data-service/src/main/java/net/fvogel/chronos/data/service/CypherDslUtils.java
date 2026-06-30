@@ -44,7 +44,6 @@ public class CypherDslUtils {
     }
 
     private static Condition mapEntryFilterToCondition(EntryFilter entryFilter, Node node) {
-        Property property = node.property(Cypher.literalOf(entryFilter.getAttribute()));
 
         // Label filter
         if (ObjectUtils.isNotEmpty(entryFilter.getLabels())) {
@@ -63,16 +62,27 @@ public class CypherDslUtils {
     }
 
     private static Condition getCondition(BaseAttributeFilter filter, PropertyContainer propertyContainer) {
-        Property property = propertyContainer.property(Cypher.literalOf(filter.getAttribute()));
+        var attribute = filter.getAttribute();
         var value = filter.getValue();
         var operator = filter.getOperator();
 
-        if (operator == null) {
+        // All null: return; filter targets labels or types
+        if (ObjectUtils.allNull(attribute, value, operator)) {
             return Cypher.noCondition();
         }
 
+        // Not *all* null (except vor 'value') -> Invalid
+        if (attribute == null) {
+            throw new InvalidParameterException("No name specified for at least one attribute");
+        }
+        if (operator == null) {
+            throw new InvalidParameterException("No operator specified for attribute '" + attribute + "'");
+        }
+
+        Property property = propertyContainer.property(Cypher.literalOf(attribute));
+
         // specific null value handling
-        if (null == filter.getValue()) {
+        if (value == null) {
             switch (operator) {
                 case NOT -> {
                     return property.isNotNull();

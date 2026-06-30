@@ -12,7 +12,9 @@ import net.fvogel.chronos.data.persistence.CypherClient;
 import org.apache.commons.lang3.ObjectUtils;
 import org.neo4j.cypherdsl.core.Condition;
 import org.neo4j.cypherdsl.core.Cypher;
+import org.neo4j.cypherdsl.core.Named;
 import org.neo4j.cypherdsl.core.Node;
+import org.neo4j.cypherdsl.core.PatternElement;
 import org.neo4j.cypherdsl.core.Relationship;
 import org.neo4j.cypherdsl.core.SortItem;
 import org.neo4j.cypherdsl.core.Statement;
@@ -22,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -68,14 +71,17 @@ public class CypherService {
     }
 
     public List<RelationRecord> mesh(MeshQuery query) {
+        // Root node
         var nodeName = "n";
         var n = Cypher.anyNode().named(nodeName);
+        PatternElement match = n;
 
         // Only for relations:
         var relName = "r";
         var relNodeName = "m";
-        var m = Cypher.anyNode(relNodeName);
-        Relationship rel;
+
+        List<Named> returnElements = new ArrayList<>();
+        returnElements.add(n);
 
         Condition nodeConditions = CypherDslUtils.all(CypherDslUtils.extractEntryConditions(query.getEntryFilters(), n));
         Condition relationCondition = Cypher.noCondition();
@@ -97,26 +103,26 @@ public class CypherService {
                     .toArray(String[]::new);
 
             // Relationships
-            rel = n.relationshipBetween(m, relationTypes).named(relName);
+            var m = Cypher.anyNode(relNodeName);
+            Relationship rel = n.relationshipBetween(m, relationTypes).named(relName);
+            match = rel;
             relationCondition = CypherDslUtils.all(CypherDslUtils.extractRelationConditions(query.getRelationFilters(), rel));
+            returnElements.add(rel);
+            returnElements.add(m);
 
             // Target Nodes
             if (ObjectUtils.isNotEmpty(relationFilter.getTargetEntryFilters())) {
                 targetNodeUnionCondition = CypherDslUtils.all(CypherDslUtils.extractEntryConditions(relationFilter.getTargetEntryFilters(), m));
             }
 
-            statement = Cypher.match(rel)
-                    .where(nodeConditions)
-                    .and(relationCondition)
-                    .and(targetNodeUnionCondition)
-                    .returning(n, rel, m)
-                    .build();
-        } else {
-            statement = Cypher.match(n)
-                    .where(nodeConditions)
-                    .returning(n)
-                    .build();
         }
+
+        statement = Cypher.match(match)
+                .where(nodeConditions)
+                .and(relationCondition)
+                .and(targetNodeUnionCondition)
+                .returning(returnElements.toArray(Named[]::new))
+                .build();
 
         return client.runStatement(statement, result -> result
                 .list(record -> {

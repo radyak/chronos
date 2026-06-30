@@ -12,6 +12,7 @@ import java.util.List;
 
 import static net.fvogel.chronos.data.model.query.ConditionOperator.CONTAINS;
 import static net.fvogel.chronos.data.model.query.ConditionOperator.EQUAL;
+import static net.fvogel.chronos.data.model.query.ConditionOperator.GREATER_THAN;
 import static net.fvogel.chronos.data.testutils.DataApiRequestMatcher.toExactlyContainKeys;
 import static net.fvogel.chronos.data.testutils.EntryFilterBuilder.entryFilter;
 import static net.fvogel.chronos.data.testutils.MeshQueryBuilder.query;
@@ -195,9 +196,41 @@ public class DataApiMeshFilteringIntegrationTest extends BaseIntegrationTest {
                 .withEntryFilter("start", ConditionOperator.EQUAL, "0032-04-28")
                 .build();
         var queryString = objectMapper.writeValueAsString(query).replace("EQUAL", "invalidOperator");
-        System.out.println("Sending: " + queryString);
         mvc.perform(post("/api/data/mesh")
                         .content(queryString)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void searchMeshThrowsBadRequestForUnspecifiedFilterOperator() throws Exception {
+        var query = query()
+                .withEntryFilter("start", null, "0032-04-28")
+                .build();
+        mvc.perform(post("/api/data/mesh")
+                        .content(objectMapper.writeValueAsString(query))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void searchMeshThrowsBadRequestForUnspecifiedAttribute() throws Exception {
+        var query = query()
+                .withEntryFilter(null, EQUAL, "0032-04-28")
+                .build();
+        mvc.perform(post("/api/data/mesh")
+                        .content(objectMapper.writeValueAsString(query))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void searchMeshThrowsBadRequestForIncompatibleValue() throws Exception {
+        var query = query()
+                .withEntryFilter("start", GREATER_THAN, null)
+                .build();
+        mvc.perform(post("/api/data/mesh")
+                        .content(objectMapper.writeValueAsString(query))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
