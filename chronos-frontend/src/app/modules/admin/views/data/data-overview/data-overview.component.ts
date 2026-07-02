@@ -1,20 +1,19 @@
 import { Component, computed, inject, Signal } from '@angular/core';
 import { HistoricalDataService } from '../../../../public/services/historical-data.service';
-import { QueryDTO } from 'src/app/common/model/data/query.model.dto';
+import { ListQueryDTO } from 'src/app/common/model/data/query/list-query.model.dto';
 import { ElementAttributePipe } from 'src/app/common/util/element-attribute.pipe';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { firstValueFrom, map } from 'rxjs';
 import { SortByComponent } from 'src/app/common/components/sort-by/sort-by.component';
-import { SortOrder } from 'src/app/common/model/data/sort-order.dto';
+import { SortOrder } from 'src/app/common/model/data/common/sort-order.dto';
 import { LoadingComponent } from 'src/app/common/components/loading/loading.component';
 import { IconConstants } from 'src/app/common/constants/icon.constants';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CREATE_ROUTE_KEYWORD } from '../../../admin.routes';
-import { EntryDTO } from 'src/app/common/model/data/entry.dto';
-import { AdminDataClient } from '../../../clients/admin-data.client';
 import { AdminDataService } from '../../../services/admin-data.service';
+import { EntryDTO } from 'src/app/common/model/data/response/entry.dto';
 
 function cleanParams(obj: Record<string, any>) {
   return Object.fromEntries(
@@ -47,7 +46,7 @@ export class DataOverviewComponent {
   private router = inject(Router);
 
   // Derived Signals
-  protected queryParams: Signal<QueryDTO> = toSignal(
+  protected queryParams: Signal<ListQueryDTO> = toSignal(
     this.route.queryParamMap.pipe(
       map(params => {
         const sortOrderString: string | null = params.get('sortOrder');
@@ -108,7 +107,7 @@ export class DataOverviewComponent {
     });
   }
 
-  private updateQuery(patch: Partial<QueryDTO>) {
+  private updateQuery(patch: Partial<ListQueryDTO>) {
     const current = this.queryParams();
 
     const next = {

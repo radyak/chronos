@@ -1,0 +1,17 @@
+<div class="demo-page">
+  <!--
+    Two-way binding pattern:
+      [graphData]        pushes data INTO the D3 component (Angular → D3)
+      (graphDataChange)  receives mutations back from the panel (D3/panel → Angular)
+  -->
+  <app-graph-viz
+    [graphData]="graph"
+    (graphDataChange)="graph = $event">
+  </app-graph-viz>
+
+  <!-- JSON mirror – updates in real time as you edit nodes in the panel -->
+  <details class="json-panel">
+    <summary>Live JSON snapshot</summary>
+    <pre>{{ graph | json }}</pre>
+  </details>
+</div>

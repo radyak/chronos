@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { EntryDTO } from '../model/data/entry.dto';
+import { EntryDTO } from '../model/data/response/entry.dto';
 
 @Pipe({
   name: 'attribute',

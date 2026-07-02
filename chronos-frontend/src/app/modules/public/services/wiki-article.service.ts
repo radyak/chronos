@@ -1,12 +1,9 @@
 import { inject, Injectable, ResourceRef, Signal } from '@angular/core';
-import { QueryDTO } from 'src/app/common/model/data/query.model.dto';
-import { EntryDTO } from 'src/app/common/model/data/entry.dto';
-import { CountResultDTO } from 'src/app/common/model/data/count-result.dto';
 import { rxResource } from '@angular/core/rxjs-interop';
-import { HistoricalDataClient } from '../clients/historical-data.client';
-import { WikiArticlesClient } from '../clients/wiki-article.client';
 import { of, switchMap } from 'rxjs';
 import { WikipediaSummary } from 'src/app/common/model/wikipedia/wikipedia-summary.model';
+import { HistoricalDataClient } from '../clients/historical-data.client';
+import { WikiArticlesClient } from '../clients/wiki-article.client';
 
 @Injectable({
   providedIn: 'root',

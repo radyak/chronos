@@ -1,10 +1,10 @@
 import { inject, Injectable } from '@angular/core';
 import { catchError, firstValueFrom, from, Observable, tap } from 'rxjs';
 import { NotificationService } from 'src/app/common/components/notifications/notification.service';
-import { EntryDTO } from 'src/app/common/model/data/entry.dto';
+import { EntryDTO } from 'src/app/common/model/data/response/entry.dto';
+import { ErrorResponseDTO } from 'src/app/common/model/error-response.dto';
 import { AdminDataClient } from '../clients/admin-data.client';
 import { AdminConfirmService } from './admin-confirm.service';
-import { ErrorResponseDTO } from 'src/app/common/model/error-response.dto';
 
 @Injectable({
   providedIn: 'root',
