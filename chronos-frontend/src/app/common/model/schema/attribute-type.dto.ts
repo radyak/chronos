@@ -1,4 +1,4 @@
-export enum AttributeTypeDTO {
+export enum SchemaAttributeTypeDTO {
     STRING = "STRING",
     NUMBER = "NUMBER",
     ENUM = "ENUM",

@@ -1,7 +1,7 @@
-import { TypeAO } from "src/app/common/model/schema/admin/type.ao";
+import { SchemaTypeAO } from "src/app/common/model/schema/admin/type.ao";
 
 export class EditTypeFormMapper {
-    public static toAO(formData: any, original?: TypeAO): TypeAO {
+    public static toAO(formData: any, original?: SchemaTypeAO): SchemaTypeAO {
         return {
             ...original,
             key: formData.key,

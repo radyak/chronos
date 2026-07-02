@@ -8,13 +8,13 @@ import { CREATE_ROUTE_KEYWORD } from 'src/app/modules/admin/admin.routes';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { EditTypeFormMapper } from './edit-type-form.mapper';
 import { NgbAccordionModule, NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
-import { AttributeAO } from 'src/app/common/model/schema/admin/attribute.ao';
+import { SchemaAttributeAO } from 'src/app/common/model/schema/admin/attribute.ao';
 import { EditAttributeDialogComponent } from './edit-attribute-dialog/edit-attribute-dialog.component';
 import { AdminSchemaService } from 'src/app/modules/admin/services/admin-schema.service';
 import { IconConstants } from 'src/app/common/constants/icon.constants';
 import { uniqueValidator } from 'src/app/common/validators/unique-validator';
 import { FormService } from 'src/app/common/util/form.service';
-import { RelationAO } from 'src/app/common/model/schema/admin/relation.ao';
+import { SchemaRelationAO } from 'src/app/common/model/schema/admin/relation.ao';
 import { EditRelationOffcanvasComponent } from './edit-relation-offcanvas/edit-relation-offcanvas.component';
 import { IconSelectComponent } from "./icon-select/icon-select.component";
 import { ApiErrorDTO, ErrorResponseDTO } from 'src/app/common/model/error-response.dto';
@@ -75,7 +75,7 @@ export class EditTypeComponent {
 
   // Form & controls
   protected form?: FormGroup;
-  protected currentAttribute: WritableSignal<AttributeAO | undefined> = signal(undefined);
+  protected currentAttribute: WritableSignal<SchemaAttributeAO | undefined> = signal(undefined);
   protected submitted = false;
   protected forceDisplayErrors = false;
 
@@ -120,7 +120,7 @@ export class EditTypeComponent {
     });
   }
 
-  protected editAttribute(attr: AttributeAO): void {
+  protected editAttribute(attr: SchemaAttributeAO): void {
     const modalRef = this.modalService.open(EditAttributeDialogComponent);
     modalRef.componentInstance.attribute.set(attr);
     const takenAttributeNames = this.typeResource.value()?.attributes?.filter(a => a !== attr).map(a => a.key);
@@ -158,7 +158,7 @@ export class EditTypeComponent {
     this.editAttribute({});
   }
 
-  protected editRelation(rel: RelationAO): void {
+  protected editRelation(rel: SchemaRelationAO): void {
 		const offcanvasRef = this.offcanvasService.open(EditRelationOffcanvasComponent, {
       position: 'bottom',
       backdrop: 'static'
@@ -240,7 +240,7 @@ export class EditTypeComponent {
     );
   }
 
-  protected deleteAttribute(attribute: AttributeAO): void {
+  protected deleteAttribute(attribute: SchemaAttributeAO): void {
     this.adminConfirmService.confirm(
       `Delete Attribute`,
       `Do you want to delete attribute '${attribute.key}'?`
@@ -259,7 +259,7 @@ export class EditTypeComponent {
     )
   }
 
-  protected deleteRelation(relation: RelationAO): void {
+  protected deleteRelation(relation: SchemaRelationAO): void {
     this.adminConfirmService.confirm(
       `Delete Relation`,
       `Do you want to delete relation '${relation.key} (-> ${relation.target?.key})'?`

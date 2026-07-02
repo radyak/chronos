@@ -1,12 +1,12 @@
-import { AttributeDTO } from "./attribute.dto";
+import { SchemaAttributeDTO } from "./attribute.dto";
 
-export interface RelationDTO {
+export interface SchemaRelationDTO {
     id: number;
     key: string;
     explanation: string;
     examples: string;
-    attributes: Array<AttributeDTO>;
-    defaultAttributes: Array<AttributeDTO>;
+    attributes: Array<SchemaAttributeDTO>;
+    defaultAttributes: Array<SchemaAttributeDTO>;
     sourceTypeId: number;
     targetTypeId: number;
 }

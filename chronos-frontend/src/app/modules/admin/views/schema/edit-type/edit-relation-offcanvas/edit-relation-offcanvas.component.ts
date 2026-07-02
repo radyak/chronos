@@ -2,8 +2,8 @@ import { Component, effect, inject, model, ModelSignal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbActiveOffcanvas, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { AttributeAO } from 'src/app/common/model/schema/admin/attribute.ao';
-import { RelationAO } from 'src/app/common/model/schema/admin/relation.ao';
+import { SchemaAttributeAO } from 'src/app/common/model/schema/admin/attribute.ao';
+import { SchemaRelationAO } from 'src/app/common/model/schema/admin/relation.ao';
 import { FormService } from 'src/app/common/util/form.service';
 import { uniqueValidator } from 'src/app/common/validators/unique-validator';
 import { IconConstants as IconsConfig } from 'src/app/common/constants/icon.constants';
@@ -33,7 +33,7 @@ export class EditRelationOffcanvasComponent {
   private adminConfirmService = inject(AdminConfirmService);
 
   // Inputs
-  protected relation: ModelSignal<RelationAO> = model({});
+  protected relation: ModelSignal<SchemaRelationAO> = model({});
   protected takenKeys: ModelSignal<string[]> = model([] as string[]);
   protected backendErrors: ModelSignal<ApiErrorDTO[]> = model<ApiErrorDTO[]>([]);
 
@@ -98,7 +98,7 @@ export class EditRelationOffcanvasComponent {
 
   protected confirm(): void {
     this.submitted = true;
-    const relation: RelationAO = {
+    const relation: SchemaRelationAO = {
       ...this.relation(),
       ...this.form?.getRawValue(),      
     };
@@ -113,7 +113,7 @@ export class EditRelationOffcanvasComponent {
     this.editAttribute({});
   }
 
-  protected editAttribute(attr: AttributeAO): void {
+  protected editAttribute(attr: SchemaAttributeAO): void {
     const modalRef = this.modalService.open(EditAttributeDialogComponent);
     modalRef.componentInstance.attribute.set(attr);
     const takenAttributeNames = this.relation()?.attributes?.filter(a => a !== attr).map(a => a.key);
@@ -138,7 +138,7 @@ export class EditRelationOffcanvasComponent {
     })
   }
 
-  protected deleteAttribute(attribute: AttributeAO): void {
+  protected deleteAttribute(attribute: SchemaAttributeAO): void {
     this.adminConfirmService.confirm(
       `Delete Attribute`,
       `Do you want to delete attribute '${attribute.key}'?`

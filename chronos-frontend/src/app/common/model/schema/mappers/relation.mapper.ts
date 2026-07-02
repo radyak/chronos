@@ -1,13 +1,13 @@
-import { RelationAO } from "../admin/relation.ao";
-import { RelationDTO } from "../relation.dto";
+import { SchemaRelationAO } from "../admin/relation.ao";
+import { SchemaRelationDTO } from "../relation.dto";
 import { AttributeMapper } from "./attribute.mapper";
 import { SchemaResponseDTO } from "../schema-response.dto";
 import { sortByOrder } from "src/app/common/util/array-utils";
 
 export class RelationMapper {
 
-    public static dtoToAo(dto: RelationDTO, schemaPartial: SchemaResponseDTO): RelationAO {
-        const ao: RelationAO = {
+    public static dtoToAo(dto: SchemaRelationDTO, schemaPartial: SchemaResponseDTO): SchemaRelationAO {
+        const ao: SchemaRelationAO = {
             id: dto.id,
             key: dto.key,
             examples: dto.examples,
@@ -20,8 +20,8 @@ export class RelationMapper {
         return ao;
     }
 
-    public static onlyDefaults(schemaPartial: SchemaResponseDTO): RelationAO {
-        const ao: RelationAO = {
+    public static onlyDefaults(schemaPartial: SchemaResponseDTO): SchemaRelationAO {
+        const ao: SchemaRelationAO = {
             defaultAttributes: schemaPartial.relations.defaultAttributes?.map(AttributeMapper.dtoToAo).sort(sortByOrder),
         };
         return ao;
