@@ -1,13 +1,19 @@
+import { CommonModule } from '@angular/common';
 import {
-  Component, ElementRef, ViewChild, Input, Output, EventEmitter,
-  OnChanges, OnDestroy, SimpleChanges, NgZone, ChangeDetectionStrategy
+  ChangeDetectionStrategy,
+  Component, ElementRef,
+  input,
+  NgZone,
+  OnChanges, OnDestroy,
+  SimpleChanges,
+  ViewChild
 } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import * as d3 from 'd3';
 import { GraphData } from './model/graph-data.model';
-import { GraphNode } from './model/graph-node.model';
 import { GraphLink } from './model/graph-link.model';
-import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { GraphNode } from './model/graph-node.model';
+import { defaultNetworkGraphConfig } from './model/network-graph.config';
 
 /** Color palette keyed by node type label */
 const TYPE_COLORS: Record<string, string> = {
@@ -16,9 +22,6 @@ const TYPE_COLORS: Record<string, string> = {
   Default:'#a78bfa',
 };
 
-const LINK_COLOR = '#94a3b8';
-const NODE_RADIUS = 28;
-const FONT_SIZE   = 11;
 
 @Component({
   selector: 'chronos-network-graph',
@@ -33,10 +36,7 @@ const FONT_SIZE   = 11;
 export class NetworkGraphComponent implements OnChanges, OnDestroy {
 
   /** Input: full graph data */
-  @Input() graphData!: GraphData;
-
-  /** Output: fires whenever the user edits a node in the detail panel */
-  @Output() graphDataChange = new EventEmitter<GraphData>();
+  public readonly graphData = input.required<GraphData>();
 
   @ViewChild('host',        { static: true }) hostRef!: ElementRef<HTMLDivElement>;
   @ViewChild('svg',         { static: true }) svgRef!:  ElementRef<SVGSVGElement>;
@@ -45,13 +45,13 @@ export class NetworkGraphComponent implements OnChanges, OnDestroy {
   @ViewChild('nodesLayer',  { static: true }) nodesRef!:ElementRef<SVGGElement>;
   @ViewChild('labelsLayer', { static: true }) lblRef!:  ElementRef<SVGGElement>;
 
-  readonly LINK_COLOR = LINK_COLOR;
+  config = defaultNetworkGraphConfig;
 
   selectedNode: GraphNode | null = null;
 
   /** Unique relationship type names (used for SVG marker defs via *ngFor) */
   get linkTypes(): string[] {
-    return [...new Set(this.graphData?.links.map(l => l.type) ?? [])];
+    return [...new Set(this.graphData().links.map(l => l.type) ?? [])];
   }
 
   private simulation!: d3.Simulation<GraphNode, GraphLink>;
@@ -61,13 +61,13 @@ export class NetworkGraphComponent implements OnChanges, OnDestroy {
 
   // ─── Lifecycle ────────────────────────────────────────────────────────────
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['graphData'] && this.graphData) {
+  public ngOnChanges(changes: SimpleChanges): void {
+    if (changes['graphData'] && this.graphData()) {
       this.zone.runOutsideAngular(() => this.buildGraph());
     }
   }
 
-  ngOnDestroy(): void {
+  public ngOnDestroy(): void {
     this.simulation?.stop();
     this.resizeObserver?.disconnect();
   }
@@ -82,17 +82,19 @@ export class NetworkGraphComponent implements OnChanges, OnDestroy {
     const svg = d3.select(this.svgRef.nativeElement);
 
     // Zoom behaviour
-    const zoom = d3.zoom<SVGSVGElement, unknown>()
-      .scaleExtent([0.2, 4])
-      .on('zoom', (event) => {
-        d3.select(this.zoomRef.nativeElement)
-          .attr('transform', event.transform);
-      });
-    svg.call(zoom as any);
+    if (this.config.zoom.enabled) {
+      const zoom = d3.zoom<SVGSVGElement, unknown>()
+        .scaleExtent([0.2, 4])
+        .on('zoom', (event) => {
+          d3.select(this.zoomRef.nativeElement)
+            .attr('transform', event.transform);
+        });
+      svg.call(zoom as any);
+    }
 
     // Deep-copy data so D3 mutations don't corrupt the Angular model
-    const nodes: GraphNode[] = this.graphData.nodes.map(n => ({ ...n }));
-    const links: GraphLink[] = this.graphData.links.map(l => ({ ...l }));
+    const nodes: GraphNode[] = this.graphData().nodes.map(n => ({ ...n }));
+    const links: GraphLink[] = this.graphData().links.map(l => ({ ...l }));
 
     // ── Simulation ──────────────────────────────────────────────────────────
     this.simulation?.stop();
@@ -101,16 +103,16 @@ export class NetworkGraphComponent implements OnChanges, OnDestroy {
         .id(d => d.id).distance(120))
       .force('charge', d3.forceManyBody().strength(-400))
       .force('center', d3.forceCenter(w / 2, h / 2))
-      .force('collision', d3.forceCollide(NODE_RADIUS + 10));
+      .force('collision', d3.forceCollide(this.config.nodes.radius + 10));
 
     // ── Links ───────────────────────────────────────────────────────────────
     const linkSel = d3.select(this.linksRef.nativeElement)
       .selectAll<SVGLineElement, GraphLink>('line')
       .data(links, d => d.id)
       .join('line')
-      .attr('stroke', LINK_COLOR)
-      .attr('stroke-width', 1.5)
-      .attr('stroke-opacity', 0.7)
+      .attr('stroke', this.config.links.color)
+      .attr('stroke-width', this.config.links.width)
+      .attr('stroke-opacity', this.config.links.opacity)
       .attr('marker-end', d => `url(#arrow-${d.type})`);
 
     // Link labels
@@ -118,8 +120,8 @@ export class NetworkGraphComponent implements OnChanges, OnDestroy {
       .selectAll<SVGTextElement, GraphLink>('text')
       .data(links, d => d.id)
       .join('text')
-      .attr('fill', '#64748b')
-      .attr('font-size', 9)
+      .attr('fill', this.config.links.text.color || this.config.text.color)
+      .attr('font-size', this.config.links.text.fontSize || this.config.text.fontSize)
       .attr('text-anchor', 'middle')
       .attr('dominant-baseline', 'middle')
       .text(d => d.type);
@@ -129,17 +131,16 @@ export class NetworkGraphComponent implements OnChanges, OnDestroy {
       .selectAll<SVGCircleElement, GraphNode>('circle')
       .data(nodes, d => d.id)
       .join('circle')
-      .attr('r', NODE_RADIUS)
+      .attr('r', this.config.nodes.radius)
       .attr('fill', d => this.nodeColor(d))
-      .attr('stroke', '#0f172a')
-      .attr('stroke-width', 3)
+      .attr('stroke', this.config.nodes.stroke)
+      .attr('stroke-width', this.config.nodes.strokeWidth)
       .style('cursor', 'pointer')
       .call(this.dragBehaviour(this.simulation) as any)
       .on('click', (_event, d) => {
-        this.zone.run(() => {
           // Map D3 node back to original Angular model node
-          this.selectedNode = this.graphData.nodes.find(n => n.id === d.id) ?? null;
-        });
+          this.selectedNode = this.graphData().nodes.find(n => n.id === d.id) ?? null;
+          console.log('Selected node:', this.selectedNode);
       });
 
     // Node labels
@@ -149,8 +150,8 @@ export class NetworkGraphComponent implements OnChanges, OnDestroy {
       .join('text')
       .attr('text-anchor', 'middle')
       .attr('dominant-baseline', 'middle')
-      .attr('fill', '#0f172a')
-      .attr('font-size', FONT_SIZE)
+      .attr('fill', this.config.text.color)
+      .attr('font-size', this.config.text.fontSize)
       .attr('font-weight', '700')
       .attr('pointer-events', 'none')
       .text(d => this.truncate(d.label, 12));
@@ -180,7 +181,7 @@ export class NetworkGraphComponent implements OnChanges, OnDestroy {
     // (called from onNodeLabelChange)
     (this as any)._refreshLabels = () => {
       labelSel.text(d => {
-        const updated = this.graphData.nodes.find(n => n.id === d.id);
+        const updated = this.graphData().nodes.find(n => n.id === d.id);
         return this.truncate(updated?.label ?? d.label, 12);
       });
     };
@@ -189,52 +190,28 @@ export class NetworkGraphComponent implements OnChanges, OnDestroy {
   // ─── Drag behaviour ───────────────────────────────────────────────────────
 
   private dragBehaviour(sim: d3.Simulation<GraphNode, GraphLink>) {
-    return d3.drag<SVGCircleElement, GraphNode>()
-      .on('start', (event, d) => {
-        if (!event.active) sim.alphaTarget(0.3).restart();
-        d.fx = d.x; d.fy = d.y;
-      })
-      .on('drag', (event, d) => { d.fx = event.x; d.fy = event.y; })
-      .on('end',  (event, d) => {
-        if (!event.active) sim.alphaTarget(0);
-        d.fx = null; d.fy = null;
-      });
+    const drag = d3.drag<SVGCircleElement, GraphNode>();
+    if (!this.config.drag.enabled) {
+      return drag;
+    }
+    return drag
+        .on('start', (event, d) => {
+          if (!event.active) sim.alphaTarget(0.3).restart();
+          d.fx = d.x; d.fy = d.y;
+        })
+        .on('drag', (event, d) => { d.fx = event.x; d.fy = event.y; })
+        .on('end',  (event, d) => {
+          if (!event.active) sim.alphaTarget(0);
+          d.fx = null; d.fy = null;
+        });
   }
-
-  // ─── Two-way binding helpers ──────────────────────────────────────────────
-
-  onNodeLabelChange(node: GraphNode): void {
-    (this as any)._refreshLabels?.();
-    this.emitChange();
-  }
-
-  emitChange(): void {
-    this.graphDataChange.emit({ ...this.graphData });
-  }
-
-  clearSelection(): void { this.selectedNode = null; }
 
   // ─── Template helpers ─────────────────────────────────────────────────────
 
-  nodeColor(node: GraphNode): string {
-    return TYPE_COLORS[node.type] ?? TYPE_COLORS['Default'];
-  }
-
-  propKeys(node: GraphNode): string[] {
-    return Object.keys(node.properties);
-  }
-
-  nodeRelationships(node: GraphNode): { type: string; target: string }[] {
-    return this.graphData.links
-      .filter(l => {
-        const srcId = typeof l.source === 'string' ? l.source : (l.source as GraphNode).id;
-        return srcId === node.id;
-      })
-      .map(l => {
-        const tgtId = typeof l.target === 'string' ? l.target : (l.target as GraphNode).id;
-        const tgt = this.graphData.nodes.find(n => n.id === tgtId);
-        return { type: l.type, target: tgt?.label ?? tgtId };
-      });
+  private nodeColor(node: GraphNode): string {
+    var color = TYPE_COLORS[node.type] ?? TYPE_COLORS['Default'];
+    var rgbColor = d3.rgb(color).darker(this.config.nodes.dim).formatRgb();
+    return rgbColor;
   }
 
   private truncate(text: string, max: number): string {

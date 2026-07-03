@@ -12,7 +12,7 @@
         markerHeight="6"
         orient="auto"
       >
-        <path d="M0,-5L10,0L0,5" [attr.fill]="LINK_COLOR" />
+        <path d="M0,-5L10,0L0,5" [attr.fill]="config.links.color" />
       </marker>
     </defs>
     <g class="zoom-layer" #zoomLayer>
@@ -22,42 +22,4 @@
     </g>
   </svg>
 
-  <!-- Detail panel shown on node selection -->
-  <aside class="detail-panel" *ngIf="selectedNode">
-    <header>
-      <span class="badge" [style.background]="nodeColor(selectedNode)">
-        {{ selectedNode.type }}
-      </span>
-      <h3>{{ selectedNode.label }}</h3>
-      <button class="close-btn" (click)="clearSelection()">✕</button>
-    </header>
-
-    <!-- Two-way binding: edit label -->
-    <label class="field">
-      <span>Label</span>
-      <input
-        [(ngModel)]="selectedNode.label"
-        (ngModelChange)="onNodeLabelChange(selectedNode)"
-        class="field-input"
-      />
-    </label>
-
-    <!-- Two-way binding: edit each property -->
-    <label class="field" *ngFor="let key of propKeys(selectedNode)">
-      <span>{{ key }}</span>
-      <input
-        [(ngModel)]="selectedNode.properties[key]"
-        (ngModelChange)="emitChange()"
-        class="field-input"
-      />
-    </label>
-
-    <div class="rel-list">
-      <strong>Relationships</strong>
-      <div *ngFor="let rel of nodeRelationships(selectedNode)" class="rel-item">
-        <span class="rel-type">{{ rel.type }}</span>
-        <span class="rel-target">→ {{ rel.target }}</span>
-      </div>
-    </div>
-  </aside>
 </div>
