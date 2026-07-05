@@ -128,6 +128,24 @@
               }
             </div>
           </div>
+          <div class="form-group col-6">
+            <label class="form-label mt-4" for="color">Color:</label>
+            <input
+              class="form-control"
+              formControlName="color"
+              id="color"
+              name="color"
+              type="text"
+              [class.is-invalid]="isInvalid('color')"
+              [style.background-color]="form?.get('color')?.value"
+              [style.color]="getContrastColor()"
+            />
+            <div class="invalid-feedback">
+              @for (error of errors('color', 'Color'); track error) {
+                {{ error }}
+              }
+            </div>
+          </div>
         </div>
       </div>
     </fieldset>

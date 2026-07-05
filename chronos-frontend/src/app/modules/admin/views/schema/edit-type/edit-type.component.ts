@@ -19,6 +19,7 @@ import { EditRelationOffcanvasComponent } from './edit-relation-offcanvas/edit-r
 import { IconSelectComponent } from "./icon-select/icon-select.component";
 import { ApiErrorDTO, ErrorResponseDTO } from 'src/app/common/model/error-response.dto';
 import { BackendErrorService } from 'src/app/common/util/backend-error.service';
+import { getContrastColor, isBright } from 'src/app/common/util/color-brightness.function';
 
 @Component({
   selector: 'chronos-edit-type',
@@ -109,6 +110,11 @@ export class EditTypeComponent {
             ]
           ],
           icon: [null, 
+            [
+              Validators.required
+            ]
+          ],
+          color: [null, 
             [
               Validators.required
             ]
@@ -304,6 +310,11 @@ export class EditTypeComponent {
 
   protected toggleForceDisplayErrors(): void {
     this.forceDisplayErrors = !this.forceDisplayErrors;
+  }
+
+  protected getContrastColor(): string {
+    const color = this.form?.get('color')?.value;
+    return getContrastColor(color);
   }
 
   private getBackendErrorsSection(fieldPathPrefix: string): ApiErrorDTO[] {

@@ -7,7 +7,8 @@ export class EditTypeFormMapper {
             key: formData.key,
             examples: formData.examples,
             explanation: formData.explanation,
-            icon: formData.icon
+            icon: formData.icon,
+            color: formData.color
         };
     }
 }

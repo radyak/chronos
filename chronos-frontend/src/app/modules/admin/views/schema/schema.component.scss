@@ -10,3 +10,15 @@ table td:last-child {
   white-space: nowrap;
   width: 1%;
 }
+
+.color {
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  border-radius: 50%;
+  border: 2px solid #fff;
+
+  &.light {
+    color: #000;
+  }
+}

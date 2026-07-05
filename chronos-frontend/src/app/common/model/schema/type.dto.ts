@@ -6,5 +6,6 @@ export interface SchemaTypeDTO {
     explanation?: string;
     examples?: string;
     icon?: string;
+    color?: string;
     attributes?: Array<SchemaAttributeDTO>;
 }

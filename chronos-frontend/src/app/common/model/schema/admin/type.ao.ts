@@ -7,6 +7,7 @@ export interface SchemaTypeAO {
     explanation?: string;
     examples?: string;
     icon?: string;
+    color?: string;
     attributes?: Array<SchemaAttributeAO>;
     defaultAttributes?: Array<SchemaAttributeAO>;
     relations?: Array<SchemaRelationAO>;

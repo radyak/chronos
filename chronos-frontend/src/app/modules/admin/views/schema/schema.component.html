@@ -32,9 +32,13 @@
       @for (type of types; track type.id) {
         <tr class="pointer">
           <td (click)="editType(type)">
+            <div class="color"
+                  [class.light]="isBright(type.color)"
+                  [style.background-color]="type.color">
             @if (type.icon) {
               <fa-icon [icon]="type.icon"></fa-icon>
             }
+            </div>
           </td>
           <td (click)="editType(type)">
             {{ type.key }}

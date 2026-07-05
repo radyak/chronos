@@ -25,6 +25,7 @@ export class TypeMapper {
             examples: dto.examples,
             explanation: dto.explanation,
             icon: dto.icon,
+            color: dto.color,
             attributes: dto.attributes?.map(AttributeMapper.dtoToAo).sort(sortByOrder),
             defaultAttributes: schemaPartial.types.defaultAttributes?.map(AttributeMapper.dtoToAo).sort(sortByOrder),
             relations: schemaPartial.relations.elements.map(rel => RelationMapper.dtoToAo(rel, schemaPartial))
