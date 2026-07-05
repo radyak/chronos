@@ -14,6 +14,7 @@ public class Type {
     String explanation;
     String examples;
     String icon;
+    String color;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     List<Attribute> attributes = new ArrayList<>();
 }

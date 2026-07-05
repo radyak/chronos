@@ -27,6 +27,7 @@ public class ModelMapper {
         dto.setExamples(typePO.getExamples());
         dto.setExplanation(typePO.getExplanation());
         dto.setIcon(typePO.getIcon());
+        dto.setColor(typePO.getColor());
         dto.setAttributes(typePO.getAttributes().stream().map(this::toDto).toList());
         return dto;
     }
