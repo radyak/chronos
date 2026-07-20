@@ -1,11 +1,9 @@
 import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
-  Component, ElementRef,
+  Component, effect, ElementRef,
   input,
-  NgZone,
-  OnChanges, OnDestroy,
-  SimpleChanges,
+  OnDestroy,
   ViewChild
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -14,13 +12,6 @@ import { GraphData } from './model/graph-data.model';
 import { GraphLink } from './model/graph-link.model';
 import { GraphNode } from './model/graph-node.model';
 import { defaultNetworkGraphConfig } from './model/network-graph.config';
-
-/** Color palette keyed by node type label */
-const TYPE_COLORS: Record<string, string> = {
-  Movie:  '#e8a838',
-  Person: '#6dcfb8',
-  Default:'#a78bfa',
-};
 
 
 @Component({
@@ -33,10 +24,11 @@ const TYPE_COLORS: Record<string, string> = {
   templateUrl: './network-graph.component.html',
   styleUrls: ['./network-graph.component.scss'],
 })
-export class NetworkGraphComponent implements OnChanges, OnDestroy {
+export class NetworkGraphComponent implements OnDestroy {
 
   /** Input: full graph data */
   public readonly graphData = input.required<GraphData>();
+  public readonly typeColorMap = input<Record<string, string>>();
 
   @ViewChild('host',        { static: true }) hostRef!: ElementRef<HTMLDivElement>;
   @ViewChild('svg',         { static: true }) svgRef!:  ElementRef<SVGSVGElement>;
@@ -57,15 +49,17 @@ export class NetworkGraphComponent implements OnChanges, OnDestroy {
   private simulation!: d3.Simulation<GraphNode, GraphLink>;
   private resizeObserver!: ResizeObserver;
 
-  constructor(private zone: NgZone) {}
+  constructor() {
+    effect(() => {
+      const graphData = this.graphData();
+      const typeColorMap = this.typeColorMap();
+      if (graphData && typeColorMap) {
+        this.buildGraph();
+      }
+    });
+  }
 
   // ─── Lifecycle ────────────────────────────────────────────────────────────
-
-  public ngOnChanges(changes: SimpleChanges): void {
-    if (changes['graphData'] && this.graphData()) {
-      this.zone.runOutsideAngular(() => this.buildGraph());
-    }
-  }
 
   public ngOnDestroy(): void {
     this.simulation?.stop();
@@ -209,12 +203,21 @@ export class NetworkGraphComponent implements OnChanges, OnDestroy {
   // ─── Template helpers ─────────────────────────────────────────────────────
 
   private nodeColor(node: GraphNode): string {
-    var color = TYPE_COLORS[node.type] ?? TYPE_COLORS['Default'];
+    var color = this.getTypeColor(node.type);
     var rgbColor = d3.rgb(color).darker(this.config.nodes.dim).formatRgb();
     return rgbColor;
   }
 
   private truncate(text: string, max: number): string {
     return text.length > max ? text.slice(0, max - 1) + '…' : text;
+  }
+
+  private getTypeColor(type: string): string {
+    // {
+    //   Movie:  '#e8a838',
+    //   Person: '#6dcfb8',
+    //   Default:'#a78bfa',
+    // }
+    return this.typeColorMap()?.[type] ?? '#a78bfa';
   }
 }

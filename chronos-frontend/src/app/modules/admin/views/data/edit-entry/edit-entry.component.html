@@ -165,5 +165,6 @@
 
 <h2 id="entry-relations">Relations</h2>
 
-<chronos-network-graph [graphData]="graph()">
-</chronos-network-graph>
+<chronos-entity-network-graph [data]="meshResource.value()"
+                              [schema]="schema.value()">
+</chronos-entity-network-graph>

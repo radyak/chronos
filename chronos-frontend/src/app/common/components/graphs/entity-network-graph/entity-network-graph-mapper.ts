@@ -1,12 +1,11 @@
 import { DataResponseDTO } from "src/app/common/model/data/response/data-response.dto";
-import { GraphData } from "../model/graph-data.model";
-import { GraphNode } from "../model/graph-node.model";
-import { GraphLink } from "../model/graph-link.model";
+import { GraphData, GraphLink, GraphNode } from "../network-graph";
+import { EntityNetworkGraphData } from "./entity-network-graph-data.model";
 
-export class NetworkGraphMapper {
+export class EntityNetworkGraphMapper {
 
-  public static mapDataResponseToGraphData(dataResponse: DataResponseDTO): GraphData {
-    const nodes: GraphNode[] = dataResponse.entries.map(entry => ({
+  public static mapToGraphData(data: EntityNetworkGraphData): GraphData {
+    const nodes: GraphNode[] = data.entries.map(entry => ({
         _element: entry,
         id: entry.elementId,
         label: entry.attributes['key'] || '',
@@ -14,7 +13,7 @@ export class NetworkGraphMapper {
         properties: entry.attributes,
     }));
 
-    const links: GraphLink[] = dataResponse.relations.map(relation => ({
+    const links: GraphLink[] = data.relations.map(relation => ({
         _element: relation,
         id: relation.elementId,
         type: relation.type,

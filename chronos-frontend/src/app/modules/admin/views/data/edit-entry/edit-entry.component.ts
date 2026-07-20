@@ -6,8 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { firstValueFrom, map } from 'rxjs';
-import { NetworkGraphComponent } from 'src/app/common/components/network-graph';
-import { NetworkGraphMapper } from 'src/app/common/components/network-graph/mapping/network-graph-mapper';
+import { EntityNetworkGraphComponent } from 'src/app/common/components/graphs/entity-network-graph/entity-network-graph.component';
 import { TooltipComponent } from 'src/app/common/components/tooltip/tooltip.component';
 import { IconConstants } from 'src/app/common/constants/icon.constants';
 import { FilterOperator } from 'src/app/common/model/data/common/filter-operator.dto';
@@ -32,15 +31,12 @@ import { EntryAttributeFormService } from './entry-attribute-form.service';
     TooltipComponent,
     ElementAttributePipe,
     DatePipe,
-    NetworkGraphComponent
+    EntityNetworkGraphComponent
 ],
   templateUrl: './edit-entry.component.html',
   styleUrl: './edit-entry.component.scss',
 })
 export class EditEntryComponent {
-
-  // Test
-  // protected graph: GraphData = EXAMPLE_GRAPH;
 
   // Subject / Model
   protected entry: WritableSignal<EntryDTO> = signal({
@@ -89,13 +85,6 @@ export class EditEntryComponent {
   }));
   protected entryResource = this.historicalDataService.entry(this.entryId);
   protected meshResource = this.historicalDataService.mesh(this.meshParams);
-  protected graph = computed(() => {
-    const dataResponse = this.meshResource.value();
-    if (!dataResponse) {
-      return { nodes: [], links: [] };
-    }
-    return NetworkGraphMapper.mapDataResponseToGraphData(dataResponse);
-  });
   protected isNew = computed(() => !this.entryResource.hasValue());
   protected schema = inject(AdminSchemaService).allTypes();
   protected backendErrors: WritableSignal<ApiErrorDTO[]> = signal([]);
