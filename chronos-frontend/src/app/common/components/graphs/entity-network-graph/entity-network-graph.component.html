@@ -1,3 +1,5 @@
 <chronos-network-graph [graphData]="graphData()"
-                       [typeColorMap]="typeColorMap()">
+                       [typeColorMap]="typeColorMap()"
+                       (elementClick)="onElementClick($event)"
+                       [highlightedElements]="selectedElements()">
 </chronos-network-graph>

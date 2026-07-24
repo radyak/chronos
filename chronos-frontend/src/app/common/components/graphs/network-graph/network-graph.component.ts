@@ -4,6 +4,7 @@ import {
   Component, effect, ElementRef,
   input,
   OnDestroy,
+  output,
   ViewChild
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -12,6 +13,8 @@ import { GraphData } from './model/graph-data.model';
 import { GraphLink } from './model/graph-link.model';
 import { GraphNode } from './model/graph-node.model';
 import { defaultNetworkGraphConfig } from './model/network-graph.config';
+import { RelationDTO } from 'src/app/common/model/data/response/relation.dto';
+import { EntryDTO } from 'src/app/common/model/data/response/entry.dto';
 
 
 @Component({
@@ -26,9 +29,13 @@ import { defaultNetworkGraphConfig } from './model/network-graph.config';
 })
 export class NetworkGraphComponent implements OnDestroy {
 
-  /** Input: full graph data */
+  // Inputs
   public readonly graphData = input.required<GraphData>();
   public readonly typeColorMap = input<Record<string, string>>();
+  public readonly highlightedElements = input<Array<EntryDTO | RelationDTO>>();
+
+  // Outputs
+  public readonly elementClick = output<EntryDTO | RelationDTO>();
 
   @ViewChild('host',        { static: true }) hostRef!: ElementRef<HTMLDivElement>;
   @ViewChild('svg',         { static: true }) svgRef!:  ElementRef<SVGSVGElement>;
@@ -39,8 +46,6 @@ export class NetworkGraphComponent implements OnDestroy {
 
   config = defaultNetworkGraphConfig;
 
-  selectedNode: GraphNode | null = null;
-
   /** Unique relationship type names (used for SVG marker defs via *ngFor) */
   get linkTypes(): string[] {
     return [...new Set(this.graphData().links.map(l => l.type) ?? [])];
@@ -49,6 +54,13 @@ export class NetworkGraphComponent implements OnDestroy {
   private simulation!: d3.Simulation<GraphNode, GraphLink>;
   private resizeObserver!: ResizeObserver;
 
+  // Elements (nodes and links)
+  private nodes!: d3.Selection<SVGCircleElement, GraphNode, SVGGElement, unknown>;
+  private nodeLabels!: d3.Selection<SVGTextElement, GraphNode, SVGGElement, unknown>;
+  
+  private links!: d3.Selection<SVGLineElement,   GraphLink, SVGGElement, unknown>;
+  private linkLabels!: d3.Selection<SVGTextElement, GraphLink, SVGGElement, unknown>;
+
   constructor() {
     effect(() => {
       const graphData = this.graphData();
@@ -56,6 +68,9 @@ export class NetworkGraphComponent implements OnDestroy {
       if (graphData && typeColorMap) {
         this.buildGraph();
       }
+    });
+    effect(() => {
+      this.update();
     });
   }
 
@@ -100,28 +115,43 @@ export class NetworkGraphComponent implements OnDestroy {
       .force('collision', d3.forceCollide(this.config.nodes.radius + 10));
 
     // ── Links ───────────────────────────────────────────────────────────────
-    const linkSel = d3.select(this.linksRef.nativeElement)
+    this.links = d3.select(this.linksRef.nativeElement)
       .selectAll<SVGLineElement, GraphLink>('line')
       .data(links, d => d.id)
       .join('line')
+      .style('cursor', 'pointer')
       .attr('stroke', this.config.links.color)
       .attr('stroke-width', this.config.links.width)
       .attr('stroke-opacity', this.config.links.opacity)
-      .attr('marker-end', d => `url(#arrow-${d.type})`);
+      .attr('marker-end', d => `url(#arrow)`)
+      .on('click', (_event, d) => {
+          const clickedLink = this.graphData().links.find(l => l.id === d.id) ?? null;
+          if (clickedLink?._element) {
+            this.elementClick.emit(clickedLink._element);
+          }
+      });
 
     // Link labels
-    const linkLabelSel = d3.select(this.linksRef.nativeElement)
+    this.linkLabels = d3.select(this.linksRef.nativeElement)
       .selectAll<SVGTextElement, GraphLink>('text')
       .data(links, d => d.id)
       .join('text')
+      .style('cursor', 'pointer')
       .attr('fill', this.config.links.text.color || this.config.text.color)
+      .attr('font-weight', this.config.text.fontWeight)
       .attr('font-size', this.config.links.text.fontSize || this.config.text.fontSize)
       .attr('text-anchor', 'middle')
       .attr('dominant-baseline', 'middle')
-      .text(d => d.type);
+      .text(d => d.type)
+      .on('click', (_event, d) => {
+          const clickedLink = this.graphData().links.find(l => l.id === d.id) ?? null;
+          if (clickedLink?._element) {
+            this.elementClick.emit(clickedLink._element);
+          }
+      });
 
     // ── Nodes ───────────────────────────────────────────────────────────────
-    const nodeSel = d3.select(this.nodesRef.nativeElement)
+    this.nodes = d3.select(this.nodesRef.nativeElement)
       .selectAll<SVGCircleElement, GraphNode>('circle')
       .data(nodes, d => d.id)
       .join('circle')
@@ -133,12 +163,14 @@ export class NetworkGraphComponent implements OnDestroy {
       .call(this.dragBehaviour(this.simulation) as any)
       .on('click', (_event, d) => {
           // Map D3 node back to original Angular model node
-          this.selectedNode = this.graphData().nodes.find(n => n.id === d.id) ?? null;
-          console.log('Selected node:', this.selectedNode);
+          const clickedNode = this.graphData().nodes.find(n => n.id === d.id) ?? null;
+          if (clickedNode?._element) {
+            this.elementClick.emit(clickedNode?._element);
+          }
       });
 
     // Node labels
-    const labelSel = d3.select(this.lblRef.nativeElement)
+    this.nodeLabels = d3.select(this.lblRef.nativeElement)
       .selectAll<SVGTextElement, GraphNode>('text')
       .data(nodes, d => d.id)
       .join('text')
@@ -146,27 +178,27 @@ export class NetworkGraphComponent implements OnDestroy {
       .attr('dominant-baseline', 'middle')
       .attr('fill', this.config.text.color)
       .attr('font-size', this.config.text.fontSize)
-      .attr('font-weight', '700')
+      .attr('font-weight', this.config.text.fontWeight)
       .attr('pointer-events', 'none')
       .text(d => this.truncate(d.label, 12));
 
     // ── Tick ────────────────────────────────────────────────────────────────
     this.simulation.on('tick', () => {
-      linkSel
+      this.links
         .attr('x1', d => (d.source as GraphNode).x!)
         .attr('y1', d => (d.source as GraphNode).y!)
         .attr('x2', d => (d.target as GraphNode).x!)
         .attr('y2', d => (d.target as GraphNode).y!);
 
-      linkLabelSel
+      this.linkLabels
         .attr('x', d => ((d.source as GraphNode).x! + (d.target as GraphNode).x!) / 2)
         .attr('y', d => ((d.source as GraphNode).y! + (d.target as GraphNode).y!) / 2);
 
-      nodeSel
+      this.nodes
         .attr('cx', d => d.x!)
         .attr('cy', d => d.y!);
 
-      labelSel
+      this.nodeLabels
         .attr('x', d => d.x!)
         .attr('y', d => d.y!);
     });
@@ -174,11 +206,39 @@ export class NetworkGraphComponent implements OnDestroy {
     // Re-sync label text when Angular model label changes
     // (called from onNodeLabelChange)
     (this as any)._refreshLabels = () => {
-      labelSel.text(d => {
+      this.nodeLabels.text(d => {
         const updated = this.graphData().nodes.find(n => n.id === d.id);
         return this.truncate(updated?.label ?? d.label, 12);
       });
     };
+  }
+
+  // ─── Graph update ───────────────────────────────────────────────────
+
+  private update(): void {
+    const modelIds = this.highlightedElements()?.map(el => el.elementId);
+
+    const isSelected = (d: GraphNode | GraphLink) => {
+      return d._element?.elementId && modelIds?.includes(d._element?.elementId);
+    }
+
+    this.nodes
+      .attr('stroke-width', d => isSelected(d) ? this.config.nodes.strokeWidth * 2 : this.config.nodes.strokeWidth)
+      .attr('fill', d => this.nodeColor(d, 
+        isSelected(d) ? 0.25 : 1
+      ));
+
+    this.linkLabels
+      .attr('font-weight', d => isSelected(d) ? this.config.text.fontWeight * 2: this.config.text.fontWeight);
+      
+    this.links
+      .attr('stroke-width', d => isSelected(d) ? this.config.links.width * 2: this.config.links.width)
+      .attr('stroke-opacity', d => isSelected(d) ? this.config.links.opacity * 2: this.config.links.opacity)
+      .attr('marker-end', d => `url(#arrow)`)
+
+    this.nodeLabels
+      .attr('font-weight', d => isSelected(d) ? this.config.text.fontWeight * 2: this.config.text.fontWeight);
+
   }
 
   // ─── Drag behaviour ───────────────────────────────────────────────────────
@@ -202,9 +262,9 @@ export class NetworkGraphComponent implements OnDestroy {
 
   // ─── Template helpers ─────────────────────────────────────────────────────
 
-  private nodeColor(node: GraphNode): string {
+  private nodeColor(node: GraphNode, dimFactor = 1): string {
     var color = this.getTypeColor(node.type);
-    var rgbColor = d3.rgb(color).darker(this.config.nodes.dim).formatRgb();
+    var rgbColor = d3.rgb(color).darker(this.config.nodes.dim * dimFactor).formatRgb();
     return rgbColor;
   }
 
@@ -213,11 +273,6 @@ export class NetworkGraphComponent implements OnDestroy {
   }
 
   private getTypeColor(type: string): string {
-    // {
-    //   Movie:  '#e8a838',
-    //   Person: '#6dcfb8',
-    //   Default:'#a78bfa',
-    // }
     return this.typeColorMap()?.[type] ?? '#a78bfa';
   }
 }

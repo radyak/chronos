@@ -1,9 +1,10 @@
-import { Component, computed, input } from '@angular/core';
-import { NetworkGraphComponent } from '../network-graph';
+import { Component, computed, input, signal } from '@angular/core';
+import { SchemaTypeAO } from 'src/app/common/model/schema/admin/type.ao';
+import { GraphLink, GraphNode, NetworkGraphComponent } from '../network-graph';
 import { EntityNetworkGraphData } from './entity-network-graph-data.model';
 import { EntityNetworkGraphMapper } from './entity-network-graph-mapper';
-import { SchemaTypeDTO } from 'src/app/common/model/schema/type.dto';
-import { SchemaTypeAO } from 'src/app/common/model/schema/admin/type.ao';
+import { RelationDTO } from 'src/app/common/model/data/response/relation.dto';
+import { EntryDTO } from 'src/app/common/model/data/response/entry.dto';
 
 @Component({
   selector: 'chronos-entity-network-graph',
@@ -17,6 +18,9 @@ export class EntityNetworkGraphComponent {
   // Inputs
   public readonly data = input.required<EntityNetworkGraphData | undefined>();
   public readonly schema = input.required<SchemaTypeAO[] | undefined>();
+
+  // Signals
+  protected readonly selectedElements = signal<Array<EntryDTO | RelationDTO>>([]);
 
   // Derived Signals
   protected graphData = computed(() => {
@@ -38,4 +42,7 @@ export class EntityNetworkGraphComponent {
     }, {} as Record<string, string>);
   });
 
+  protected onElementClick(element: EntryDTO | RelationDTO): void {
+    this.selectedElements.update((selected) => [...selected, element]);
+  }
 }

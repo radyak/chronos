@@ -1,7 +1,8 @@
 export interface NetworkGraphConfig {
   text: {
       color: string,
-      fontSize: number
+      fontSize: number,
+      fontWeight: number
   },
   links: {
       color: string,
@@ -29,7 +30,8 @@ export interface NetworkGraphConfig {
 export const defaultNetworkGraphConfig: NetworkGraphConfig = {
   text: {
       color: "#eee",  // "#0f172a",
-      fontSize: 11
+      fontSize: 11,
+      fontWeight: 300
   },
   links: {
       color: "#94a3b8",
