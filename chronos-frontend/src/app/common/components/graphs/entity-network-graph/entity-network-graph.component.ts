@@ -19,6 +19,8 @@ export class EntityNetworkGraphComponent {
   public readonly data = input.required<EntityNetworkGraphData | undefined>();
   public readonly schema = input.required<SchemaTypeAO[] | undefined>();
   public readonly multipleSelection = input<boolean>(false);
+  public readonly entriesSelectable = input<boolean>(true);
+  public readonly relationsSelectable = input<boolean>(true);
 
   // Outputs
   public readonly selected = output<Array<EntryDTO | RelationDTO>>();
@@ -54,6 +56,12 @@ export class EntityNetworkGraphComponent {
   });
 
   protected onElementClick(element: EntryDTO | RelationDTO): void {
+    if (!this.entriesSelectable() && 'labels' in element) {
+      return;
+    }
+    if (!this.relationsSelectable() && 'type' in element) {
+      return;
+    }
     if (this.multipleSelection()) {
       const selected = this.selectedElements();
       if (!selected.includes(element)) {
