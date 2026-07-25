@@ -1,4 +1,5 @@
-import { SortOrder } from "./sort-order.dto";
+import { FilterOperator } from "../common/filter-operator.dto";
+import { SortOrder } from "../common/sort-order.dto";
 
 export interface DataResponseMetaInfoDTO {
     request: string;
@@ -24,14 +25,4 @@ interface FilterDTO {
     attribute: string;
     operator: FilterOperator;
     value: string;
-}
-
-enum FilterOperator {
-    EQUAL = "EQUAL",
-    NOT = "NOT",
-    GREATER_THAN = "GREATER_THAN",
-    GREATER_EQUAL_THAN = "GREATER_EQUAL_THAN",
-    LESS_THAN = "LESS_THAN",
-    LESS_EQUAL_THAN = "LESS_EQUAL_THAN",
-    // CONTAINS = "CONTAINS", Good idea, AI?
 }

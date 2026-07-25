@@ -1,10 +1,12 @@
 import { inject, Injectable, ResourceRef, Signal } from '@angular/core';
-import { QueryDTO } from 'src/app/common/model/data/query.model.dto';
-import { EntryDTO } from 'src/app/common/model/data/entry.dto';
-import { CountResultDTO } from 'src/app/common/model/data/count-result.dto';
+import { ListQueryDTO } from 'src/app/common/model/data/query/list-query.model.dto';
+import { EntryDTO } from 'src/app/common/model/data/response/entry.dto';
+import { CountResultDTO } from 'src/app/common/model/data/response/count-result.dto';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { HistoricalDataClient } from '../clients/historical-data.client';
 import { map, of } from 'rxjs';
+import { MeshQueryDTO } from 'src/app/common/model/data/query/mesh-query.model.dto';
+import { DataResponseDTO } from 'src/app/common/model/data/response/data-response.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +16,7 @@ export class HistoricalDataService {
   // Injected Dependencies
   private historicalDataClient = inject(HistoricalDataClient);
   
-  public list(query: Signal<QueryDTO>): ResourceRef<EntryDTO[] | undefined> {
+  public list(query: Signal<ListQueryDTO>): ResourceRef<EntryDTO[] | undefined> {
     return rxResource({
       params: () => query(),
       stream: ({ params }) => {
@@ -24,6 +26,15 @@ export class HistoricalDataService {
             return response.entries;
           })
         );
+      },
+    });
+  }
+  
+  public mesh(query: Signal<MeshQueryDTO>): ResourceRef<DataResponseDTO | undefined> {
+    return rxResource({
+      params: () => query(),
+      stream: ({ params }) => {
+        return this.historicalDataClient.mesh(params);
       },
     });
   }

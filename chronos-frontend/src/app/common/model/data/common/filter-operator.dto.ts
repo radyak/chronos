@@ -1,0 +1,9 @@
+export enum FilterOperator {
+    EQUAL = "EQUAL",
+    NOT = "NOT",
+    GREATER_THAN = "GREATER_THAN",
+    GREATER_EQUAL_THAN = "GREATER_EQUAL_THAN",
+    LESS_THAN = "LESS_THAN",
+    LESS_EQUAL_THAN = "LESS_EQUAL_THAN",
+    CONTAINS = "CONTAINS"
+}

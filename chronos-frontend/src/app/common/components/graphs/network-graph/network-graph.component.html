@@ -1,0 +1,25 @@
+<div class="graph-host" #host>
+  <svg #svg class="graph-svg">
+    <defs>
+      <!-- Arrow markers for relationship direction -->
+      <marker
+        *ngFor="let type of linkTypes"
+        [id]="'arrow-' + type"
+        viewBox="0 -5 10 10"
+        refX="22"
+        refY="0"
+        markerWidth="6"
+        markerHeight="6"
+        orient="auto"
+      >
+        <path d="M0,-5L10,0L0,5" [attr.fill]="config.links.color" />
+      </marker>
+    </defs>
+    <g class="zoom-layer" #zoomLayer>
+      <g class="links-layer" #linksLayer></g>
+      <g class="nodes-layer" #nodesLayer></g>
+      <g class="labels-layer" #labelsLayer></g>
+    </g>
+  </svg>
+
+</div>

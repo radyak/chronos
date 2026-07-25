@@ -1,0 +1,19 @@
+:host {
+  display: block;
+  // font-family: "Segoe UI", sans-serif;
+}
+
+.graph-host {
+  position: relative;
+  width: 100%;
+  height: 600px;
+  // background: #0f172a;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.graph-svg {
+  width: 100%;
+  height: 100%;
+}
+

@@ -13,6 +13,16 @@ export function colorBrightness(hexColor: string): number {
   return brightness;
 }
 
-export function isBright(hexColor: string) {
+export function isBright(hexColor?: string) {
+  if (!hexColor) {
+    return false;
+  }
   return colorBrightness(hexColor) > 0.60;
+}
+
+export function getContrastColor(hexColor?: string) {
+    if (!hexColor) {
+      return '#fff';
+    }
+    return isBright(hexColor) ? '#000000' : '#FFFFFF';
 }

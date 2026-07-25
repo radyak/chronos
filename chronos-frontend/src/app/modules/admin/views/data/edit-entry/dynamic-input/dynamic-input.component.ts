@@ -3,8 +3,8 @@ import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { DateInputComponent } from 'src/app/common/components/date-input/date-input.component';
 import { WikiArticleInputComponent } from 'src/app/common/components/wiki-article-input/wiki-article-input.component';
 import { ApiErrorDTO } from 'src/app/common/model/error-response.dto';
-import { AttributeAO } from 'src/app/common/model/schema/admin/attribute.ao';
-import { AttributeTypeDTO } from 'src/app/common/model/schema/attribute-type.dto';
+import { SchemaAttributeAO } from 'src/app/common/model/schema/admin/attribute.ao';
+import { SchemaAttributeTypeDTO } from 'src/app/common/model/schema/attribute-type.dto';
 import { BackendErrorService } from 'src/app/common/util/backend-error.service';
 import { FormService } from 'src/app/common/util/form.service';
 
@@ -24,17 +24,17 @@ export class DynamicInputComponent {
   private backendErrorService = inject(BackendErrorService);
 
   // Inputs
-  public attribute = input.required<AttributeAO>();
+  public attribute = input.required<SchemaAttributeAO>();
   public form = input.required<FormGroup>();
   public disabled = input<boolean>(false);
   public backendErrors = input<ApiErrorDTO[]>();
 
   // Constants for template
-  protected readonly STRING = AttributeTypeDTO.STRING;
-  protected readonly ENUM = AttributeTypeDTO.ENUM;
-  protected readonly NUMBER = AttributeTypeDTO.NUMBER;
-  protected readonly DATENOTATION = AttributeTypeDTO.DATENOTATION;
-  protected readonly WIKIQID = AttributeTypeDTO.WIKIQID;
+  protected readonly STRING = SchemaAttributeTypeDTO.STRING;
+  protected readonly ENUM = SchemaAttributeTypeDTO.ENUM;
+  protected readonly NUMBER = SchemaAttributeTypeDTO.NUMBER;
+  protected readonly DATENOTATION = SchemaAttributeTypeDTO.DATENOTATION;
+  protected readonly WIKIQID = SchemaAttributeTypeDTO.WIKIQID;
 
   // Methods
 

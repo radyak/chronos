@@ -1,10 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { CountResultDTO } from 'src/app/common/model/data/count-result.dto';
-import { EntryDTO } from 'src/app/common/model/data/entry.dto';
-import { DataResponseDTO } from 'src/app/common/model/data/data-response.dto';
-import { QueryDTO } from 'src/app/common/model/data/query.model.dto';
+import { Observable, take } from 'rxjs';
+import { CountResultDTO } from 'src/app/common/model/data/response/count-result.dto';
+import { DataResponseDTO } from 'src/app/common/model/data/response/data-response.dto';
+import { ListQueryDTO } from 'src/app/common/model/data/query/list-query.model.dto';
+import { EntryDTO } from 'src/app/common/model/data/response/entry.dto';
+import { MeshQueryDTO } from 'src/app/common/model/data/query/mesh-query.model.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -14,8 +15,12 @@ export class HistoricalDataClient {
   private apiUrl = '/api/data';
   
 
-  public list(query?: QueryDTO, filters?: Record<string, string>): Observable<DataResponseDTO> {
+  public list(query?: ListQueryDTO, filters?: Record<string, string>): Observable<DataResponseDTO> {
     return this.http.get<DataResponseDTO>(`${this.apiUrl}/list`, { params: {...query, ...filters} as any });
+  }
+
+  public mesh(query?: MeshQueryDTO): Observable<DataResponseDTO> {
+    return this.http.post<DataResponseDTO>(`${this.apiUrl}/mesh`, query).pipe(take(1));
   }
 
   public getStatistics(): Observable<CountResultDTO[]> {

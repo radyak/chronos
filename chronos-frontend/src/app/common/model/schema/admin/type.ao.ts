@@ -1,13 +1,14 @@
-import { AttributeAO } from "./attribute.ao";
-import { RelationAO } from "./relation.ao";
+import { SchemaAttributeAO } from "./attribute.ao";
+import { SchemaRelationAO } from "./relation.ao";
 
-export interface TypeAO {
+export interface SchemaTypeAO {
     id?: number;
     key?: string;
     explanation?: string;
     examples?: string;
     icon?: string;
-    attributes?: Array<AttributeAO>;
-    defaultAttributes?: Array<AttributeAO>;
-    relations?: Array<RelationAO>;
+    color?: string;
+    attributes?: Array<SchemaAttributeAO>;
+    defaultAttributes?: Array<SchemaAttributeAO>;
+    relations?: Array<SchemaRelationAO>;
 }

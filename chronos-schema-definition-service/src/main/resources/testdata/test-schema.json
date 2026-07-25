@@ -1,6 +1,8 @@
 [
   {
     "key": "Territory",
+    "icon": "landmark-flag",
+    "color": "#32a852",
     "attributes": [
       {
         "key": "area",
@@ -28,6 +30,8 @@
   },
   {
     "key": "Person",
+    "icon": "user",
+    "color": "#e69b19",
     "attributes": [
       {
         "key": "gender",
@@ -111,6 +115,8 @@
   },
   {
     "key": "TestType",
+    "icon": "spaghetti-monster-flying",
+    "color": "#8224b5",
     "attributes": [
       {
         "key": "enum-scalar-attr",

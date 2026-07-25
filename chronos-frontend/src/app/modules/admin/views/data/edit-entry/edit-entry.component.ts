@@ -1,23 +1,27 @@
+import { DatePipe } from '@angular/common';
 import { Component, computed, effect, inject, signal, Signal, WritableSignal } from '@angular/core';
-import { AdminConfirmService } from '../../../services/admin-confirm.service';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { IconConstants } from 'src/app/common/constants/icon.constants';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AdminSchemaService } from '../../../services/admin-schema.service';
-import { EntryDTO } from 'src/app/common/model/data/entry.dto';
 import { fas } from '@fortawesome/free-solid-svg-icons';
+import { firstValueFrom, map } from 'rxjs';
+import { EntityNetworkGraphComponent } from 'src/app/common/components/graphs/entity-network-graph/entity-network-graph.component';
+import { TooltipComponent } from 'src/app/common/components/tooltip/tooltip.component';
+import { IconConstants } from 'src/app/common/constants/icon.constants';
+import { FilterOperator } from 'src/app/common/model/data/common/filter-operator.dto';
+import { MeshQueryDTO } from 'src/app/common/model/data/query/mesh-query.model.dto';
+import { EntryDTO } from 'src/app/common/model/data/response/entry.dto';
+import { ApiErrorDTO } from 'src/app/common/model/error-response.dto';
+import { ElementAttributePipe } from 'src/app/common/util/element-attribute.pipe';
+import { HistoricalDataService } from 'src/app/modules/public/services/historical-data.service';
+import { CREATE_ROUTE_KEYWORD } from '../../../admin.routes';
+import { AdminConfirmService } from '../../../services/admin-confirm.service';
+import { AdminDataService } from '../../../services/admin-data.service';
+import { AdminSchemaService } from '../../../services/admin-schema.service';
 import { DynamicInputComponent } from './dynamic-input/dynamic-input.component';
 import { EntryAttributeFormService } from './entry-attribute-form.service';
-import { AdminDataService } from '../../../services/admin-data.service';
-import { firstValueFrom, map } from 'rxjs';
-import { TooltipComponent } from 'src/app/common/components/tooltip/tooltip.component';
-import { HistoricalDataService } from 'src/app/modules/public/services/historical-data.service';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { CREATE_ROUTE_KEYWORD } from '../../../admin.routes';
-import { ElementAttributePipe } from 'src/app/common/util/element-attribute.pipe';
-import { DatePipe } from '@angular/common';
-import { ApiErrorDTO } from 'src/app/common/model/error-response.dto';
+import { RelationDTO } from 'src/app/common/model/data/response/relation.dto';
 
 @Component({
   selector: 'chronos-edit-entry',
@@ -27,8 +31,9 @@ import { ApiErrorDTO } from 'src/app/common/model/error-response.dto';
     DynamicInputComponent,
     TooltipComponent,
     ElementAttributePipe,
-    DatePipe
-  ],
+    DatePipe,
+    EntityNetworkGraphComponent
+],
   templateUrl: './edit-entry.component.html',
   styleUrl: './edit-entry.component.scss',
 })
@@ -65,10 +70,26 @@ export class EditEntryComponent {
     ),
     { initialValue: null }
   );
+  protected meshParams: Signal<MeshQueryDTO> = computed(() => ({
+    entryFilters: [
+      {
+        attribute: 'key',
+        operator: FilterOperator.EQUAL,
+        value: this.entryId()
+      }
+    ],
+    relationFilters: [
+      {
+        types: ['*']
+      }
+    ]
+  }));
   protected entryResource = this.historicalDataService.entry(this.entryId);
+  protected meshResource = this.historicalDataService.mesh(this.meshParams);
   protected isNew = computed(() => !this.entryResource.hasValue());
   protected schema = inject(AdminSchemaService).allTypes();
   protected backendErrors: WritableSignal<ApiErrorDTO[]> = signal([]);
+  protected selectedElements: WritableSignal<Array<EntryDTO | RelationDTO>> = signal([]);
 
   // Derived Signals
   protected currentEntryTypeKey = computed(() => {
@@ -174,5 +195,9 @@ export class EditEntryComponent {
       }, {});
     this.entry.update(e => ({ ...e, attributes: { ...e.attributes, ...filteredAttributes } }));
   }
+
+  // protected selectedElementsChange(selectedElements: Array<EntryDTO | RelationDTO>): void {
+  //   console.log('Selected elements in edit-entry:', selectedElements);
+  // }
 
 }

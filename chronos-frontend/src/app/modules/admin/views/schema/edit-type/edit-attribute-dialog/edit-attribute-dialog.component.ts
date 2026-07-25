@@ -4,8 +4,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ApiErrorDTO } from 'src/app/common/model/error-response.dto';
-import { AttributeAO } from 'src/app/common/model/schema/admin/attribute.ao';
-import { AttributeTypeDTO } from 'src/app/common/model/schema/attribute-type.dto';
+import { SchemaAttributeAO } from 'src/app/common/model/schema/admin/attribute.ao';
+import { SchemaAttributeTypeDTO } from 'src/app/common/model/schema/attribute-type.dto';
 import { BackendErrorService } from 'src/app/common/util/backend-error.service';
 import { FormService } from 'src/app/common/util/form.service';
 import { uniqueValidator } from 'src/app/common/validators/unique-validator';
@@ -29,7 +29,7 @@ export class EditAttributeDialogComponent {
   private backendErrorService = inject(BackendErrorService);
 
   // Inputs
-  protected attribute: ModelSignal<AttributeAO | undefined> = model();
+  protected attribute: ModelSignal<SchemaAttributeAO | undefined> = model();
   protected takenAttributeNames: ModelSignal<string[] | undefined> = model();
   protected backendErrors: ModelSignal<ApiErrorDTO[]> = model<ApiErrorDTO[]>([]);
 
@@ -40,18 +40,18 @@ export class EditAttributeDialogComponent {
   // Form & controls
   protected form!: FormGroup;
   protected submitted = false;
-  protected types: AttributeTypeDTO[] = Object.values(AttributeTypeDTO)
+  protected types: SchemaAttributeTypeDTO[] = Object.values(SchemaAttributeTypeDTO)
       .filter(t => typeof t !== "number")
-      .map(t => t as unknown as AttributeTypeDTO)
-      .filter(t => t !== AttributeTypeDTO.WIKIQID);
+      .map(t => t as unknown as SchemaAttributeTypeDTO)
+      .filter(t => t !== SchemaAttributeTypeDTO.WIKIQID);
   protected newAllowedValue: WritableSignal<string> = signal("");
 
   // Constants
-  protected readonly STRING = AttributeTypeDTO.STRING;
-  protected readonly NUMBER = AttributeTypeDTO.NUMBER;
-  protected readonly ENUM = AttributeTypeDTO.ENUM;
-  protected readonly DATENOTATION = AttributeTypeDTO.DATENOTATION;
-  protected readonly WIKIQID = AttributeTypeDTO.WIKIQID;
+  protected readonly STRING = SchemaAttributeTypeDTO.STRING;
+  protected readonly NUMBER = SchemaAttributeTypeDTO.NUMBER;
+  protected readonly ENUM = SchemaAttributeTypeDTO.ENUM;
+  protected readonly DATENOTATION = SchemaAttributeTypeDTO.DATENOTATION;
+  protected readonly WIKIQID = SchemaAttributeTypeDTO.WIKIQID;
 
   // Init
   constructor() {
@@ -162,7 +162,7 @@ export class EditAttributeDialogComponent {
     this.newAllowedValue.set("");
   }
 
-  protected isType(type: AttributeTypeDTO): boolean {
+  protected isType(type: SchemaAttributeTypeDTO): boolean {
     return this.form.get("type")?.value === type;
   }
 

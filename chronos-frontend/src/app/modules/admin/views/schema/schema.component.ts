@@ -1,12 +1,13 @@
 import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { fas } from '@fortawesome/free-solid-svg-icons';
+import { firstValueFrom } from 'rxjs';
+import { SchemaTypeAO } from 'src/app/common/model/schema/admin/type.ao';
+import { isBright } from 'src/app/common/util/color-brightness.function';
+import { IconConstants } from '../../../../common/constants/icon.constants';
 import { CREATE_ROUTE_KEYWORD } from '../../admin.routes';
 import { AdminSchemaService } from '../../services/admin-schema.service';
-import { IconConstants } from '../../../../common/constants/icon.constants';
-import { firstValueFrom } from 'rxjs';
-import { fas } from '@fortawesome/free-solid-svg-icons';
-import { TypeAO } from 'src/app/common/model/schema/admin/type.ao';
 
 @Component({
   selector: 'chronos-schema',
@@ -40,11 +41,11 @@ export class SchemaComponent{
     this.router.navigate([CREATE_ROUTE_KEYWORD], { relativeTo: this.route });
   }
 
-  protected editType(type: TypeAO): void {
+  protected editType(type: SchemaTypeAO): void {
     this.router.navigate([type.key], { relativeTo: this.route });
   }
 
-  protected deleteType(type: TypeAO): void {
+  protected deleteType(type: SchemaTypeAO): void {
     firstValueFrom(this.schemaService.deleteType(type)).then(
       () => {
         this.reloadTrigger.update(v => v + 1);
@@ -52,4 +53,8 @@ export class SchemaComponent{
     );
   }
 
+  protected isBright(hexColor?: string): boolean {
+    return isBright(hexColor);
+  }
+  
 }

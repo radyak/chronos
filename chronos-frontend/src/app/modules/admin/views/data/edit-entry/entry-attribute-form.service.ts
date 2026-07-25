@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { AsyncValidatorFn, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
-import { TypeAO } from 'src/app/common/model/schema/admin/type.ao';
+import { SchemaTypeAO } from 'src/app/common/model/schema/admin/type.ao';
 import { UniquenessValidatorService } from 'src/app/common/validators/api-unique-validator';
 
 @Injectable({
@@ -13,7 +13,7 @@ export class EntryAttributeFormService {
   private uniquenessValidatorService: UniquenessValidatorService = inject(UniquenessValidatorService);
 
   // Methods
-  public generateFormGroup(type: TypeAO | null, isNewEntry: boolean, elementId?: string): FormGroup {
+  public generateFormGroup(type: SchemaTypeAO | null, isNewEntry: boolean, elementId?: string): FormGroup {
     const group: { [key: string]: any } = {};
 
     const attributes = [

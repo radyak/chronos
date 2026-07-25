@@ -2,7 +2,7 @@ import { Component, computed, forwardRef, inject, signal } from '@angular/core';
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
-import { TypeAO } from 'src/app/common/model/schema/admin/type.ao';
+import { SchemaTypeAO } from 'src/app/common/model/schema/admin/type.ao';
 import { AdminSchemaService } from 'src/app/modules/admin/services/admin-schema.service';
 
 @Component({
@@ -28,11 +28,11 @@ export class TypeSelectComponent implements ControlValueAccessor {
   protected allTypes = inject(AdminSchemaService).allTypes().asReadonly();
 
   // Form control
-  private onChange: (value?: TypeAO) => void = () => {};
+  private onChange: (value?: SchemaTypeAO) => void = () => {};
   private onTouched: () => void = () => {};
 
   // Internals
-  protected type?: TypeAO;
+  protected type?: SchemaTypeAO;
   protected typeSearch = signal("");
   protected types = computed(() => {
     const search = this.typeSearch().toLocaleLowerCase();
@@ -42,7 +42,7 @@ export class TypeSelectComponent implements ControlValueAccessor {
   });
 
   // ControlValueAccessor methods
-  public writeValue(value: TypeAO): void {
+  public writeValue(value: SchemaTypeAO): void {
     this.type = value;
   }
 
@@ -55,7 +55,7 @@ export class TypeSelectComponent implements ControlValueAccessor {
   }
 
   // Custom Methods
-  protected selectType(type?: TypeAO): void {
+  protected selectType(type?: SchemaTypeAO): void {
     this.type = type;
     this.typeSearch.set("");
     this.onChange(type);

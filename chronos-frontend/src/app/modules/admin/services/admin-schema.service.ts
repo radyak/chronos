@@ -1,7 +1,7 @@
 import { computed, inject, Injectable, ResourceRef, signal, Signal } from '@angular/core';
 import { AdminConfirmService } from './admin-confirm.service';
 import { catchError, firstValueFrom, from, map, Observable, of, tap } from 'rxjs';
-import { TypeAO } from 'src/app/common/model/schema/admin/type.ao';
+import { SchemaTypeAO } from 'src/app/common/model/schema/admin/type.ao';
 import { TypeMapper } from 'src/app/common/model/schema/mappers/type.mapper';
 import { NotificationService } from 'src/app/common/components/notifications/notification.service';
 import { rxResource, toSignal } from '@angular/core/rxjs-interop';
@@ -29,7 +29,7 @@ export class AdminSchemaService {
   public readonly defaultTypeAttributes = computed(() => this.schema()?.types.defaultAttributes?.map(AttributeMapper.dtoToAo) ?? []);
   public readonly defaultRelationAttributes = computed(() => this.schema()?.relations.defaultAttributes?.map(AttributeMapper.dtoToAo) ?? []);
 
-  public allTypes(reloadTrigger: Signal<number> = signal(0)): ResourceRef<TypeAO[] | undefined> {
+  public allTypes(reloadTrigger: Signal<number> = signal(0)): ResourceRef<SchemaTypeAO[] | undefined> {
     return rxResource({
       params: () => reloadTrigger?.(),
       stream: () => this.schemaClient.getSchema().pipe(
@@ -40,13 +40,13 @@ export class AdminSchemaService {
     });
   }
 
-  public schemaTypeResource(typeIdentifier: string): ResourceRef<TypeAO | undefined> {
+  public schemaTypeResource(typeIdentifier: string): ResourceRef<SchemaTypeAO | undefined> {
     return rxResource({
       stream: () => {
         if (!typeIdentifier) {
           return of({
             defaultAttributes: this.defaultTypeAttributes().sort(sortByOrder),
-          } as TypeAO);
+          } as SchemaTypeAO);
         }
         return this.schemaClient.getType(typeIdentifier).pipe(
           map(TypeMapper.fromSchemaResponseDTO)
@@ -55,7 +55,7 @@ export class AdminSchemaService {
     });
   }
 
-  public saveType(type: TypeAO): Observable<void> {
+  public saveType(type: SchemaTypeAO): Observable<void> {
     return this.adminSchemaClient.saveType(type).pipe(
       catchError((err: any, caught: Observable<void>) => {
         this.notificationService.error(`Error while saving type "${type.key}"`);
@@ -67,7 +67,7 @@ export class AdminSchemaService {
     );
   }
 
-  public deleteType(type: TypeAO): Observable<void> {
+  public deleteType(type: SchemaTypeAO): Observable<void> {
     return from(
       this.confirmService.confirm(
         `Confirm Delete ${type.key}`,

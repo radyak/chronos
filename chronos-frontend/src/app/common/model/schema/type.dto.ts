@@ -1,10 +1,11 @@
-import { AttributeDTO } from "./attribute.dto";
+import { SchemaAttributeDTO } from "./attribute.dto";
 
-export interface TypeDTO {
+export interface SchemaTypeDTO {
     id?: number;
     key?: string;
     explanation?: string;
     examples?: string;
     icon?: string;
-    attributes?: Array<AttributeDTO>;
+    color?: string;
+    attributes?: Array<SchemaAttributeDTO>;
 }

@@ -1,6 +1,6 @@
-import { SortOrder } from "./sort-order.dto";
+import { SortOrder } from "../common/sort-order.dto";
 
-export interface QueryDTO {
+export interface ListQueryDTO {
     page?: number;
     pageSize?: number;
     sortOrder?: SortOrder;

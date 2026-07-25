@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable, of, take } from 'rxjs';
-import { TypeAO } from 'src/app/common/model/schema/admin/type.ao';
+import { SchemaTypeAO } from 'src/app/common/model/schema/admin/type.ao';
 import { SchemaResponseDTO } from 'src/app/common/model/schema/schema-response.dto';
 
 @Injectable({

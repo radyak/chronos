@@ -162,3 +162,10 @@
         </form>
       }
 }
+
+<h2 id="entry-relations">Relations</h2>
+
+<chronos-entity-network-graph [data]="meshResource.value()"
+                              [schema]="schema.value()"
+                              [(selectedElements)]="selectedElements">
+</chronos-entity-network-graph>

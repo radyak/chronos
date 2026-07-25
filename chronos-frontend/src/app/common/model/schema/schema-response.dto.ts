@@ -1,6 +1,6 @@
-import { AttributeDTO } from "./attribute.dto";
-import { TypeDTO } from "./type.dto";
-import { RelationDTO } from "./relation.dto";
+import { SchemaAttributeDTO } from "./attribute.dto";
+import { SchemaTypeDTO } from "./type.dto";
+import { SchemaRelationDTO } from "./relation.dto";
 
 export interface SchemaResponseDTO {
     meta: {
@@ -9,11 +9,11 @@ export interface SchemaResponseDTO {
         base: string;
     };
     types: {
-        elements: Array<TypeDTO>;
-        defaultAttributes: Array<AttributeDTO>;
+        elements: Array<SchemaTypeDTO>;
+        defaultAttributes: Array<SchemaAttributeDTO>;
     }
     relations: {
-        elements: Array<RelationDTO>;
-        defaultAttributes: Array<AttributeDTO>;
+        elements: Array<SchemaRelationDTO>;
+        defaultAttributes: Array<SchemaAttributeDTO>;
     }
 }
