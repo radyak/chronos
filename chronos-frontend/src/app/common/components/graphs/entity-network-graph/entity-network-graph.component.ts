@@ -1,10 +1,10 @@
-import { Component, computed, input, signal } from '@angular/core';
+import { Component, computed, effect, input, model, output, signal } from '@angular/core';
+import { EntryDTO } from 'src/app/common/model/data/response/entry.dto';
+import { RelationDTO } from 'src/app/common/model/data/response/relation.dto';
 import { SchemaTypeAO } from 'src/app/common/model/schema/admin/type.ao';
-import { GraphLink, GraphNode, NetworkGraphComponent } from '../network-graph';
+import { NetworkGraphComponent } from '../network-graph';
 import { EntityNetworkGraphData } from './entity-network-graph-data.model';
 import { EntityNetworkGraphMapper } from './entity-network-graph-mapper';
-import { RelationDTO } from 'src/app/common/model/data/response/relation.dto';
-import { EntryDTO } from 'src/app/common/model/data/response/entry.dto';
 
 @Component({
   selector: 'chronos-entity-network-graph',
@@ -18,6 +18,10 @@ export class EntityNetworkGraphComponent {
   // Inputs
   public readonly data = input.required<EntityNetworkGraphData | undefined>();
   public readonly schema = input.required<SchemaTypeAO[] | undefined>();
+  public readonly multipleSelection = input<boolean>(false);
+
+  // Outputs
+  public readonly selected = output<Array<EntryDTO | RelationDTO>>();
 
   // Signals
   protected readonly selectedElements = signal<Array<EntryDTO | RelationDTO>>([]);
@@ -31,6 +35,13 @@ export class EntityNetworkGraphComponent {
     return EntityNetworkGraphMapper.mapToGraphData(data);
   });
 
+  // Init
+  constructor() {
+    effect(() => {
+      this.selected.emit(this.selectedElements());
+    });
+  }
+
   protected typeColorMap = computed(() => {
     const types = this.schema();
     if (!types || types.length === 0) {
@@ -43,6 +54,17 @@ export class EntityNetworkGraphComponent {
   });
 
   protected onElementClick(element: EntryDTO | RelationDTO): void {
-    this.selectedElements.update((selected) => [...selected, element]);
+    if (this.multipleSelection()) {
+      const selected = this.selectedElements();
+      if (!selected.includes(element)) {
+        // Not yet selected -> add to selection
+        this.selectedElements.set([...selected, element]);
+      } else {
+        // Already selected -> remove from selection
+        this.selectedElements.set(selected.filter(e => e !== element));
+      }
+    } else {
+      this.selectedElements.set([element]);
+    }
   }
 }

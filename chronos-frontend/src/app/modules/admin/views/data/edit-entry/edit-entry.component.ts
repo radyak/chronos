@@ -21,6 +21,7 @@ import { AdminDataService } from '../../../services/admin-data.service';
 import { AdminSchemaService } from '../../../services/admin-schema.service';
 import { DynamicInputComponent } from './dynamic-input/dynamic-input.component';
 import { EntryAttributeFormService } from './entry-attribute-form.service';
+import { RelationDTO } from 'src/app/common/model/data/response/relation.dto';
 
 @Component({
   selector: 'chronos-edit-entry',
@@ -192,6 +193,10 @@ export class EditEntryComponent {
         return obj;
       }, {});
     this.entry.update(e => ({ ...e, attributes: { ...e.attributes, ...filteredAttributes } }));
+  }
+
+  protected onElementsSelected(selectedElements: Array<EntryDTO | RelationDTO>): void {
+    console.log('Selected elements in edit-entry:', selectedElements);
   }
 
 }

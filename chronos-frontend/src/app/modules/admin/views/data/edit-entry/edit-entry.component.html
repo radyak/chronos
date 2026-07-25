@@ -166,5 +166,7 @@
 <h2 id="entry-relations">Relations</h2>
 
 <chronos-entity-network-graph [data]="meshResource.value()"
-                              [schema]="schema.value()">
+                              [schema]="schema.value()"
+                              [multipleSelection]="true"
+                              (selected)="onElementsSelected($event)">
 </chronos-entity-network-graph>
