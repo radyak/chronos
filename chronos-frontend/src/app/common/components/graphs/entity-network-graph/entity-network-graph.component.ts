@@ -1,4 +1,4 @@
-import { Component, computed, effect, input, model, output, signal } from '@angular/core';
+import { Component, computed, input, model } from '@angular/core';
 import { EntryDTO } from 'src/app/common/model/data/response/entry.dto';
 import { RelationDTO } from 'src/app/common/model/data/response/relation.dto';
 import { SchemaTypeAO } from 'src/app/common/model/schema/admin/type.ao';
@@ -22,11 +22,8 @@ export class EntityNetworkGraphComponent {
   public readonly entriesSelectable = input<boolean>(true);
   public readonly relationsSelectable = input<boolean>(true);
 
-  // Outputs
-  public readonly selected = output<Array<EntryDTO | RelationDTO>>();
-
   // Signals
-  protected readonly selectedElements = signal<Array<EntryDTO | RelationDTO>>([]);
+  public readonly selectedElements = model<Array<EntryDTO | RelationDTO>>([]);
 
   // Derived Signals
   protected graphData = computed(() => {
@@ -36,13 +33,6 @@ export class EntityNetworkGraphComponent {
     }
     return EntityNetworkGraphMapper.mapToGraphData(data);
   });
-
-  // Init
-  constructor() {
-    effect(() => {
-      this.selected.emit(this.selectedElements());
-    });
-  }
 
   protected typeColorMap = computed(() => {
     const types = this.schema();

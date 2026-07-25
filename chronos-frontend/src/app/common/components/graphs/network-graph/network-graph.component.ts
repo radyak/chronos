@@ -180,7 +180,14 @@ export class NetworkGraphComponent implements OnDestroy {
       .attr('font-size', this.config.text.fontSize)
       .attr('font-weight', this.config.text.fontWeight)
       .attr('pointer-events', 'none')
-      .text(d => this.truncate(d.label, 12));
+      .text(d => this.truncate(d.label, 12))
+      .on('click', (_event, d) => {
+          // Map D3 node back to original Angular model node
+          const clickedNode = this.graphData().nodes.find(n => n.id === d.id) ?? null;
+          if (clickedNode?._element) {
+            this.elementClick.emit(clickedNode?._element);
+          }
+      });
 
     // ── Tick ────────────────────────────────────────────────────────────────
     this.simulation.on('tick', () => {

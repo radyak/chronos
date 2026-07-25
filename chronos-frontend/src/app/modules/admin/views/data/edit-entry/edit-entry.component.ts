@@ -89,6 +89,7 @@ export class EditEntryComponent {
   protected isNew = computed(() => !this.entryResource.hasValue());
   protected schema = inject(AdminSchemaService).allTypes();
   protected backendErrors: WritableSignal<ApiErrorDTO[]> = signal([]);
+  protected selectedElements: WritableSignal<Array<EntryDTO | RelationDTO>> = signal([]);
 
   // Derived Signals
   protected currentEntryTypeKey = computed(() => {
@@ -195,8 +196,8 @@ export class EditEntryComponent {
     this.entry.update(e => ({ ...e, attributes: { ...e.attributes, ...filteredAttributes } }));
   }
 
-  protected onElementsSelected(selectedElements: Array<EntryDTO | RelationDTO>): void {
-    console.log('Selected elements in edit-entry:', selectedElements);
-  }
+  // protected selectedElementsChange(selectedElements: Array<EntryDTO | RelationDTO>): void {
+  //   console.log('Selected elements in edit-entry:', selectedElements);
+  // }
 
 }
