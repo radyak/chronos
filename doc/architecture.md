@@ -2,8 +2,9 @@
 
 Chronos is built in a (quasi-)microservice architecture.
 
-```plantuml
-@startuml
+<div hidden>
+```
+@startuml architecture
   component "Keycloak" as IDP
   interface Auth
 
@@ -44,3 +45,6 @@ Chronos is built in a (quasi-)microservice architecture.
 
 @enduml
 ```
+</div>
+
+![](architecture.svg)
