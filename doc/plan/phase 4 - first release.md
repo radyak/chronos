@@ -6,8 +6,8 @@ With the Consultation of AI ([phase 3](phase%203%20-%20interview%20with%20ai.md)
 Now that the dimensions of domain logic and code base has passed a certain size, measures should be taken to handle this.
 
 > 💡 ***Decision:***
-> - Use AI, especially straight-forward but broad changes
-> - Re-align code (also with AI) to comply with Architecture and reduce couplings
+> - Use AI, especially for broad and comprehensive, but straight-forward changes
+> - Re-align code (also with AI) to comply with Architecture and reduce unnecessary couplings
 
 ## 2. Priority of features
 <!--
@@ -25,8 +25,9 @@ UI design and UX were improvised here and there became a bit inconsistent, ugly 
 -->
 
 ## 5. Foundation for data scientificity
-The representation of sources, evidences and controversies is **very important** to the data foundation, so much that AI suggested "Reification" - i.e.: also 
-**However, it's not part of the domain model** per se and rather an additional, orthogonal aspect (like version and approval information, see *point 6.*). While a graph model (nodes + relation) would nearly perfectly reflect the domain's requirements, the suggested Reification would at least squeeze a second, different dimension into the otherwise consistent modelling, if not even defeat the actual purpose of a graph database / model.
+The representation of sources, evidences and controversies - in short: *verifiability* - is **very important** to the overall functional foundation. Thus, AI suggested "Reification" - i.e.: also Relations would be nodes, so that verifyability data can also be linked to relations. 
+**However, the verifyability data is per se not part of the domain model** and rather an additional, orthogonal aspect (like version and approval information, see *point 6.*). While a graph model (nodes + relation) would nearly perfectly reflect the domain's requirements, the suggested Reification would squeeze a second, different dimension into the otherwise consistent modeling - if not even defeat the actual purpose of a graph database / model at all, making the effective model unmaintainable.
+Plus, also other data, such as maps, time development etc. which could be added later, could also be attributed with verifyability data - so this aspect has to live in its own realm anyway.
 
 > 💡 ***Decision:***
 > - The related data will be a sub-set of data nodes (e.g. "_evidence" or similar)
