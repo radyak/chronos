@@ -9,20 +9,33 @@ Now that the dimensions of domain logic and code base has passed a certain size,
 > - Use AI, especially for broad and comprehensive, but straight-forward changes
 > - Re-align code (also with AI) to comply with Architecture and reduce unnecessary couplings
 
+
 ## 2. Priority of features
 <!--
 'The direction and priority which user group to focus on and which functionality to provide in the first version is not clear.
 -->
 
-## 3. 
-<!--
-Since perfectly clean design would have been time-consuming, here and there some shortcuts were taken (e.g. mix of DTO, domain and AO - "Admin Objects").
--->
+
+## 3. Design "blots" 
+Quick (& dirty) fixes, shortcuts and resulting workarounds can be dangerous, especially if they can take effect from early stages. Thus the design should be adjusted and consolidated again.
+
+> 💡 ***Decision:***
+> - List self-indicated defects
+> - Define a design & architecture ruleset for AI
+> - Let AI analyze and detect implementation flaws and suggestions to fix them
+> - Adjust code (manually or with AI) to 
+
 
 ## 4. Inconsistent UI
-<!--
-UI design and UX were improvised here and there became a bit inconsistent, ugly and unintuitive.
--->
+Chronos doesn't even have a design system or a UI Kit. Thus, even rather simple UI section were built inconsistently and look odd.
+
+> 💡 ***Decision:***
+> - Use AI to
+>   - establish and document a Design System
+>   - get a CSS setup/framework/theme suggested
+>   - establish a UI Kit
+> - Fix flaws in code (or get AI suggestions)
+
 
 ## 5. Foundation for data scientificity
 The representation of sources, evidences and controversies - in short: *verifiability* - is **very important** to the overall functional foundation. Thus, AI suggested "Reification" - i.e.: also Relations would be nodes, so that verifyability data can also be linked to relations. 
@@ -39,6 +52,7 @@ Plus, also other data, such as maps, time development etc. which could be added 
 > - This also allows queries by *source* of *verification* factor
 > - Evidence data *per attribute* would be overkill, so *only per relation & entry*
 
+
 ## 6. Review & approval process
 <!--
 >> - **Open, wiki-style crowd contributions** — but this requires (in order of build priority):
@@ -49,10 +63,12 @@ Plus, also other data, such as maps, time development etc. which could be added 
 >> - **Recommendation: launch curated/seeded, open editing later** — a wiki with little content and no visitors doesn't attract good contributors; bootstrap like Wikidata did, via bulk import + curation first.
 -->
 
+
 ## 7. Specific Date Format
 <!--
 > > EDTF (Extended Date/Time Format)** rather than inventing notation — it already handles unspecified digits, "one of several possible dates," ranges, and uncertainty qualifiers. Add a **calendar system field** (Gregorian/Julian/Hijri/etc.) alongside precision, since Julian–Gregorian mismatches and non-Western calendars are unavoidable at global scope.
 -->
+
 
 ## 8. Data & Schema Governance
 <!--
@@ -62,6 +78,7 @@ Plus, also other data, such as maps, time development etc. which could be added 
 >> - **Additive-only changes** by default (new optional attributes fine; renaming/removing triggers explicit migration review) — avoids silent breakage without needing a full migration engine yet.
 >> - Single trusted schema admin is fine as a starting constraint; worth planning how this delegates later (Wikidata-style property-proposal model) without redesigning the core now.
 -->
+
 
 ## 9. Query-Transform-Display Pipelines
 <!--
@@ -77,6 +94,8 @@ A shareable, forkable "social layer" around saved analysis pipelines — the mos
 - **Sequencing:** don't launch with an open builder. Launch with a handful of polished, hand-built example pipelines demonstrating the payoff → let users fork/tweak parameters → only build the full open builder once real usage shows what people actually want to build.
 -->
 
+---
+
 # Scope of First Release
 <!--
 - **First vertical slice:** parallel regional timelines (not all four use cases at once).
@@ -84,6 +103,8 @@ A shareable, forkable "social layer" around saved analysis pipelines — the mos
 - **Deliberately over-curate 3–4 regions deeply** (even though region selection is flexible from day one) so demo paths reliably show rich data rather than empty timelines.
 - **Statement-level sourcing by default**, sub-statement promotion only where disputed.
 -->
+
+---
 
 # Open Questions
 <!--
