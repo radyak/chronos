@@ -10,13 +10,7 @@ Now that the dimensions of domain logic and code base has passed a certain size,
 > - Re-align code (also with AI) to comply with Architecture and reduce unnecessary couplings
 
 
-## 2. Priority of features
-<!--
-'The direction and priority which user group to focus on and which functionality to provide in the first version is not clear.
--->
-
-
-## 3. Design "blots" 
+## 2. Design "blots" 
 Quick (& dirty) fixes, shortcuts and resulting workarounds can be dangerous, especially if they can take effect from early stages. Thus the design should be adjusted and consolidated again.
 
 > 💡 ***Decision:***
@@ -26,7 +20,7 @@ Quick (& dirty) fixes, shortcuts and resulting workarounds can be dangerous, esp
 > - Adjust code (manually or with AI) to 
 
 
-## 4. Inconsistent UI
+## 3. Inconsistent UI
 Chronos doesn't even have a design system or a UI Kit. Thus, even rather simple UI section were built inconsistently and look odd.
 
 > 💡 ***Decision:***
@@ -37,7 +31,7 @@ Chronos doesn't even have a design system or a UI Kit. Thus, even rather simple 
 > - Fix flaws in code (or get AI suggestions)
 
 
-## 5. Foundation for data scientificity
+## 4. Foundation for data scientificity
 The representation of sources, evidences and controversies - in short: *verifiability* - is **very important** to the overall functional foundation. Thus, AI suggested "Reification" - i.e.: also Relations would be nodes, so that verifyability data can also be linked to relations. 
 **However, the verifyability data is per se not part of the domain model** and rather an additional, orthogonal aspect (like version and approval information, see *point 6.*). While a graph model (nodes + relation) would nearly perfectly reflect the domain's requirements, the suggested Reification would squeeze a second, different dimension into the otherwise consistent modeling - if not even defeat the actual purpose of a graph database / model at all, making the effective model unmaintainable.
 Plus, also other data, such as maps, time development etc. which could be added later, could also be attributed with verifyability data - so this aspect has to live in its own realm anyway.
@@ -53,6 +47,15 @@ Plus, also other data, such as maps, time development etc. which could be added 
 > - Evidence data *per attribute* would be overkill, so *only per relation & entry*
 
 
+## 5. Specific Date Format
+The often difficult availability of data renders the possibility to express fuzzy dates a requirement. Variants such as ranges, multiple distinct possible values or simply placeholders for entirely unknown date components should be expressible with a respective date format.
+
+> 💡 ***Decision:***
+> Look into EDTF (Extended Date/Time Format)** rather than inventing notation — it already handles unspecified digits, "one of several possible dates," ranges, and uncertainty qualifiers.
+> AI suggested to "add a **calendar system field** (Gregorian/Julian/Hijri/etc.) alongside precision, since Julian–Gregorian mismatches and non-Western calendars are unavoidable at global scope." - however, since this is a mere data representation aspect, it must be considered to follow a common date standard in the data base and respect conversion only during editing and querying. 
+
+
+
 ## 6. Review & approval process
 <!--
 >> - **Open, wiki-style crowd contributions** — but this requires (in order of build priority):
@@ -64,13 +67,8 @@ Plus, also other data, such as maps, time development etc. which could be added 
 -->
 
 
-## 7. Specific Date Format
-<!--
-> > EDTF (Extended Date/Time Format)** rather than inventing notation — it already handles unspecified digits, "one of several possible dates," ranges, and uncertainty qualifiers. Add a **calendar system field** (Gregorian/Julian/Hijri/etc.) alongside precision, since Julian–Gregorian mismatches and non-Western calendars are unavoidable at global scope.
--->
 
-
-## 8. Data & Schema Governance
+## 7. Data & Schema Governance
 <!--
 >> - **Meta-model is fixed in code** (Entity, Statement, Attribute, Source, EditorialStatus — the plumbing).
 >> - **Relation/entity *types* are data, not code** — a governed type registry, extensible without deployment.
@@ -80,7 +78,7 @@ Plus, also other data, such as maps, time development etc. which could be added 
 -->
 
 
-## 9. Query-Transform-Display Pipelines
+## 8. Query-Transform-Display Pipelines
 <!--
 
 A shareable, forkable "social layer" around saved analysis pipelines — the most ambitious and highest-UX-risk part of the project.
@@ -93,6 +91,13 @@ A shareable, forkable "social layer" around saved analysis pipelines — the mos
 - **Snapshot/pin data versions behind shared pipelines** — since facts are never fixed, a citation needs a reproducible state, not a live-changing query result.
 - **Sequencing:** don't launch with an open builder. Launch with a handful of polished, hand-built example pipelines demonstrating the payoff → let users fork/tweak parameters → only build the full open builder once real usage shows what people actually want to build.
 -->
+
+
+## 9. Priority of features
+<!--
+'The direction and priority which user group to focus on and which functionality to provide in the first version is not clear.
+-->
+
 
 ---
 
