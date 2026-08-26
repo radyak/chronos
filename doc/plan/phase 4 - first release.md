@@ -31,7 +31,15 @@ Chronos doesn't even have a design system or a UI Kit. Thus, even rather simple 
 > - Fix flaws in code (or get AI suggestions)
 
 
-## 4. Foundation for data scientificity
+## 4. Specific Date Format
+The often difficult availability of data renders the possibility to express fuzzy dates a requirement. Variants such as ranges, multiple distinct possible values or simply placeholders for entirely unknown date components should be expressible with a respective date format.
+
+> 💡 ***Decision:***
+> Look into EDTF (Extended Date/Time Format)** rather than inventing notation — it already handles unspecified digits, "one of several possible dates," ranges, and uncertainty qualifiers.
+> AI suggested to "add a **calendar system field** (Gregorian/Julian/Hijri/etc.) alongside precision, since Julian–Gregorian mismatches and non-Western calendars are unavoidable at global scope." - however, since this is a mere data representation aspect, it must be considered to follow a common date standard in the data base and respect conversion only during editing and querying. 
+
+
+## 5. Foundation for data scientificity
 The representation of sources, evidences and controversies - in short: *verifiability* - is **very important** to the overall functional foundation. Thus, AI suggested "Reification" - i.e.: also Relations would be nodes, so that verifyability data can also be linked to relations. 
 **However, the verifyability data is per se not part of the domain model** and rather an additional, orthogonal aspect (like version and approval information, see *point 6.*). While a graph model (nodes + relation) would nearly perfectly reflect the domain's requirements, the suggested Reification would squeeze a second, different dimension into the otherwise consistent modeling - if not even defeat the actual purpose of a graph database / model at all, making the effective model unmaintainable.
 Plus, also other data, such as maps, time development etc. which could be added later, could also be attributed with verifyability data - so this aspect has to live in its own realm anyway.
@@ -47,35 +55,32 @@ Plus, also other data, such as maps, time development etc. which could be added 
 > - Evidence data *per attribute* would be overkill, so *only per relation & entry*
 
 
-## 5. Specific Date Format
-The often difficult availability of data renders the possibility to express fuzzy dates a requirement. Variants such as ranges, multiple distinct possible values or simply placeholders for entirely unknown date components should be expressible with a respective date format.
+## 6. Review & approval process
+The claim for data scientificity, which already implies sources and evidence state from point 5, will require some kind of peer reviews, similarly as it is done for scientific papers, including a respective process. This should ensure data quality and reliability, but it not slow down contribution at the same time.
 
 > 💡 ***Decision:***
-> Look into EDTF (Extended Date/Time Format)** rather than inventing notation — it already handles unspecified digits, "one of several possible dates," ranges, and uncertainty qualifiers.
-> AI suggested to "add a **calendar system field** (Gregorian/Julian/Hijri/etc.) alongside precision, since Julian–Gregorian mismatches and non-Western calendars are unavoidable at global scope." - however, since this is a mere data representation aspect, it must be considered to follow a common date standard in the data base and respect conversion only during editing and querying. 
-
-
-
-## 6. Review & approval process
-<!--
->> - **Open, wiki-style crowd contributions** — but this requires (in order of build priority):
->>   1. Revision history per fact
->>   2. Proposal → review → published states (not raw overwrite)
->>   3. A "disputed" state that preserves competing sourced claims rather than silently resolving them
->>   4. A clear content license (likely CC BY-SA, mixing CC0 Wikidata imports with community edits)
->> - **Recommendation: launch curated/seeded, open editing later** — a wiki with little content and no visitors doesn't attract good contributors; bootstrap like Wikidata did, via bulk import + curation first.
--->
+> - The first release will not include such processes - *AI Recommendation*: launch curated/seeded, open editing later** — a wiki with little content and no visitors doesn't attract good contributors; bootstrap like Wikidata did, via bulk import + curation first
+> - Later on, there would be an extension, based on a respective review service
+>   - The service should cover all "reviewable" entities of the overall system (i.e. schema, entries, labels) and contain revision history → e.g. document-based database like MongoDB
+>   - UI must be extended respectively; Migration will require: creation endpoints must be protected and callable only from review service; UI parts will be reusable
+>   - Universally unifrom process (proposed → in review → approved/published)
+>   - Versions per entity
+>   - *AI recommendation*: launch curated/seeded, open editing later** — a wiki with little content and no visitors doesn't attract good contributors; bootstrap like Wikidata did, via bulk import + curation first
 
 
 
 ## 7. Data & Schema Governance
-<!--
->> - **Meta-model is fixed in code** (Entity, Statement, Attribute, Source, EditorialStatus — the plumbing).
->> - **Relation/entity *types* are data, not code** — a governed type registry, extensible without deployment.
->> - Type changes go through the **same proposal → review → approval workflow as data facts**, not a separate system — less to build, and keeps both processes consistent.
->> - **Additive-only changes** by default (new optional attributes fine; renaming/removing triggers explicit migration review) — avoids silent breakage without needing a full migration engine yet.
->> - Single trusted schema admin is fine as a starting constraint; worth planning how this delegates later (Wikidata-style property-proposal model) without redesigning the core now.
--->
+Other than standards like FHIR (health domain), Chronos' schema will have to react often and quickly, especially in the beginning, when data & modelling scale up fast. Thus, it must be considered, wether a hard-coded or a rather dynamic schema definition would be preferrable.
+
+> 💡 ***Decision:***
+> We will mostly follow the *AI recommendations* here:
+> - **Meta-model** (i.e. how a schema is defined) **is fixed in code**.
+> - **Relation/entity *types*** (i.e. schema) **are data, not code** — a governed type registry, extensible without deployment.
+> - Type changes go through the **same review workflow** as data facts (extension point)
+> - **Additive-only changes** by default
+>   - New optional attributes (soft CREATE)
+>   - Changing (UPDATE)/removing (DELETE) and even new mandatory attributes (hard CREATE) would either need a full migration - or mean potential inconsistencies (extension point)
+> - Start with one **single trusted schema admin**
 
 
 ## 8. Query-Transform-Display Pipelines
