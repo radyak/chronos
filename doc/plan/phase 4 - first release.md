@@ -84,18 +84,18 @@ Other than standards like FHIR (health domain), Chronos' schema will have to rea
 
 
 ## 8. Query-Transform-Display Pipelines
-<!--
+The structured data alone will only suffice a few use cases. What is needed, are user-friendly ways to query the data and display it in different ways - both connected with transformations of the data. Thus, three stages are relevant for data intelligence, which form some kind of pipeline: query, transformation, display. All of such data-flow blocks should be bound to contracts, which also express compatibility among them and allow to only build functioning pipelines from the beginning. 
 
-A shareable, forkable "social layer" around saved analysis pipelines — the most ambitious and highest-UX-risk part of the project.
-
-- **Typed dataflow blocks**, each with a fixed input/output shape (like Node-RED/Blueprints) — the UI only offers valid connections, preventing broken pipelines by construction.
-- **v1 query stage should stay shallow**, form-like filters (entity type, one-hop relation filter, date-range/attribute predicate) rather than full graph pattern matching — the Roman Emperors example doesn't need more than this. Multi-hop path queries deferred to a later block version.
-- **Transform stage** ≈ pivot-table mental model (group/aggregate) — reuse familiar UX (Airtable/Tableau-like), don't invent new interaction patterns.
-- **Display stage**: constrain chart type choices to whatever the transform's output shape supports; consider a declarative grammar (Vega-Lite-style) to avoid bespoke glue per chart type.
-- **Block contracts are versioned the same way as schema** — additive-only; breaking changes get a new block version so old pipelines don't silently break.
-- **Snapshot/pin data versions behind shared pipelines** — since facts are never fixed, a citation needs a reproducible state, not a live-changing query result.
-- **Sequencing:** don't launch with an open builder. Launch with a handful of polished, hand-built example pipelines demonstrating the payoff → let users fork/tweak parameters → only build the full open builder once real usage shows what people actually want to build.
--->
+> 💡 ***Decision:***
+> We will basically follow AI's recommendation, with some tweaks to its suggestions:
+> - Query stage: should stay shallow
+> - Transform stage: ≈ pivot-table mental model (group/aggregate) — reuse familiar UX (Airtable/Tableau-like), don't invent new interaction patterns.
+> - Display stage: constrain chart type choices to whatever the transform's output shape supports; consider a declarative grammar (Vega-Lite-style) to avoid glue per chart type.
+> Important:
+> - For the first release, we won't launch with an open builder. Launch with a handful of polished, hand-built example pipelines demonstrating the payoff. Users would be able to fork/tweak parameters. A full open builder will follow once real usage shows what people actually want to build. 
+> - However, all stubs should be designed with the extensions in mind already! I.e. interfaces for data-blocks, keep it possible to develop full-fledged queries e.g. with multi-hops or Vega-lite-like data interfaces
+> All parts should be hard-coded, but also in a way so that a service could replace this functionality 
+> In later stages, this infrastructure could be extended to a "social layer" around saved analysis blocks or whole pipelines — AI considered this "the most ambitious and highest-UX-risk part of the project". In the end, it should grow and develop naturally, along the actual user needs and use cases. Then, the blocks should also introduce versioning and snapshots/pinning of data & pipelines/block versions.
 
 
 ## 9. Priority of features
