@@ -99,9 +99,14 @@ The structured data alone will only suffice a few use cases. What is needed, are
 
 
 ## 9. Priority of features
-<!--
-'The direction and priority which user group to focus on and which functionality to provide in the first version is not clear.
--->
+Which user group to focus on and which functionality to provide in the first version will have an impact not only on the release date but also on the future direction of development.
+
+> 💡 ***Decision:***
+> The focus should clearly be on the public user's side, i.e. discovering data and using QTD (query-transform-display) pipelines
+> - This will be the outward-facing part that represents the prototype and should gather feedback as early as possible
+> - Admin aspects will only be relevant to one user in the beginning, and this maybe even only in a reduced scope, since lots of data could be sourced from WikiData
+> Thus, focus should be: Some QTD blocks and pipelines (hard-coded data), data sourcing (and attribution/licensing), data scientificity (evidence sources, versioning, debate status, date format) and maybe user auth & storage (e.g. to store pipelines)
+
 
 
 ---
