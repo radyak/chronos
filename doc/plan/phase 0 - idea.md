@@ -28,8 +28,7 @@ The model of the Historical Data is defined by a **schema**, which defines. Both
 ### User Interface
 The User Interface should provide basic access to everyone, but user-specific permissions should distinguish which features a user can use.
 * **Exploration**: There should be a section where users can browse Historical Data in different formats and graphical representation. Also random suggestions for data, data sets and pre-built info graphics should be available there. Besides browsing, users should also be able to specifically query data - as user-friendly as possible, e.g. using a graphical query builder and/or using query blocks. A similar pattern for building blocks, the queried data could be transformed, so that it can fit and be displayed in different graph types, which can also be configured. In the future, these graphs should be possible to save, publish and share with other users.
-* **Administration**: The underlying data and meta data must be administered and curated by trusted, professional users. Depending on the data, the process of maintenance might involve four-eye-principle, versioning and tasks/notification to request respective actions. This involves the following aspects:
-  * Schema
+* **Administration**: The underlying data must be administered and curated by trusted, professional users. Depending on the data, the process of maintenance might involve four-eye-principle, versioning and tasks/notification to request respective actions. This involves the following aspects:
   * Data
   * Sources
   * Labels

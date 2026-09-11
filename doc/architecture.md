@@ -2,45 +2,54 @@
 
 Chronos is built in a (quasi-)microservice architecture.
 
-```plantuml
-@startuml
-  component "Keycloak" as IDP
-  interface Auth
+```mermaid
+---
+config:
+    theme: 'neutral'
+---
+flowchart
+    classDef DomainService fill:#f9d5e5,stroke:#a33
+    classDef core stroke-width:2px
 
-  frame Browser {
-    component UI
-  }
+    IDP["Keycloak"]
+    Auth((Auth))
 
-  frame "Cluster" {
-    component "UI Server" as UIServer
-    component UI
-    component "UI Service" as UIS
-    component "Gateway" as GW
-    component "Schema Definition" as SDS
-    component "Historical Data" as HDS
-    component "Wiki Service" as Wiki
-  }
+    subgraph Browser
+        UI["UI"]
+    end
 
-  'Serve UI
-  UI <.. UIServer
+    subgraph Cluster
+        UIServer["UI Server"]
+        GW["Gateway"]
 
-  'UI Access
-  UI --> GW
-  GW --> SDS : /api/schema
-  GW --> HDS : /api/data
-  GW --> Wiki : /api/wiki
-  GW --> UIS : /api/ui
+        UIS["UI Service"]
+        SDS["Schema Definition"]
+        HDS["Historical Data"]
+        Wiki["Wiki Service"]
 
-  'Cluster-internal Access
-  HDS -> SDS : validation
+    end
 
-  'Auth Integration
-  IDP - Auth
-  UI -left-> Auth
-  HDS ---> Auth
-  SDS ---> Auth
-  Wiki ---> Auth
+    %% Serve UI
+    UIServer -.-> UI
 
+    %% UI Access
+    UI --> GW
+    GW -->|/api/schema| SDS
+    GW -->|/api/data| HDS
+    GW -->|/api/wiki| Wiki
+    GW -->|/api/ui| UIS
 
-@enduml
+    %% Cluster-internal Access
+    HDS -->|validation| SDS
+
+    %% Auth Integration
+    Auth --- IDP
+    UI --> Auth
+    HDS --> Auth
+    SDS --> Auth
+    Wiki --> Auth
+
+    class UI,SDS,HDS,Wiki DomainService
+    class UI,SDS,HDS core
+
 ```
