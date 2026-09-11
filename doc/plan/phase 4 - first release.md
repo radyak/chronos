@@ -112,18 +112,125 @@ Which user group to focus on and which functionality to provide in the first ver
 ---
 
 # Scope of First Release
-<!--
-- **First vertical slice:** parallel regional timelines (not all four use cases at once).
-- **Fixed starter type set** (Person, Territory/Polity, Dynasty, Denomination, Event, Source) rather than building the schema-admin UI before there's real content to justify it.
-- **Deliberately over-curate 3–4 regions deeply** (even though region selection is flexible from day one) so demo paths reliably show rich data rather than empty timelines.
-- **Statement-level sourcing by default**, sub-statement promotion only where disputed.
--->
+
+## Management Summary
+
+The first release is a **not a fully-fleged platform launch** but the **go-live of the very first foundation components** - with the focus on being a **public showcase** at this stage. It is a narrow but deep vertical slice that lets an anonymous visitor explore curated historical data and see what a schema-governed history *graph* can do that a prose wiki cannot. Target audience are first users, potential supporters and investors — i.e. the outward-facing, public side of the product (point 9), not the curation side.
+
+It has to demonstrate three things, and nothing more, yet:
+
+1. **Structured, typed, related data** — entries and relations against a governed type registry, browsable and queryable.
+2. **Scientificity** — evidence, sources and verification state attached to entries and relations, and fuzzy dates expressed in a real standard (EDTF) instead of a homegrown notation.
+3. **Payoff** — a handful of polished, hand-built query-transform-display (QTD) pipelines that turn that data into infographics, with parameters the visitor may fork and tweak.
+
+Everything else is deliberately deferred. Curation stays with *one trusted admin** and is bootstrapped by sourcing data (Wikidata/Wikipedia) rather than by attracting contributors. There is **no review & approval process**, **no open pipeline builder**, **no multi-admin governance** in this release — but each of these is kept as an explicit extension point so the first release does not have to be unbuilt to add them.
+
+Two cross-cutting preconditions come before feature work, because they are what phase 4 diagnosed as the real risk (points 1–3): an **architecture ruleset plus a clean-up pass** on the existing code, and a **design system / UI kit**, since without one every screen of the showcase would repeat the inconsistency that made the MVP look improvised.
+
+### Decisions and what they mean for this release
+
+| § | Decision | Consequence for the first release |
+| --- | --- | --- |
+| 1 | AI for broad, straight-forward changes; re-align code to the architecture | Stage 1 — ruleset first, then the clean-up pass |
+| 2 | List defects, define a design & architecture ruleset for AI, detect and fix flaws | Stage 1 — prerequisite for all following stages |
+| 3 | Establish and document a design system, CSS theme and UI kit | Stage 2 — prerequisite for every public screen |
+| 4 | EDTF instead of own notation; one storage standard; calendars are an edit/query concern | Stage 3 — EDTF in; calendar conversion deferred |
+| 5 | Verifiability as orthogonal `_evidence` data nodes per entry & relation; no reification | Stage 4 — in; a dedicated *sources* service deferred |
+| 6 | No review & approval process in the first release; seed & curate first | Out of scope; creation endpoints stay isolated enough to lock down later |
+| 7 | Meta-model in code, types as data, additive-only, single schema admin | Stage 5 — enforced; non-additive changes are an extension point |
+| 8 | Shallow query, pivot-like transform, shape-constrained display; no open builder | Stages 6–7 — typed contracts + hand-built pipelines |
+| 9 | Focus on the public user: discovery and QTD; admin minimal; source from Wikidata | Sets the order of the whole plan; Stages 6–8 are the visible release |
+
+### Not in the first release
+
+Review & approval workflow and revision history (point 6) · a separate sources service (point 5) · schema updates,
+deletions and new mandatory attributes (point 7) · calendar-system conversion (point 4) · open QTD builder, pipeline
+versioning/snapshots and the social layer (point 8) · multi-admin governance and delegation (point 7).
+
+## Plan
+
+### Stage 1 — Engineering baseline (points 1, 2)
+- Write the **design & architecture ruleset** for AI into the repo: layer separation (`rest` → `service` →
+  `persistence`/`client`), mapping at the boundary, extension points instead of branching.
+- List the **self-indicated defects** (DTO/domain/AO mix in HDS, stale docs, dead JaCoCo exclusion, proxy/container name mismatch) in `doc/issues.md`.
+- Run the AI analysis against the ruleset and fix the flagged layer violations and couplings.
+- *Done when:* ruleset committed, defect list current, boundaries mapped, build and tests green.
+
+### Stage 2 — Design system & UI kit (point 3)
+- Document the **design system** (colour, type, spacing, states) on top of the existing theme variables and settle the CSS framework/theme setup.
+- Build the **UI kit** components the public slice needs and migrate the existing views onto them.
+- *Done when:* design system documented under `doc/`, kit components live in `common/`, existing views use them, no new ad-hoc CSS.
+
+### Stage 3 — EDTF dates (point 4)
+- Replace the narrow `DATENOTATION` subset with an **EDTF-based attribute type**: parsing/validation as a shared concern,
+  ordering and range semantics for queries and sorting, support in the date input component.
+- Storage stays on the single standard; conversion for other calendar systems is deferred.
+- *Done when:* EDTF values validate, persist, sort, filter and render; existing date values migrated.
+- *Before data sourcing, because imported dates must land in the final notation.*
+
+### Stage 4 — Evidence sub-graph (point 5)
+- Introduce `_evidence` data nodes carrying *status*, *sources* and *verification*, attached **per entry and per relation** — not per attribute, and without reifying relations.
+- Return evidence with entry and mesh reads, allow filtering by status/verification, surface it in the UI.
+- *Done when:* evidence can be created, read, filtered and is visible end-to-end.
+- *Before data sourcing, because provenance, attribution and licensing of imported data are recorded here.*
+
+### Stage 5 — Schema governance & starter types (point 7)
+- Enforce **additive-only** schema evolution in the SDS: new optional attributes allowed; update, removal and new mandatory attributes rejected behind a documented extension point.
+- Keep the **single schema-admin** role; seed the fixed starter type set as data, not code.
+- *Done when:* the additive rule is enforced and tested, and the starter types are seeded reproducibly.
+
+### Stage 6 — Data sourcing & curation (points 9, 6)
+- Build the **sourcing path** from Wikidata/Wikipedia into entries and relations, recording attribution and licensing as
+  evidence sources.
+- **Over-curate a small number of regions/topics deeply** so every demo path shows rich data instead of empty results.
+- *Done when:* the curated corpus loads reproducibly and its licensing is documented.
+
+### Stage 7 — QTD blocks & example pipelines (point 8)
+- Define the **typed block contracts** for query → transform → display, versioned and additive-only, with compatibility
+  expressed by the block's input/output shape.
+- Implement them hard-coded, but behind interfaces, so a dedicated service can take the functionality over later:
+  **query** stays shallow (reuse the existing list/mesh filters), **transform** follows the pivot-table model
+  (group/aggregate), **display** is constrained to the chart types the transform's output shape supports, ideally via a
+  declarative chart grammar rather than glue per chart type.
+- Build **a handful of polished example pipelines** over the curated corpus, with forkable/tweakable parameters. No open
+  builder.
+- *Done when:* the contracts are documented and every example pipeline runs end-to-end over real curated data.
+
+### Stage 8 — Public discovery UI (points 9, 3)
+- Browse and query entries, entry detail with evidence and dates, relation mesh via the network graph, and a **gallery of
+  the example pipelines** with editable parameters.
+- Built entirely from the Stage 2 UI kit.
+- *Done when:* an anonymous visitor can go from landing page to browsing to a pipeline result and share it.
+
+### Stage 9 — Optional: accounts & stored pipelines (point 9)
+- Only if Stages 1–8 land in time: let authenticated users store their forked pipeline parameters. Read access stays
+  anonymous either way.
+
+### Stage 10 — Release
+- Deploy the cluster, write release notes and a short demo walkthrough for the showcase audience, and open a feedback
+  channel so the first users' reactions steer what follows (open builder, review service, more regions).
 
 ---
 
 # Open Questions
-<!--
-- Should the review queue (for facts and schema proposals alike) be a public talk-page-style queue or a private admin inbox at this stage?
-- Timeline display semantics: one row per entity (Gantt-style reign bars) vs. plotting ranges as points on a shared regional axis?
-- How schema-admin authority evolves/delegates as the contributor base grows.
--->
+
+## Architecture
+- **EDTF scope:** which EDTF level/profile is supported in v1?
+- **Evidence attachment:** Should the `_evidence` node be an evidence-carrying property (serialized JSON or commonly prefixed attributes)?
+
+## Domain
+- **Verification scale:** define the values between 0 and 1 and how *status* ("secured", "debated") relate to them
+
+## Sourcing
+- **Sourcing mechanics:** is the Wikidata/Wikipedia import a one-off script, a dev tool, or a service? Who runs it, and how is re-import/refresh handled without overwriting curation?
+- **Licensing:** Wikidata (CC0) and Wikipedia (CC BY-SA) differ — what does the attribution requirement mean for the display of sourced entries and for exported infographics?
+
+## Showcase
+- **Starter type set:** which entity and relation types exactly, and which regions/topics get the deep curation — the demo paths depend on this choice being fixed early.
+- **Pipeline set:** how many example pipelines, which questions do they answer, and which chart grammar is used?
+- **Success criteria:** what would make the showcase a success for first users, supporters and investors, and how is that feedback collected?
+
+## Other
+- **Pipeline sharing without accounts:** if Stage 9 is dropped, how is a tweaked pipeline shared — URL-encoded parameters, or not at all?
+- **Display semantics for timelines:** one row per entity (Gantt-style bars) or ranges plotted on a shared regional axis?
+- **Later, but decided now?** how schema-admin authority evolves and delegates as contributors join, and whether the later review queue is a public talk-page-style queue or a private admin inbox.
