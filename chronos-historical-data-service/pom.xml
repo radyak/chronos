@@ -161,7 +161,6 @@
                     <excludes>
                         <exclude>**/NoSecurityConfig.class</exclude>
                         <exclude>**/TestDataManager.class</exclude>
-                        <exclude>net/fvogel/chronos/data/REFACTORING/*/**</exclude>
                     </excludes>
                 </configuration>
             </plugin>
