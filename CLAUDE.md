@@ -114,8 +114,6 @@ API docs per service: `/v3/api-docs`, `/swagger-ui/index.html`. Ready-made reque
 
 ## Known stale/rough spots (don't trust blindly)
 
-- `chronos-commons/README.md` and `chronos-schema-definition-service/README.md` are **swapped** (each describes the other).
 - `doc/development.md` still describes the old monolith setup (frontend WebJar as a backend Maven dependency, one shared Neo4j) — no backend depends on `chronos-frontend` any more; it is packaged as its own nginx image.
 - `doc/deployment.md` describes Postgres as *the* datastore; that applies to SDS only, HDS is Neo4j.
 - `doc/structure.md` is an empty stub. `chronos-frontend/proxy.conf.json` targets `chronos-sds`/`chronos-hds`, which are not the container names in `docker-compose.yaml` (`schema`/`data`), and `docker-compose.dev-cluster.yaml` still deploys the old single `radyak/chronos` monolith image against a Neo4j container configured with Postgres volumes.
-- `chronos-historical-data-service/pom.xml` excludes `net/fvogel/chronos/data/REFACTORING/**` from JaCoCo; that package no longer exists.
