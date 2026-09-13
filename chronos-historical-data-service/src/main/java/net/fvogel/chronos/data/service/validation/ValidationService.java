@@ -30,7 +30,6 @@ public class ValidationService {
 
     /**
      * TODO: Add ValidationRules for
-     * - isChangeable
      * - valuePattern
      * - valueRange
      */
